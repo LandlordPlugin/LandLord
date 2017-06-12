@@ -1,0 +1,102 @@
+# Landlord Created by Jcdesimp
+# ##### DEFAULT CONFIG #####
+# General options
+# options:
+#    #Enable sound effects when interacting with owned land.
+#    soundEffects: true
+#    #Enable particle effects for land interaction
+#    particleEffects: true
+#    #Enable the land map (/landlord map)
+#    #Can sometimes be resource intensive if a lot of players have it open.
+#    enableMap: true
+#    #Regenerate a chunk when it is unclaimed (Removes all builds and changes)
+#    regenOnUnclaim: false
+#    #Show entey/exit messages when players enter/leave owned land.
+#    showLandAlerts: true
+#    #File inside the "messages" folder to use as souce for all messages displayed to players.
+#    messagesFile: "english.yml"
+#    limitBuildInsideRegionWorld:
+#    #Players are not allowed to build in the landlord-world. After passing a certain treshold (owning 9
+#    #   lands by default), they are allowed to even build in that world.
+# Limits on amount of owned land
+# limits:
+#    #Max land a regular player can own (-1 for no limit).
+#    landLimit: 10
+#    #Extra land that players with "landlord.limit.extra","landlord.limit.extra2", etc. can own (Gets added to landLimit).
+#    extra: 10
+#    extra2: 20
+#    extra3: 30
+#    extra4: 40
+#    extra5: 50
+# Economy settings (Requires Vault)
+# economy:
+#    #Enable economy integration features
+#    enable: false
+#    #Amount of free land a player can own before being charged
+#    freeLand: 0
+#    #Cost of claiming land
+#    buyPrice: 100
+#    #Money given to player when unclaiming land
+#    sellPrice: 50
+# Worldguard Options (Requires Worldguard)
+# worldguard:
+#    #Prevent players from claiming chunks that intersect with worldguard regions,
+#    #UNLESS they have build permissions within that region.
+#    blockRegionClaim: true
+# Here you can enable/disable the built-in land flags.
+# enabled-flags:
+#    build: true
+#    harmAnimals: true
+#    openDoor: true
+#    tntDamage: true
+#    useContainers: true
+#    useRedstone: true
+#    pvp: true
+# Here you can disable worlds where player should not claim/unclaim
+# disabled-worlds:
+# - world_nether
+# - world_the_end
+# #### CONFIGURE OPTIONS BELOW ####
+
+options:
+  soundEffects: true
+  particleEffects: true
+  enableMap: true
+  regenOnUnclaim: false
+  showLandAlerts: true
+  messagesFile: "english.yml"
+  limitBuildInsideRegionWorld:
+    value: false
+    treshold: 9
+limits:
+  landLimit: 10
+  extra: 10
+  extra2: 20
+  extra3: 30
+  extra4: 40
+  extra5: 50
+economy:
+  enable: false
+  freeLand: 0
+  buyPrice: 100
+  sellPrice: 50
+worldguard:
+  blockRegionClaim: true
+enabled-flags:
+  build: true
+  harmAnimals: true
+  openDoor: true
+  tntDamage: true
+  useContainers: true
+  useRedstone: true
+  pvp: true
+  setHome: true
+disabled-worlds:
+- world_nether
+- world_the_end
+MySQL:
+  Hostname: localhost
+  Port: 3306
+  Database: minecraft
+  User: root
+  Password: passy

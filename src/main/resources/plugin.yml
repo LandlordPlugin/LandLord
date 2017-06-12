@@ -1,0 +1,115 @@
+name: Landlord
+version: 1.6
+main: com.jcdesimp.landlord.Landlord
+author: Jcdesimp
+authors: [SpatiumPrinceps]
+website: http://dev.bukkit.org/bukkit-plugins/landlord/
+softdepend: [Vault, WorldGuard]
+
+commands:
+
+  landlord:
+    aliases: [land, ll]
+    description: The base Landlord command.
+    usage: /<command> [command]
+    permission: landlord.use
+    permission-message: You don't have permission.
+
+permissions:
+
+  landlord.*:
+    description: Gives access to all landlord commands
+    children:
+      landlord.player.*: true
+      landlord.admin.*: true
+
+  landlord.player.*:
+    description: Gives access to default player commands.
+    children:
+      landlord.player.own: true
+      landlord.player.map: true
+      landlord.player.info: true
+
+  landlord.admin.*:
+    description: Gives access to admin commands.
+    children:
+      landlord.admin.unclaim: true
+      landlord.admin.list: true
+      landlord.admin.manage: true
+      landlord.admin.clearworld: true
+      landlord.admin.bypass: true
+      landlord.admin.reload: true
+      landlord.admin.modifyfriends: true
+      landlord.admin.friends: true
+
+  landlord.use:
+    description: required to use any Landlord commands
+    default: true
+
+  landlord.player.own:
+    description: permission for plot ownership (claim, unclaim, manage, friends, etc.)
+    default: true
+
+  landlord.player.map:
+    description: permission to use the land map
+    default: true
+
+  landlord.player.info:
+    description: Permission to use land info
+    default: true
+
+  landlord.limit.extra:
+    description: gives a larger land limit
+    default: false
+
+  landlord.limit.extra2:
+    description: gives a larger land limit
+    default: false
+
+  landlord.limit.extra3:
+    description: gives a larger land limit
+    default: false
+
+  landlord.limit.extra4:
+    description: gives a larger land limit
+    default: false
+
+  landlord.limit.extra5:
+    description: gives a larger land limit
+    default: false
+
+  landlord.limit.override:
+    description: allows unlimited land ownership
+    default: false
+
+  landlord.admin.unclaim:
+    description: Unclaim anyone's land
+    default: op
+
+  landlord.admin.list:
+    description: list all land owned by a user
+    default: op
+
+  landlord.admin.manage:
+    description: manage anyone's land
+    default: op
+
+  landlord.admin.clearworld:
+    description: clear a player's land in a world or all land in a world
+    default: op
+
+  landlord.admin.bypass:
+    description: bypass land protections
+    default: op
+
+  landlord.admin.reload:
+    description: reload plugin configuration
+    default: op
+
+  landlord.admin.friends:
+    description: view friends of any land
+    default: op
+
+  landlord.admin.modifyfriends:
+    description: add/remove friends of any land
+    default: op
