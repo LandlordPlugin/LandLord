@@ -22,6 +22,12 @@
                         </goals>
                         <configuration>
                             <finalName>LandLord</finalName>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.zaxxer.hikari</pattern>
+                                    <shadedPattern>me.mc2.internal.hikari</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
