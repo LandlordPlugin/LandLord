@@ -77,11 +77,13 @@ public class SpigotUtil {
         try {
             if (ichatbasecomponent == null)
                 ichatbasecomponent = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class);
-            ichatbasecomponent.invoke(null, "{\"text\": \"" + message + "\"}");
-            if (chatType == null)
-                chatType = getNMSClass("PacketPlayOutChat").getDeclaredClasses()[0].getField("GAME_INFO").get(null);
-            Constructor<?> titleConstructor = getNMSClass("PacketPlayOutChat").getConstructor(getNMSClass("IChatBaseComponent"), getNMSClass("PacketPlayOutChat"));
-            Object packet = titleConstructor.newInstance(ichatbasecomponent, chatType);
+            Object basecomponent = ichatbasecomponent.invoke(null, "{\"text\": \"" + message + "\"}");
+            if (chatType == null) {
+                Object[] consts = getNMSClass("ChatMessageType").getEnumConstants();
+                chatType = consts[2].getClass().getMethod("a", byte.class).invoke(null, (byte) 2);
+            }
+            Constructor<?> titleConstructor = getNMSClass("PacketPlayOutChat").getConstructor(getNMSClass("IChatBaseComponent"), getNMSClass("ChatMessageType"));
+            Object packet = titleConstructor.newInstance(basecomponent, chatType);
 
             sendPacket(player, packet);
         } catch (IllegalAccessException e) {
@@ -89,8 +91,6 @@ public class SpigotUtil {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
             e.printStackTrace();

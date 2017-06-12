@@ -245,7 +245,7 @@ public class Database extends MySQL {
                     while (res.next()) {
                         Data data = new Data(world, res.getInt("x"), res.getInt("z"));
                         OwnedLand ownedLand = new OwnedLand(data);
-                        ownedLand.setOwner(UUID.fromString(res.getString("owner")));
+                        ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
                         ownedLand.setLandId(res.getInt("landid"));
                         ownedLand.setFriends(getFriends(ownedLand.getLandId()));
                         ownedLand.setFlags(getFlags(ownedLand.getLandId()));
