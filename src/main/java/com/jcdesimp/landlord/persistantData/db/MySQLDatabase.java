@@ -1,7 +1,11 @@
-package com.jcdesimp.landlord.persistantData;
+package com.jcdesimp.landlord.persistantData.db;
 
 import biz.princeps.lib.storage.MySQL;
 import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.persistantData.Data;
+import com.jcdesimp.landlord.persistantData.Friend;
+import com.jcdesimp.landlord.persistantData.LandFlag;
+import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.Location;
 
 import java.sql.Connection;
@@ -16,9 +20,9 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by spatium on 10.06.17.
  */
-public class Database extends MySQL {
+public class MySQLDatabase extends MySQL {
 
-    public Database(String hostname, int port, String database, String user, String password) {
+    public MySQLDatabase(String hostname, int port, String database, String user, String password) {
         super(hostname, port, database, user, password);
         setupDatabase();
     }
@@ -68,7 +72,7 @@ public class Database extends MySQL {
         }
     }
 
-    private List<Friend> getFriends(int id) {
+    protected List<Friend> getFriends(int id) {
         ArrayList<Friend> list = new ArrayList<>();
         String query = "SELECT * FROM ll_friend WHERE landid = ?";
         try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
@@ -86,7 +90,7 @@ public class Database extends MySQL {
         return list;
     }
 
-    private List<LandFlag> getFlags(int landid) {
+    protected List<LandFlag> getFlags(int landid) {
         ArrayList<LandFlag> list = new ArrayList<>();
         String query = "SELECT * FROM ll_flagperm WHERE landid = ?";
         try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {

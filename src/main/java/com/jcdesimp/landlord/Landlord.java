@@ -1,12 +1,15 @@
 package com.jcdesimp.landlord;
 
+import biz.princeps.lib.storage.AbstractDatabase;
+import biz.princeps.lib.storage.SQLite;
 import com.jcdesimp.landlord.configuration.CustomConfig;
 import com.jcdesimp.landlord.landFlags.*;
 import com.jcdesimp.landlord.landManagement.FlagManager;
 import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.landManagement.ViewManager;
 import com.jcdesimp.landlord.landMap.MapManager;
-import com.jcdesimp.landlord.persistantData.Database;
+import com.jcdesimp.landlord.persistantData.db.MySQLDatabase;
+import com.jcdesimp.landlord.persistantData.db.SQLiteDatabase;
 import com.jcdesimp.landlord.pluginHooks.VaultHandler;
 import com.jcdesimp.landlord.pluginHooks.WorldguardHandler;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -20,7 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class Landlord extends JavaPlugin {
 
-    private Database mysql;
+    private AbstractDatabase db;
     private Landlord plugin;
     private MapManager mapManager;
     private WorldguardHandler wgHandler;
@@ -59,7 +62,10 @@ public final class Landlord extends JavaPlugin {
             getServer().getPluginManager().registerEvents(pListen, this);
         }
 
-        mysql = new Database(getConfig().getString("MySQL.Hostname"), getConfig().getInt("MySQL.Port"), getConfig().getString("MySQL.Database"), getConfig().getString("MySQL.User"), getConfig().getString("MySQL.Password"));
+        if (getConfig().getBoolean("SQLite.enable"))
+            db = new SQLiteDatabase(this.getDataFolder() + "/database.db");
+        else
+            db = new MySQLDatabase(getConfig().getString("MySQL.Hostname"), getConfig().getInt("MySQL.Port"), getConfig().getString("MySQL.MySQLDatabase"), getConfig().getString("MySQL.User"), getConfig().getString("MySQL.Password"));
 
 
         // Command Executor
@@ -118,7 +124,7 @@ public final class Landlord extends JavaPlugin {
         mapManager.removeAllMaps();
         manageViewManager.deactivateAll();
         pListen.clearPtrack();
-        mysql.close();
+        db.close();
     }
 
     @Override
@@ -214,8 +220,8 @@ public final class Landlord extends JavaPlugin {
     }
 
 
-    public Database getDatabase() {
-        return mysql;
+    public AbstractDatabase getDatabase() {
+        return db;
     }
 
 

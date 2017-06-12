@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by spatium on 11.06.17.
  */
-public class MySQL extends AbstractDatabase {
+public abstract class MySQL extends AbstractDatabase {
 
     protected HikariDataSource ds;
 

@@ -94,6 +94,8 @@ enabled-flags:
 disabled-worlds:
 - world_nether
 - world_the_end
+SQLite:
+  enable: true
 MySQL:
   Hostname: localhost
   Port: 3306

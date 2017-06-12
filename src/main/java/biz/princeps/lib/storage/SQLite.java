@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by spatium on 11.06.17.
  */
-public class SQLite extends AbstractDatabase {
+public abstract class SQLite extends AbstractDatabase {
 
     private String dbpath;
     private Connection sqlConnection;
@@ -30,10 +30,9 @@ public class SQLite extends AbstractDatabase {
         if (conn == null) {
             getLogger().warning("Could not establish SQLite Connection");
         }
-        this.setupDatabase();
     }
 
-    private Connection getSQLConnection() {
+    public Connection getSQLConnection() {
         // Check if Connection was not previously closed.
         try {
             if (sqlConnection == null || sqlConnection.isClosed()) {
@@ -64,7 +63,7 @@ public class SQLite extends AbstractDatabase {
     }
 
     @Override
-    protected void close() {
+    public void close() {
         try {
             this.sqlConnection.close();
         } catch (SQLException e) {
@@ -104,6 +103,19 @@ public class SQLite extends AbstractDatabase {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    protected void execute(String query) {
+        pool.submit(() -> {
+            try (PreparedStatement st = sqlConnection.prepareStatement(query)) {
+
+                st.execute();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
 
