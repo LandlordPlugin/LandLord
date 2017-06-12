@@ -54,13 +54,14 @@
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
-            <version>LATEST</version>
+            <version>1.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
             <version>LATEST</version>
+            <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
         <dependency>

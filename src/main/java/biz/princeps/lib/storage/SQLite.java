@@ -24,11 +24,11 @@ public class SQLite extends AbstractDatabase {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            getLogger().logWarn("The JBDC library for your database type was not found. Please read the plugin's support for more information.");
+            getLogger().warning("The JBDC library for your database type was not found. Please read the plugin's support for more information.");
         }
         Connection conn = getSQLConnection();
         if (conn == null) {
-            getLogger().logWarn("Could not establish SQLite Connection");
+            getLogger().warning("Could not establish SQLite Connection");
         }
         this.setupDatabase();
     }
@@ -40,7 +40,7 @@ public class SQLite extends AbstractDatabase {
                 sqlConnection = this.createSQLiteConnection();
             }
         } catch (SQLException e) {
-            getLogger().logWarn("Error while attempting to retrieve connection to database: ", e);
+            getLogger().warning("Error while attempting to retrieve connection to database: " + e);
         }
         return sqlConnection;
     }
@@ -50,10 +50,10 @@ public class SQLite extends AbstractDatabase {
         File dbfile = new File(dbpath);
         try {
             if (dbfile.createNewFile()) {
-                getLogger().logInfo("Successfully created database file.");
+                getLogger().warning("Successfully created database file.");
             }
         } catch (IOException e) {
-            getLogger().logWarn("Error while creating database file: ", e);
+            getLogger().warning("Error while creating database file: " + e);
         }
         return DriverManager.getConnection("jdbc:sqlite:" + dbfile);
     }
