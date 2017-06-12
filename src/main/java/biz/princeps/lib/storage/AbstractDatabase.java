@@ -1,10 +1,11 @@
 package biz.princeps.lib.storage;
 
-import com.mysql.jdbc.log.Slf4JLogger;
+import com.jcdesimp.landlord.Landlord;
 
 import java.sql.ResultSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * Created by spatium on 11.06.17.
@@ -12,13 +13,14 @@ import java.util.concurrent.Executors;
 public abstract class AbstractDatabase {
 
     protected ExecutorService pool;
-    protected Slf4JLogger logger;
+    protected Logger logger;
 
     public AbstractDatabase() {
         this.pool = Executors.newCachedThreadPool();
+        logger = Landlord.getInstance().getLogger();
     }
 
-    public Slf4JLogger getLogger() {
+    public Logger getLogger() {
         return logger;
     }
 
