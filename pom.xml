@@ -10,22 +10,18 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.1</version>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>copy-dependencies</goal>
+                            <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/target</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <finalName>LandLord</finalName>
                         </configuration>
                     </execution>
                 </executions>
