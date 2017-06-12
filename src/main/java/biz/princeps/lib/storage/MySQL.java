@@ -1,5 +1,6 @@
 package biz.princeps.lib.storage;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -19,7 +20,7 @@ public class MySQL extends AbstractDatabase {
     public MySQL(String hostname, int port, String database, String username, String password) {
         super();
         HikariConfig config = new HikariConfig();
-        config.setDataSourceClassName(HikariDataSource.class.getName());
+        config.setDataSourceClassName(MysqlDataSource.class.getName());
 
         config.addDataSourceProperty("serverName", hostname);
         config.addDataSourceProperty("port", port);
