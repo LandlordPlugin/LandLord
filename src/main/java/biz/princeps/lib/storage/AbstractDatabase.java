@@ -35,11 +35,11 @@ public abstract class AbstractDatabase {
 
     public abstract void close();
 
-    protected abstract void executeUpdate(String query);
+    public abstract void executeUpdate(String query);
 
-    protected abstract ResultSet executeQuery(String query);
+    public abstract ResultSet executeQuery(String query);
 
-    protected abstract void execute(String query);
+    public abstract void execute(String query);
 
 
     public abstract OwnedLand getLand(Data data);
@@ -66,4 +66,6 @@ public abstract class AbstractDatabase {
 
     public abstract int getFirstFreeFlagID();
 
+
+    //public abstract int migrate();
 }

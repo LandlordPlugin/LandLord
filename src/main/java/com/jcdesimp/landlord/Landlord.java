@@ -62,8 +62,10 @@ public final class Landlord extends JavaPlugin {
             getServer().getPluginManager().registerEvents(pListen, this);
         }
 
-        if (getConfig().getBoolean("SQLite.enable"))
+        if (getConfig().getBoolean("SQLite.enable")) {
             db = new SQLiteDatabase(this.getDataFolder() + "/database.db");
+            ((SQLiteDatabase)db).setupDatabase();
+        }
         else
             db = new MySQLDatabase(getConfig().getString("MySQL.Hostname"), getConfig().getInt("MySQL.Port"), getConfig().getString("MySQL.MySQLDatabase"), getConfig().getString("MySQL.User"), getConfig().getString("MySQL.Password"));
 

@@ -2,11 +2,15 @@ package com.jcdesimp.landlord.persistantData.db;
 
 import biz.princeps.lib.storage.SQLite;
 import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.landManagement.FlagManager;
+import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.persistantData.Data;
 import com.jcdesimp.landlord.persistantData.Friend;
 import com.jcdesimp.landlord.persistantData.LandFlag;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
+import com.sun.org.apache.bcel.internal.generic.LAND;
 import org.bukkit.Location;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by spatium on 12.06.17.
@@ -23,11 +28,10 @@ public class SQLiteDatabase extends SQLite {
 
     public SQLiteDatabase(String dbpath) {
         super(dbpath);
-        setupDatabase();
     }
 
     @Override
-    protected void setupDatabase() {
+    public void setupDatabase() {
         String query1 = "CREATE TABLE IF NOT EXISTS ll_flagperm (landid INTEGER, identifier VARCHAR(20), canEveryone BOOLEAN, canFriends BOOLEAN, id INTEGER, PRIMARY KEY (id))";
         this.execute(query1);
         String query3 = "CREATE TABLE IF NOT EXISTS ll_friend (landid INTEGER, frienduuid VARCHAR(36), id INTEGER, PRIMARY KEY (landid))";
@@ -68,7 +72,7 @@ public class SQLiteDatabase extends SQLite {
     protected List<Friend> getFriends(int id) {
         ArrayList<Friend> list = new ArrayList<>();
         String query = "SELECT * FROM ll_friend WHERE landid = ?";
-        try ( PreparedStatement st = getSQLConnection().prepareStatement(query)) {
+        try (PreparedStatement st = getSQLConnection().prepareStatement(query)) {
             st.setInt(1, id);
 
             ResultSet res = st.executeQuery();
@@ -86,7 +90,7 @@ public class SQLiteDatabase extends SQLite {
     protected List<LandFlag> getFlags(int landid) {
         ArrayList<LandFlag> list = new ArrayList<>();
         String query = "SELECT * FROM ll_flagperm WHERE landid = ?";
-        try ( PreparedStatement st = getSQLConnection().prepareStatement(query)) {
+        try (PreparedStatement st = getSQLConnection().prepareStatement(query)) {
             st.setInt(1, landid);
 
             ResultSet res = st.executeQuery();
@@ -104,7 +108,7 @@ public class SQLiteDatabase extends SQLite {
     public void removeFriend(UUID f) {
         pool.submit(() -> {
             String query = "DELETE FROM ll_friend WHERE frienduuid = ?";
-            try ( PreparedStatement st = getSQLConnection().prepareStatement(query)) {
+            try (PreparedStatement st = getSQLConnection().prepareStatement(query)) {
                 st.setString(1, f.toString());
                 st.executeUpdate();
             } catch (SQLException e) {
@@ -136,9 +140,9 @@ public class SQLiteDatabase extends SQLite {
     }
 
     public void save(OwnedLand land) {
-        String query = "REPLACE INTO ll_flagperm (landid, identifier, canEveryone, canFriends, id) VALUES (?, ?, ?, ?, ?)";
-        String query2 = "REPLACE INTO ll_friend (landid, frienduuid, id) VALUES (?,?,?)";
-        String query3 = "REPLACE INTO ll_land (landid, owneruuid, x, z, world) VALUES (?,?,?,?,?)";
+        String query = "INSERT OR REPLACE INTO ll_flagperm (landid, identifier, canEveryone, canFriends, id) VALUES (?, ?, ?, ?, ?)";
+        String query2 = "INSERT OR REPLACE INTO ll_friend (landid, frienduuid, id) VALUES (?,?,?)";
+        String query3 = "INSERT OR REPLACE INTO ll_land (landid, owneruuid, x, z, world) VALUES (?,?,?,?,?)";
         pool.submit(() -> {
             try (PreparedStatement st = getSQLConnection().prepareStatement(query);
                  PreparedStatement st2 = getSQLConnection().prepareStatement(query2);
@@ -178,7 +182,7 @@ public class SQLiteDatabase extends SQLite {
             return pool.submit(() -> {
                 ArrayList<OwnedLand> list = new ArrayList<>();
                 String query = "SELECT * FROM ll_land WHERE owneruuid = ?";
-                try ( PreparedStatement st = getSQLConnection().prepareStatement(query)) {
+                try (PreparedStatement st = getSQLConnection().prepareStatement(query)) {
                     st.setString(1, owner.toString());
 
                     ResultSet res = st.executeQuery();
@@ -261,7 +265,7 @@ public class SQLiteDatabase extends SQLite {
             return pool.submit(() -> {
                 ArrayList<OwnedLand> list = new ArrayList<>();
                 String query = "SELECT * FROM ll_land WHERE world = ?";
-                try ( PreparedStatement st = getSQLConnection().prepareStatement(query)) {
+                try (PreparedStatement st = getSQLConnection().prepareStatement(query)) {
 
                     st.setString(1, location.getWorld().getName());
                     ResultSet res = st.executeQuery();
@@ -318,7 +322,7 @@ public class SQLiteDatabase extends SQLite {
             return pool.submit(() -> {
                 int var = 0;
                 String query = "SELECT * FROM ll_flagperm";
-                try ( PreparedStatement st = getSQLConnection().prepareStatement(query)) {
+                try (PreparedStatement st = getSQLConnection().prepareStatement(query)) {
                     ResultSet res = st.executeQuery();
                     while (res.next()) {
                         if (res.getInt("id") == var) {
@@ -332,6 +336,30 @@ public class SQLiteDatabase extends SQLite {
             }).get();
         } catch (InterruptedException | ExecutionException e) {
             return -1;
+        }
+    }
+
+    public static int migrate() {
+        SQLiteDatabase oldDB = new SQLiteDatabase(Landlord.getInstance().getDataFolder() + "/Landlord.db");
+
+        String query = "SELECT * FROM ll_land";
+        AtomicInteger i = new AtomicInteger();
+        try (PreparedStatement st = oldDB.getSQLConnection().prepareStatement(query);
+             ResultSet res = st.executeQuery()) {
+
+            while (res.next()) {
+                OwnedLand land = new OwnedLand(new Data(res.getString("world_name"), res.getInt("x"), res.getInt("z")));
+                land.setOwner(UUID.fromString(res.getString("owner_name")));
+                land.setLandId(res.getInt("id"));
+                land.setFlags(LandManager.getDefaultFlags(land.getLandId()));
+                land.setFriends(new ArrayList<>());
+                Landlord.getInstance().getDatabase().save(land);
+                i.incrementAndGet();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            return i.get();
         }
     }
 

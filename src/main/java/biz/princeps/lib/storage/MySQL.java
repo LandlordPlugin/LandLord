@@ -1,5 +1,9 @@
 package biz.princeps.lib.storage;
 
+import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.persistantData.Data;
+import com.jcdesimp.landlord.persistantData.OwnedLand;
+import com.jcdesimp.landlord.persistantData.db.SQLiteDatabase;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -8,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -43,7 +48,7 @@ public abstract class MySQL extends AbstractDatabase {
         ds.close();
     }
 
-    protected void executeUpdate(String query) {
+    public void executeUpdate(String query) {
         pool.submit(() -> {
             try (Connection con = ds.getConnection();
                  PreparedStatement st = con.prepareStatement(query)) {
@@ -57,7 +62,7 @@ public abstract class MySQL extends AbstractDatabase {
         });
     }
 
-    protected void execute(String query) {
+    public void execute(String query) {
         pool.submit(() -> {
             try (Connection con = ds.getConnection();
                  PreparedStatement st = con.prepareStatement(query)) {
@@ -71,7 +76,7 @@ public abstract class MySQL extends AbstractDatabase {
         });
     }
 
-    protected ResultSet executeQuery(String query) {
+    public ResultSet executeQuery(String query) {
         try {
             return pool.submit(() -> {
                 ResultSet res = null;
@@ -91,6 +96,5 @@ public abstract class MySQL extends AbstractDatabase {
             return null;
         }
     }
-
 
 }

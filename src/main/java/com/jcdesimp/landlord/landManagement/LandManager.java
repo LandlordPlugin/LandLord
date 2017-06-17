@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -40,10 +42,10 @@ public class LandManager {
      * @param c     The chunk this land represents
      * @return OwnedLand
      */
-    public static OwnedLand createNewLand(Player owner, Chunk c) {
+    public static OwnedLand createNewLand(UUID owner, Chunk c) {
         Data data = new Data(c.getWorld().getName(), c.getX(), c.getZ());
         OwnedLand lnd = new OwnedLand(data);
-        lnd.setOwner(owner.getUniqueId());
+        lnd.setOwner(owner);
         lnd.setLandId(Landlord.getInstance().getDatabase().getFirstFreeLandID());
         lnd.setFlags(getDefaultFlags(lnd.getLandId()));
         lnd.setFriends(new ArrayList<>());
@@ -73,11 +75,14 @@ public class LandManager {
     }
 
 
-    private static List<LandFlag> getDefaultFlags(int landid) {
+    private static Set<String> flags = Landlord.getInstance().getFlagManager().getRegisteredFlags().keySet();
+
+    public static List<LandFlag> getDefaultFlags(int landid) {
         List<LandFlag> list = new ArrayList<>();
 
         int id = Landlord.getInstance().getDatabase().getFirstFreeFlagID();
-        for (String identifier : Landlord.getInstance().getFlagManager().getRegisteredFlags().keySet()) {
+        System.out.println(flags.size());
+        for (String identifier : flags) {
             LandFlag flag = new LandFlag(landid, identifier, false, true, id);
             list.add(flag);
             id++;

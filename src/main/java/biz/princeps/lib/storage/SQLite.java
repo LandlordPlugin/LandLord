@@ -1,8 +1,14 @@
 package biz.princeps.lib.storage;
 
+import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.persistantData.Data;
+import com.jcdesimp.landlord.persistantData.OwnedLand;
+import com.jcdesimp.landlord.persistantData.db.SQLiteDatabase;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -72,7 +78,7 @@ public abstract class SQLite extends AbstractDatabase {
     }
 
     @Override
-    protected void executeUpdate(String query) {
+    public void executeUpdate(String query) {
         pool.submit(() -> {
             try (PreparedStatement st = sqlConnection.prepareStatement(query)) {
 
@@ -85,19 +91,16 @@ public abstract class SQLite extends AbstractDatabase {
     }
 
     @Override
-    protected ResultSet executeQuery(String query) {
+    public ResultSet executeQuery(String query) {
         try {
             return pool.submit(() -> {
-                ResultSet res = null;
                 try (PreparedStatement st = sqlConnection.prepareStatement(query)) {
 
-                    res = st.executeQuery();
+                    return st.executeQuery();
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    return null;
                 }
-                return res;
-
             }).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -106,7 +109,7 @@ public abstract class SQLite extends AbstractDatabase {
     }
 
     @Override
-    protected void execute(String query) {
+    public void execute(String query) {
         pool.submit(() -> {
             try (PreparedStatement st = sqlConnection.prepareStatement(query)) {
 
@@ -117,5 +120,7 @@ public abstract class SQLite extends AbstractDatabase {
             }
         });
     }
+
+
 }
 
