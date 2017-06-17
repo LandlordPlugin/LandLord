@@ -8,6 +8,7 @@ import com.jcdesimp.landlord.persistantData.Friend;
 import com.jcdesimp.landlord.persistantData.LandFlag;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.Location;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -336,28 +337,31 @@ public class SQLiteDatabase extends SQLite {
         }
     }
 
-    public static int migrate() {
+    public static void migrate() {
         SQLiteDatabase oldDB = new SQLiteDatabase(Landlord.getInstance().getDataFolder() + "/Landlord.db");
 
         String query = "SELECT * FROM ll_land";
-        AtomicInteger i = new AtomicInteger();
-        try (PreparedStatement st = oldDB.getSQLConnection().prepareStatement(query);
-             ResultSet res = st.executeQuery()) {
+        new BukkitRunnable(){
 
-            while (res.next()) {
-                OwnedLand land = new OwnedLand(new Data(res.getString("world_name"), res.getInt("x"), res.getInt("z")));
-                land.setOwner(UUID.fromString(res.getString("owner_name")));
-                land.setLandId(res.getInt("id"));
-                land.setFlags(LandManager.getDefaultFlags(land.getLandId()));
-                land.setFriends(new ArrayList<>());
-                Landlord.getInstance().getDatabase().save(land);
-                i.incrementAndGet();
+            @Override
+            public void run() {
+                try (PreparedStatement st = oldDB.getSQLConnection().prepareStatement(query);
+                     ResultSet res = st.executeQuery()) {
+
+                    while (res.next()) {
+                        OwnedLand land = new OwnedLand(new Data(res.getString("world_name"), res.getInt("x"), res.getInt("z")));
+                        land.setOwner(UUID.fromString(res.getString("owner_name")));
+                        land.setLandId(res.getInt("id"));
+                        land.setFlags(LandManager.getDefaultFlags(land.getLandId()));
+                        land.setFriends(new ArrayList<>());
+                        Landlord.getInstance().getDatabase().save(land);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            return i.get();
-        }
+        }.runTaskAsynchronously(Landlord.getInstance());
+
     }
 
 }

@@ -80,7 +80,6 @@ public class LandManager {
         List<LandFlag> list = new ArrayList<>();
 
         int id = Landlord.getInstance().getDatabase().getFirstFreeFlagID();
-        System.out.println(flags.size());
         for (String identifier : flags) {
             LandFlag flag = new LandFlag(landid, identifier, false, true, id);
             list.add(flag);
