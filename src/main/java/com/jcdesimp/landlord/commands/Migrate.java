@@ -34,7 +34,8 @@ public class Migrate implements LandlordCommand {
             }
             if (args.length == 2) {
                 if (args[1].equals("confirm")) {
-                    sender.sendMessage(ChatColor.GREEN + "Migration was successfull... hopefully! Check the log for any errors, and make sure everything is working correctly.");
+                    SQLiteDatabase.migrate();
+                    sender.sendMessage(ChatColor.GREEN + "Migration was successfull... hopefully! \nIf you have a large database, give the server some time to import everything! \nCheck the log for any errors, and make sure everything is working correctly.");
                 }
             }
         }

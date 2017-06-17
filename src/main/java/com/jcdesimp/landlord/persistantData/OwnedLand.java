@@ -62,6 +62,10 @@ public class OwnedLand {
         this.flags = flags;
     }
 
+    public Data getData(){
+        return data;
+    }
+
     public Chunk getChunk() {
         World world = Bukkit.getServer().getWorld(data.getWorld());
         return world.getChunkAt(data.getX(), data.getZ());
