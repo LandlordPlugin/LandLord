@@ -1,7 +1,6 @@
 package com.jcdesimp.landlord;
 
 import biz.princeps.lib.storage.AbstractDatabase;
-import biz.princeps.lib.storage.SQLite;
 import com.jcdesimp.landlord.configuration.CustomConfig;
 import com.jcdesimp.landlord.landFlags.*;
 import com.jcdesimp.landlord.landManagement.FlagManager;

@@ -1,21 +1,11 @@
 package com.jcdesimp.landlord.commands;
 
 import com.jcdesimp.landlord.Landlord;
-import com.jcdesimp.landlord.persistantData.Data;
-import com.jcdesimp.landlord.persistantData.OwnedLand;
 import com.jcdesimp.landlord.persistantData.db.SQLiteDatabase;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by spatium on 12.06.17.

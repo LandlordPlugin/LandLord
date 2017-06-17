@@ -1,9 +1,5 @@
 package biz.princeps.lib.storage;
 
-import com.jcdesimp.landlord.Landlord;
-import com.jcdesimp.landlord.persistantData.Data;
-import com.jcdesimp.landlord.persistantData.OwnedLand;
-import com.jcdesimp.landlord.persistantData.db.SQLiteDatabase;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -12,7 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 /**
