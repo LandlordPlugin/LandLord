@@ -66,7 +66,7 @@ public final class Landlord extends JavaPlugin {
             ((SQLiteDatabase)db).setupDatabase();
         }
         else
-            db = new MySQLDatabase(getConfig().getString("MySQL.Hostname"), getConfig().getInt("MySQL.Port"), getConfig().getString("MySQL.MySQLDatabase"), getConfig().getString("MySQL.User"), getConfig().getString("MySQL.Password"));
+            db = new MySQLDatabase(getConfig().getString("MySQL.Hostname"), getConfig().getInt("MySQL.Port"), getConfig().getString("MySQL.Database"), getConfig().getString("MySQL.User"), getConfig().getString("MySQL.Password"));
 
 
         // Command Executor
