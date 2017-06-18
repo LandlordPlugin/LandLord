@@ -354,6 +354,8 @@ public class SQLiteDatabase extends SQLite {
 
             @Override
             public void run() {
+                Landlord.getInstance().getLogger().info("Starting database conversion!");
+
                 try (PreparedStatement st = oldDB.getSQLConnection().prepareStatement(query);
                      ResultSet res = st.executeQuery()) {
 
@@ -367,6 +369,8 @@ public class SQLiteDatabase extends SQLite {
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
+                }finally{
+                    Landlord.getInstance().getLogger().info("Conversion of database completed!");
                 }
             }
         }.runTaskAsynchronously(Landlord.getInstance());
