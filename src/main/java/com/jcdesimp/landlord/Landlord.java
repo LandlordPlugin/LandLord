@@ -43,6 +43,7 @@ public final class Landlord extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+
         mapManager = new MapManager(this);
         //listner = new LandListener();
         //getServer().getPluginManager().registerEvents(new LandListener(this), this);
@@ -61,13 +62,13 @@ public final class Landlord extends JavaPlugin {
             getServer().getPluginManager().registerEvents(pListen, this);
         }
 
+        // database stuff
         if (getConfig().getBoolean("SQLite.enable")) {
             db = new SQLiteDatabase(this.getDataFolder() + "/database.db");
             ((SQLiteDatabase)db).setupDatabase();
         }
         else
             db = new MySQLDatabase(getConfig().getString("MySQL.Hostname"), getConfig().getInt("MySQL.Port"), getConfig().getString("MySQL.Database"), getConfig().getString("MySQL.User"), getConfig().getString("MySQL.Password"));
-
 
         // Command Executor
         getCommand("landlord").setExecutor(new LandlordCommandExecutor(this));

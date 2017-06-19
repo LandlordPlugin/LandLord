@@ -29,15 +29,17 @@ public class MySQLDatabase extends MySQL {
 
     @Override
     public void setupDatabase() {
+        /*
         String query1 = "CREATE TABLE IF NOT EXISTS ll_flagperm (landid INTEGER, identifier VARCHAR(20), canEveryone BOOLEAN, canFriends BOOLEAN, id INTEGER)";
         this.execute(query1);
         String query2 = "ALTER TABLE ll_flagperm ADD UNIQUE (id)";
         this.execute(query2);
+        */
         String query3 = "CREATE TABLE IF NOT EXISTS ll_friend (landid INTEGER, frienduuid VARCHAR(36), id INTEGER)";
         this.execute(query3);
         String query4 = "ALTER TABLE ll_friend ADD UNIQUE (id)";
         this.execute(query4);
-        String query5 = "CREATE TABLE IF NOT EXISTS ll_land (landid INTEGER, owneruuid VARCHAR(36), x INTEGER, z INTEGER, world VARCHAR(16))";
+        String query5 = "CREATE TABLE IF NOT EXISTS ll_land (landid INTEGER, owneruuid VARCHAR(36), x INTEGER, z INTEGER, world VARCHAR(16), flags TEXT)";
         this.execute(query5);
         String query6 = "ALTER TABLE ll_land ADD UNIQUE (landid)";
         this.execute(query6);
@@ -60,7 +62,7 @@ public class MySQLDatabase extends MySQL {
                         land.setOwner(UUID.fromString(res.getString("owneruuid")));
                         land.setLandId(res.getInt("landid"));
                         land.setFriends(getFriends(land.getLandId()));
-                        land.setFlags(getFlags(land.getLandId()));
+                        land.setFlags(stringToFlags(res.getString("flags")));
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -70,6 +72,26 @@ public class MySQLDatabase extends MySQL {
         } catch (InterruptedException | ExecutionException e) {
             return null;
         }
+    }
+
+    private List<LandFlag> stringToFlags(String flags) {
+        String[] splitted = flags.split("_");
+        List<LandFlag> list = new ArrayList<>();
+        for (String flag : splitted) {
+            String[] params = flag.split(":");
+            LandFlag flagy = new LandFlag(Integer.parseInt(params[0]), params[1], Boolean.parseBoolean(params[2]), Boolean.parseBoolean(params[3]));
+            list.add(flagy);
+        }
+        return list;
+    }
+
+    private String flagsToString(List<LandFlag> list) {
+        StringBuilder sb = new StringBuilder(list.get(0).toString());
+        for (int i = 1; i < list.size(); i++) {
+            sb.append("_");
+            sb.append(list.get(i));
+        }
+        return sb.toString();
     }
 
     protected List<Friend> getFriends(int id) {
@@ -83,24 +105,6 @@ public class MySQLDatabase extends MySQL {
                 Friend f = new Friend(UUID.fromString(res.getString("frienduuid")));
                 f.setId(res.getInt("id"));
                 list.add(f);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    protected List<LandFlag> getFlags(int landid) {
-        ArrayList<LandFlag> list = new ArrayList<>();
-        String query = "SELECT * FROM ll_flagperm WHERE landid = ?";
-        try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
-            st.setInt(1, landid);
-
-            ResultSet res = st.executeQuery();
-            while (res.next()) {
-                LandFlag landFlag = new LandFlag(landid, res.getString("identifier"), res.getBoolean("canEveryone"), res.getBoolean("canFriends"), res.getInt("id"));
-
-                list.add(landFlag);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -123,46 +127,28 @@ public class MySQLDatabase extends MySQL {
     public void removeLand(int landid) {
         pool.submit(() -> {
             String query = "DELETE FROM ll_land WHERE landid = ?";
-            String query2 = "DELETE FROM ll_flagperm WHERE landid = ?";
             String query3 = "DELETE FROM ll_friend WHERE landid = ?";
 
             try (Connection con = getConnection();
                  PreparedStatement st = con.prepareStatement(query);
-                 PreparedStatement st2 = con.prepareStatement(query2);
                  PreparedStatement st3 = con.prepareStatement(query3)) {
                 st.setInt(1, landid);
                 st.executeUpdate();
-                st2.setInt(1, landid);
-                st2.executeUpdate();
                 st3.setInt(1, landid);
                 st3.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         });
-
     }
 
     public void save(OwnedLand land) {
-        String query = "REPLACE INTO ll_flagperm (landid, identifier, canEveryone, canFriends, id) VALUES (?, ?, ?, ?, ?)";
         String query2 = "REPLACE INTO ll_friend (landid, frienduuid, id) VALUES (?,?,?)";
-        String query3 = "REPLACE INTO ll_land (landid, owneruuid, x, z, world) VALUES (?,?,?,?,?)";
+        String query3 = "REPLACE INTO ll_land (landid, owneruuid, x, z, world, flags) VALUES (?,?,?,?,?,?)";
         pool.submit(() -> {
             try (Connection con = getConnection();
-                 PreparedStatement st = con.prepareStatement(query);
                  PreparedStatement st2 = con.prepareStatement(query2);
                  PreparedStatement st3 = con.prepareStatement(query3)) {
-
-                for (LandFlag flag : land.getFlags()) {
-                    st.setInt(1, land.getLandId());
-                    st.setString(2, flag.getIdentifier());
-                    st.setBoolean(3, flag.canEveryone());
-                    st.setBoolean(4, flag.canFriends());
-                    st.setInt(5, flag.getId());
-                    synchronized (this) {
-                        st.execute();
-                    }
-                }
 
                 for (Friend f : land.getFriends()) {
                     st2.setInt(1, land.getLandId());
@@ -178,6 +164,7 @@ public class MySQLDatabase extends MySQL {
                 st3.setInt(3, land.getData().getX());
                 st3.setInt(4, land.getData().getZ());
                 st3.setString(5, land.getData().getWorld());
+                st3.setString(6, flagsToString(land.getFlags()));
                 synchronized (this) {
                     st3.execute();
                 }
@@ -203,7 +190,7 @@ public class MySQLDatabase extends MySQL {
                         ownedLand.setOwner(owner);
                         ownedLand.setLandId(res.getInt("landid"));
                         ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                        ownedLand.setFlags(getFlags(ownedLand.getLandId()));
+                        ownedLand.setFlags(stringToFlags(res.getString("flags")));
                         list.add(ownedLand);
                     }
                 } catch (SQLException e) {
@@ -231,7 +218,7 @@ public class MySQLDatabase extends MySQL {
                         ownedLand.setOwner(owner);
                         ownedLand.setLandId(res.getInt("landid"));
                         ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                        ownedLand.setFlags(getFlags(ownedLand.getLandId()));
+                        ownedLand.setFlags(stringToFlags(res.getString("flags")));
                         list.add(ownedLand);
                     }
                 } catch (SQLException e) {
@@ -258,7 +245,7 @@ public class MySQLDatabase extends MySQL {
                         ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
                         ownedLand.setLandId(res.getInt("landid"));
                         ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                        ownedLand.setFlags(getFlags(ownedLand.getLandId()));
+                        ownedLand.setFlags(stringToFlags(res.getString("flags")));
                         list.add(ownedLand);
                     }
                 } catch (SQLException e) {
@@ -292,7 +279,7 @@ public class MySQLDatabase extends MySQL {
                             ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
                             ownedLand.setLandId(res.getInt("landid"));
                             ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                            ownedLand.setFlags(getFlags(ownedLand.getLandId()));
+                            ownedLand.setFlags(stringToFlags(res.getString("flags")));
                             list.add(ownedLand);
                         }
                     }
@@ -309,34 +296,12 @@ public class MySQLDatabase extends MySQL {
     public int getFirstFreeLandID() {
         try {
             return pool.submit(() -> {
-                int var = 0;
+                int var = 1;
                 String query = "SELECT * FROM ll_land";
                 try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
                     ResultSet res = st.executeQuery();
                     while (res.next()) {
                         if (res.getInt("landid") == var) {
-                            var++;
-                        } else {
-                            return var;
-                        }
-                    }
-                }
-                return var;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return -1;
-        }
-    }
-
-    public int getFirstFreeFlagID() {
-        try {
-            return pool.submit(() -> {
-                int var = 0;
-                String query = "SELECT * FROM ll_flagperm";
-                try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        if (res.getInt("id") == var) {
                             var++;
                         } else {
                             return var;

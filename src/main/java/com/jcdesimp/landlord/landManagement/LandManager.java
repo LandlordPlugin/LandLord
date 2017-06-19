@@ -79,11 +79,9 @@ public class LandManager {
     public static List<LandFlag> getDefaultFlags(int landid) {
         List<LandFlag> list = new ArrayList<>();
 
-        int id = Landlord.getInstance().getDatabase().getFirstFreeFlagID();
         for (String identifier : flags) {
-            LandFlag flag = new LandFlag(landid, identifier, false, true, id);
+            LandFlag flag = new LandFlag(landid, identifier, false, true);
             list.add(flag);
-            id++;
         }
         return list;
     }

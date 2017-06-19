@@ -46,8 +46,6 @@ public abstract class AbstractDatabase {
 
     protected abstract List<Friend> getFriends(int id);
 
-    protected abstract List<LandFlag> getFlags(int landid);
-
     public abstract void removeFriend(UUID f);
 
     public abstract void removeLand(int landid);
@@ -64,7 +62,6 @@ public abstract class AbstractDatabase {
 
     public abstract int getFirstFreeLandID();
 
-    public abstract int getFirstFreeFlagID();
 
 
     //public abstract int migrate();

@@ -10,13 +10,12 @@ import com.jcdesimp.landlord.landManagement.Landflag;
 
 public class LandFlag {
 
-    private int id, landid;
+    private int landid;
     private String identifier;
     private boolean canEveryone;
     private boolean canFriends;
 
-    public LandFlag(int landid, String identifier, boolean canEveryone, boolean canFriends, int id) {
-        this.id = id;
+    public LandFlag(int landid, String identifier, boolean canEveryone, boolean canFriends) {
         this.identifier = identifier;
         this.canEveryone = canEveryone;
         this.canFriends = canFriends;
@@ -24,13 +23,7 @@ public class LandFlag {
     }
 
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getLandid() {
         return landid;
@@ -66,5 +59,10 @@ public class LandFlag {
 
     public void setCanEveryone(boolean canEveryone) {
         this.canEveryone = canEveryone;
+    }
+
+    @Override
+    public String toString() {
+        return landid + ":" + identifier + ":" + canEveryone + ":" + canFriends;
     }
 }
