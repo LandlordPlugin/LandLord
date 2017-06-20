@@ -92,7 +92,7 @@ public final class Landlord extends JavaPlugin  {
             }
         }
 
-
+        this.getServer().getPluginManager().registerEvents(landManager, this);
         //Register default flags
         if (getConfig().getBoolean("enabled-flags.build")) {
             flagManager.registerFlag(new Build(this));

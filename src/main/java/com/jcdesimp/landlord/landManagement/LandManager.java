@@ -9,17 +9,18 @@ import com.jcdesimp.landlord.persistantData.LandFlag;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 /**
  * Created by spatium on 10.06.17.
  */
-public class LandManager {
+public class LandManager implements Listener {
 
     private LoadingCache<Data, OwnedLand> cache = CacheBuilder.newBuilder()
             .maximumSize(Landlord.getInstance().getConfig().getInt("cacheSize"))
@@ -37,6 +38,8 @@ public class LandManager {
                 }
             });
 
+    private HashMap<UUID, Integer> landcount = new HashMap<>();
+
 
     /**
      * Factory method that creates a new OwnedLand instance given an owner name and chunk
@@ -53,6 +56,7 @@ public class LandManager {
         lnd.setFlags(getDefaultFlags(lnd.getLandId()));
         lnd.setFriends(new ArrayList<>());
         cache.put(data, lnd);
+        updateLandCount(owner, getLandCount(owner) + 1);
         return lnd;
     }
 
@@ -77,8 +81,8 @@ public class LandManager {
         Data data = new Data(worldName, x, z);
         OwnedLand toFind = null;
         try {
-        //     System.out.println(cache.size() +":" + data.hashCode());
-             toFind = cache.get(data);
+            //     System.out.println(cache.size() +":" + data.hashCode());
+            toFind = cache.get(data);
         } catch (ExecutionException e) {
         } finally {
             return toFind;
@@ -106,5 +110,34 @@ public class LandManager {
         OwnedLand lanny = cache.getIfPresent(land.getData());
         if (lanny == null)
             cache.put(land.getData(), land);
+    }
+
+
+    // player land count manager
+    public void insertLandCount(UUID id) {
+        landcount.put(id, Landlord.getInstance().getDatabase().getLands(id).size());
+    }
+
+    public void removeLandCount(UUID id) {
+        landcount.remove(id);
+    }
+
+
+    public int getLandCount(UUID id) {
+        return landcount.get(id);
+    }
+
+    public void updateLandCount(UUID id, int i) {
+        landcount.replace(id, i);
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        insertLandCount(e.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    public void onDisconnect(PlayerQuitEvent e) {
+        removeLandCount(e.getPlayer().getUniqueId());
     }
 }

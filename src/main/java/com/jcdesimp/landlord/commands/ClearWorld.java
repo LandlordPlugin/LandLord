@@ -68,7 +68,7 @@ public class ClearWorld implements LandlordCommand {
             }
 
             for (OwnedLand land1 : land) {
-                plugin.getDatabase().removeLand(land1.getLandId());
+                land1.delete();
             }
             plugin.getMapManager().updateAll();
             sender.sendMessage(ChatColor.GREEN + confirmation);

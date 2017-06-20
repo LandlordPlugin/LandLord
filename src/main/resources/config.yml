@@ -66,7 +66,7 @@ options:
   showLandAlerts: true
   messagesFile: "english.yml"
   limitBuildInsideRegionWorld:
-    value: false
+    enabled: false
     treshold: 9
 limits:
   landLimit: 10

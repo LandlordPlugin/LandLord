@@ -24,21 +24,11 @@ import java.util.Arrays;
 /**
  * File created by jcdesimp on 4/11/14.
  */
-/*
- *******************************************************
- * All flags need to extend the abstract Landflag class
- *******************************************************
- */
 public class Build extends Landflag {
-    /*
-     **********************
-     * IMPORTANT!!!! Landlord will take care of registering
-     * the listeners, all you need to do is register the
-     * class with landlord's flagManager!!!
-     **********************
-     */
-    private ArrayList<String> disabledWorlds = (ArrayList<String>) getPlugin().getConfig().getList("disabled-worlds");
 
+    private ArrayList<String> disabledWorlds = (ArrayList<String>) getPlugin().getConfig().getList("disabled-worlds");
+    private boolean limitBuild = getPlugin().getConfig().getBoolean("options.limitBuildInsideRegionWorld.enabled");
+    private int buildingTreshould = getPlugin().getConfig().getInt("options.limitBuildInsideRegionWorld.treshold");
     /**
      * Constructor needs to be defined and properly call super()
      */
@@ -55,16 +45,6 @@ public class Build extends Landflag {
     }
 
 
-
-    /*
-     ******************************************************************************
-     * ALL event handlers for this flag NEED to be defined inside this class!!!!!
-     * REMEMBER! Do not register this class with bukkit, register with Landlord's
-     * flag manager and landlord will register the event handlers.
-     ******************************************************************************
-     */
-
-
     /**
      * Event handler for block placements
      *
@@ -72,17 +52,8 @@ public class Build extends Landflag {
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void blockPlace(BlockPlaceEvent event) {
-
-        //get the player associated with the event. (Might want to check for null if applicable to the event)
         Player p = event.getPlayer();
 
-        /*
-         *******************************
-         * Call getApplicableLand(location)
-         * If it's null the action didn't happen on owned land
-         * and could be ignored.
-         *******************************
-         */
         OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlock().getLocation());
         if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
             return;
@@ -90,24 +61,14 @@ public class Build extends Landflag {
             if (p.isOp())
                 return;
 
-            if (getPlugin().getConfig().getBoolean("options.limitBuildInsideRegionWorld.value"))
-                if (getPlugin().getDatabase().getLands(p.getUniqueId()).size() < getPlugin().getConfig().getInt("options.limitBuildInsideRegionWorld.treshold")) {
+            if (limitBuild)
+                if (getPlugin().getLandManager().getLandCount(p.getUniqueId()) < buildingTreshould ) {
                     SpigotUtil.sendActionBar(p, ChatColor.RED + getPlugin().getMessageConfig().getString("notAllowedToBuild"));
                     event.setCancelled(true);
                 }
             return;
         }
 
-
-
-        /*
-         *************************************
-         * Finally check if the player has permission for your flag
-         * with land.hasPermTo(player, this) ('this' representing this flag of course)
-         * If they have permission to do the action you're checking for, you shouldn't
-         * have to cancel the event.
-         *************************************
-         */
         if (!land.hasPermTo(p, this)) {
             p.sendMessage(ChatColor.RED + getPlugin().getMessageConfig().getString("event.build.blockPlace"));
             event.setCancelled(true);
@@ -115,13 +76,6 @@ public class Build extends Landflag {
 
     }
 
-    /*
-     *************************************
-     * Of course u can register as many
-     * event listeners as you need for your flag
-     * to do it's job
-     *************************************
-     */
     @EventHandler(priority = EventPriority.HIGH)
     public void blockBreak(BlockBreakEvent event) {
         Player p = event.getPlayer();
@@ -131,8 +85,8 @@ public class Build extends Landflag {
         if (land == null) {
             if (p.isOp())
                 return;
-            if (getPlugin().getConfig().getBoolean("options.limitBuildInsideRegionWorld.value"))
-                if (getPlugin().getDatabase().getLands(p.getUniqueId()).size() < getPlugin().getConfig().getInt("options.limitBuildInsideRegionWorld.treshold")) {
+            if (limitBuild)
+                if (getPlugin().getLandManager().getLandCount(p.getUniqueId()) < buildingTreshould) {
                     SpigotUtil.sendActionBar(p, ChatColor.RED + getPlugin().getMessageConfig().getString("notAllowedToBuild"));
                     event.setCancelled(true);
                 }
@@ -148,11 +102,17 @@ public class Build extends Landflag {
     @EventHandler(priority = EventPriority.HIGH)
     public void liquidEmpty(PlayerBucketEmptyEvent event) {
         OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlockClicked().getLocation());
+        Player p = event.getPlayer();
         if (land == null) {
+            if (p.isOp())
+                return;
+            if (limitBuild)
+                if (getPlugin().getDatabase().getLands(p.getUniqueId()).size() < buildingTreshould) {
+                    SpigotUtil.sendActionBar(p, ChatColor.RED + getPlugin().getMessageConfig().getString("notAllowedToBuild"));
+                    event.setCancelled(true);
+                }
             return;
         }
-
-        Player p = event.getPlayer();
 
         if (!land.hasPermTo(p, this)) {
             p.sendMessage(ChatColor.RED + getPlugin().getMessageConfig().getString("event.build.bucketEmpty"));

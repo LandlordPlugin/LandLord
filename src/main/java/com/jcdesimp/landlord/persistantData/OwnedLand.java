@@ -141,6 +141,7 @@ public class OwnedLand {
     public void delete() {
         Landlord.getInstance().getDatabase().removeLand(landid);
         Landlord.getInstance().getLandManager().removeFromCache(data);
+        Landlord.getInstance().getLandManager().updateLandCount(owner, Landlord.getInstance().getLandManager().getLandCount(owner) - 1);
     }
 
 
