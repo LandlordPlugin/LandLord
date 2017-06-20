@@ -54,7 +54,6 @@ public class ShowMap implements LandlordCommand {
                 e.printStackTrace();
                 sender.sendMessage(ChatColor.RED + noMap);
             }
-
         }
         return true;
     }
