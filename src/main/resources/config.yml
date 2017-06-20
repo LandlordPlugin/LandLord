@@ -80,6 +80,7 @@ economy:
   freeLand: 0
   buyPrice: 100
   sellPrice: 50
+  resetPrice: 500
 worldguard:
   blockRegionClaim: true
 enabled-flags:

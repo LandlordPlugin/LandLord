@@ -65,11 +65,11 @@ public abstract class MySQL extends AbstractDatabase {
                 st.execute();
 
             } catch (SQLException e) {
-                e.printStackTrace();
             }
 
         });
     }
+
 
     public ResultSet executeQuery(String query) {
         try {

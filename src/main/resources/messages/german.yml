@@ -182,6 +182,18 @@ commands:
     - delallfriends
     - deleteallfriends
     - deletefriendall
+  reset:
+      usage: "/#{label} #{cmd}"
+      description: "Regeneriere den Chunk, in dem Du gerade stehst."
+      missingMoney: "Du hast nicht genügend Geld für das Zurücksetzen. Du hast #{money} aber benötigst #{price}"
+      alerts:
+        success: "#Der Chunk wurde erfolgreicht regeneriert."
+        warning: "Du bist drauf und dran dieses Land zurückzusetzen \nDies kostet Dich #{price}. Wenn das ok ist, klicke auf diese Nachricht!"
+        click: "Klicke hier um den Chunk zurückzusetzen!"
+      triggers:
+        - "reset"
+        - "regen"
+        - "regenerate"
 map:
   legend:
     yours: Dein

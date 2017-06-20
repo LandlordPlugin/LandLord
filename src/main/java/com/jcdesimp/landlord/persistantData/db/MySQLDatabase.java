@@ -30,6 +30,7 @@ public class MySQLDatabase extends MySQL {
 
     @Override
     public void setupDatabase() {
+
         String query3 = "CREATE TABLE IF NOT EXISTS ll_friend (landid INTEGER, frienduuid VARCHAR(36), id INTEGER)";
         this.execute(query3);
         String query4 = "ALTER TABLE ll_friend ADD UNIQUE (id)";
@@ -38,6 +39,7 @@ public class MySQLDatabase extends MySQL {
         this.execute(query5);
         String query6 = "ALTER TABLE ll_land ADD UNIQUE (landid)";
         this.execute(query6);
+
         Landlord.getInstance().getLogger().info("Connected to MySQL and setted up tables!");
     }
 

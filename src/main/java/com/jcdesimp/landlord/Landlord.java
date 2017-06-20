@@ -42,8 +42,6 @@ public final class Landlord extends JavaPlugin  {
     @Override
     public void onEnable() {
         plugin = this;
-
-
         mapManager = new MapManager(this);
         //listner = new LandListener();
         //getServer().getPluginManager().registerEvents(new LandListener(this), this);
@@ -214,7 +212,6 @@ public final class Landlord extends JavaPlugin  {
      */
     public boolean hasVault() {
         Plugin plugin = getServer().getPluginManager().getPlugin("Vault");
-        // WorldGuard may not be loaded
         return !(plugin == null || !this.getConfig().getBoolean("economy.enable", true));
     }
 

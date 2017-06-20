@@ -40,6 +40,7 @@ public class LandlordCommandExecutor implements CommandExecutor {
         this.register(new ClearWorld(plugin));  // register the clearworld command
         this.register(new Reload(plugin));      // register the reload command
         this.register(new Migrate(plugin));
+        this.register(new ResetLand(plugin));
     }
 
 

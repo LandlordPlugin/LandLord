@@ -180,6 +180,18 @@ commands:
         - "delallfriends"
         - "deleteallfriends"
         - "deletefriendall"
+  reset:
+      usage: "/#{label} #{cmd}"
+      description: "Regenerates the chunk you are standing in."
+      missingMoney: "You dont have enough money to reset this land. You have #{money} but need #{price}"
+      alerts:
+        success: "#The chunk was successfully resetted."
+        warning: "You are about to reset your land! \nThis costs you #{price}. If you are ok with it, click on this message!"
+        click: "Click here to reset the chunk"
+      triggers:
+        - "reset"
+        - "regen"
+        - "regenerate"
 map:
   legend:
     yours: "Yours"

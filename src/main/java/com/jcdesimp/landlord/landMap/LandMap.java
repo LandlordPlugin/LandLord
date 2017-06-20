@@ -20,10 +20,8 @@ import java.util.UUID;
 public class LandMap {
 
     Player mapViewer;
-    //Scoreboard playerMap;
     int schedulerId;
     Chunk currChunk;
-    //  List<OwnedLand> nearbyLand;
     String currDir;
     private Landlord plugin;
 
@@ -35,7 +33,6 @@ public class LandMap {
         this.currDir = getPlayerDirection(mapViewer);
 
         displayMap(mapViewer);
-
 
         this.schedulerId = new BukkitRunnable() {
             public void run() {

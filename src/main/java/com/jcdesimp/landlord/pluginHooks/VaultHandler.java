@@ -3,8 +3,12 @@ package com.jcdesimp.landlord.pluginHooks;
 import com.jcdesimp.landlord.Landlord;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
+
+import java.util.UUID;
 
 /**
  * File created by jcdesimp on 3/15/14.
@@ -53,5 +57,8 @@ public class VaultHandler {
         return economy.format(amt);
     }
 
+    public double getBalance(UUID id){
+        return economy.getBalance(Bukkit.getOfflinePlayer(id));
+    }
 
 }
