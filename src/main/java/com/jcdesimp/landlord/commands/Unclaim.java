@@ -1,7 +1,6 @@
 package com.jcdesimp.landlord.commands;
 
 import com.jcdesimp.landlord.Landlord;
-import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;

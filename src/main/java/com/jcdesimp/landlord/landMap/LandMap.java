@@ -2,7 +2,6 @@ package com.jcdesimp.landlord.landMap;
 
 
 import com.jcdesimp.landlord.Landlord;
-import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.persistantData.Data;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.*;
@@ -11,18 +10,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * File created by jcdesimp on 3/1/14.
  */
-@SuppressWarnings("SpellCheckingInspection")
 public class LandMap {
 
     Player mapViewer;
@@ -50,7 +44,7 @@ public class LandMap {
                     currDir = getPlayerDirection(mapViewer);
                 }
             }
-        }.runTaskTimer(plugin, 7L, plugin.getConfig().getLong("landMapRefresh")).getTaskId();
+        }.runTaskTimer(plugin, 0L, plugin.getConfig().getLong("landMapRefresh")).getTaskId();
 
         displayMap(this.mapViewer);
     }

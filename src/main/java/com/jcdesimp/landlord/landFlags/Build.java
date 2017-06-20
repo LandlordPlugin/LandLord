@@ -2,7 +2,6 @@ package com.jcdesimp.landlord.landFlags;
 
 import biz.princeps.lib.util.SpigotUtil;
 import com.jcdesimp.landlord.Landlord;
-import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.landManagement.Landflag;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.ChatColor;
