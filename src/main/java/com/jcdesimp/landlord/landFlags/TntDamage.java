@@ -82,7 +82,7 @@ public class TntDamage extends Landflag {
         }
 
         TNTPrimed tnt = (TNTPrimed) event.getEntity();
-        OwnedLand land = LandManager.getApplicableLand(event.getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getLocation());
         if (land != null) {
             if (tnt.getSource() != null && tnt.getSource().getType().equals(EntityType.PLAYER)) {
                 Player p = (Player) tnt.getSource();
@@ -101,7 +101,7 @@ public class TntDamage extends Landflag {
         Iterator<Block> it = destroyed.iterator();
         while (it.hasNext()) {
             Block block = it.next();
-            OwnedLand lnd = LandManager.getApplicableLand(block.getLocation());
+            OwnedLand lnd = getPlugin().getLandManager().getApplicableLand(block.getLocation());
             if (lnd != null && !lnd.canEveryone(this)) {
                 if (!(tnt.getSource() instanceof Player) || !lnd.hasPermTo((Player) tnt.getSource(), this)) {
                     it.remove();
@@ -122,7 +122,7 @@ public class TntDamage extends Landflag {
             return;
         }
 
-        OwnedLand land = LandManager.getApplicableLand(event.getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getLocation());
         if (land != null) {
             if (!land.canEveryone(this)) {
                 event.setCancelled(true);
@@ -135,7 +135,7 @@ public class TntDamage extends Landflag {
         Iterator<Block> it = destroyed.iterator();
         while (it.hasNext()) {
             Block block = it.next();
-            OwnedLand lnd = LandManager.getApplicableLand(block.getLocation());
+            OwnedLand lnd = getPlugin().getLandManager().getApplicableLand(block.getLocation());
             if (lnd != null && !lnd.canEveryone(this)) {
                 it.remove();
             }
@@ -156,7 +156,7 @@ public class TntDamage extends Landflag {
         //System.out.println(event.getItem().getType());
         if ((event.getClickedBlock().getType().equals(Material.TNT)) && event.getItem() != null && event.getItem().getType().equals(Material.FLINT_AND_STEEL)) {
 
-            OwnedLand land = LandManager.getApplicableLand(event.getClickedBlock().getLocation());
+            OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getClickedBlock().getLocation());
             if (land == null) {
                 return;
             }

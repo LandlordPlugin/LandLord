@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Main plugin class for Landlord
  */
-public final class Landlord extends JavaPlugin implements Listener {
+public final class Landlord extends JavaPlugin  {
 
     private AbstractDatabase db;
     private Landlord plugin;
@@ -35,18 +35,19 @@ public final class Landlord extends JavaPlugin implements Listener {
     private FlagManager flagManager;
     private ViewManager manageViewManager;
     private LandAlerter pListen;
+    private LandManager landManager;
 
     private CustomConfig mainConfig;
     private CustomConfig messagesConfig;
 
     public static Landlord getInstance() {
         return (Landlord) Bukkit.getPluginManager().getPlugin("Landlord");
-        //return Bukkit.getPluginManager().getPlugin("MyPlugin");
     }
 
     @Override
     public void onEnable() {
         plugin = this;
+
 
         mapManager = new MapManager(this);
         //listner = new LandListener();
@@ -73,10 +74,11 @@ public final class Landlord extends JavaPlugin implements Listener {
         } else
             db = new MySQLDatabase(getConfig().getString("MySQL.Hostname"), getConfig().getInt("MySQL.Port"), getConfig().getString("MySQL.Database"), getConfig().getString("MySQL.User"), getConfig().getString("MySQL.Password"));
 
+        landManager = new LandManager();
+
+
         // Command Executor
         getCommand("landlord").setExecutor(new LandlordCommandExecutor(this));
-        this.getServer().getPluginManager().registerEvents(this, this);
-
 
         //Worldguard Check
         if (!hasWorldGuard() && this.getConfig().getBoolean("worldguard.blockRegionClaim", true)) {
@@ -215,7 +217,6 @@ public final class Landlord extends JavaPlugin implements Listener {
      *     Vault
      * **************
      */
-
     public boolean hasVault() {
         Plugin plugin = getServer().getPluginManager().getPlugin("Vault");
         // WorldGuard may not be loaded
@@ -231,10 +232,9 @@ public final class Landlord extends JavaPlugin implements Listener {
         return db;
     }
 
-
-    @EventHandler
-    public void onChunkLoadEvent(ChunkLoadEvent e) {
-        Chunk chunk = e.getChunk();
-        OwnedLand land = LandManager.getLandFromDatabase(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
+    public LandManager getLandManager() {
+        return landManager;
     }
+
+
 }

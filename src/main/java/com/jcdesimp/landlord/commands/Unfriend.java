@@ -62,7 +62,7 @@ public class Unfriend implements LandlordCommand {
              * *************************************
              */
             Friend frd = new Friend(Bukkit.getOfflinePlayer(args[1]).getUniqueId());
-            OwnedLand land = LandManager.getLandFromDatabase(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
+            OwnedLand land = plugin.getLandManager().getLandFromCache(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
             if (land == null || (!land.getOwner().equals(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends"))) {
                 player.sendMessage(ChatColor.RED + notOwner);
                 return true;

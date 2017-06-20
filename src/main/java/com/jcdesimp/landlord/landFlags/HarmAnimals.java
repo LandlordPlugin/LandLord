@@ -109,7 +109,7 @@ public class HarmAnimals extends Landflag {
 
         if (attacker.getType().toString().equals("PLAYER")) {
             Player p = (Player) attacker;
-            OwnedLand land = LandManager.getApplicableLand(victim.getLocation());
+            OwnedLand land = getPlugin().getLandManager().getApplicableLand(victim.getLocation());
             if (land == null) {
                 return;
             }
@@ -125,7 +125,7 @@ public class HarmAnimals extends Landflag {
             Projectile a = (Projectile) attacker;
             Player p;
             if (a.getShooter() instanceof Player) {
-                OwnedLand land = LandManager.getApplicableLand(victim.getLocation());
+                OwnedLand land = getPlugin().getLandManager().getApplicableLand(victim.getLocation());
                 p = (Player) a.getShooter();
                 if (land == null) {
                     return;

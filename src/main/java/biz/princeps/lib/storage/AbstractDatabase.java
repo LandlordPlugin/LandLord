@@ -4,12 +4,14 @@ import com.jcdesimp.landlord.Landlord;
 import com.jcdesimp.landlord.persistantData.Data;
 import com.jcdesimp.landlord.persistantData.Friend;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
+import org.bukkit.Location;
 
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 /**
@@ -40,7 +42,7 @@ public abstract class AbstractDatabase {
     public abstract void execute(String query);
 
 
-    public abstract OwnedLand getLand(Data data);
+    public abstract Future<OwnedLand> getLand(Data data);
 
     protected abstract List<Friend> getFriends(int id);
 
@@ -56,7 +58,7 @@ public abstract class AbstractDatabase {
 
     public abstract List<OwnedLand> getLands(String world);
 
-    //public abstract List<OwnedLand> getNearbyLands(Location location, int offsetX, int offsetZ);
+    public abstract List<OwnedLand> getNearbyLands(Location location, int offsetX, int offsetZ);
 
     public abstract int getFirstFreeLandID();
 

@@ -54,7 +54,7 @@ public class Manage implements LandlordCommand {
                 return true;
             }
             Chunk currChunk = player.getLocation().getChunk();
-            OwnedLand land = LandManager.getLandFromDatabase(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
+            OwnedLand land = plugin.getLandManager().getApplicableLand(currChunk);
             if (land == null || (!land.getOwner().equals(player.getUniqueId()) && !player.hasPermission("landlord.admin.manage"))) {
                 player.sendMessage(ChatColor.RED + notOwner);
                 return true;

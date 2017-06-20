@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * File created by jcdesimp on 3/1/14.
@@ -26,7 +29,7 @@ public class LandMap {
     //Scoreboard playerMap;
     int schedulerId;
     Chunk currChunk;
-    List<OwnedLand> nearbyLand;
+    //  List<OwnedLand> nearbyLand;
     String currDir;
     private Landlord plugin;
 
@@ -34,34 +37,11 @@ public class LandMap {
         this.plugin = plugin;
         this.mapViewer = p;
         this.currChunk = p.getLocation().getChunk();
-        //System.out.println("CURR: "+currChunk);
 
-        this.nearbyLand = new ArrayList<>();
-
-        for (int x = -3; x <= 3; x++) {
-            for (int z = -3; z <= 3; z++) {
-                Data data = new Data(currChunk.getWorld().getName(), currChunk.getX()+ x, currChunk.getZ() + z);
-                OwnedLand land = LandManager.getLandFromDatabase(data);
-                nearbyLand.add(land);
-            }
-        }
-
-
-        //displayMap(mapViewer);
         this.currDir = getPlayerDirection(mapViewer);
+
         displayMap(mapViewer);
 
-
-        /*this.schedulerId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Landlord.getInstance(), new BukkitRunnable() {
-            @Override
-            public void run() {
-                if(!currDir.equals(getPlayerDirection(mapViewer)) || !currChunk.equals(mapViewer.getLocation().getChunk())){
-                    displayMap(mapViewer);
-                    currDir = getPlayerDirection(mapViewer);
-                }
-
-            }
-        }, 0L, 7L);*/
 
         this.schedulerId = new BukkitRunnable() {
             public void run() {
@@ -70,11 +50,9 @@ public class LandMap {
                     currDir = getPlayerDirection(mapViewer);
                 }
             }
-        }.runTaskTimer(Landlord.getInstance(), 0L, 7L).getTaskId();
+        }.runTaskTimer(plugin, 7L, 20L).getTaskId();
 
         displayMap(this.mapViewer);
-
-
     }
 
     public static String getPlayerDirection(Player playerSelf) {
@@ -307,12 +285,12 @@ public class LandMap {
     public void removeMap() {
         mapViewer.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         Bukkit.getServer().getScheduler().cancelTask(schedulerId);
-
     }
 
     private Scoreboard displayMap(Player p) {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
-        Scoreboard board = manager.getNewScoreboard();
+        final Scoreboard board = manager.getNewScoreboard();
+
         //Scoreboard board = manager.getMainScoreboard();
         Team team = board.registerNewTeam("teamname");
         team.addPlayer(p);
@@ -450,14 +428,9 @@ public class LandMap {
     }
 
     public void updateMap() {
-        nearbyLand.clear();
-        for (int x = -3; x <= 3; x++) {
-            for (int z = -3; z <= 3; z++) {
-                Data data = new Data(currChunk.getWorld().getName(), currChunk.getX()+ x, currChunk.getZ() + z);
-                OwnedLand land = LandManager.getLandFromDatabase(data);
-                nearbyLand.add(land);
-            }
-        }
+
+        // nearbyLand.clear();
+
         currChunk = mapViewer.getLocation().getChunk();
         currDir = "";
     }
@@ -474,22 +447,29 @@ public class LandMap {
         if (!currChunk.equals(mapViewer.getLocation().getChunk())) {
             updateMap();
         }
+
+        List<OwnedLand> nearby = plugin.getDatabase().getNearbyLands(p.getLocation(), 3, 3);
         for (int z = 0; z < mapBoard.length; z++) {
             String row = "";
             for (int x = 0; x < mapBoard[z].length; x++) {
 
                 int xx = x - radius;
                 int zz = z - radius;
-                Chunk chunk = p.getLocation().getWorld().getChunkAt(p.getLocation().getChunk().getX() + xx, p.getLocation().getChunk().getZ() + zz);
-                OwnedLand land = LandManager.getLandFromDatabase(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
+                //  Chunk chunk = p.getLocation().getWorld().getChunkAt();
+
+                Data data = new Data(p.getWorld().getName(), p.getLocation().getChunk().getX() + xx, p.getLocation().getChunk().getZ() + zz);
+                OwnedLand land = null;
+                for (OwnedLand landy : nearby) {
+                    if (landy.getData().equals(data))
+                        land = landy;
+                }
 
                 String currSpot = mapBoard[z][x];
 
                 if (land != null) {
-                    OwnedLand ol = land;
-                    if (ol.getOwner().equals(p.getUniqueId())) {
+                    if (land.getOwner().equals(p.getUniqueId())) {
                         currSpot = ChatColor.GREEN + currSpot;
-                    } else if (ol.isFriend(p.getUniqueId())) {
+                    } else if (land.isFriend(p.getUniqueId())) {
                         currSpot = ChatColor.YELLOW + currSpot;
                     } else {
                         currSpot = ChatColor.RED + currSpot;
@@ -503,6 +483,7 @@ public class LandMap {
                 }
                 //System.out.println(currSpot);
                 row += currSpot;
+
             }
             //if currchunk changed
             mapRows[z] = row;

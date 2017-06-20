@@ -51,7 +51,7 @@ public class Friends implements LandlordCommand {
                 player.sendMessage(ChatColor.RED + noPerms);
                 return true;
             }
-            OwnedLand land = LandManager.getApplicableLand(player.getLocation());
+            OwnedLand land = plugin.getLandManager().getApplicableLand(player.getLocation());
             if (land == null || (!land.getOwner().equals(player.getUniqueId()) && !player.hasPermission("landlord.admin.friends"))) {
                 player.sendMessage(ChatColor.RED + notOwner);
                 return true;

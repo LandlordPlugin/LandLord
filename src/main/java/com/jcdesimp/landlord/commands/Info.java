@@ -43,7 +43,7 @@ public class Info implements LandlordCommand {
                 return true;
             }
             Chunk currChunk = player.getLocation().getChunk();
-            OwnedLand land = LandManager.getLandFromDatabase(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
+            OwnedLand land = plugin.getLandManager().getLandFromCache(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
             String owner = ChatColor.GRAY + "" + ChatColor.ITALIC + noOwner;
             if (land != null) {
 

@@ -37,4 +37,14 @@ public class Data {
     public void setZ(int z) {
         this.z = z;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Data) {
+            Data d = (Data) object;
+            if (d.getWorld().equals(world) && d.getX() == x && d.getZ() == z)
+                return true;
+        }
+        return false;
+    }
 }

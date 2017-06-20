@@ -82,7 +82,7 @@ public class OpenDoor extends Landflag {
         Player p = event.getPlayer();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) &&
                 Arrays.asList(blockedItems).contains(event.getClickedBlock().getType())) {
-            OwnedLand land = LandManager.getApplicableLand(event.getClickedBlock().getLocation());
+            OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getClickedBlock().getLocation());
             if (land == null) {
                 return;
             }

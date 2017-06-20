@@ -84,7 +84,7 @@ public class Build extends Landflag {
          * and could be ignored.
          *******************************
          */
-        OwnedLand land = LandManager.getApplicableLand(event.getBlock().getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlock().getLocation());
         if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
             return;
         if (land == null) {
@@ -126,7 +126,7 @@ public class Build extends Landflag {
     @EventHandler(priority = EventPriority.HIGH)
     public void blockBreak(BlockBreakEvent event) {
         Player p = event.getPlayer();
-        OwnedLand land = LandManager.getApplicableLand(event.getBlock().getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlock().getLocation());
         if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
             return;
         if (land == null) {
@@ -148,7 +148,7 @@ public class Build extends Landflag {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void liquidEmpty(PlayerBucketEmptyEvent event) {
-        OwnedLand land = LandManager.getApplicableLand(event.getBlockClicked().getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlockClicked().getLocation());
         if (land == null) {
             return;
         }
@@ -163,7 +163,7 @@ public class Build extends Landflag {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void liquidFill(PlayerBucketFillEvent event) {
-        OwnedLand land = LandManager.getApplicableLand(event.getBlockClicked().getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlockClicked().getLocation());
         if (land == null) {
             return;
         }
@@ -179,7 +179,7 @@ public class Build extends Landflag {
     public void paintingFrameBreak(HangingBreakByEntityEvent event) {
         org.bukkit.entity.Entity victim = event.getEntity();
         org.bukkit.entity.Entity remover = event.getRemover();
-        OwnedLand land = LandManager.getApplicableLand(victim.getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(victim.getLocation());
         if (land == null) {
             return;
         }
@@ -200,7 +200,7 @@ public class Build extends Landflag {
             return;
         }
 
-        OwnedLand land = LandManager.getApplicableLand(event.getRightClicked().getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getRightClicked().getLocation());
         if (land == null) {
             return;
         }
@@ -222,7 +222,7 @@ public class Build extends Landflag {
             return;
         }
 
-        OwnedLand land = LandManager.getApplicableLand(victim.getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(victim.getLocation());
         if (land == null) {
             return;
         }
@@ -267,7 +267,7 @@ public class Build extends Landflag {
         if (attacker.getType().toString().equals("PLAYER")) {
             p = (Player) attacker;
 
-            OwnedLand land = LandManager.getApplicableLand(victim.getLocation());
+            OwnedLand land = getPlugin().getLandManager().getApplicableLand(victim.getLocation());
             if (land == null) {
                 return;
             }
@@ -284,7 +284,7 @@ public class Build extends Landflag {
                 return;
             }
 
-            OwnedLand land = LandManager.getApplicableLand(victim.getLocation());
+            OwnedLand land = getPlugin().getLandManager().getApplicableLand(victim.getLocation());
             if (land == null) {
                 return;
             }
@@ -307,7 +307,7 @@ public class Build extends Landflag {
         ItemFrame iFrame = (ItemFrame) entity;
         if (iFrame.getItem() != null && !iFrame.getItem().getType().equals(Material.AIR))
             return;
-        OwnedLand land = LandManager.getApplicableLand(entity.getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(entity.getLocation());
         if (land == null) {
             return;
         }
@@ -328,7 +328,7 @@ public class Build extends Landflag {
         if ((iFrame.getItem().equals(null)) || (iFrame.getItem().getType().equals(Material.AIR))) {
             return;
         }
-        OwnedLand land = LandManager.getApplicableLand(entity.getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(entity.getLocation());
         if (land == null) {
             return;
         }
@@ -342,7 +342,7 @@ public class Build extends Landflag {
     @EventHandler(priority = EventPriority.HIGH)
     public void paintingFramePlace(HangingPlaceEvent event) {
         org.bukkit.entity.Entity placer = event.getPlayer();
-        OwnedLand land = LandManager.getApplicableLand(event.getBlock().getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlock().getLocation());
         if (land == null) {
             return;
         }
@@ -370,7 +370,7 @@ public class Build extends Landflag {
 
         //trampling crops
         if (p != null && event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType().toString().equals("SOIL")) {
-            OwnedLand land = LandManager.getApplicableLand(event.getClickedBlock().getLocation());
+            OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getClickedBlock().getLocation());
             if (land == null) {
                 return;
             }
@@ -385,7 +385,7 @@ public class Build extends Landflag {
         //Using fire charge
         ItemStack item = event.getItem();
         if (p != null && item != null && event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getItem().getType().equals(Material.FIREBALL)) {
-            OwnedLand land = LandManager.getApplicableLand(event.getClickedBlock().getLocation());
+            OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getClickedBlock().getLocation());
             if (land == null) {
                 return;
             }
@@ -409,7 +409,7 @@ public class Build extends Landflag {
 
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) &&
                 Arrays.asList(blockedItems).contains(event.getClickedBlock().getType())) {
-            OwnedLand land = LandManager.getApplicableLand(event.getClickedBlock().getLocation());
+            OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getClickedBlock().getLocation());
             if (land == null) {
                 return;
             }

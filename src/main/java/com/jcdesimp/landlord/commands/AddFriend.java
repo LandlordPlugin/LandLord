@@ -63,7 +63,7 @@ public class AddFriend implements LandlordCommand {
 
             Chunk currChunk = player.getLocation().getChunk();
 
-            OwnedLand land = LandManager.getLandFromDatabase(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
+            OwnedLand land = plugin.getLandManager().getLandFromCache(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
 
             //Does land exist, and if so does player own it
             if (land == null || (!land.getOwner().equals(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends"))) {

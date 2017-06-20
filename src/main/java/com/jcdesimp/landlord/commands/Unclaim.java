@@ -106,7 +106,7 @@ public class Unclaim implements LandlordCommand {
                     return true;
                 }
             }
-            OwnedLand dbLand = LandManager.getLandFromDatabase(worldname, x, z);
+            OwnedLand dbLand = plugin.getLandManager().getLandFromCache(worldname, x, z);
 
 
             if (dbLand == null || (!dbLand.getOwner().equals(player.getUniqueId()) && !player.hasPermission("landlord.admin.unclaim"))) {

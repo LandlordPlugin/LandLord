@@ -74,7 +74,7 @@ public class SetHome extends Landflag {
         String cmd = event.getMessage();
         if (cmd != null) {
             if (cmd.contains("sethome")) {
-                OwnedLand land = LandManager.getApplicableLand(p.getLocation());
+                OwnedLand land = getPlugin().getLandManager().getApplicableLand(p.getLocation());
                 if (land != null) {
                     if (!land.hasPermTo(p, this)) {
                         p.sendMessage(ChatColor.RED + getPlugin().getMessageConfig().getString("event.setHome"));

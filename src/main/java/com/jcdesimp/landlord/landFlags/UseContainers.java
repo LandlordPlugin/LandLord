@@ -83,7 +83,7 @@ public class UseContainers extends Landflag {
         if (!Arrays.asList(blockAccess).contains(event.getClickedBlock().getType().toString()) && !(event.getClickedBlock().getType().name().endsWith("SHULKER_BOX"))) {
             return;
         }
-        OwnedLand land = LandManager.getApplicableLand(event.getClickedBlock().getLocation());
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getClickedBlock().getLocation());
         if (land == null) {
             return;
         }
