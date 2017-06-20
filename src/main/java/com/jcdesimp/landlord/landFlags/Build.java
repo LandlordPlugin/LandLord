@@ -107,7 +107,7 @@ public class Build extends Landflag {
             if (p.isOp())
                 return;
             if (limitBuild)
-                if (getPlugin().getDatabase().getLands(p.getUniqueId()).size() < buildingTreshould) {
+                if (getPlugin().getLandManager().getLandCount(p.getUniqueId()) < buildingTreshould) {
                     SpigotUtil.sendActionBar(p, ChatColor.RED + getPlugin().getMessageConfig().getString("notAllowedToBuild"));
                     event.setCancelled(true);
                 }
