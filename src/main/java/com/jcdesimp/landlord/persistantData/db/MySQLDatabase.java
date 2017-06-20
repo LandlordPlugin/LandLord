@@ -30,12 +30,6 @@ public class MySQLDatabase extends MySQL {
 
     @Override
     public void setupDatabase() {
-        /*
-        String query1 = "CREATE TABLE IF NOT EXISTS ll_flagperm (landid INTEGER, identifier VARCHAR(20), canEveryone BOOLEAN, canFriends BOOLEAN, id INTEGER)";
-        this.execute(query1);
-        String query2 = "ALTER TABLE ll_flagperm ADD UNIQUE (id)";
-        this.execute(query2);
-        */
         String query3 = "CREATE TABLE IF NOT EXISTS ll_friend (landid INTEGER, frienduuid VARCHAR(36), id INTEGER)";
         this.execute(query3);
         String query4 = "ALTER TABLE ll_friend ADD UNIQUE (id)";

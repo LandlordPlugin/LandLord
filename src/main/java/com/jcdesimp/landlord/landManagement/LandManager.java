@@ -1,5 +1,9 @@
 package com.jcdesimp.landlord.landManagement;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalListener;
 import com.jcdesimp.landlord.Landlord;
 import com.jcdesimp.landlord.persistantData.Data;
 import com.jcdesimp.landlord.persistantData.LandFlag;
@@ -14,6 +18,22 @@ import java.util.concurrent.ExecutionException;
  * Created by spatium on 10.06.17.
  */
 public class LandManager {
+
+    private LoadingCache<Data, OwnedLand> cache = CacheBuilder.newBuilder()
+            .maximumSize(Landlord.getInstance().getConfig().getInt("cacheSize"))
+            .build(new CacheLoader<Data, OwnedLand>() {
+                @Override
+                public OwnedLand load(Data data) throws Exception {
+                    OwnedLand ownedLand = Landlord.getInstance().getDatabase().getLand(data).get();
+                    //   System.out.println("Get from cache called" + cache.size());
+                    //   System.out.println(data.getWorld() + ":" + data.getX() + ":" + data.getZ());
+                    //  System.out.println(data.hashCode() + " __  " + ownedLand.getData().hashCode());
+                    if (ownedLand != null)
+                        return ownedLand;
+                    else
+                        throw new Exception("Land ist not owned!");
+                }
+            });
 
 
     /**
@@ -30,6 +50,7 @@ public class LandManager {
         lnd.setLandId(Landlord.getInstance().getDatabase().getFirstFreeLandID());
         lnd.setFlags(getDefaultFlags(lnd.getLandId()));
         lnd.setFriends(new ArrayList<>());
+        cache.put(data, lnd);
         return lnd;
     }
 
@@ -54,13 +75,12 @@ public class LandManager {
         Data data = new Data(worldName, x, z);
         OwnedLand toFind = null;
         try {
-            toFind = Landlord.getInstance().getDatabase().getLand(data).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        //     System.out.println(cache.size() +":" + data.hashCode());
+             toFind = cache.get(data);
         } catch (ExecutionException e) {
-            e.printStackTrace();
+        } finally {
+            return toFind;
         }
-        return toFind;
     }
 
     private static Set<String> flags = Landlord.getInstance().getFlagManager().getRegisteredFlags().keySet();
@@ -73,5 +93,16 @@ public class LandManager {
             list.add(flag);
         }
         return list;
+    }
+
+
+    public void removeFromCache(Data data) {
+        cache.invalidate(data);
+    }
+
+    public void insertOrReplaceIntoCache(OwnedLand land) {
+        OwnedLand lanny = cache.getIfPresent(land.getData());
+        if (lanny == null)
+            cache.put(land.getData(), land);
     }
 }

@@ -103,3 +103,4 @@ MySQL:
   User: root
   Password: passy
 cacheSize: 5000
+landMapRefresh: 20

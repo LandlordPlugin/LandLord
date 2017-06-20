@@ -62,7 +62,7 @@ public class OwnedLand {
         this.flags = flags;
     }
 
-    public Data getData(){
+    public Data getData() {
         return data;
     }
 
@@ -140,6 +140,7 @@ public class OwnedLand {
 
     public void delete() {
         Landlord.getInstance().getDatabase().removeLand(landid);
+        Landlord.getInstance().getLandManager().removeFromCache(data);
     }
 
 

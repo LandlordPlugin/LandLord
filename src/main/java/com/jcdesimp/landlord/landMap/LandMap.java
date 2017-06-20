@@ -50,7 +50,7 @@ public class LandMap {
                     currDir = getPlayerDirection(mapViewer);
                 }
             }
-        }.runTaskTimer(plugin, 7L, 20L).getTaskId();
+        }.runTaskTimer(plugin, 7L, plugin.getConfig().getLong("landMapRefresh")).getTaskId();
 
         displayMap(this.mapViewer);
     }
@@ -467,6 +467,7 @@ public class LandMap {
                 String currSpot = mapBoard[z][x];
 
                 if (land != null) {
+                    plugin.getLandManager().insertOrReplaceIntoCache(land);
                     if (land.getOwner().equals(p.getUniqueId())) {
                         currSpot = ChatColor.GREEN + currSpot;
                     } else if (land.isFriend(p.getUniqueId())) {
