@@ -323,7 +323,7 @@ public class SQLiteDatabase extends SQLite {
                         land.setFlags(LandManager.getDefaultFlags(land.getLandId()));
                         land.setFriends(new ArrayList<>());
                         Landlord.getInstance().getDatabase().save(land);
-                        Thread.sleep(50L);
+                        Thread.sleep(10L);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
