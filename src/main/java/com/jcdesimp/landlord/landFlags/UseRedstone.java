@@ -1,6 +1,7 @@
 package com.jcdesimp.landlord.landFlags;
 
 import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.landManagement.Landflag;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.ChatColor;
@@ -80,7 +81,7 @@ public class UseRedstone extends Landflag {
         Player p = event.getPlayer();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && Arrays.asList(blockedInteracts).contains(event.getClickedBlock().getType())) {
             //System.out.println("left click");
-            OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getClickedBlock().getLocation());
+            OwnedLand land = LandManager.getApplicableLand(event.getClickedBlock().getLocation());
             if (land == null) {
                 return;
             }
@@ -92,7 +93,7 @@ public class UseRedstone extends Landflag {
         }
         if (event.getAction().equals(Action.PHYSICAL) && Arrays.asList(blockedInteracts).contains(event.getClickedBlock().getType())) {
             //System.out.println("physical");
-            OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getClickedBlock().getLocation());
+            OwnedLand land = LandManager.getApplicableLand(event.getClickedBlock().getLocation());
             if (land == null) {
                 return;
             }

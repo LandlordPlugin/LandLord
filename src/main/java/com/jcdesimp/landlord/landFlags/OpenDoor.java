@@ -1,6 +1,7 @@
 package com.jcdesimp.landlord.landFlags;
 
 import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.landManagement.Landflag;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.ChatColor;
@@ -81,7 +82,7 @@ public class OpenDoor extends Landflag {
         Player p = event.getPlayer();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) &&
                 Arrays.asList(blockedItems).contains(event.getClickedBlock().getType())) {
-            OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getClickedBlock().getLocation());
+            OwnedLand land = LandManager.getApplicableLand(event.getClickedBlock().getLocation());
             if (land == null) {
                 return;
             }

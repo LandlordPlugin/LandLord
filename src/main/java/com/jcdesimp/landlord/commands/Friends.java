@@ -1,6 +1,7 @@
 package com.jcdesimp.landlord.commands;
 
 import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.persistantData.Friend;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.Bukkit;
@@ -50,7 +51,7 @@ public class Friends implements LandlordCommand {
                 player.sendMessage(ChatColor.RED + noPerms);
                 return true;
             }
-            OwnedLand land = plugin.getLandManager().getApplicableLand(player.getLocation());
+            OwnedLand land = LandManager.getApplicableLand(player.getLocation());
             if (land == null || (!land.getOwner().equals(player.getUniqueId()) && !player.hasPermission("landlord.admin.friends"))) {
                 player.sendMessage(ChatColor.RED + notOwner);
                 return true;

@@ -102,3 +102,4 @@ MySQL:
   Database: minecraft
   User: root
   Password: passy
+cacheSize: 5000

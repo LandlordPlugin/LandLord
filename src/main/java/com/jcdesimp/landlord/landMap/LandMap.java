@@ -2,6 +2,8 @@ package com.jcdesimp.landlord.landMap;
 
 
 import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.landManagement.LandManager;
+import com.jcdesimp.landlord.persistantData.Data;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,7 +36,17 @@ public class LandMap {
         this.currChunk = p.getLocation().getChunk();
         //System.out.println("CURR: "+currChunk);
 
-        this.nearbyLand = plugin.getDatabase().getNearbyLands(p.getLocation(), 3, 3);
+        this.nearbyLand = new ArrayList<>();
+
+        for (int x = -3; x <= 3; x++) {
+            for (int z = -3; z <= 3; z++) {
+                Data data = new Data(currChunk.getWorld().getName(), currChunk.getX()+ x, currChunk.getZ() + z);
+                OwnedLand land = LandManager.getLandFromDatabase(data);
+                nearbyLand.add(land);
+            }
+        }
+
+
         //displayMap(mapViewer);
         this.currDir = getPlayerDirection(mapViewer);
         displayMap(mapViewer);
@@ -437,7 +450,14 @@ public class LandMap {
     }
 
     public void updateMap() {
-        nearbyLand = Landlord.getInstance().getDatabase().getNearbyLands(mapViewer.getLocation(), 4, 4);
+        nearbyLand.clear();
+        for (int x = -3; x <= 3; x++) {
+            for (int z = -3; z <= 3; z++) {
+                Data data = new Data(currChunk.getWorld().getName(), currChunk.getX()+ x, currChunk.getZ() + z);
+                OwnedLand land = LandManager.getLandFromDatabase(data);
+                nearbyLand.add(land);
+            }
+        }
         currChunk = mapViewer.getLocation().getChunk();
         currDir = "";
     }
@@ -461,7 +481,7 @@ public class LandMap {
                 int xx = x - radius;
                 int zz = z - radius;
                 Chunk chunk = p.getLocation().getWorld().getChunkAt(p.getLocation().getChunk().getX() + xx, p.getLocation().getChunk().getZ() + zz);
-                OwnedLand land = plugin.getLandManager().getLandFromDatabase(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
+                OwnedLand land = LandManager.getLandFromDatabase(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
 
                 String currSpot = mapBoard[z][x];
 

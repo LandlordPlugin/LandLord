@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 public class LandManager {
 
     private static LoadingCache<Data, OwnedLand> cache = CacheBuilder.newBuilder()
-            .maximumSize(1000)
+            .maximumSize(Landlord.getInstance().getConfig().getInt("cacheSize"))
             .build(new CacheLoader<Data, OwnedLand>() {
                 @Override
                 public OwnedLand load(Data data) throws Exception {
@@ -56,6 +56,11 @@ public class LandManager {
         return getLandFromDatabase(l.getWorld().getName(), l.getChunk().getX(), l.getChunk().getZ());
     }
 
+    public static OwnedLand getApplicableLand(Chunk chunk) {
+        return getLandFromDatabase(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
+    }
+
+
     /**
      * Gets land from the database
      *
@@ -66,6 +71,14 @@ public class LandManager {
      */
     public static OwnedLand getLandFromDatabase(String worldName, int x, int z) {
         Data data = new Data(worldName, x, z);
+        try {
+            return cache.get(data);
+        } catch (ExecutionException e) {
+            return null;
+        }
+    }
+
+    public static OwnedLand getLandFromDatabase(Data data) {
         try {
             return cache.get(data);
         } catch (ExecutionException e) {

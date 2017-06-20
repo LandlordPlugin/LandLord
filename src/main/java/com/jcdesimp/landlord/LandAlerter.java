@@ -1,5 +1,6 @@
 package com.jcdesimp.landlord;
 
+import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -41,7 +42,7 @@ public class LandAlerter implements Listener {
         String enterOwn = messages.getString("info.alerts.enterOwnLand");
         String enterOther = messages.getString("info.alerts.enterOtherLand");
 
-        OwnedLand land = plugin.getLandManager().getApplicableLand(loc);
+        OwnedLand land = LandManager.getApplicableLand(loc);
 
 
         //Leaving Land

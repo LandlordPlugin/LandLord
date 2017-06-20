@@ -3,9 +3,7 @@ package biz.princeps.lib.storage;
 import com.jcdesimp.landlord.Landlord;
 import com.jcdesimp.landlord.persistantData.Data;
 import com.jcdesimp.landlord.persistantData.Friend;
-import com.jcdesimp.landlord.persistantData.LandFlag;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
-import org.bukkit.Location;
 
 import java.sql.ResultSet;
 import java.util.List;
@@ -58,7 +56,7 @@ public abstract class AbstractDatabase {
 
     public abstract List<OwnedLand> getLands(String world);
 
-    public abstract List<OwnedLand> getNearbyLands(Location location, int offsetX, int offsetZ);
+    //public abstract List<OwnedLand> getNearbyLands(Location location, int offsetX, int offsetZ);
 
     public abstract int getFirstFreeLandID();
 

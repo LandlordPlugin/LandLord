@@ -1,6 +1,7 @@
 package com.jcdesimp.landlord.commands;
 
 import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -53,7 +54,7 @@ public class Manage implements LandlordCommand {
                 return true;
             }
             Chunk currChunk = player.getLocation().getChunk();
-            OwnedLand land = plugin.getLandManager().getLandFromDatabase(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
+            OwnedLand land = LandManager.getLandFromDatabase(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
             if (land == null || (!land.getOwner().equals(player.getUniqueId()) && !player.hasPermission("landlord.admin.manage"))) {
                 player.sendMessage(ChatColor.RED + notOwner);
                 return true;

@@ -1,6 +1,7 @@
 package com.jcdesimp.landlord.commands;
 
 import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
@@ -105,7 +106,7 @@ public class Unclaim implements LandlordCommand {
                     return true;
                 }
             }
-            OwnedLand dbLand = plugin.getLandManager().getLandFromDatabase(worldname, x, z);
+            OwnedLand dbLand = LandManager.getLandFromDatabase(worldname, x, z);
 
 
             if (dbLand == null || (!dbLand.getOwner().equals(player.getUniqueId()) && !player.hasPermission("landlord.admin.unclaim"))) {

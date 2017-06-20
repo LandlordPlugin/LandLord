@@ -7,20 +7,25 @@ import com.jcdesimp.landlord.landManagement.FlagManager;
 import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.landManagement.ViewManager;
 import com.jcdesimp.landlord.landMap.MapManager;
+import com.jcdesimp.landlord.persistantData.OwnedLand;
 import com.jcdesimp.landlord.persistantData.db.MySQLDatabase;
 import com.jcdesimp.landlord.persistantData.db.SQLiteDatabase;
 import com.jcdesimp.landlord.pluginHooks.VaultHandler;
 import com.jcdesimp.landlord.pluginHooks.WorldguardHandler;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Main plugin class for Landlord
  */
-public final class Landlord extends JavaPlugin {
+public final class Landlord extends JavaPlugin implements Listener {
 
     private AbstractDatabase db;
     private Landlord plugin;
@@ -30,7 +35,6 @@ public final class Landlord extends JavaPlugin {
     private FlagManager flagManager;
     private ViewManager manageViewManager;
     private LandAlerter pListen;
-    private LandManager landManager;
 
     private CustomConfig mainConfig;
     private CustomConfig messagesConfig;
@@ -65,13 +69,14 @@ public final class Landlord extends JavaPlugin {
         // database stuff
         if (getConfig().getBoolean("SQLite.enable")) {
             db = new SQLiteDatabase(this.getDataFolder() + "/database.db");
-            ((SQLiteDatabase)db).setupDatabase();
-        }
-        else
+            ((SQLiteDatabase) db).setupDatabase();
+        } else
             db = new MySQLDatabase(getConfig().getString("MySQL.Hostname"), getConfig().getInt("MySQL.Port"), getConfig().getString("MySQL.Database"), getConfig().getString("MySQL.User"), getConfig().getString("MySQL.Password"));
 
         // Command Executor
         getCommand("landlord").setExecutor(new LandlordCommandExecutor(this));
+        this.getServer().getPluginManager().registerEvents(this, this);
+
 
         //Worldguard Check
         if (!hasWorldGuard() && this.getConfig().getBoolean("worldguard.blockRegionClaim", true)) {
@@ -227,7 +232,9 @@ public final class Landlord extends JavaPlugin {
     }
 
 
-    public LandManager getLandManager() {
-        return landManager;
+    @EventHandler
+    public void onChunkLoadEvent(ChunkLoadEvent e) {
+        Chunk chunk = e.getChunk();
+        OwnedLand land = LandManager.getLandFromDatabase(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
     }
 }

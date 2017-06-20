@@ -1,6 +1,7 @@
 package com.jcdesimp.landlord.commands;
 
 import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.persistantData.Friend;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.*;
@@ -61,7 +62,7 @@ public class Unfriend implements LandlordCommand {
              * *************************************
              */
             Friend frd = new Friend(Bukkit.getOfflinePlayer(args[1]).getUniqueId());
-            OwnedLand land = plugin.getLandManager().getLandFromDatabase(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
+            OwnedLand land = LandManager.getLandFromDatabase(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
             if (land == null || (!land.getOwner().equals(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends"))) {
                 player.sendMessage(ChatColor.RED + notOwner);
                 return true;

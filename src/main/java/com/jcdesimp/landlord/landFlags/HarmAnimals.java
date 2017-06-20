@@ -1,6 +1,7 @@
 package com.jcdesimp.landlord.landFlags;
 
 import com.jcdesimp.landlord.Landlord;
+import com.jcdesimp.landlord.landManagement.LandManager;
 import com.jcdesimp.landlord.landManagement.Landflag;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.ChatColor;
@@ -108,7 +109,7 @@ public class HarmAnimals extends Landflag {
 
         if (attacker.getType().toString().equals("PLAYER")) {
             Player p = (Player) attacker;
-            OwnedLand land = getPlugin().getLandManager().getApplicableLand(victim.getLocation());
+            OwnedLand land = LandManager.getApplicableLand(victim.getLocation());
             if (land == null) {
                 return;
             }
@@ -124,7 +125,7 @@ public class HarmAnimals extends Landflag {
             Projectile a = (Projectile) attacker;
             Player p;
             if (a.getShooter() instanceof Player) {
-                OwnedLand land = getPlugin().getLandManager().getApplicableLand(victim.getLocation());
+                OwnedLand land = LandManager.getApplicableLand(victim.getLocation());
                 p = (Player) a.getShooter();
                 if (land == null) {
                     return;

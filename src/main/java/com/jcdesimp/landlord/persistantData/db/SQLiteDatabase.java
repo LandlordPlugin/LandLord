@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by spatium on 12.06.17.
@@ -141,34 +140,30 @@ public class SQLiteDatabase extends SQLite {
     public void save(OwnedLand land) {
         String query2 = "INSERT OR REPLACE INTO ll_friend (landid, frienduuid, id) VALUES (?,?,?)";
         String query3 = "INSERT OR REPLACE INTO ll_land (landid, owneruuid, x, z, world, flags) VALUES (?,?,?,?,?,?)";
-        pool.submit(() -> {
-            try (Connection con = getSQLConnection();
-                 PreparedStatement st2 = con.prepareStatement(query2);
-                 PreparedStatement st3 = con.prepareStatement(query3)) {
+        try (Connection con = getSQLConnection();
+             PreparedStatement st2 = con.prepareStatement(query2);
+             PreparedStatement st3 = con.prepareStatement(query3)) {
 
-                for (Friend f : land.getFriends()) {
-                    st2.setInt(1, land.getLandId());
-                    st2.setString(2, f.getUuid().toString());
-                    st2.setInt(3, f.getId());
-                    synchronized (this) {
-                        st2.execute();
-                    }
-                }
+            for (Friend f : land.getFriends()) {
+                st2.setInt(1, land.getLandId());
+                st2.setString(2, f.getUuid().toString());
+                st2.setInt(3, f.getId());
+                st2.execute();
 
-                st3.setInt(1, land.getLandId());
-                st3.setString(2, land.getOwner().toString());
-                st3.setInt(3, land.getData().getX());
-                st3.setInt(4, land.getData().getZ());
-                st3.setString(5, land.getData().getWorld());
-                st3.setString(6, flagsToString(land.getFlags()));
-                synchronized (this) {
-                    st3.execute();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
 
-        });
+            st3.setInt(1, land.getLandId());
+            st3.setString(2, land.getOwner().toString());
+            st3.setInt(3, land.getData().getX());
+            st3.setInt(4, land.getData().getZ());
+            st3.setString(5, land.getData().getWorld());
+            st3.setString(6, flagsToString(land.getFlags()));
+            st3.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public List<OwnedLand> getLands(UUID owner) {
@@ -254,6 +249,7 @@ public class SQLiteDatabase extends SQLite {
         }
     }
 
+    /*
     public List<OwnedLand> getNearbyLands(Location location, int offsetX, int offsetZ) {
         try {
             return pool.submit(() -> {
@@ -288,23 +284,19 @@ public class SQLiteDatabase extends SQLite {
             return null;
         }
     }
+    */
 
     public int getFirstFreeLandID() {
         try {
             return pool.submit(() -> {
-                int var = 1;
-                String query = "SELECT * FROM ll_land";
+                String query = "SELECT COUNT(*) FROM ll_land";
                 try (Connection con = getSQLConnection(); PreparedStatement st = con.prepareStatement(query)) {
                     ResultSet res = st.executeQuery();
                     while (res.next()) {
-                        if (res.getInt("landid") == var) {
-                            var++;
-                        } else {
-                            return var;
-                        }
+                        return res.getInt(1);
                     }
                 }
-                return var;
+                return 0;
             }).get();
         } catch (InterruptedException | ExecutionException e) {
             return -1;
@@ -315,7 +307,7 @@ public class SQLiteDatabase extends SQLite {
         SQLiteDatabase oldDB = new SQLiteDatabase(Landlord.getInstance().getDataFolder() + "/Landlord.db");
 
         String query = "SELECT * FROM ll_land";
-        new BukkitRunnable(){
+        new BukkitRunnable() {
 
             @Override
             public void run() {
@@ -335,7 +327,7 @@ public class SQLiteDatabase extends SQLite {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }finally{
+                } finally {
                     Landlord.getInstance().getLogger().info("Conversion of database completed!");
                 }
             }
