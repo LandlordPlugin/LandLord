@@ -150,6 +150,19 @@ commands:
       triggers:
         - "unclaim"
         - "sell"
+  unclaimall:
+      usage: "/#{label} #{cmd}."
+      description: "Unclaims all your chunks."
+      alerts:
+        noWorld: "World #{worldName} does not exist."
+        landSold: "Land sold for #{amount}."
+        unclaimOther: "Unclaimed #{player}'s land"
+        unclaimed: "Successfully unclaimed chunk #{chunkCoords} in world #{worldName}."
+        priceWarning: "Get #{pricetag} per unclaim."
+        regenWarning: "Regenerates Chunk!"
+      triggers:
+        - "unclaimall"
+        - "sellall"
   unfriend:
       usage: "/#{label} #{cmd} <player>"
       description: "Remove friend from this land."

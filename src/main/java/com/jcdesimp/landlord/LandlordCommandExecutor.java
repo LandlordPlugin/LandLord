@@ -41,6 +41,7 @@ public class LandlordCommandExecutor implements CommandExecutor {
         this.register(new Reload(plugin));      // register the reload command
         this.register(new Migrate(plugin));
         this.register(new ResetLand(plugin));
+        this.register(new UnclaimAll(plugin));
     }
 
 

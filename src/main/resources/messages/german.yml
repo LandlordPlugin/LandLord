@@ -152,6 +152,19 @@ commands:
     triggers:
     - unclaim
     - sell
+  unclaimall:
+      usage: "/#{label} #{cmd}."
+      description: "Verkaufe alle Deine chunks."
+      alerts:
+        noWorld: 'World #{worldName} existiert nicht.'
+        landSold: 'Land verkauft für #{amount}.'
+        unclaimOther: 'Das Land von #{player} wurde verkauft.'
+        unclaimed: 'Der Verkauf vom Land #{chunkCoords} in der Welt #{worldName} war erfolgreich.'
+      priceWarning: 'Du erhälst #{pricetag} für den Verkauf.'
+      regenWarning: Regeneriert das Land
+    triggers:
+    - unclaimall
+    - sellall
   unfriend:
     usage: '/#{label} #{cmd} <player>'
     description: Entferne einen Freund von einem Land
