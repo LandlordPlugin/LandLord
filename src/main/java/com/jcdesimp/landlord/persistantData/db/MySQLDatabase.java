@@ -140,7 +140,7 @@ public class MySQLDatabase extends MySQL {
     public void save(OwnedLand land) {
         String query2 = "REPLACE INTO ll_friend (landid, frienduuid, id) VALUES (?,?,?)";
         String query3 = "REPLACE INTO ll_land (landid, owneruuid, x, z, world, flags) VALUES (?,?,?,?,?,?)";
-        System.out.println("Land save called");
+        System.out.println("Land save called for land X=" + land.getData().getX() + " Z=" + land.getData().getZ() + " LANDID=" + land.getLandId());
         try (Connection con = getConnection();
              PreparedStatement st2 = con.prepareStatement(query2);
              PreparedStatement st3 = con.prepareStatement(query3)) {
