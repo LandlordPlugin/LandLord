@@ -295,7 +295,7 @@ public class MySQLDatabase extends MySQL {
     public int getFirstFreeLandID() {
         try {
             return pool.submit(() -> {
-                String query = "SELECT COUNT(*) FROM ll_land";
+                String query = "SELECT MIN(t1.landid + 1) AS nextID  FROM ll_land t1 LEFT JOIN ll_land t2 ON t1.landid + 1 = t2.landid WHERE t2.landid IS NULL;";
                 try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
                     ResultSet res = st.executeQuery();
                     while (res.next()) {
