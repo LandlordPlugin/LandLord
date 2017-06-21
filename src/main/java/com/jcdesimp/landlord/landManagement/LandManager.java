@@ -81,7 +81,6 @@ public class LandManager implements Listener {
         Data data = new Data(worldName, x, z);
         OwnedLand toFind = null;
         try {
-            //     System.out.println(cache.size() +":" + data.hashCode());
             toFind = cache.get(data);
         } catch (ExecutionException e) {
         } finally {
