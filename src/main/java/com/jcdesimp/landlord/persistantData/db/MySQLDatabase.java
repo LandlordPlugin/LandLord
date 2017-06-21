@@ -43,30 +43,27 @@ public class MySQLDatabase extends MySQL {
         Landlord.getInstance().getLogger().info("Connected to MySQL and setted up tables!");
     }
 
-    public Future<OwnedLand> getLand(Data data) {
-        Future<OwnedLand> future = pool.submit(() -> {
-            OwnedLand land = null;
-            String query = "SELECT * FROM ll_land WHERE world = ? AND x = ? AND z = ?";
-            try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                st.setString(1, data.getWorld());
-                st.setInt(2, data.getX());
-                st.setInt(3, data.getZ());
+    public OwnedLand getLand(Data data) {
+        OwnedLand land = null;
+        String query = "SELECT * FROM ll_land WHERE world = ? AND x = ? AND z = ?";
+        try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
+            st.setString(1, data.getWorld());
+            st.setInt(2, data.getX());
+            st.setInt(3, data.getZ());
 
-                ResultSet res = st.executeQuery();
-                if (res.next()) {
-                    land = new OwnedLand(data);
-                    land.setOwner(UUID.fromString(res.getString("owneruuid")));
-                    land.setLandId(res.getInt("landid"));
-                    land.setFriends(getFriends(land.getLandId()));
-                    land.setFlags(stringToFlags(res.getString("flags")));
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            ResultSet res = st.executeQuery();
+            if (res.next()) {
+                land = new OwnedLand(data);
+                land.setOwner(UUID.fromString(res.getString("owneruuid")));
+                land.setLandId(res.getInt("landid"));
+                land.setFriends(getFriends(land.getLandId()));
+                land.setFlags(stringToFlags(res.getString("flags")));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             return land;
-        });
-
-        return future;
+        }
     }
 
     private List<LandFlag> stringToFlags(String flags) {
@@ -277,7 +274,7 @@ public class MySQLDatabase extends MySQL {
                         ownedLand.setFriends(getFriends(ownedLand.getLandId()));
                         ownedLand.setFlags(stringToFlags(res.getString("flags")));
                         list.add(ownedLand);
-                      //  System.out.println("Found nearby land: " + data.toString() + "   landid:" + ownedLand.getLandId());
+                        //  System.out.println("Found nearby land: " + data.toString() + "   landid:" + ownedLand.getLandId());
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();

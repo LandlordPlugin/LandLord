@@ -27,7 +27,7 @@ public class LandManager implements Listener {
             .build(new CacheLoader<Data, OwnedLand>() {
                 @Override
                 public OwnedLand load(Data data) throws Exception {
-                    OwnedLand ownedLand = Landlord.getInstance().getDatabase().getLand(data).get();
+                    OwnedLand ownedLand = Landlord.getInstance().getDatabase().getLand(data);
                     //   System.out.println("Get from cache called" + cache.size());
                     //   System.out.println(data.getWorld() + ":" + data.getX() + ":" + data.getZ());
                     //  System.out.println(data.hashCode() + " __  " + ownedLand.getData().hashCode());

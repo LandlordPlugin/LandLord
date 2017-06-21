@@ -40,28 +40,29 @@ public class SQLiteDatabase extends SQLite {
         Landlord.getInstance().getLogger().info("Connected to SQLite and setted up tables!");
     }
 
-    public Future<OwnedLand> getLand(Data data) {
-        return pool.submit(() -> {
-            OwnedLand land = null;
-            String query = "SELECT * FROM ll_land WHERE world = ? AND x = ? AND z = ?";
-            try (Connection con = getSQLConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                st.setString(1, data.getWorld());
-                st.setInt(2, data.getX());
-                st.setInt(3, data.getZ());
+    public OwnedLand getLand(Data data) {
+        OwnedLand land = null;
+        String query = "SELECT * FROM ll_land WHERE world = ? AND x = ? AND z = ?";
+        try {
+            Connection con = getSQLConnection();
+            PreparedStatement st = con.prepareStatement(query);
+            st.setString(1, data.getWorld());
+            st.setInt(2, data.getX());
+            st.setInt(3, data.getZ());
 
-                ResultSet res = st.executeQuery();
-                while (res.next()) {
-                    land = new OwnedLand(data);
-                    land.setOwner(UUID.fromString(res.getString("owneruuid")));
-                    land.setLandId(res.getInt("landid"));
-                    land.setFriends(getFriends(land.getLandId()));
-                    land.setFlags(stringToFlags(res.getString("flags")));
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                land = new OwnedLand(data);
+                land.setOwner(UUID.fromString(res.getString("owneruuid")));
+                land.setLandId(res.getInt("landid"));
+                land.setFriends(getFriends(land.getLandId()));
+                land.setFlags(stringToFlags(res.getString("flags")));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             return land;
-        });
+        }
 
     }
 
@@ -88,7 +89,9 @@ public class SQLiteDatabase extends SQLite {
     protected List<Friend> getFriends(int id) {
         ArrayList<Friend> list = new ArrayList<>();
         String query = "SELECT * FROM ll_friend WHERE landid = ?";
-        try (Connection con = getSQLConnection(); PreparedStatement st = con.prepareStatement(query)) {
+        try {
+            Connection con = getSQLConnection();
+            PreparedStatement st = con.prepareStatement(query);
             st.setInt(1, id);
 
             ResultSet res = st.executeQuery();
@@ -106,7 +109,9 @@ public class SQLiteDatabase extends SQLite {
     public void removeFriend(UUID f) {
         pool.submit(() -> {
             String query = "DELETE FROM ll_friend WHERE frienduuid = ?";
-            try (Connection con = getSQLConnection(); PreparedStatement st = con.prepareStatement(query)) {
+            try {
+                Connection con = getSQLConnection();
+                PreparedStatement st = con.prepareStatement(query);
                 st.setString(1, f.toString());
                 st.executeUpdate();
             } catch (SQLException e) {
@@ -120,9 +125,10 @@ public class SQLiteDatabase extends SQLite {
             String query = "DELETE FROM ll_land WHERE landid = ?";
             String query3 = "DELETE FROM ll_friend WHERE landid = ?";
 
-            try (Connection con = getSQLConnection();
-                 PreparedStatement st = con.prepareStatement(query);
-                 PreparedStatement st3 = con.prepareStatement(query3)) {
+            try {
+                Connection con = getSQLConnection();
+                PreparedStatement st = con.prepareStatement(query);
+                PreparedStatement st3 = con.prepareStatement(query3);
                 st.setInt(1, landid);
                 st.executeUpdate();
                 st3.setInt(1, landid);
@@ -136,9 +142,10 @@ public class SQLiteDatabase extends SQLite {
     public void save(OwnedLand land) {
         String query2 = "INSERT OR REPLACE INTO ll_friend (landid, frienduuid, id) VALUES (?,?,?)";
         String query3 = "INSERT OR REPLACE INTO ll_land (landid, owneruuid, x, z, world, flags) VALUES (?,?,?,?,?,?)";
-        try (Connection con = getSQLConnection();
-             PreparedStatement st2 = con.prepareStatement(query2);
-             PreparedStatement st3 = con.prepareStatement(query3)) {
+        try {
+            Connection con = getSQLConnection();
+            PreparedStatement st2 = con.prepareStatement(query2);
+            PreparedStatement st3 = con.prepareStatement(query3);
 
             for (Friend f : land.getFriends()) {
                 st2.setInt(1, land.getLandId());
@@ -163,144 +170,138 @@ public class SQLiteDatabase extends SQLite {
     }
 
     public List<OwnedLand> getLands(UUID owner) {
-        try {
-            return pool.submit(() -> {
-                ArrayList<OwnedLand> list = new ArrayList<>();
-                String query = "SELECT * FROM ll_land WHERE owneruuid = ?";
-                try (Connection con = getSQLConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                    st.setString(1, owner.toString());
 
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        Data data = new Data(res.getString("world"), res.getInt("x"), res.getInt("z"));
-                        OwnedLand ownedLand = new OwnedLand(data);
-                        ownedLand.setOwner(owner);
-                        ownedLand.setLandId(res.getInt("landid"));
-                        ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                        ownedLand.setFlags(stringToFlags(res.getString("flags")));
-                        list.add(ownedLand);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return list;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return null;
+        ArrayList<OwnedLand> list = new ArrayList<>();
+        String query = "SELECT * FROM ll_land WHERE owneruuid = ?";
+        try {
+            Connection con = getSQLConnection();
+            PreparedStatement st = con.prepareStatement(query);
+            st.setString(1, owner.toString());
+
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                Data data = new Data(res.getString("world"), res.getInt("x"), res.getInt("z"));
+                OwnedLand ownedLand = new OwnedLand(data);
+                ownedLand.setOwner(owner);
+                ownedLand.setLandId(res.getInt("landid"));
+                ownedLand.setFriends(getFriends(ownedLand.getLandId()));
+                ownedLand.setFlags(stringToFlags(res.getString("flags")));
+
+                list.add(ownedLand);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            return list;
         }
     }
 
     public List<OwnedLand> getLands(UUID owner, String world) {
+
+        ArrayList<OwnedLand> list = new ArrayList<>();
+        String query = "SELECT * FROM ll_land WHERE owneruuid = ? AND world = ?";
         try {
-            return pool.submit(() -> {
-                ArrayList<OwnedLand> list = new ArrayList<>();
-                String query = "SELECT * FROM ll_land WHERE owneruuid = ? AND world = ?";
-                try (Connection con = getSQLConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                    st.setString(1, owner.toString());
-                    st.setString(2, world);
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        Data data = new Data(world, res.getInt("x"), res.getInt("z"));
-                        OwnedLand ownedLand = new OwnedLand(data);
-                        ownedLand.setOwner(owner);
-                        ownedLand.setLandId(res.getInt("landid"));
-                        ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                        ownedLand.setFlags(stringToFlags(res.getString("flags")));
-                        list.add(ownedLand);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return list;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return null;
+            Connection con = getSQLConnection();
+            PreparedStatement st = con.prepareStatement(query);
+
+            st.setString(1, owner.toString());
+            st.setString(2, world);
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                Data data = new Data(world, res.getInt("x"), res.getInt("z"));
+                OwnedLand ownedLand = new OwnedLand(data);
+                ownedLand.setOwner(owner);
+                ownedLand.setLandId(res.getInt("landid"));
+                ownedLand.setFriends(getFriends(ownedLand.getLandId()));
+                ownedLand.setFlags(stringToFlags(res.getString("flags")));
+                list.add(ownedLand);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return list;
+
     }
 
     public List<OwnedLand> getLands(String world) {
-        try {
-            return pool.submit(() -> {
-                ArrayList<OwnedLand> list = new ArrayList<>();
-                String query = "SELECT * FROM ll_land WHERE world = ?";
-                try (Connection con = getSQLConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                    st.setString(1, world);
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        Data data = new Data(world, res.getInt("x"), res.getInt("z"));
-                        OwnedLand ownedLand = new OwnedLand(data);
-                        ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
-                        ownedLand.setLandId(res.getInt("landid"));
-                        ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                        ownedLand.setFlags(stringToFlags(res.getString("flags")));
-                        list.add(ownedLand);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return list;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return null;
+
+        ArrayList<OwnedLand> list = new ArrayList<>();
+        String query = "SELECT * FROM ll_land WHERE world = ?";
+        try (Connection con = getSQLConnection(); PreparedStatement st = con.prepareStatement(query)) {
+            st.setString(1, world);
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                Data data = new Data(world, res.getInt("x"), res.getInt("z"));
+                OwnedLand ownedLand = new OwnedLand(data);
+                ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
+                ownedLand.setLandId(res.getInt("landid"));
+                ownedLand.setFriends(getFriends(ownedLand.getLandId()));
+                ownedLand.setFlags(stringToFlags(res.getString("flags")));
+                list.add(ownedLand);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return list;
+
     }
 
 
     public List<OwnedLand> getNearbyLands(Location location, int offsetX, int offsetZ) {
+
+        ArrayList<OwnedLand> list = new ArrayList<>();
+        int off1 = location.getChunk().getX() + offsetX;
+        int off2 = location.getChunk().getX() - offsetX;
+        int off3 = location.getChunk().getZ() + offsetZ;
+        int off4 = location.getChunk().getZ() - offsetZ;
+
+        String query = "SELECT * FROM ll_land WHERE world = ? AND x <= ? AND x >= ? AND z <= ? AND z >= ?";
         try {
-            return pool.submit(() -> {
-                ArrayList<OwnedLand> list = new ArrayList<>();
-                int off1 = location.getChunk().getX() + offsetX;
-                int off2 = location.getChunk().getX() - offsetX;
-                int off3 = location.getChunk().getZ() + offsetZ;
-                int off4 = location.getChunk().getZ() - offsetZ;
+            Connection con = getSQLConnection();
+            PreparedStatement st = con.prepareStatement(query);
+            st.setString(1, location.getWorld().getName());
+            st.setInt(2, off1);
+            st.setInt(3, off2);
+            st.setInt(4, off3);
+            st.setInt(5, off4);
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                Data data = new Data(location.getWorld().getName(), res.getInt("x"), res.getInt("z"));
 
-                String query = "SELECT * FROM ll_land WHERE world = ? AND x <= ? AND x >= ? AND z <= ? AND z >= ?";
-                try (Connection con = getSQLConnection(); PreparedStatement st = con.prepareStatement(query)) {
+                OwnedLand ownedLand = new OwnedLand(data);
+                ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
+                ownedLand.setLandId(res.getInt("landid"));
+                ownedLand.setFriends(getFriends(ownedLand.getLandId()));
+                ownedLand.setFlags(stringToFlags(res.getString("flags")));
+                list.add(ownedLand);
 
-                    st.setString(1, location.getWorld().getName());
-                    st.setInt(2, off1);
-                    st.setInt(3, off2);
-                    st.setInt(4, off3);
-                    st.setInt(5, off4);
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        Data data = new Data(location.getWorld().getName(), res.getInt("x"), res.getInt("z"));
-
-                        OwnedLand ownedLand = new OwnedLand(data);
-                        ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
-                        ownedLand.setLandId(res.getInt("landid"));
-                        ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                        ownedLand.setFlags(stringToFlags(res.getString("flags")));
-                        list.add(ownedLand);
-
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return list;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return list;
+
     }
 
 
     public int getFirstFreeLandID() {
+
+        String query = "SELECT MIN(t1.landid + 1) AS nextID  FROM ll_land t1 LEFT JOIN ll_land t2 ON t1.landid + 1 = t2.landid WHERE t2.landid IS NULL;";
+
+        Connection con = getSQLConnection();
         try {
-            return pool.submit(() -> {
-                String query = "SELECT MIN(t1.landid + 1) AS nextID  FROM ll_land t1 LEFT JOIN ll_land t2 ON t1.landid + 1 = t2.landid WHERE t2.landid IS NULL;";
-                try (Connection con = getSQLConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        return res.getInt(1);
-                    }
-                }
-                return 0;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return -1;
+            PreparedStatement st = con.prepareStatement(query);
+
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                return res.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return 0;
+
     }
 
     public static void migrate() {

@@ -42,7 +42,7 @@ public abstract class AbstractDatabase {
     public abstract void execute(String query);
 
 
-    public abstract Future<OwnedLand> getLand(Data data);
+    public abstract OwnedLand getLand(Data data);
 
     protected abstract List<Friend> getFriends(int id);
 
