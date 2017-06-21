@@ -140,6 +140,7 @@ public class MySQLDatabase extends MySQL {
     public void save(OwnedLand land) {
         String query2 = "REPLACE INTO ll_friend (landid, frienduuid, id) VALUES (?,?,?)";
         String query3 = "REPLACE INTO ll_land (landid, owneruuid, x, z, world, flags) VALUES (?,?,?,?,?,?)";
+        System.out.println("Land save called");
         try (Connection con = getConnection();
              PreparedStatement st2 = con.prepareStatement(query2);
              PreparedStatement st3 = con.prepareStatement(query3)) {
@@ -270,13 +271,14 @@ public class MySQLDatabase extends MySQL {
                     ResultSet res = st.executeQuery();
                     while (res.next()) {
                         Data data = new Data(location.getWorld().getName(), res.getInt("x"), res.getInt("z"));
-                        System.out.println("Found nearby land: " + data.toString());
                         OwnedLand ownedLand = new OwnedLand(data);
                         ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
                         ownedLand.setLandId(res.getInt("landid"));
                         ownedLand.setFriends(getFriends(ownedLand.getLandId()));
                         ownedLand.setFlags(stringToFlags(res.getString("flags")));
                         list.add(ownedLand);
+                        System.out.println("Found nearby land: " + data.toString() + "   landid:" + ownedLand.getLandId());
+
 
                     }
                 } catch (SQLException e) {
