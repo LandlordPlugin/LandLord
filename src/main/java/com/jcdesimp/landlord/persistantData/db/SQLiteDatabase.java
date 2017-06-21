@@ -33,11 +33,9 @@ public class SQLiteDatabase extends SQLite {
 
     @Override
     public void setupDatabase() {
-        String query1 = "CREATE TABLE IF NOT EXISTS ll_flagperm (landid INTEGER, identifier VARCHAR(20), canEveryone BOOLEAN, canFriends BOOLEAN, id INTEGER, PRIMARY KEY (id))";
-        this.execute(query1);
         String query3 = "CREATE TABLE IF NOT EXISTS ll_friend (landid INTEGER, frienduuid VARCHAR(36), id INTEGER, PRIMARY KEY (landid))";
         this.execute(query3);
-        String query5 = "CREATE TABLE IF NOT EXISTS ll_land (landid INTEGER, owneruuid VARCHAR(36), x INTEGER, z INTEGER, world VARCHAR(16), PRIMARY KEY(landid))";
+        String query5 = "CREATE TABLE IF NOT EXISTS ll_land (landid INTEGER, owneruuid VARCHAR(36), x INTEGER, z INTEGER, world VARCHAR(16), flags TEXT, PRIMARY KEY(landid))";
         this.execute(query5);
         Landlord.getInstance().getLogger().info("Connected to SQLite and setted up tables!");
     }
