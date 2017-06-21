@@ -42,8 +42,8 @@
 
     <repositories>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>princepsrepo</id>
+            <url>http://ci.princeps.biz:7776/nexus/content/repositories/princepsrepo/</url>
         </repository>
         <repository>
             <id>vault-repo</id>

@@ -144,7 +144,7 @@ public class Claim implements LandlordCommand {
 
             land = plugin.getLandManager().createNewLand(player.getUniqueId(), currChunk);
             // player.sendMessage(land.getOwnerUsername() + land.getChunk().getWorld() + land.getChunk().getZ() + ":" + land.getChunk().getX());
-            Landlord.getInstance().getDatabase().save(land);
+            land.save();
             OwnedLand.highlightLand(player, Effect.HAPPY_VILLAGER);
             sender.sendMessage(
                     ChatColor.GREEN + success

@@ -29,7 +29,10 @@ public class Data {
     }
 
 
-
+    @Override
+    public String toString() {
+        return "[" + world + ":" + x + ":" + z + "]";
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -43,12 +46,11 @@ public class Data {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17,31)
+        return new HashCodeBuilder(17, 31)
                 .append(world)
                 .append(x)
                 .append(z).toHashCode();
     }
-
 
 
 }

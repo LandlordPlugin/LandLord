@@ -270,7 +270,7 @@ public class MySQLDatabase extends MySQL {
                     ResultSet res = st.executeQuery();
                     while (res.next()) {
                         Data data = new Data(location.getWorld().getName(), res.getInt("x"), res.getInt("z"));
-
+                        System.out.println("Found nearby land: " + data.toString());
                         OwnedLand ownedLand = new OwnedLand(data);
                         ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
                         ownedLand.setLandId(res.getInt("landid"));

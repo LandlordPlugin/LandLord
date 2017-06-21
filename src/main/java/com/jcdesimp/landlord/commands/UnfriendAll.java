@@ -62,7 +62,7 @@ public class UnfriendAll implements LandlordCommand {
                 }
 
                 for (OwnedLand landd : pLand) {
-                    plugin.getDatabase().save(landd);
+                    landd.save();
                 }
 
                 player.sendMessage(ChatColor.GREEN + playerRemoved.replace("#{playername}", args[1]));

@@ -63,7 +63,7 @@ public class FriendAll implements LandlordCommand {
                 }
 
                 for (OwnedLand ownedLand : pLand) {
-                    plugin.getDatabase().save(ownedLand);
+                    ownedLand.save();
                 }
 
 

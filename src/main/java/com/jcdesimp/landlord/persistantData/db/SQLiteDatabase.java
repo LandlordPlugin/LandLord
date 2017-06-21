@@ -324,7 +324,7 @@ public class SQLiteDatabase extends SQLite {
                         land.setLandId(res.getInt("id"));
                         land.setFlags(LandManager.getDefaultFlags(land.getLandId()));
                         land.setFriends(new ArrayList<>());
-                        Landlord.getInstance().getDatabase().save(land);
+                        land.save();
                         Thread.sleep(10L);
                     }
                 } catch (Exception e) {

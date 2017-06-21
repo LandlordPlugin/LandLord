@@ -188,4 +188,8 @@ public class OwnedLand {
     public List<LandFlag> getFlags() {
         return flags;
     }
+
+    public void save() {
+        Landlord.getInstance().getDatabase().save(this);
+    }
 }

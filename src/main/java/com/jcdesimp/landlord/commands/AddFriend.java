@@ -85,7 +85,7 @@ public class AddFriend implements LandlordCommand {
                 OwnedLand.highlightLand(player, Effect.HEART, 2);
             }
 
-            plugin.getDatabase().save(land);
+            land.save();
             if (plugin.getConfig().getBoolean("options.soundEffects", true)) {     //conf
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, .2f);
             }

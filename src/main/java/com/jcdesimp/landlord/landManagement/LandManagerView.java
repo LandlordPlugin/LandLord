@@ -200,7 +200,7 @@ public class LandManagerView implements Listener {
         //" " + event.getViewers().toString());
         //todo customizing the name of the land management UI creates possible a risk, player check addresses this
         if (event.getInventory().getTitle().contains(messages.getString("manager.title")) && p.getName().equalsIgnoreCase(player.getName()) && isOpen) {
-            Landlord.getInstance().getDatabase().save(mLand);
+            mLand.save();
             player.sendMessage(ChatColor.GREEN + messages.getString("manager.saved"));
             if (Landlord.getInstance().getConfig().getBoolean("options.soundEffects", true)) {
                 player.playSound(player.getLocation(), Sound.BLOCK_LAVA_EXTINGUISH, 10, 10);
@@ -252,15 +252,14 @@ public class LandManagerView implements Listener {
                     Landflag flag = plugin.getFlagManager().getFlag(event.getCurrentItem().getItemMeta().getDisplayName());
                     LandFlag flagy = mLand.getFlag(flag);
                     flagy.setCanEveryone(!flagy.canEveryone());
-                    plugin.getDatabase().save(mLand);
-
+                    mLand.save();
                 } else if (row == 2) {
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1L, 1L);
                     System.out.println(event.getCurrentItem().getItemMeta().getDisplayName());
                     Landflag flag = plugin.getFlagManager().getFlag(event.getCurrentItem().getItemMeta().getDisplayName());
                     LandFlag flagy = mLand.getFlag(flag);
                     flagy.setCanFriends(!flagy.canFriends());
-                    plugin.getDatabase().save(mLand);
+                    mLand.save();
                 }
                 updateUIData();
                 setToggles();

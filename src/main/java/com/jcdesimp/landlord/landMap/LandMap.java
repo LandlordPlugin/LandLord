@@ -459,6 +459,7 @@ public class LandMap {
 
                 if (land != null) {
                     plugin.getLandManager().insertOrReplaceIntoCache(land);
+                    System.out.println(nearby.size()  + ":" + land.getData().getX() + ":_" + land.getData().getZ());
                     if (land.getOwner().equals(p.getUniqueId())) {
                         currSpot = ChatColor.GREEN + currSpot;
                     } else if (land.isFriend(p.getUniqueId())) {

@@ -73,7 +73,7 @@ public class Unfriend implements LandlordCommand {
             if (plugin.getConfig().getBoolean("options.particleEffects", true)) { //conf
                 land.highlightLand(player, Effect.ZOMBIE_CONVERTED_VILLAGER, 2);
             }
-            plugin.getDatabase().save(land);
+            land.save();
             if (plugin.getConfig().getBoolean("options.soundEffects", true)) { //conf
                 player.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 10, .5f);
             }
