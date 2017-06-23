@@ -10,7 +10,7 @@ info:
     noOwner: None
   warnings:
     playerCommand: This command can only be run by a player.
-    noPerms: Du hast kiene Permissions
+    noPerms: Du hast keine Permissions
     unknownPlayer: Dieser Spieler existiert nicht.
     notOwner: Dir gehört dieses Land nicht
     badPage: Diese Seitennummer ist falsch.
@@ -18,14 +18,14 @@ info:
 commands:
   addFriend:
     usage: '/#{label} #{cmd} <player>'
-    description: Füge Freunde zu dem Land hinzu
+    description: "Füge Freunde zu dem Land hinzu"
     alerts:
       success: 'Player #{player} ist nun ein Freund.'
       alreadyFriend: 'Player #{player} ist bereits ein Freund auf diesem Land.'
     triggers:
-    - friend
-    - addfriend
-    - trust
+    - "friend"
+    - "addfriend"
+    - "trust"
   claim:
     usage: '/#{label} #{cmd}'
     description: Kaufe dieses Land
@@ -44,8 +44,7 @@ commands:
     - protect
   clearWorld:
     usage: '/#{label} #{cmd} <world> [player]'
-    description: Delete all land owned by a player in a world. Delete all land of
-      a world (console only).
+    description: Delete all land owned by a player in a world. Delete all land of a world (console only).
     alerts:
       notConsole: You can only delete entire worlds from the console.
       chunkWarning: Does not regenerate chunks.
@@ -145,23 +144,22 @@ commands:
       noWorld: 'World #{worldName} existiert nicht.'
       landSold: 'Land verkauft für #{amount}.'
       unclaimOther: 'Das Land von #{player} wurde verkauft.'
-      unclaimed: 'Der Verkauf vom Land #{chunkCoords} in der Welt #{worldName} war
-        erfolgreich.'
+      unclaimed: 'Der Verkauf vom Land #{chunkCoords} in der Welt #{worldName} war erfolgreich.'
       priceWarning: 'Du erhälst #{pricetag} für den Verkauf.'
       regenWarning: Regeneriert das Land
     triggers:
     - unclaim
     - sell
   unclaimall:
-      usage: "/#{label} #{cmd}."
-      description: "Verkaufe alle Deine chunks."
-      alerts:
-        noWorld: 'World #{worldName} existiert nicht.'
-        landSold: 'Land verkauft für #{amount}.'
-        unclaimOther: 'Das Land von #{player} wurde verkauft.'
-        unclaimed: 'Der Verkauf vom Land #{chunkCoords} in der Welt #{worldName} war erfolgreich.'
-      priceWarning: 'Du erhälst #{pricetag} für den Verkauf.'
-      regenWarning: Regeneriert das Land
+    usage: "/#{label} #{cmd}."
+    description: "Verkaufe alle Deine chunks."
+    alerts:
+      noWorld: 'World #{worldName} existiert nicht.'
+      landSold: 'Land verkauft für #{amount}.'
+      unclaimOther: 'Das Land von #{player} wurde verkauft.'
+      unclaimed: 'Der Verkauf vom Land #{chunkCoords} in der Welt #{worldName} war erfolgreich.'
+    priceWarning: 'Du erhälst #{pricetag} für den Verkauf.'
+    regenWarning: Regeneriert das Land
     triggers:
     - unclaimall
     - sellall
@@ -216,8 +214,7 @@ map:
 flags:
   build:
     displayName: Build
-    description: Gebe Berechtigung zum abbauen/bauen und um Dinge wie Itemframes zu
-      bearbeiten.
+    description: Gebe Berechtigung zum abbauen/bauen und um Dinge wie Itemframes zu bearbeiten.
     allowedTitle: Bauen erlaubt
     allowedText: kann bauen.
     deniedTitle: Bauen verboten
@@ -252,16 +249,14 @@ flags:
     deniedText: kann keinen Schaden mit TnT anrichten.
   useContainers:
     displayName: Use Containers
-    description: Erlaube die Benutzung von trap chests|chests, furnaces, anvils, hoppers,|droppers,
-      dispensers, beacons,|brewing stands, cauldrons,|and Jukeboxes.
+    description: Erlaube die Benutzung von trap chests|chests, furnaces, anvils, hoppers,|droppers, dispensers, beacons,|brewing stands, cauldrons,|and Jukeboxes.
     allowedTitle: Container-Benutzung erlaubt.
     allowedText: kann Container benutzen.
     deniedTitle: Container-Benutzung verboten.
     deniedText: kann keine Container benutzen.
   useRedstone:
     displayName: Use Redstone
-    description: Erlaube die Benutzung von buttons und|levers, und pressure plates,|und
-      tripwires.
+    description: Erlaube die Benutzung von buttons und|levers, und pressure plates,|und tripwires.
     allowedTitle: Redstonebenutzung erlaubt.
     allowedText: kann Redstone benutzen.
     deniedTitle: Redstonebenutzung verboten.
