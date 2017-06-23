@@ -58,14 +58,11 @@ public class FriendAll implements LandlordCommand {
 
             if (pLand.size() > 0) {
                 Friend f = new Friend(possible.getUniqueId());
+                f.setId(plugin.getDatabase().getFirstFreeFriendID());
                 for (OwnedLand l : pLand) {
                     l.addFriend(f);
+                    l.save();
                 }
-
-                for (OwnedLand ownedLand : pLand) {
-                    ownedLand.save();
-                }
-
 
                 player.sendMessage(ChatColor.GREEN + friendAddedString.replace("#{player}", args[1]));
                 return true;

@@ -45,6 +45,7 @@ public class WorldguardHandler {
             return true;
         }
         RegionManager regionManager = worldguard.getRegionManager(player.getWorld());
+
         System.out.println("Has Worldguard");
         if (regionManager != null) {
             //System.out.println("region manager not null");
