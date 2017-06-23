@@ -151,11 +151,11 @@ public class OwnedLand {
      * @param p player
      * @param e effect to play
      */
-    public static void highlightLand(Player p, Effect e) {
+    public static void highlightLand(Player p, Particle e) {
         highlightLand(p, e, 5);
     }
 
-    public static void highlightLand(Player p, Effect e, int amt) {
+    public static void highlightLand(Player p, Particle e, int amt) {
         if (!Landlord.getInstance().getConfig().getBoolean("options.particleEffects", true)) {
             return;
         }
@@ -178,7 +178,8 @@ public class OwnedLand {
             edgeBlock.setZ(edgeBlock.getBlockZ() + .5);
             edgeBlock.setX(edgeBlock.getBlockX() + .5);
 
-            p.spigot().playEffect(edgeBlock, e, 0, 0, 0.2f, 0.2f, 0.2f, 0.2f, amt, 20);
+          //  p.spigot().playEffect(edgeBlock, e, 0, 0, 0.2f, 0.2f, 0.2f, 0.2f, amt, 20);
+            p.getWorld().spawnParticle(e, edgeBlock, amt, 0.2, 0.2, 0.2, 20.0);
             //e.display(edgeBlock, 0.2f, 0.2f, 0.2f, 9.2f, amt, p);
             //p.playEffect(edgeBlocks.get(i), e, null);
         }

@@ -6,6 +6,7 @@ import net.minecraft.server.v1_12_R1.LootTableRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Effect;
+import org.bukkit.Particle;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -56,7 +57,7 @@ public class Info implements LandlordCommand {
                 owner = ChatColor.GOLD + land.getOwnerUsername();
             }
             if (plugin.getConfig().getBoolean("options.particleEffects")) {
-                OwnedLand.highlightLand(player, Effect.LAVADRIP);
+                OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
             }
 
             // Build the land info string

@@ -76,13 +76,14 @@ public class AddFriend implements LandlordCommand {
                 return true;
             }
             Friend friend = new Friend(possible.getUniqueId());
+            friend.setId(plugin.getDatabase().getFirstFreeFriendID());
 
             if (!land.addFriend(friend)) {
                 player.sendMessage(ChatColor.YELLOW + alreadyFriend.replace("#{player}", args[1]));
                 return true;
             }
             if (plugin.getConfig().getBoolean("options.particleEffects", true)) {      //conf
-                OwnedLand.highlightLand(player, Effect.HEART, 2);
+                OwnedLand.highlightLand(player, Particle.HEART, 2);
             }
 
             land.save();

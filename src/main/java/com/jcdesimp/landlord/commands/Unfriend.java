@@ -60,18 +60,17 @@ public class Unfriend implements LandlordCommand {
              * mark for possible change    !!!!!!!!!
              * *************************************
              */
-            Friend frd = new Friend(Bukkit.getOfflinePlayer(args[1]).getUniqueId());
             OwnedLand land = plugin.getLandManager().getLandFromCache(currChunk.getWorld().getName(), currChunk.getX(), currChunk.getZ());
             if (land == null || (!land.getOwner().equals(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends"))) {
                 player.sendMessage(ChatColor.RED + notOwner);
                 return true;
             }
-            if (!land.removeFriend(frd.getUuid())) {
+            if (!land.removeFriend(Bukkit.getOfflinePlayer(args[1]).getUniqueId())) {
                 player.sendMessage(ChatColor.YELLOW + notFriend.replace("#{playerName}", args[1]));
                 return true;
             }
             if (plugin.getConfig().getBoolean("options.particleEffects", true)) { //conf
-                land.highlightLand(player, Effect.ZOMBIE_CONVERTED_VILLAGER, 2);
+                land.highlightLand(player, Particle.SPELL_WITCH, 2);
             }
             land.save();
             if (plugin.getConfig().getBoolean("options.soundEffects", true)) { //conf

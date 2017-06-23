@@ -77,7 +77,7 @@ public class UnclaimAll implements LandlordCommand {
                     }
                 }
                 dbLand.delete();
-                dbLand.highlightLand(player, Effect.WITCH_MAGIC);
+                dbLand.highlightLand(player, Particle.SPELL_WITCH);
 
                 sender.sendMessage(
                         ChatColor.YELLOW + unclaimed

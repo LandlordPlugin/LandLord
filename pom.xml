@@ -55,11 +55,10 @@
         </repository>
     </repositories>
     <dependencies>
-        <!--Spigot API-->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>paper</artifactId>
-            <version>1.12</version>
+            <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
 

@@ -20,7 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Main plugin class for Landlord
  */
-public final class Landlord extends JavaPlugin  {
+public final class Landlord extends JavaPlugin {
 
     private AbstractDatabase db;
     private Landlord plugin;
@@ -43,18 +43,14 @@ public final class Landlord extends JavaPlugin  {
     public void onEnable() {
         plugin = this;
         mapManager = new MapManager(this);
-        //listner = new LandListener();
-        //getServer().getPluginManager().registerEvents(new LandListener(this), this);
+
         flagManager = new FlagManager(this);
         manageViewManager = new ViewManager();
         getServer().getPluginManager().registerEvents(mapManager, this);
 
-
-        // generate/load the main config file
         mainConfig = new CustomConfig(this, "config.yml", "config.yml");
-        // generate/load the main language file based on language value in config.
         messagesConfig = new CustomConfig(this, "messages/english.yml", "messages/" + (mainConfig.get().getString("options.messagesFile").replace("/", ".")));
-        // Registering Alert Listener
+
         pListen = new LandAlerter(plugin);
         if (getConfig().getBoolean("options.showLandAlerts", true)) {
             getServer().getPluginManager().registerEvents(pListen, this);
@@ -138,10 +134,6 @@ public final class Landlord extends JavaPlugin  {
         return messagesConfig.get();
     }
 
-    private FileConfiguration getMessages() {
-        return messagesConfig.get();
-    }
-
     public FlagManager getFlagManager() {
         return flagManager;
     }
@@ -154,19 +146,6 @@ public final class Landlord extends JavaPlugin  {
         return manageViewManager;
     }
 
-
-
-    /*
-     * ***************************
-     *      Dependency Stuff
-     * ***************************
-     */
-
-    /*
-     * **************
-     *   Worldguard
-     * **************
-     */
     private WorldGuardPlugin getWorldGuard() {
         Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
 
@@ -190,26 +169,12 @@ public final class Landlord extends JavaPlugin  {
 
     public boolean hasWorldGuard() {
         Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
-
-        //System.out.println("-------- " + plugin.toString());
-        // WorldGuard may not be loaded
         if (plugin == null || !(plugin instanceof WorldGuardPlugin) || !this.getConfig().getBoolean("worldguard.blockRegionClaim", true)) {
             return false;
         }
-        /*if(plugin.toString().contains("6.0.0-beta")) {
-
-            getLogger().warning("This WorldGuard version \'6.0.0-beta\' does not work with Landlord, please update it.");
-            return false;
-        }*/
-
         return true;
     }
 
-    /*
-     * **************
-     *     Vault
-     * **************
-     */
     public boolean hasVault() {
         Plugin plugin = getServer().getPluginManager().getPlugin("Vault");
         return !(plugin == null || !this.getConfig().getBoolean("economy.enable", true));
@@ -218,7 +183,6 @@ public final class Landlord extends JavaPlugin  {
     public VaultHandler getvHandler() {
         return vHandler;
     }
-
 
     public AbstractDatabase getDatabase() {
         return db;

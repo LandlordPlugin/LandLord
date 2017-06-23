@@ -304,4 +304,21 @@ public class MySQLDatabase extends MySQL {
         }
     }
 
+
+    public int getFirstFreeFriendID() {
+        try {
+            return pool.submit(() -> {
+                String query = "SELECT MIN(t1.id + 1) AS nextID  FROM ll_friend t1 LEFT JOIN ll_friend t2 ON t1.id + 1 = t2.id WHERE t2.id IS NULL;";
+                try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
+                    ResultSet res = st.executeQuery();
+                    while (res.next()) {
+                        return res.getInt(1);
+                    }
+                }
+                return 0;
+            }).get();
+        } catch (InterruptedException | ExecutionException e) {
+            return -1;
+        }
+    }
 }

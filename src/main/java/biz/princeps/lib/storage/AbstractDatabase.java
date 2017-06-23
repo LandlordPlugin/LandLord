@@ -62,6 +62,7 @@ public abstract class AbstractDatabase {
 
     public abstract int getFirstFreeLandID();
 
+    public abstract int getFirstFreeFriendID();
 
 
     //public abstract int migrate();

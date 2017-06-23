@@ -336,4 +336,18 @@ public class SQLiteDatabase extends SQLite {
 
     }
 
+    public int getFirstFreeFriendID() {
+
+        String query = "SELECT MIN(t1.id + 1) AS nextID  FROM ll_friend t1 LEFT JOIN ll_friend t2 ON t1.id + 1 = t2.id WHERE t2.id IS NULL;";
+        try (Connection con = getSQLConnection(); PreparedStatement st = con.prepareStatement(query)) {
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                return res.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+
+    }
 }
