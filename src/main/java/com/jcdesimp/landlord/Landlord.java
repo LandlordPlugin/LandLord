@@ -14,6 +14,7 @@ import com.jcdesimp.landlord.pluginHooks.WorldguardHandler;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -49,7 +50,9 @@ public final class Landlord extends JavaPlugin {
         getServer().getPluginManager().registerEvents(mapManager, this);
 
         mainConfig = new CustomConfig(this, "config.yml", "config.yml");
-        messagesConfig = new CustomConfig(this, "messages/english.yml", "messages/" + (mainConfig.get().getString("options.messagesFile").replace("/", ".")));
+
+        String lang = (mainConfig.get().getString("options.messagesFile").replace("/", "."));
+        messagesConfig = new CustomConfig(this, "messages/" + lang, "messages/" + lang);
 
         pListen = new LandAlerter(plugin);
         if (getConfig().getBoolean("options.showLandAlerts", true)) {
@@ -114,11 +117,18 @@ public final class Landlord extends JavaPlugin {
         if (getConfig().getBoolean("enabled-flags.setHome")) {
             flagManager.registerFlag(new SetHome(this));
         }
+
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            landManager.insertLandCount(p.getUniqueId());
+        }
     }
 
     @Override
     public void onDisable() {
         getLogger().info(getDescription().getName() + " has been disabled!");
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            landManager.removeLandCount(p.getUniqueId());
+        }
         mapManager.removeAllMaps();
         manageViewManager.deactivateAll();
         pListen.clearPtrack();
