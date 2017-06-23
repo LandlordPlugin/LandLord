@@ -39,8 +39,13 @@ public class WorldguardHandler {
      * @return boolean of allowed or not
      */
     public boolean canClaim(Player player, Chunk currChunk) {
+
+        if(worldguard == null){
+            System.out.println("Worldguard null, aborting!");
+            return true;
+        }
         RegionManager regionManager = worldguard.getRegionManager(player.getWorld());
-        //System.out.println("Has Worldguard");
+        System.out.println("Has Worldguard");
         if (regionManager != null) {
             //System.out.println("region manager not null");
             ProtectedRegion check = new ProtectedCuboidRegion("check", toVector(currChunk.getBlock(0, 0, 0)), toVector(currChunk.getBlock(15, 127, 15)));
