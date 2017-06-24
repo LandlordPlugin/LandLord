@@ -141,7 +141,8 @@ public class OwnedLand {
     public void delete() {
         Landlord.getInstance().getDatabase().removeLand(landid);
         Landlord.getInstance().getLandManager().removeFromCache(data);
-        Landlord.getInstance().getLandManager().updateLandCount(owner, Landlord.getInstance().getLandManager().getLandCount(owner) - 1);
+        if (Bukkit.getPlayer(owner) != null)
+            Landlord.getInstance().getLandManager().updateLandCount(owner, Landlord.getInstance().getLandManager().getLandCount(owner) - 1);
     }
 
 
@@ -178,7 +179,7 @@ public class OwnedLand {
             edgeBlock.setZ(edgeBlock.getBlockZ() + .5);
             edgeBlock.setX(edgeBlock.getBlockX() + .5);
 
-          //  p.spigot().playEffect(edgeBlock, e, 0, 0, 0.2f, 0.2f, 0.2f, 0.2f, amt, 20);
+            //  p.spigot().playEffect(edgeBlock, e, 0, 0, 0.2f, 0.2f, 0.2f, 0.2f, amt, 20);
             p.getWorld().spawnParticle(e, edgeBlock, amt, 0.2, 0.2, 0.2, 20.0);
             //e.display(edgeBlock, 0.2f, 0.2f, 0.2f, 9.2f, amt, p);
             //p.playEffect(edgeBlocks.get(i), e, null);
