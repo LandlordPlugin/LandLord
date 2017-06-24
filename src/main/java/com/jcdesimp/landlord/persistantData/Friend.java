@@ -38,6 +38,6 @@ public class Friend {
     }
 
     public String getName() {
-        return Bukkit.getPlayer(uuid).getDisplayName();
+        return Bukkit.getOfflinePlayer(uuid).getName();
     }
 }

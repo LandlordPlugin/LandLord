@@ -69,11 +69,8 @@ public class Friends implements LandlordCommand {
                     return true;
                 }
             }
-
-            //List<OwnedLand> myLand = plugin.getDatabase().find(OwnedLand.class).where().eq("ownerName",player.getName()).findList();
-
             String header = ChatColor.DARK_GREEN + "----- " + friendListHeader + " -----\n";
-            ArrayList<String> friendList = new ArrayList<String>();
+            ArrayList<String> friendList = new ArrayList<>();
             if (land.getFriends().isEmpty()) {
                 player.sendMessage(ChatColor.YELLOW + noFriends);
                 return true;
