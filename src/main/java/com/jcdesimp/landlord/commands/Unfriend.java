@@ -72,7 +72,8 @@ public class Unfriend implements LandlordCommand {
             if (plugin.getConfig().getBoolean("options.particleEffects", true)) { //conf
                 land.highlightLand(player, Particle.SPELL_WITCH, 2);
             }
-            land.save();
+            Landlord.getInstance().getLandManager().refresh(land.getData());
+
             if (plugin.getConfig().getBoolean("options.soundEffects", true)) { //conf
                 player.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 10, .5f);
             }

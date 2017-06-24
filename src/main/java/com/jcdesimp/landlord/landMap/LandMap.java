@@ -458,7 +458,7 @@ public class LandMap {
                 String currSpot = mapBoard[z][x];
 
                 if (land != null) {
-                    plugin.getLandManager().insertOrReplaceIntoCache(land);
+                    //plugin.getLandManager().insertOrReplaceIntoCache(land);
                     //System.out.println(nearby.size()  + ":" + land.getData().getX() + ":_" + land.getData().getZ());
                     if (land.getOwner().equals(p.getUniqueId())) {
                         currSpot = ChatColor.GREEN + currSpot;

@@ -4,6 +4,7 @@ import com.jcdesimp.landlord.Landlord;
 import com.jcdesimp.landlord.landManagement.Landflag;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,7 +119,8 @@ public class OwnedLand {
      */
     public boolean removeFriend(UUID id) {
         if (isFriend(id)) {
-            Landlord.getInstance().getDatabase().removeFriend(id);
+            Landlord.getInstance().getDatabase().removeFriend(landid, id);
+            this.friends.remove(id);
             return true;
         }
         return false;

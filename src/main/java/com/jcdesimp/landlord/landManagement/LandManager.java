@@ -5,6 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.jcdesimp.landlord.Landlord;
 import com.jcdesimp.landlord.persistantData.Data;
+import com.jcdesimp.landlord.persistantData.Friend;
 import com.jcdesimp.landlord.persistantData.LandFlag;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 import org.bukkit.Chunk;
@@ -106,10 +107,12 @@ public class LandManager implements Listener {
     }
 
     public void insertOrReplaceIntoCache(OwnedLand land) {
-        OwnedLand lanny = cache.getIfPresent(land.getData());
-        if (lanny == null)
-            cache.put(land.getData(), land);
+       // OwnedLand lanny = cache.getIfPresent(land.getData());
+     //   System.out.println(cache.size() + ":"+ land.getData().getX() + ":" +land.getData().getZ());
+        cache.put(land.getData(), land);
+       // System.out.println(cache.size() + ":"+ land.getData().getX() + ":" +land.getData().getZ());
     }
+
 
 
     // player land count manager
@@ -138,5 +141,9 @@ public class LandManager implements Listener {
     @EventHandler
     public void onDisconnect(PlayerQuitEvent e) {
         removeLandCount(e.getPlayer().getUniqueId());
+    }
+
+    public void refresh(Data data) {
+        cache.refresh(data);
     }
 }

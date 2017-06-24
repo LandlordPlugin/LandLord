@@ -46,7 +46,7 @@ public abstract class AbstractDatabase {
 
     protected abstract List<Friend> getFriends(int id);
 
-    public abstract void removeFriend(UUID f);
+    public abstract void removeFriend(int landid, UUID f);
 
     public abstract void removeLand(int landid);
 

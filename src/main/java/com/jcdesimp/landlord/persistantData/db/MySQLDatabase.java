@@ -104,16 +104,15 @@ public class MySQLDatabase extends MySQL {
         return list;
     }
 
-    public void removeFriend(UUID f) {
-        pool.submit(() -> {
-            String query = "DELETE FROM ll_friend WHERE frienduuid = ?";
-            try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                st.setString(1, f.toString());
-                st.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+    public void removeFriend(int landid, UUID f) {
+        String query = "DELETE FROM ll_friend WHERE frienduuid = ? AND landid = ?";
+        try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
+            st.setString(1, f.toString());
+            st.setInt(2, landid);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeLand(int landid) {
@@ -147,7 +146,6 @@ public class MySQLDatabase extends MySQL {
                 st2.setString(2, f.getUuid().toString());
                 st2.setInt(3, f.getId());
                 st2.execute();
-
             }
 
             st3.setInt(1, land.getLandId());
@@ -161,90 +159,76 @@ public class MySQLDatabase extends MySQL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     public List<OwnedLand> getLands(UUID owner) {
-        try {
-            return pool.submit(() -> {
-                ArrayList<OwnedLand> list = new ArrayList<>();
-                String query = "SELECT * FROM ll_land WHERE owneruuid = ?";
-                try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                    st.setString(1, owner.toString());
 
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        Data data = new Data(res.getString("world"), res.getInt("x"), res.getInt("z"));
-                        OwnedLand ownedLand = new OwnedLand(data);
-                        ownedLand.setOwner(owner);
-                        ownedLand.setLandId(res.getInt("landid"));
-                        ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                        ownedLand.setFlags(stringToFlags(res.getString("flags")));
-                        list.add(ownedLand);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return list;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return null;
+        ArrayList<OwnedLand> list = new ArrayList<>();
+        String query = "SELECT * FROM ll_land WHERE owneruuid = ?";
+        try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
+            st.setString(1, owner.toString());
+
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                Data data = new Data(res.getString("world"), res.getInt("x"), res.getInt("z"));
+                OwnedLand ownedLand = new OwnedLand(data);
+                ownedLand.setOwner(owner);
+                ownedLand.setLandId(res.getInt("landid"));
+                ownedLand.setFriends(getFriends(ownedLand.getLandId()));
+                ownedLand.setFlags(stringToFlags(res.getString("flags")));
+                list.add(ownedLand);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return list;
+
     }
 
     public List<OwnedLand> getLands(UUID owner, String world) {
-        try {
-            return pool.submit(() -> {
-                ArrayList<OwnedLand> list = new ArrayList<>();
-                String query = "SELECT * FROM ll_land WHERE owneruuid = ? AND world = ?";
-                try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                    st.setString(1, owner.toString());
-                    st.setString(2, world);
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        Data data = new Data(world, res.getInt("x"), res.getInt("z"));
-                        OwnedLand ownedLand = new OwnedLand(data);
-                        ownedLand.setOwner(owner);
-                        ownedLand.setLandId(res.getInt("landid"));
-                        ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                        ownedLand.setFlags(stringToFlags(res.getString("flags")));
-                        list.add(ownedLand);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return list;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return null;
+        ArrayList<OwnedLand> list = new ArrayList<>();
+        String query = "SELECT * FROM ll_land WHERE owneruuid = ? AND world = ?";
+        try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
+            st.setString(1, owner.toString());
+            st.setString(2, world);
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                Data data = new Data(world, res.getInt("x"), res.getInt("z"));
+                OwnedLand ownedLand = new OwnedLand(data);
+                ownedLand.setOwner(owner);
+                ownedLand.setLandId(res.getInt("landid"));
+                ownedLand.setFriends(getFriends(ownedLand.getLandId()));
+                ownedLand.setFlags(stringToFlags(res.getString("flags")));
+                list.add(ownedLand);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return list;
+
     }
 
     public List<OwnedLand> getLands(String world) {
-        try {
-            return pool.submit(() -> {
-                ArrayList<OwnedLand> list = new ArrayList<>();
-                String query = "SELECT * FROM ll_land WHERE world = ?";
-                try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                    st.setString(1, world);
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        Data data = new Data(world, res.getInt("x"), res.getInt("z"));
-                        OwnedLand ownedLand = new OwnedLand(data);
-                        ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
-                        ownedLand.setLandId(res.getInt("landid"));
-                        ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                        ownedLand.setFlags(stringToFlags(res.getString("flags")));
-                        list.add(ownedLand);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return list;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return null;
+
+        ArrayList<OwnedLand> list = new ArrayList<>();
+        String query = "SELECT * FROM ll_land WHERE world = ?";
+        try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
+            st.setString(1, world);
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                Data data = new Data(world, res.getInt("x"), res.getInt("z"));
+                OwnedLand ownedLand = new OwnedLand(data);
+                ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
+                ownedLand.setLandId(res.getInt("landid"));
+                ownedLand.setFriends(getFriends(ownedLand.getLandId()));
+                ownedLand.setFlags(stringToFlags(res.getString("flags")));
+                list.add(ownedLand);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return list;
+
     }
 
 

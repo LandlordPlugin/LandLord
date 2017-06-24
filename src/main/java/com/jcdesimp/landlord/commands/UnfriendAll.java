@@ -2,6 +2,7 @@ package com.jcdesimp.landlord.commands;
 
 import com.jcdesimp.landlord.Landlord;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -9,8 +10,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  * Created by jcdesimp on 2/18/15.
@@ -48,21 +47,20 @@ public class UnfriendAll implements LandlordCommand {
                 return true;
             }
 
-            List<OwnedLand> pLand = plugin.getDatabase().getLands(player.getUniqueId());
 
-            OfflinePlayer possible = getOfflinePlayer(args[1]);
+            OfflinePlayer possible = Bukkit.getOfflinePlayer(args[1]);
             if (!possible.hasPlayedBefore() && !possible.isOnline()) {
                 player.sendMessage(ChatColor.RED + unknownPlayer);
                 return true;
             }
+            List<OwnedLand> pLand = plugin.getDatabase().getLands(player.getUniqueId());
 
             if (pLand.size() > 0) {
                 for (OwnedLand l : pLand) {
+                    System.out.println(l.getLandId());
                     l.removeFriend(possible.getUniqueId());
-                }
-
-                for (OwnedLand landd : pLand) {
-                    landd.save();
+                    Landlord.getInstance().getLandManager().refresh(l.getData());
+                    //plugin.getLandManager().updateFriends(l.getData(), l.getFriends());
                 }
 
                 player.sendMessage(ChatColor.GREEN + playerRemoved.replace("#{playername}", args[1]));

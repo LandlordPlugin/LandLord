@@ -106,18 +106,18 @@ public class SQLiteDatabase extends SQLite {
         return list;
     }
 
-    public void removeFriend(UUID f) {
-        pool.submit(() -> {
-            String query = "DELETE FROM ll_friend WHERE frienduuid = ?";
-            try {
-                Connection con = getSQLConnection();
-                PreparedStatement st = con.prepareStatement(query);
-                st.setString(1, f.toString());
-                st.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+    public void removeFriend(int landid, UUID f) {
+        String query = "DELETE FROM ll_friend WHERE frienduuid = ? AND landid = ?";
+        try {
+            Connection con = getSQLConnection();
+            PreparedStatement st = con.prepareStatement(query);
+            st.setString(1, f.toString());
+            st.setInt(2, landid);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void removeLand(int landid) {
@@ -166,7 +166,6 @@ public class SQLiteDatabase extends SQLite {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     public List<OwnedLand> getLands(UUID owner) {

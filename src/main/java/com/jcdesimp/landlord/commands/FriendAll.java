@@ -3,6 +3,7 @@ package com.jcdesimp.landlord.commands;
 import com.jcdesimp.landlord.Landlord;
 import com.jcdesimp.landlord.persistantData.Friend;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -10,9 +11,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-
-import static org.bukkit.Bukkit.getOfflinePlayer;
-
 /**
  * Created by jcdesimp on 2/18/15.
  * Command for a player toi add a friend to all of their land at once.
@@ -49,17 +47,17 @@ public class FriendAll implements LandlordCommand {
                 return true;
             }
 
-            List<OwnedLand> pLand = plugin.getDatabase().getLands(((Player) sender).getUniqueId());
-            OfflinePlayer possible = getOfflinePlayer(args[1]);
+            OfflinePlayer possible = Bukkit.getOfflinePlayer(args[1]);
             if (!possible.hasPlayedBefore() && !possible.isOnline()) {
                 player.sendMessage(ChatColor.RED + unknownPlayer);
                 return true;
             }
 
+            List<OwnedLand> pLand = plugin.getDatabase().getLands(((Player) sender).getUniqueId());
             if (pLand.size() > 0) {
                 Friend f = new Friend(possible.getUniqueId());
-                f.setId(plugin.getDatabase().getFirstFreeFriendID());
                 for (OwnedLand l : pLand) {
+                    f.setId(plugin.getDatabase().getFirstFreeFriendID());
                     l.addFriend(f);
                     l.save();
                 }
