@@ -88,19 +88,11 @@ public class HarmAnimals extends Landflag {
      *
      * @param event that happened
      */
-
-
-    /*
-     *************************************
-     * Of course u can register as many
-     * event listeners as you need for
-     * your flag to do it's job
-     *************************************
-     */
     @EventHandler(priority = EventPriority.HIGH)
     public void animalDamage(EntityDamageByEntityEvent event) {
         org.bukkit.entity.Entity victim = event.getEntity();
-        if (!Arrays.asList(safeAnimals).contains(victim.getType())) {
+        if (!safeAnimals.contains(victim.getType())) {
+            System.out.println("not a protected animal");
             return;
         }
 
