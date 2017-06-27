@@ -53,10 +53,9 @@ public class Build extends Landflag {
     @EventHandler(priority = EventPriority.HIGH)
     public void blockPlace(BlockPlaceEvent event) {
         Player p = event.getPlayer();
-
-        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlock().getLocation());
         if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
             return;
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlock().getLocation());
         if (land == null) {
             if (p.isOp())
                 return;
@@ -78,10 +77,10 @@ public class Build extends Landflag {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void blockBreak(BlockBreakEvent event) {
-        Player p = event.getPlayer();
-        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlock().getLocation());
         if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
             return;
+        Player p = event.getPlayer();
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlock().getLocation());
         if (land == null) {
             if (p.isOp())
                 return;
@@ -101,8 +100,11 @@ public class Build extends Landflag {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void liquidEmpty(PlayerBucketEmptyEvent event) {
+        if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
+            return;
         OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlockClicked().getLocation());
         Player p = event.getPlayer();
+
         if (land == null) {
             if (p.isOp())
                 return;
@@ -122,7 +124,10 @@ public class Build extends Landflag {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void liquidFill(PlayerBucketFillEvent event) {
+        if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
+            return;
         OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlockClicked().getLocation());
+
         if (land == null) {
             return;
         }
@@ -136,6 +141,8 @@ public class Build extends Landflag {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void paintingFrameBreak(HangingBreakByEntityEvent event) {
+        if (disabledWorlds.contains(event.getRemover().getLocation().getWorld().getName()))
+            return;
         org.bukkit.entity.Entity victim = event.getEntity();
         org.bukkit.entity.Entity remover = event.getRemover();
         OwnedLand land = getPlugin().getLandManager().getApplicableLand(victim.getLocation());
@@ -155,6 +162,8 @@ public class Build extends Landflag {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void interactWithArmorStand(PlayerInteractAtEntityEvent event) {
+        if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
+            return;
         if (!event.getRightClicked().getType().equals(EntityType.ARMOR_STAND)) {
             return;
         }
@@ -175,6 +184,8 @@ public class Build extends Landflag {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void destroyArmorStand(EntityDamageByEntityEvent event) {
+        if (disabledWorlds.contains(event.getEntity().getLocation().getWorld().getName()))
+            return;
         Entity victim = event.getEntity();
         //System.out.println("Victim: "+victim);
         if (!victim.getType().equals(EntityType.ARMOR_STAND)) {
@@ -215,7 +226,8 @@ public class Build extends Landflag {
     @EventHandler(priority = EventPriority.HIGH)
     public void removeItemFromFrame(EntityDamageByEntityEvent event) {
         Entity victim = event.getEntity();
-
+        if (disabledWorlds.contains(victim.getLocation().getWorld().getName()))
+            return;
 
         if (!victim.getType().equals(EntityType.ITEM_FRAME)) {
             return;
@@ -258,6 +270,8 @@ public class Build extends Landflag {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void removeItemFromFrame(PlayerInteractEntityEvent event) {
+        if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
+            return;
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
         if (!entity.getType().equals(EntityType.ITEM_FRAME)) {
@@ -280,6 +294,8 @@ public class Build extends Landflag {
     public void rotateItemInFrame(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
+        if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
+            return;
         if (!entity.getType().equals(EntityType.ITEM_FRAME)) {
             return;
         }
@@ -300,6 +316,8 @@ public class Build extends Landflag {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void paintingFramePlace(HangingPlaceEvent event) {
+        if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
+            return;
         org.bukkit.entity.Entity placer = event.getPlayer();
         OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getBlock().getLocation());
         if (land == null) {
@@ -323,7 +341,8 @@ public class Build extends Landflag {
         if (event.getClickedBlock() == null) {
             return;
         }
-
+        if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
+            return;
 
         Player p = event.getPlayer();
 
@@ -358,6 +377,8 @@ public class Build extends Landflag {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void protectBlockStates(PlayerInteractEvent event) {
+        if (disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName()))
+            return;
         Material[] blockedItems = {Material.NOTE_BLOCK, Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON,
                 Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.FLOWER_POT, Material.CAKE_BLOCK, Material.DAYLIGHT_DETECTOR
                 , Material.DAYLIGHT_DETECTOR_INVERTED};

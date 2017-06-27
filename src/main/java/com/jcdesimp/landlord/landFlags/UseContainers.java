@@ -3,6 +3,8 @@ package com.jcdesimp.landlord.landFlags;
 import com.jcdesimp.landlord.Landlord;
 import com.jcdesimp.landlord.landManagement.Landflag;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
+import net.minecraft.server.v1_12_R1.ChunkGenerator;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.generator.BlockPopulator;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 

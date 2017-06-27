@@ -92,7 +92,7 @@ public class HarmAnimals extends Landflag {
     public void animalDamage(EntityDamageByEntityEvent event) {
         org.bukkit.entity.Entity victim = event.getEntity();
         if (!safeAnimals.contains(victim.getType())) {
-            System.out.println("not a protected animal");
+            //System.out.println("not a protected animal");
             return;
         }
 
