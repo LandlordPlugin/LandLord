@@ -92,7 +92,6 @@ public class Unclaim implements LandlordCommand {
                     player.sendMessage(ChatColor.RED + usage
                             .replace("#{label}", label)
                             .replace("#{command}", args[0])
-
                     );
                     return true;
 
@@ -100,7 +99,6 @@ public class Unclaim implements LandlordCommand {
                     player.sendMessage(ChatColor.RED + usage
                             .replace("#{label}", label)
                             .replace("#{command}", args[0])
-
                     );
                     return true;
                 }
@@ -150,7 +148,6 @@ public class Unclaim implements LandlordCommand {
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDERMEN_HURT, 10, .5f);
             }
             plugin.getMapManager().updateAll();
-
         }
         return true;
     }

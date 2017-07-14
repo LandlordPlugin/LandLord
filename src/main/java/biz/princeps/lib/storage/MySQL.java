@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by spatium on 11.06.17.
@@ -44,52 +43,39 @@ public abstract class MySQL extends AbstractDatabase {
     }
 
     public void executeUpdate(String query) {
-        pool.submit(() -> {
-            try (Connection con = ds.getConnection();
-                 PreparedStatement st = con.prepareStatement(query)) {
+        try (Connection con = ds.getConnection();
+             PreparedStatement st = con.prepareStatement(query)) {
 
-                st.executeUpdate();
+            st.executeUpdate();
 
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void execute(String query) {
-        pool.submit(() -> {
-            try (Connection con = ds.getConnection();
-                 PreparedStatement st = con.prepareStatement(query)) {
+        try (Connection con = ds.getConnection();
+             PreparedStatement st = con.prepareStatement(query)) {
 
-                st.execute();
+            st.execute();
 
-            } catch (SQLException e) {
-            }
-
-        });
+        } catch (SQLException e) {
+        }
     }
 
 
     public ResultSet executeQuery(String query) {
-        try {
-            return pool.submit(() -> {
-                ResultSet res = null;
-                try (Connection con = ds.getConnection();
-                     PreparedStatement st = con.prepareStatement(query)) {
+        ResultSet res = null;
+        try (Connection con = ds.getConnection();
+             PreparedStatement st = con.prepareStatement(query)) {
 
-                    res = st.executeQuery();
+            res = st.executeQuery();
 
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return res;
-
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return res;
+
     }
 
 }

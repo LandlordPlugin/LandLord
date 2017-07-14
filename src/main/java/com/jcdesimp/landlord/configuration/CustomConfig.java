@@ -28,6 +28,7 @@ public class CustomConfig {
 
         Map<String, Object> oldConfig = get().getValues(true);
 
+
         //this.reload();
         //this.save();
         this.saveDefault();

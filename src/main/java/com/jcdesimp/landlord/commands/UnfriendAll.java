@@ -39,7 +39,8 @@ public class UnfriendAll implements LandlordCommand {
             sender.sendMessage(ChatColor.DARK_RED + notPlayer);
         } else {
             if (args.length < 2) {
-                sender.sendMessage(ChatColor.RED + usage.replace("#label}", label).replace("#{command}", args[0]));
+                sender.sendMessage(ChatColor.RED + usage.replace("#{label}", label).replace("#{cmd}", args[0]));
+                return true;
             }
             Player player = (Player) sender;
             if (!player.hasPermission("landlord.player.own")) {
@@ -57,7 +58,7 @@ public class UnfriendAll implements LandlordCommand {
 
             if (pLand.size() > 0) {
                 for (OwnedLand l : pLand) {
-              //      System.out.println(l.getLandId());
+                    //      System.out.println(l.getLandId());
                     l.removeFriend(possible.getUniqueId());
                     Landlord.getInstance().getLandManager().refresh(l.getData());
                     //plugin.getLandManager().updateFriends(l.getData(), l.getFriends());

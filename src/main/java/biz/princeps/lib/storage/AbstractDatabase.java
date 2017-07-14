@@ -19,11 +19,9 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractDatabase {
 
-    protected ExecutorService pool;
     protected Logger logger;
 
     public AbstractDatabase() {
-        this.pool = Executors.newCachedThreadPool();
         logger = Landlord.getInstance().getLogger();
     }
 

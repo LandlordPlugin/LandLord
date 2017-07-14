@@ -73,15 +73,13 @@ public abstract class SQLite extends AbstractDatabase {
 
     @Override
     public void executeUpdate(String query) {
-        pool.submit(() -> {
-            try (PreparedStatement st = sqlConnection.prepareStatement(query)) {
+        try (PreparedStatement st = sqlConnection.prepareStatement(query)) {
 
-                st.executeUpdate();
+            st.executeUpdate();
 
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

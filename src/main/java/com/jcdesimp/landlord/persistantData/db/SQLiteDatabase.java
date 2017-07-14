@@ -28,7 +28,6 @@ public class SQLiteDatabase extends SQLite {
 
     public SQLiteDatabase(String dbpath) {
         super(dbpath);
-        pool = Executors.newFixedThreadPool(1);
     }
 
     @Override
@@ -121,22 +120,20 @@ public class SQLiteDatabase extends SQLite {
     }
 
     public void removeLand(int landid) {
-        pool.submit(() -> {
-            String query = "DELETE FROM ll_land WHERE landid = ?";
-            String query3 = "DELETE FROM ll_friend WHERE landid = ?";
+        String query = "DELETE FROM ll_land WHERE landid = ?";
+        String query3 = "DELETE FROM ll_friend WHERE landid = ?";
 
-            try {
-                Connection con = getSQLConnection();
-                PreparedStatement st = con.prepareStatement(query);
-                PreparedStatement st3 = con.prepareStatement(query3);
-                st.setInt(1, landid);
-                st.executeUpdate();
-                st3.setInt(1, landid);
-                st3.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        try {
+            Connection con = getSQLConnection();
+            PreparedStatement st = con.prepareStatement(query);
+            PreparedStatement st3 = con.prepareStatement(query3);
+            st.setInt(1, landid);
+            st.executeUpdate();
+            st3.setInt(1, landid);
+            st3.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void save(OwnedLand land) {

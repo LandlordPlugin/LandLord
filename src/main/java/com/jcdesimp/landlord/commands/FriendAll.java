@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+
 /**
  * Created by jcdesimp on 2/18/15.
  * Command for a player toi add a friend to all of their land at once.
@@ -57,10 +58,11 @@ public class FriendAll implements LandlordCommand {
             if (pLand.size() > 0) {
                 Friend f = new Friend(possible.getUniqueId());
                 for (OwnedLand l : pLand) {
-                    if(!l.isFriend(possible.getUniqueId())) {
+                    if (!l.isFriend(possible.getUniqueId())) {
                         f.setId(plugin.getDatabase().getFirstFreeFriendID());
                         l.addFriend(f);
                         l.save();
+                        plugin.getLandManager().getApplicableLand(l.getChunk()).addFriend(f);
                     }
                 }
 

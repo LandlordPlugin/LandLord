@@ -116,21 +116,19 @@ public class MySQLDatabase extends MySQL {
     }
 
     public void removeLand(int landid) {
-        pool.submit(() -> {
-            String query = "DELETE FROM ll_land WHERE landid = ?";
-            String query3 = "DELETE FROM ll_friend WHERE landid = ?";
+        String query = "DELETE FROM ll_land WHERE landid = ?";
+        String query3 = "DELETE FROM ll_friend WHERE landid = ?";
 
-            try (Connection con = getConnection();
-                 PreparedStatement st = con.prepareStatement(query);
-                 PreparedStatement st3 = con.prepareStatement(query3)) {
-                st.setInt(1, landid);
-                st.executeUpdate();
-                st3.setInt(1, landid);
-                st3.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(query);
+             PreparedStatement st3 = con.prepareStatement(query3)) {
+            st.setInt(1, landid);
+            st.executeUpdate();
+            st3.setInt(1, landid);
+            st3.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void save(OwnedLand land) {
@@ -182,7 +180,6 @@ public class MySQLDatabase extends MySQL {
             e.printStackTrace();
         }
         return list;
-
     }
 
     public List<OwnedLand> getLands(UUID owner, String world) {
@@ -205,7 +202,6 @@ public class MySQLDatabase extends MySQL {
             e.printStackTrace();
         }
         return list;
-
     }
 
     public List<OwnedLand> getLands(String world) {
@@ -233,76 +229,62 @@ public class MySQLDatabase extends MySQL {
 
 
     public List<OwnedLand> getNearbyLands(Location location, int offsetX, int offsetZ) {
-        try {
-            return pool.submit(() -> {
-                ArrayList<OwnedLand> list = new ArrayList<>();
-                int off1 = location.getChunk().getX() + offsetX;
-                int off2 = location.getChunk().getX() - offsetX;
-                int off3 = location.getChunk().getZ() + offsetZ;
-                int off4 = location.getChunk().getZ() - offsetZ;
+        ArrayList<OwnedLand> list = new ArrayList<>();
+        int off1 = location.getChunk().getX() + offsetX;
+        int off2 = location.getChunk().getX() - offsetX;
+        int off3 = location.getChunk().getZ() + offsetZ;
+        int off4 = location.getChunk().getZ() - offsetZ;
 
-                String query = "SELECT * FROM ll_land WHERE world = ? AND x <= ? AND x >= ? AND z <= ? AND z >= ?";
-                try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
+        String query = "SELECT * FROM ll_land WHERE world = ? AND x <= ? AND x >= ? AND z <= ? AND z >= ?";
+        try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
 
-                    st.setString(1, location.getWorld().getName());
-                    st.setInt(2, off1);
-                    st.setInt(3, off2);
-                    st.setInt(4, off3);
-                    st.setInt(5, off4);
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        Data data = new Data(location.getWorld().getName(), res.getInt("x"), res.getInt("z"));
-                        OwnedLand ownedLand = new OwnedLand(data);
-                        ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
-                        ownedLand.setLandId(res.getInt("landid"));
-                        ownedLand.setFriends(getFriends(ownedLand.getLandId()));
-                        ownedLand.setFlags(stringToFlags(res.getString("flags")));
-                        list.add(ownedLand);
-                        //  System.out.println("Found nearby land: " + data.toString() + "   landid:" + ownedLand.getLandId());
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return list;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return null;
+            st.setString(1, location.getWorld().getName());
+            st.setInt(2, off1);
+            st.setInt(3, off2);
+            st.setInt(4, off3);
+            st.setInt(5, off4);
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                Data data = new Data(location.getWorld().getName(), res.getInt("x"), res.getInt("z"));
+                OwnedLand ownedLand = new OwnedLand(data);
+                ownedLand.setOwner(UUID.fromString(res.getString("owneruuid")));
+                ownedLand.setLandId(res.getInt("landid"));
+                ownedLand.setFriends(getFriends(ownedLand.getLandId()));
+                ownedLand.setFlags(stringToFlags(res.getString("flags")));
+                list.add(ownedLand);
+                //  System.out.println("Found nearby land: " + data.toString() + "   landid:" + ownedLand.getLandId());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return list;
     }
 
 
     public int getFirstFreeLandID() {
-        try {
-            return pool.submit(() -> {
-                String query = "SELECT MIN(t1.landid + 1) AS nextID  FROM ll_land t1 LEFT JOIN ll_land t2 ON t1.landid + 1 = t2.landid WHERE t2.landid IS NULL;";
-                try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        return res.getInt(1);
-                    }
-                }
-                return 0;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return -1;
+        String query = "SELECT MIN(t1.landid + 1) AS nextID  FROM ll_land t1 LEFT JOIN ll_land t2 ON t1.landid + 1 = t2.landid WHERE t2.landid IS NULL;";
+        try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                return res.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return 0;
     }
 
 
     public int getFirstFreeFriendID() {
-        try {
-            return pool.submit(() -> {
-                String query = "SELECT MIN(t1.id + 1) AS nextID  FROM ll_friend t1 LEFT JOIN ll_friend t2 ON t1.id + 1 = t2.id WHERE t2.id IS NULL;";
-                try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
-                    ResultSet res = st.executeQuery();
-                    while (res.next()) {
-                        return res.getInt(1);
-                    }
-                }
-                return 0;
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            return -1;
+        String query = "SELECT MIN(t1.id + 1) AS nextID  FROM ll_friend t1 LEFT JOIN ll_friend t2 ON t1.id + 1 = t2.id WHERE t2.id IS NULL;";
+        try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(query)) {
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                return res.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return 0;
     }
 }
