@@ -58,10 +58,8 @@ public class UnfriendAll implements LandlordCommand {
 
             if (pLand.size() > 0) {
                 for (OwnedLand l : pLand) {
-                    //      System.out.println(l.getLandId());
                     l.removeFriend(possible.getUniqueId());
                     Landlord.getInstance().getLandManager().refresh(l.getData());
-                    //plugin.getLandManager().updateFriends(l.getData(), l.getFriends());
                 }
 
                 player.sendMessage(ChatColor.GREEN + playerRemoved.replace("#{playername}", args[1]));

@@ -9,6 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -54,24 +55,29 @@ public class FriendAll implements LandlordCommand {
                 return true;
             }
 
-            List<OwnedLand> pLand = plugin.getDatabase().getLands(((Player) sender).getUniqueId());
-            if (pLand.size() > 0) {
-                Friend f = new Friend(possible.getUniqueId());
-                for (OwnedLand l : pLand) {
-                    if (!l.isFriend(possible.getUniqueId())) {
-                        f.setId(plugin.getDatabase().getFirstFreeFriendID());
-                        l.addFriend(f);
-                        l.save();
-                        plugin.getLandManager().getApplicableLand(l.getChunk()).addFriend(f);
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    List<OwnedLand> pLand = plugin.getDatabase().getLands(((Player) sender).getUniqueId());
+                    if (pLand.size() > 0) {
+                        Friend f = new Friend(possible.getUniqueId());
+                        for (OwnedLand l : pLand) {
+                            if (!l.isFriend(possible.getUniqueId())) {
+                                f.setId(plugin.getDatabase().getFirstFreeFriendID());
+                                plugin.getLandManager().getApplicableLand(l.getChunk()).addFriend(f);
+                                l.addFriend(f);
+
+                                l.save();
+                            }
+                        }
+
+                        player.sendMessage(ChatColor.GREEN + friendAddedString.replace("#{player}", args[1]));
+                    } else {
+                        player.sendMessage(ChatColor.YELLOW + noLandString);
                     }
                 }
-
-                player.sendMessage(ChatColor.GREEN + friendAddedString.replace("#{player}", args[1]));
-                return true;
-            } else {
-                player.sendMessage(ChatColor.YELLOW + noLandString);
-            }
-
+            }.runTaskAsynchronously(plugin);
         }
         return true;
     }

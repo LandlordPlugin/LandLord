@@ -119,7 +119,13 @@ public class OwnedLand {
      */
     public boolean removeFriend(UUID id) {
         if (isFriend(id)) {
-            Landlord.getInstance().getDatabase().removeFriend(landid, id);
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    Landlord.getInstance().getDatabase().removeFriend(landid, id);
+                }
+            }.runTaskAsynchronously(Landlord.getInstance());
             this.friends.remove(id);
             return true;
         }
