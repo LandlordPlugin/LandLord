@@ -248,14 +248,14 @@ public class LandManagerView implements Listener {
 
                 if (row == 1) {
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1L, 1L);
-                    System.out.println(event.getCurrentItem().getItemMeta().getDisplayName());
+               //     System.out.println(event.getCurrentItem().getItemMeta().getDisplayName());
                     Landflag flag = plugin.getFlagManager().getFlag(event.getCurrentItem().getItemMeta().getDisplayName());
                     LandFlag flagy = mLand.getFlag(flag);
                     flagy.setCanEveryone(!flagy.canEveryone());
                     mLand.save();
                 } else if (row == 2) {
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1L, 1L);
-                    System.out.println(event.getCurrentItem().getItemMeta().getDisplayName());
+                //    System.out.println(event.getCurrentItem().getItemMeta().getDisplayName());
                     Landflag flag = plugin.getFlagManager().getFlag(event.getCurrentItem().getItemMeta().getDisplayName());
                     LandFlag flagy = mLand.getFlag(flag);
                     flagy.setCanFriends(!flagy.canFriends());

@@ -7,10 +7,12 @@ import net.minecraft.server.v1_12_R1.ChunkGenerator;
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.inventory.EquipmentSlot;
@@ -94,6 +96,25 @@ public class UseContainers extends Landflag {
             p.sendMessage(ChatColor.RED + getPlugin().getMessageConfig().getString("event.useContainers.interact"));
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void interactWithEntity(PlayerInteractAtEntityEvent e){
+        if(e.getHand() == EquipmentSlot.OFF_HAND)
+            return;
+
+        Entity clicked = e.getRightClicked();
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(clicked.getLocation());
+
+        if(land == null)
+            return;
+
+        Player p = e.getPlayer();
+        if (!land.hasPermTo(p, this)) {
+            p.sendMessage(ChatColor.RED + getPlugin().getMessageConfig().getString("event.useContainers.interact"));
+            e.setCancelled(true);
+        }
+
     }
 
 }
