@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.inventory.EquipmentSlot;
@@ -99,7 +100,7 @@ public class UseContainers extends Landflag {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void interactWithEntity(PlayerInteractAtEntityEvent e){
+    public void interactWithEntity(PlayerInteractEntityEvent e){
         if(e.getHand() == EquipmentSlot.OFF_HAND)
             return;
 

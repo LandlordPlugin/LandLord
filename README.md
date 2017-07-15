@@ -1,3 +1,11 @@
+I fucked up using github correctly, thats why this is not a fork, but a new project.
+Jcdesimp seem to have abounded this project unfortunately, thats why I'm maintaining this project now.
+
+Featurewise it's way more advanced, also performance should be a lot better now (MySQL with hikari)...
+
+Discussions: https://www.spigotmc.org/threads/landlord.41459/
+
+
 BukkitDev Page: http://dev.bukkit.org/bukkit-plugins/landlord/
 
 Landlord
