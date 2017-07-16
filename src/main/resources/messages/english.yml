@@ -28,7 +28,7 @@ commands:
       - "trust"
   claim:
     usage: "/#{label} #{cmd}"
-    description: "Claim this chunk."
+    description: "Landlordbase this chunk."
     alerts:
       success: "Successfully claimed chunk #{chunkCoords} in world '#{worldName}'"
       cost: "Costs #{pricetag} to claim."

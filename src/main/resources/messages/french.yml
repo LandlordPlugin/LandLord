@@ -30,7 +30,7 @@ commands:
     - trust
   claim:
     usage: '/#{label} #{cmd}'
-    description: Claim ce chunk.
+    description: Landlordbase ce chunk.
     alerts:
       success: '&7[&6&lClaim >&7]&f Vous possédez désormais le chunk #{chunkCoords}.'
       cost: 'Costs #{pricetag} to claim.'
