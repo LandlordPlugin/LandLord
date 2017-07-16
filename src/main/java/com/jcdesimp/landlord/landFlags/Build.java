@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
@@ -21,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * File created by jcdesimp on 4/11/14.
@@ -30,6 +32,7 @@ public class Build extends Landflag {
     private ArrayList<String> disabledWorlds = (ArrayList<String>) getPlugin().getConfig().getList("disabled-worlds");
     private boolean limitBuild = getPlugin().getConfig().getBoolean("options.limitBuildInsideRegionWorld.enabled");
     private int buildingTreshould = getPlugin().getConfig().getInt("options.limitBuildInsideRegionWorld.treshold");
+
     /**
      * Constructor needs to be defined and properly call super()
      */
@@ -62,7 +65,7 @@ public class Build extends Landflag {
                 return;
 
             if (limitBuild)
-                if (getPlugin().getLandManager().getLandCount(p.getUniqueId()) < buildingTreshould ) {
+                if (getPlugin().getLandManager().getLandCount(p.getUniqueId()) < buildingTreshould) {
                     SpigotUtil.sendActionBar(p, ChatColor.RED + getPlugin().getMessageConfig().getString("notAllowedToBuild"));
                     event.setCancelled(true);
                 }
@@ -189,7 +192,7 @@ public class Build extends Landflag {
             return;
         Entity victim = event.getEntity();
 
-        if (!victim.getType().equals(EntityType.ARMOR_STAND) ) {
+        if (!victim.getType().equals(EntityType.ARMOR_STAND)) {
             return;
         }
 
@@ -404,16 +407,16 @@ public class Build extends Landflag {
 
     }
 
-    @EventHandler(priority =  EventPriority.HIGH)
-    public void protectVehicles(VehicleDestroyEvent event){
+    @EventHandler(priority = EventPriority.HIGH)
+    public void protectVehicles(VehicleDestroyEvent event) {
         if (disabledWorlds.contains(event.getVehicle().getLocation().getWorld().getName()))
             return;
         OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getVehicle().getLocation());
 
-        if(land == null)
+        if (land == null)
             return;
 
-        if(!(event.getAttacker() instanceof Player)){
+        if (!(event.getAttacker() instanceof Player)) {
             return;
         }
 
@@ -423,7 +426,27 @@ public class Build extends Landflag {
             p.sendMessage(ChatColor.RED + getPlugin().getMessageConfig().getString("event.build.blockBreak"));
             event.setCancelled(true);
         }
+    }
 
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onLiquidFlow(BlockFromToEvent event) {
+        if (disabledWorlds.contains(event.getToBlock().getLocation().getWorld().getName()))
+            return;
+
+        OwnedLand from = getPlugin().getLandManager().getApplicableLand(event.getBlock().getLocation());
+        OwnedLand to = getPlugin().getLandManager().getApplicableLand(event.getToBlock().getLocation());
+
+        // no matter where liquids come from, they should always be able to flow to a nullland
+        if (to == null)
+            return;
+
+        UUID fromOwner = from == null ? null : from.getOwner();
+        UUID toOwner = to.getOwner();
+
+        if (!toOwner.equals(fromOwner)) {
+            event.setCancelled(true);
+        }
     }
 
 }
