@@ -92,7 +92,6 @@ public class OpenDoor extends Landflag {
             p.sendMessage(ChatColor.RED + getPlugin().getMessageConfig().getString("event.openDoor.interact"));
             event.setCancelled(true);
         }
-
     }
 
 
