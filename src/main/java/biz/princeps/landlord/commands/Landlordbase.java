@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands;
 
+import biz.princeps.landlord.Landlord;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import com.sk89q.minecraft.util.commands.Command;
