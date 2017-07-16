@@ -404,7 +404,6 @@ public class Build extends Landflag {
             p.sendMessage(ChatColor.RED + getPlugin().getMessageConfig().getString("event.build.blockStateChange"));
             event.setCancelled(true);
         }
-
     }
 
     @EventHandler(priority = EventPriority.HIGH)
