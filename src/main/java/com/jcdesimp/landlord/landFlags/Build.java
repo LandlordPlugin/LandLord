@@ -334,9 +334,7 @@ public class Build extends Landflag {
                 p.sendMessage(ChatColor.RED + getPlugin().getMessageConfig().getString("event.build.paintingPlace"));
                 event.setCancelled(true);
             }
-
         }
-
     }
 
 
