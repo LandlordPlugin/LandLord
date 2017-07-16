@@ -65,9 +65,16 @@ public class FriendAll implements LandlordCommand {
                         for (OwnedLand l : pLand) {
                             if (!l.isFriend(possible.getUniqueId())) {
                                 f.setId(plugin.getDatabase().getFirstFreeFriendID());
-                                plugin.getLandManager().getApplicableLand(l.getChunk()).addFriend(f);
-                                l.addFriend(f);
 
+                                new BukkitRunnable() {
+
+                                    @Override
+                                    public void run() {
+                                        plugin.getLandManager().getApplicableLand(l.getChunk()).addFriend(f);
+                                    }
+                                }.runTask(plugin);
+
+                                l.addFriend(f);
                                 l.save();
                             }
                         }
