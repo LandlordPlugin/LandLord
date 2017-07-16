@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -187,8 +188,8 @@ public class Build extends Landflag {
         if (disabledWorlds.contains(event.getEntity().getLocation().getWorld().getName()))
             return;
         Entity victim = event.getEntity();
-        //System.out.println("Victim: "+victim);
-        if (!victim.getType().equals(EntityType.ARMOR_STAND)) {
+
+        if (!victim.getType().equals(EntityType.ARMOR_STAND) ) {
             return;
         }
 
@@ -398,6 +399,28 @@ public class Build extends Landflag {
             }
 
             p.sendMessage(ChatColor.RED + getPlugin().getMessageConfig().getString("event.build.blockStateChange"));
+            event.setCancelled(true);
+        }
+
+    }
+
+    @EventHandler(priority =  EventPriority.HIGH)
+    public void protectVehicles(VehicleDestroyEvent event){
+        if (disabledWorlds.contains(event.getVehicle().getLocation().getWorld().getName()))
+            return;
+        OwnedLand land = getPlugin().getLandManager().getApplicableLand(event.getVehicle().getLocation());
+
+        if(land == null)
+            return;
+
+        if(!(event.getAttacker() instanceof Player)){
+            return;
+        }
+
+        Player p = (Player) event.getAttacker();
+
+        if (!land.hasPermTo(p, this)) {
+            p.sendMessage(ChatColor.RED + getPlugin().getMessageConfig().getString("event.build.blockBreak"));
             event.setCancelled(true);
         }
 
