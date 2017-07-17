@@ -2,7 +2,17 @@ Tag: '&8[&aLandLord&8]'
 Disabled-World: '&eThis world is disabled!'
 Commands:
   Claim:
-    success: '&bYou claimed successfully chunk %chunk% in world %world%'
+    success: '&bYou successfully claimed chunk %chunk% in world %world%'
     notEnoughMoney: '&eYou dont have enough money (%money%) to claim this chunk (%chunk%)!'
     moneyTook: '&4You have been charged %money% for the land %chunk%'
     alreadyClaimed: '&eThis chunk is already claimed by %owner%'
+  Info:
+    owned:
+      - '&8=========== &aLandLord &8==========='
+      - '&eLandname: &2%landid%'
+      - '&eOwner: &2%owner%'
+      - '&eMember: &2%member%'
+    free:
+      - '&8=========== &aLandLord &8==========='
+      - '&eLandname: &2%landid%'
+      - '&eYou can buy this land for %price%'

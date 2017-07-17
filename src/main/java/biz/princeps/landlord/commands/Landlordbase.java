@@ -21,6 +21,7 @@ public class Landlordbase extends BaseCommand {
     public Landlordbase() {
         subcommands = new HashMap<>();
         subcommands.put("claim", new Claim());
+        subcommands.put("info", new Info());
     }
 
     @Default
@@ -35,6 +36,14 @@ public class Landlordbase extends BaseCommand {
     @Syntax("land claim - Claims the land you are currently standing on")
     public void onClaim(Player player) {
         ((Claim) subcommands.get("claim")).onClaim(player);
+    }
+
+    @Subcommand("info|i")
+    @CommandAlias("landi|landinfo")
+    @Syntax("land info - Shows information about the land you are standing on")
+    public void onInfo(Player player){
+        ((Info) subcommands.get("info")).onInfo(player);
+
     }
 
 

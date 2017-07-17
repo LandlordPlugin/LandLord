@@ -1,8 +1,8 @@
 package biz.princeps.landlord.commands;
 
-import biz.princeps.landlord.util.LandUtils;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import biz.princeps.landlord.util.OwnedLand;
 import org.bukkit.Chunk;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
 /**
@@ -17,45 +17,37 @@ public class Claim extends LandlordCommand {
             return;
         }
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
+        OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
+        if (pr != null) {
+            player.sendMessage(lm.getString("Commands.Claim.alreadyClaimed")
+                    .replaceAll("%owner%", pr.printOwners()));
+            return;
+        }
 
         // Money stuff
-        double calculatedCost = calculateCost(player);
+        double calculatedCost = OwnedLand.calculateCost(player);
         if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
             plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
             player.sendMessage(lm.getString("Commands.Claim.moneyTook")
                     .replaceAll("%money%", plugin.getVaultHandler().format(calculatedCost))
-                    .replaceAll("%chunk%", LandUtils.getLandName(chunk)));
+                    .replaceAll("%chunk%", OwnedLand.getLandName(chunk)));
 
         } else {
             // NOT ENOUG MONEY
             player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
                     .replaceAll("%money%", plugin.getVaultHandler().format(calculatedCost))
-                    .replaceAll("%chunk%", LandUtils.getLandName(chunk)));
-            return;
-        }
-
-        ProtectedRegion pr = plugin.getWgHandler().getRegion(chunk);
-        if (pr != null) {
-            player.sendMessage(lm.getString("Commands.Claim.alreadyClaimed")
-                    .replaceAll("%owner%", LandUtils.printOwners(pr)));
+                    .replaceAll("%chunk%", OwnedLand.getLandName(chunk)));
             return;
         }
 
         plugin.getWgHandler().claim(chunk, player);
         player.sendMessage(lm.getString("Commands.Claim.success")
-                .replaceAll("%chunk%", LandUtils.getLandName(chunk))
+                .replaceAll("%chunk%", OwnedLand.getLandName(chunk))
                 .replaceAll("%world%", chunk.getWorld().getName()));
 
         plugin.getPlayerManager().incrementLandCount(player.getUniqueId());
+        OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
     }
 
-    private double calculateCost(Player player) {
-        double minCost = plugin.getConfig().getDouble("Formula.minCost");
-        double maxCost = plugin.getConfig().getDouble("Formula.maxCost");
-        double multiplier = plugin.getConfig().getDouble("Formula.multiplier");
-        int x = plugin.getPlayerManager().get(player.getUniqueId()).getLandCount();
-        double var = Math.pow(multiplier, x);
 
-        return maxCost - (maxCost - minCost) * var;
-    }
 }
