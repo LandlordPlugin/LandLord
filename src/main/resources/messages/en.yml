@@ -19,3 +19,9 @@ Commands:
   Unclaim:
     notOwn: '&eYou do not own this chunk. It is owned by %owner%'
     success: '&bYou successfully unclaimed chunk %chunk% in world %world% and got %money% back!'
+  Addfriend:
+    notOwn: '&eYou do not own this chunk. It is owned by %owner%'
+    noPlayer: '&eCould not find following players: %players%'
+    success: '&bSuccessfully added %players% to this land'
+
+

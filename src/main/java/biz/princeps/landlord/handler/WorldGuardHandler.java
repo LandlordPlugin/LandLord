@@ -4,6 +4,9 @@ import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.RegionGroup;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -30,9 +33,14 @@ public class WorldGuardHandler {
         BlockVector vec2 = OwnedLand.locationToVec(upper);
 
         ProtectedCuboidRegion pr = new ProtectedCuboidRegion(OwnedLand.getLandName(chunk), vec1, vec2);
+
         DefaultDomain ownerDomain = new DefaultDomain();
         ownerDomain.addPlayer(owner.getUniqueId());
         pr.setOwners(ownerDomain);
+
+
+        // flag management
+        pr = setDefaultFlags(pr);
 
         RegionManager manager = wg.getRegionContainer().get(chunk.getWorld());
 
@@ -49,4 +57,17 @@ public class WorldGuardHandler {
         wg.getRegionManager(chunk.getWorld()).removeRegion(name);
     }
 
+    public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region) {
+        region.setFlag(new StateFlag("build", false), StateFlag.State.DENY);
+        region.setFlag(new StateFlag("interact", false), StateFlag.State.DENY);
+        region.setFlag(new StateFlag("pvp", false), StateFlag.State.DENY);
+        region.setFlag(new StateFlag("tnt", false), StateFlag.State.DENY);
+
+
+        return region;
+    }
+
+    public WorldGuardPlugin getWG() {
+        return wg;
+    }
 }

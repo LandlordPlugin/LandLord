@@ -2,14 +2,12 @@ package biz.princeps.landlord.util;
 
 import biz.princeps.landlord.Landlord;
 import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by spatium on 17.07.17.
@@ -30,6 +28,10 @@ public class OwnedLand {
 
     public boolean isOwner(UUID uuid) {
         return region.getOwners().getUniqueIds().contains(uuid);
+    }
+
+    public void addFriends(DefaultDomain domain){
+        region.getMembers().addAll(domain);
     }
 
     public String printOwners() {
