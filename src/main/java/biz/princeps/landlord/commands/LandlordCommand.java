@@ -7,9 +7,9 @@ import co.aikar.commands.CommandIssuer;
 /**
  * Created by spatium on 16.07.17.
  */
-public abstract class LandlordCommand extends BaseCommand {
+public abstract class LandlordCommand {
 
-    private Landlord plugin = Landlord.getInstance();
+    protected Landlord plugin = Landlord.getInstance();
 
 
 }

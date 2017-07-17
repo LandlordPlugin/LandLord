@@ -3,7 +3,7 @@ version: 1.0
 main: biz.princeps.landlord.Landlord
 author: SpatiumPrinceps
 website: http://dev.bukkit.org/bukkit-plugins/landlord/
-softdepend: [Vault, WorldGuard]
+depends: [Vault, WorldGuard]
 
 commands:
 

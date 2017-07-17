@@ -9,5 +9,6 @@ public class Claim extends LandlordCommand {
 
     public void onClaim(Player player) {
         player.sendMessage("jo");
+        plugin.getWgHandler().claim(player.getWorld().getChunkAt(player.getLocation()));
     }
 }
