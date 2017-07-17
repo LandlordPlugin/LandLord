@@ -18,3 +18,5 @@ Formula:
   maxCost: 3000.0
   minCost: 500.0
   multiplier: 0.95
+# on unclaim, this percentage of the original price is paid back.
+Payback: 0.8

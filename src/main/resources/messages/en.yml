@@ -16,3 +16,6 @@ Commands:
       - '&8=========== &aLandLord &8==========='
       - '&eLandname: &2%landid%'
       - '&eYou can buy this land for %price%'
+  Unclaim:
+    notOwn: '&eYou do not own this chunk. It is owned by %owner%'
+    success: '&bYou successfully unclaimed chunk %chunk% in world %world% and got %money% back!'

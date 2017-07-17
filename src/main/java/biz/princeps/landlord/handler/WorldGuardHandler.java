@@ -45,4 +45,8 @@ public class WorldGuardHandler {
         return (pr != null ? new OwnedLand(pr, chunk) : null);
     }
 
+    public void unclaim(Chunk chunk, String name){
+        wg.getRegionManager(chunk.getWorld()).removeRegion(name);
+    }
+
 }
