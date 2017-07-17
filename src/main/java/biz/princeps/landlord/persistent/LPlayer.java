@@ -21,9 +21,9 @@ public class LPlayer {
     private int landCount;
 
     @Constructor
-    public LPlayer(@Column(name = "uuid") UUID uuid,
+    public LPlayer(@Column(name = "uuid") String uuid,
                    @Column(name = "landCount") int landCount) {
-        this.uuid = uuid;
+        this.uuid = UUID.fromString(uuid);
         this.landCount = landCount;
     }
 
