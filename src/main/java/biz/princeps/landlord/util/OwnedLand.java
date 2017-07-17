@@ -7,7 +7,10 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by spatium on 17.07.17.
@@ -30,7 +33,7 @@ public class OwnedLand {
         return region.getOwners().getUniqueIds().contains(uuid);
     }
 
-    public void addFriends(DefaultDomain domain){
+    public void addFriends(DefaultDomain domain) {
         region.getMembers().addAll(domain);
     }
 
@@ -104,10 +107,13 @@ public class OwnedLand {
         double minCost = plugin.getConfig().getDouble("Formula.minCost");
         double maxCost = plugin.getConfig().getDouble("Formula.maxCost");
         double multiplier = plugin.getConfig().getDouble("Formula.multiplier");
-        int x = plugin.getPlayerManager().get(player.getUniqueId()).getLandCount();
+        int x = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
         double var = Math.pow(multiplier, x);
 
         return maxCost - (maxCost - minCost) * var;
     }
 
+    public ProtectedRegion getLand() {
+        return this.region;
+    }
 }

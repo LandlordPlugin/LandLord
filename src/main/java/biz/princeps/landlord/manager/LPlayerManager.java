@@ -26,13 +26,6 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
 
     }
 
-    public void incrementLandCount(UUID id) {
-        elements.get(id).setLandCount(elements.get(id).getLandCount() + 1);
-    }
-
-    public void decrementLandCount(UUID id) {
-        elements.get(id).setLandCount(elements.get(id).getLandCount() - 1);
-    }
 
     @Override
     public void addAll(Map<UUID, LPlayer> map) {

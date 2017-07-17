@@ -17,14 +17,9 @@ public class LPlayer {
     @Column(name = "uuid", length = 36)
     private UUID uuid;
 
-    @Column(name = "landCount")
-    private int landCount;
-
     @Constructor
-    public LPlayer(@Column(name = "uuid") String uuid,
-                   @Column(name = "landCount") int landCount) {
+    public LPlayer(@Column(name = "uuid") String uuid) {
         this.uuid = UUID.fromString(uuid);
-        this.landCount = landCount;
     }
 
     public LPlayer(UUID uuid) {
@@ -39,11 +34,4 @@ public class LPlayer {
         this.uuid = uuid;
     }
 
-    public int getLandCount() {
-        return landCount;
-    }
-
-    public void setLandCount(int landCount) {
-        this.landCount = landCount;
-    }
 }

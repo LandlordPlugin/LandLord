@@ -47,7 +47,7 @@ public class Info extends LandlordCommand {
 
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
 
-        // unclaimed
+        // claimed
         if (land != null) {
             player.sendMessage(owned
                     .replaceAll("%landid%", land.getLandName())
@@ -55,13 +55,16 @@ public class Info extends LandlordCommand {
                     .replaceAll("%member%", land.printMembers().isEmpty() ? "-" : land.printMembers()));
             OwnedLand.highlightLand(player, Particle.DRIP_WATER);
 
+            land.getLand().getFlags().keySet().forEach(System.out::println);
+            land.getLand().getFlags().values().forEach(System.out::println);
+
+
         } else {
-            // claimed
+            // unclaimed
             player.sendMessage(free
                     .replaceAll("%landid%", OwnedLand.getLandName(chunk))
                     .replaceAll("%price%", plugin.getVaultHandler().format(OwnedLand.calculateCost(player))));
             OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
-
         }
 
     }
