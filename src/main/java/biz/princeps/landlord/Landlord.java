@@ -1,6 +1,8 @@
 package biz.princeps.landlord;
 
 import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.lib.PrincepsLib;
+import biz.princeps.lib.storage.DatabaseAPI;
 import co.aikar.commands.BukkitCommandManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -10,10 +12,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Landlord extends JavaPlugin {
 
     private static Landlord instance;
+    private static DatabaseAPI databaseAPI;
 
     @Override
     public void onEnable(){
         manageCommands();
+
+        PrincepsLib.setPluginInstance(this);
 
     }
 
