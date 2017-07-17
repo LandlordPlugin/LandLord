@@ -3,6 +3,7 @@ package biz.princeps.landlord;
 import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.handler.VaultHandler;
 import biz.princeps.landlord.handler.WorldGuardHandler;
+import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.persistent.Requests;
@@ -54,7 +55,7 @@ public class Landlord extends JavaPlugin {
         lPlayerManager = new LPlayerManager();
 
         manageCommands();
-
+        manageListners();
         PrincepsLib.setPluginInstance(this);
         databaseAPI = new DatabaseAPI(DatabaseType.valueOf(getConfig().getString("DatabaseType")), getConfig(), new Requests(), "biz.princeps.landlord.persistent");
     }
@@ -70,6 +71,11 @@ public class Landlord extends JavaPlugin {
         BukkitCommandManager cmdmanager = new BukkitCommandManager(this);
         cmdmanager.registerCommand(new Landlordbase());
     }
+
+    private void manageListners() {
+        new JoinListener();
+    }
+
 
     private WorldGuardPlugin getWorldGuard() {
         Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
@@ -92,7 +98,7 @@ public class Landlord extends JavaPlugin {
         return instance;
     }
 
-    public static DatabaseAPI getDatabaseAPI() {
+    public DatabaseAPI getDatabaseAPI() {
         return databaseAPI;
     }
 
