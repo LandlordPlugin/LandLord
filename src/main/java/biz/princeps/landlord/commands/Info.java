@@ -1,6 +1,9 @@
 package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.util.OwnedLand;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.RegionGroup;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import org.bukkit.Chunk;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -58,7 +61,11 @@ public class Info extends LandlordCommand {
             land.getLand().getFlags().keySet().forEach(System.out::println);
             land.getLand().getFlags().values().forEach(System.out::println);
 
+            land.getLand().setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
+            land.getLand().setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.MEMBERS);
 
+            land.getLand().setFlag(DefaultFlag.BUILD, StateFlag.State.ALLOW);
+            land.getLand().setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.OWNERS);
         } else {
             // unclaimed
             player.sendMessage(free

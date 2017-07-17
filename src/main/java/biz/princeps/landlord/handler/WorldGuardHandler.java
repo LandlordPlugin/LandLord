@@ -53,17 +53,32 @@ public class WorldGuardHandler {
         return (pr != null ? new OwnedLand(pr, chunk) : null);
     }
 
-    public void unclaim(Chunk chunk, String name){
+    public void unclaim(Chunk chunk, String name) {
         wg.getRegionManager(chunk.getWorld()).removeRegion(name);
     }
 
     public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region) {
-        region.setFlag(new StateFlag("build", false), StateFlag.State.DENY);
-        region.setFlag(new StateFlag("interact", false), StateFlag.State.DENY);
-        region.setFlag(new StateFlag("pvp", false), StateFlag.State.DENY);
-        region.setFlag(new StateFlag("tnt", false), StateFlag.State.DENY);
+        // region.setFlag(new StateFlag("build", false, RegionGroup.OWNERS), StateFlag.State.ALLOW);
+        //region.setFlag(new StateFlag("interact", false, RegionGroup.OWNERS), StateFlag.State.ALLOW);
+        //region.setFlag(new StateFlag("pvp", false, RegionGroup.OWNERS), StateFlag.State.ALLOW);
+        //region.setFlag(new StateFlag("tnt", false, RegionGroup.OWNERS), StateFlag.State.ALLOW);
 
 
+        //   region.setFlag(new StateFlag("build", true), StateFlag.State.DENY);
+        //   region.setFlag(new StateFlag("interact", true), StateFlag.State.DENY);
+        //   region.setFlag(new StateFlag("pvp", true), StateFlag.State.DENY);
+        //region.setFlag(new StateFlag("tnt", true), StateFlag.State.DENY);
+
+        // region.setFlag(new StateFlag("build", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
+        //  region.setFlag(new StateFlag("interact", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
+        //  region.setFlag(new StateFlag("pvp", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
+        //  region.setFlag(new StateFlag("tnt", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
+
+        region.setFlag(DefaultFlag.BUILD, StateFlag.State.ALLOW);
+        region.setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.MEMBERS);
+
+        region.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
+        region.setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
         return region;
     }
 
