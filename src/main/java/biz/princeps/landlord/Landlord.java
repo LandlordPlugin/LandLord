@@ -8,16 +8,14 @@ import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.persistent.Requests;
 import biz.princeps.lib.PrincepsLib;
-import biz.princeps.lib.storage.*;
+import biz.princeps.lib.storage.DatabaseAPI;
+import biz.princeps.lib.storage.DatabaseType;
 import co.aikar.commands.BukkitCommandManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Created by spatium on 16.07.17.

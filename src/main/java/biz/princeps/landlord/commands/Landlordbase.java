@@ -2,7 +2,6 @@ package biz.princeps.landlord.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,6 +25,7 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("unfriend", new Unfriend());
         subcommands.put("addfriendall", new AddfriendAll());
         subcommands.put("unfriendall", new UnfriendAll());
+        subcommands.put("listlands", new ListLands());
     }
 
     //TODO
@@ -79,4 +79,20 @@ public class Landlordbase extends BaseCommand {
     public void onUnfriendAll(Player player, String[] names) {
         ((UnfriendAll) subcommands.get("unfriendall")).onUnfriendall(player, names);
     }
+
+    @Subcommand("list")
+    @CommandAlias("listlands|landlist")
+    @Syntax("land list - lists all your lands")
+    public void onLandList(Player player) {
+        int i = -1;
+        for (String s : getOrigArgs()) {
+            try {
+                i = Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+            }
+        }
+        ((ListLands) subcommands.get("listlands")).onListLands(player, new String[]{String.valueOf(i == -1 ? 0 : i)});
+    }
+
+
 }

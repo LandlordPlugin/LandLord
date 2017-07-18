@@ -2,8 +2,6 @@ package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.manager.LangManager;
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.CommandIssuer;
 import org.bukkit.entity.Player;
 
 /**

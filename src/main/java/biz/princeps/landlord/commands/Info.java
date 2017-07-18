@@ -1,9 +1,6 @@
 package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.util.OwnedLand;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
-import com.sk89q.worldguard.protection.flags.StateFlag;
 import org.bukkit.Chunk;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;

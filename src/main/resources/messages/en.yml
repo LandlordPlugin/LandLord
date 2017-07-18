@@ -36,3 +36,7 @@ Commands:
     noPlayer: '&eCould not find following players: %players%'
     success: '&bSuccessfully removed %players% from all %count% lands you own'
     noFriend: '&e%player% is not friended on any of your lands!'
+  ListLands:
+    noLands: '&eYou dont own any lands!'
+    header: '&bHere is a list of all %count% lands you own:'
+    landSegment: '&eLand: &b%info%'
