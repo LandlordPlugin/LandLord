@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.UUID;
 
 /**
  * Created by spatium on 17.07.17.
@@ -34,9 +36,18 @@ public class Addfriend extends LandlordCommand {
         UUIDFetcher.getInstance().namesToUUID(names, new FutureCallback<DefaultDomain>() {
             @Override
             public void onSuccess(@Nullable DefaultDomain defaultDomain) {
-                land.addFriends(defaultDomain);
-                player.sendMessage(lm.getString("Commands.Addfriend.success")
-                        .replaceAll("%players%", Arrays.asList(names).toString()));
+                Iterator<UUID> iterator = defaultDomain.getUniqueIds().iterator();
+                while (iterator.hasNext()) {
+                    UUID uuid = iterator.next();
+                    if (!land.getLand().getOwners().getUniqueIds().contains(uuid)) {
+                        land.getLand().getMembers().addPlayer(uuid);
+                        player.sendMessage(lm.getString("Commands.Addfriend.success")
+                                .replaceAll("%players%", Arrays.asList(names).toString()));
+                    } else {
+                        player.sendMessage(lm.getString("Commands.Addfriend.alreadyOwn"));
+                    }
+                }
+
             }
 
             @Override

@@ -17,14 +17,9 @@ public class LPlayer {
     @Column(name = "uuid", length = 36)
     private UUID uuid;
 
-    @Column(name = "important")
-    private int someStuff;
-
     @Constructor
-    public LPlayer(@Column(name = "uuid") String uuid,
-                   @Column(name = "important") int someStuff) {
+    public LPlayer(@Column(name = "uuid") String uuid) {
         this.uuid = UUID.fromString(uuid);
-        this.someStuff = someStuff;
     }
 
     public LPlayer(UUID uuid) {
@@ -37,13 +32,5 @@ public class LPlayer {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
-    }
-
-    public int getSomeStuff() {
-        return someStuff;
-    }
-
-    public void setSomeStuff(int someStuff) {
-        this.someStuff = someStuff;
     }
 }
