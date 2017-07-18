@@ -25,8 +25,10 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("addfriend", new Addfriend());
         subcommands.put("unfriend", new Unfriend());
         subcommands.put("addfriendall", new AddfriendAll());
+        subcommands.put("unfriendall", new UnfriendAll());
     }
 
+    //TODO
     @Default
     @UnknownHandler
     @Subcommand("help")
@@ -67,8 +69,14 @@ public class Landlordbase extends BaseCommand {
     }
 
     @Subcommand("addfriendall|friendall")
-    @Syntax("land addfriend - Adds friends to your land")
+    @Syntax("land addfriend - Adds friends to all your land")
     public void onAddfriendAll(Player player, String[] names) {
         ((AddfriendAll) subcommands.get("addfriendall")).onAddfriend(player, names);
+    }
+
+    @Subcommand("unfriendall|removeallfriends")
+    @Syntax("land unfriendall - anfriend someone on all your lands")
+    public void onUnfriendAll(Player player, String[] names) {
+        ((UnfriendAll) subcommands.get("unfriendall")).onUnfriendall(player, names);
     }
 }

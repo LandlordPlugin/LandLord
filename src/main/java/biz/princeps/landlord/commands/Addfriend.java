@@ -19,10 +19,6 @@ public class Addfriend extends LandlordCommand {
 
     public void onAddfriend(Player player, String[] names) {
 
-        if (this.worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
-            return;
-        }
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
