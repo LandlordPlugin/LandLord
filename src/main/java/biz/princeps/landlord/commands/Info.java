@@ -60,12 +60,6 @@ public class Info extends LandlordCommand {
 
             land.getLand().getFlags().keySet().forEach(System.out::println);
             land.getLand().getFlags().values().forEach(System.out::println);
-
-            land.getLand().setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
-            land.getLand().setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.MEMBERS);
-
-            land.getLand().setFlag(DefaultFlag.BUILD, StateFlag.State.ALLOW);
-            land.getLand().setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.OWNERS);
         } else {
             // unclaimed
             player.sendMessage(free

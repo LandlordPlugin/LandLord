@@ -74,9 +74,6 @@ public class WorldGuardHandler {
         //  region.setFlag(new StateFlag("pvp", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
         //  region.setFlag(new StateFlag("tnt", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
 
-        region.setFlag(DefaultFlag.BUILD, StateFlag.State.ALLOW);
-        region.setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.MEMBERS);
-
         region.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
         region.setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
         return region;

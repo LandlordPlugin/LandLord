@@ -23,5 +23,8 @@ Commands:
     notOwn: '&eYou do not own this chunk. It is owned by %owner%'
     noPlayer: '&eCould not find following players: %players%'
     success: '&bSuccessfully added %players% to this land'
-
+  Unfriend:
+    notOwn: '&eYou do not own this chunk. It is owned by %owner%'
+    noPlayer: '&eCould not find following players: %players%'
+    success: '&bSuccessfully added %players% to this land'
 

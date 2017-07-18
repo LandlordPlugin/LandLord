@@ -37,6 +37,10 @@ public class OwnedLand {
         region.getMembers().addAll(domain);
     }
 
+    public void removeFriends(DefaultDomain defaultDomain) {
+        region.getMembers().removeAll(defaultDomain);
+    }
+
     public String printOwners() {
         StringBuilder sb = new StringBuilder();
         Iterator<UUID> it = region.getOwners().getUniqueIds().iterator();
@@ -59,6 +63,11 @@ public class OwnedLand {
         }
         return sb.toString();
     }
+
+    public ProtectedRegion getLand() {
+        return this.region;
+    }
+
 
     /**
      * Highlights the border around the chunk with a particle effect.
@@ -113,7 +122,4 @@ public class OwnedLand {
         return maxCost - (maxCost - minCost) * var;
     }
 
-    public ProtectedRegion getLand() {
-        return this.region;
-    }
 }
