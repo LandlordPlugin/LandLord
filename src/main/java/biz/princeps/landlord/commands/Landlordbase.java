@@ -228,6 +228,11 @@ public class Landlordbase extends BaseCommand {
 
             @Override
             public void run() {
+                if (counter >= objs.size() - 1) {
+                    db.getLogger().info("Finished migrating database. Migrated " + objs.size() + " lands!");
+                    cancel();
+                }
+
                 DataObject next = objs.get(counter);
                 World world1 = Bukkit.getWorld(next.world);
                 if (world1 != null) {
@@ -239,10 +244,7 @@ public class Landlordbase extends BaseCommand {
                 if (counter % 600 == 0)
                     db.getLogger().info("Processed " + counter + " lands already. " + (objs.size() - counter) / 20 / 60 + " minutes remaining!");
 
-                if (counter >= objs.size()) {
-                    db.getLogger().info("Finished migrating database. Migrated " + objs.size() + " lands!");
-                    cancel();
-                }
+
             }
         }.runTaskTimer(Landlord.getInstance(), 0, 1);
     }
