@@ -159,29 +159,30 @@ public class Landlordbase extends BaseCommand {
                     logger.info("Starting to migrate from v1 Ebean Database...");
                     migrate(sqLite, "ll_land", "owner_name", "world_name", "x", "z");
                 }
-            } else if (args[0].equals("v2")) {
-                if (args.length == 2) {
-                    if (args[1].equals("sqlite")) {
-                        // SQLite based migration
-                        SQLite sqLite = new SQLite(logger, Landlord.getInstance().getDataFolder() + "/landlord.db") {
-                        };
+                if (args[0].equals("v2")) {
+                    if (args.length == 2) {
+                        if (args[1].equals("sqlite")) {
+                            // SQLite based migration
+                            SQLite sqLite = new SQLite(logger, Landlord.getInstance().getDataFolder() + "/database.db") {
+                            };
 
-                        logger.info("Starting to migrate from v2-SQLite Database...");
-                        migrate(sqLite, "ll_land", "owneruuid", "world", "x", "z");
+                            logger.info("Starting to migrate from v2-SQLite Database...");
+                            migrate(sqLite, "ll_land", "owneruuid", "world", "x", "z");
 
-                    } else if (args[1].equals("mysql")) {
-                        // mysql based migration
+                        } else if (args[1].equals("mysql")) {
+                            // mysql based migration
 
-                        logger.info("In your plugin folder a file called MySQL.yml has been generated. You need to enter the credentials of your former landlord database.");
-                        FileConfiguration mysqlConfig = PrincepsLib.prepareDatabaseFile();
-                        MySQL mySQL = new MySQL(Landlord.getInstance().getLogger(), mysqlConfig.getString("MySQL.Hostname"),
-                                mysqlConfig.getInt("MySQL.Port"),
-                                mysqlConfig.getString("MySQL.Database"),
-                                mysqlConfig.getString("MySQL.User"),
-                                mysqlConfig.getString("MySQL.Password")) {
-                        };
-                        logger.info("Starting to migrate from v2-MySQL Database...");
-                        migrate(mySQL, "ll_land", "owneruuid", "world", "x", "z");
+                            logger.info("In your plugin folder a file called MySQL.yml has been generated. You need to enter the credentials of your former landlord database.");
+                            FileConfiguration mysqlConfig = PrincepsLib.prepareDatabaseFile();
+                            MySQL mySQL = new MySQL(Landlord.getInstance().getLogger(), mysqlConfig.getString("MySQL.Hostname"),
+                                    mysqlConfig.getInt("MySQL.Port"),
+                                    mysqlConfig.getString("MySQL.Database"),
+                                    mysqlConfig.getString("MySQL.User"),
+                                    mysqlConfig.getString("MySQL.Password")) {
+                            };
+                            logger.info("Starting to migrate from v2-MySQL Database...");
+                            migrate(mySQL, "ll_land", "owneruuid", "world", "x", "z");
+                        }
                     }
                 }
             }
@@ -205,7 +206,7 @@ public class Landlordbase extends BaseCommand {
     public void migrate(AbstractDatabase db, String tablename, String ownerColumn, String worldColumn, String xColumn, String zColumn) {
         List<DataObject> objs = new ArrayList<>();
 
-        db.handleResultSet("SELECT * FROM ?", res -> {
+        db.handleResultSet("SELECT * FROM " + tablename, res -> {
 
             try {
                 while (res.next()) {
@@ -219,7 +220,7 @@ public class Landlordbase extends BaseCommand {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }, tablename);
+        });
         db.getLogger().info("Finished fetching data from old database. Size: " + objs.size() + " lands");
         db.getLogger().info("The next step will take around " + objs.size() / 20 / 60 + " minutes");
 
