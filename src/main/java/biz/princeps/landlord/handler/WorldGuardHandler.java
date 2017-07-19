@@ -88,8 +88,6 @@ public class WorldGuardHandler {
         region.setFlag(DefaultFlag.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell"));
         region.setFlag(DefaultFlag.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting"));
 
-
-
         return region;
     }
 

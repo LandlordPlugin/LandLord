@@ -28,6 +28,7 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("listlands", new ListLands());
         subcommands.put("landmap", new LandMap());
         subcommands.put("clearworld", new Clear());
+        subcommands.put("manage", new Manage());
     }
 
     //TODO
@@ -120,6 +121,14 @@ public class Landlordbase extends BaseCommand {
     @CommandPermission("landlord.admin.clearworld")
     public void onClearWorld(Player player, @Default("null") String target) {
         ((Clear) subcommands.get("clearworld")).onClearWorld(player, target);
+    }
+
+
+    @Subcommand("manage|mgn")
+    @Syntax("land manage - manages the land you are standing on")
+    @CommandPermission("landlord.player.own")
+    public void onLandManage(Player player, @Default("null") String[] args) {
+        ((Manage) subcommands.get("manage")).onManage(player, args);
     }
 
 }

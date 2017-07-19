@@ -29,7 +29,7 @@ Commands:
   Unfriend:
     notOwn: '&eYou do not own this chunk. It is owned by %owner%'
     noPlayer: '&eCould not find following players: %players%'
-    success: '&bSuccessfully added %players% to this land'
+    success: '&bSuccessfully removed %players% from this land'
   AddfriendAll:
     noPlayer: '&eCould not find following players: %players%'
     success: '&bSuccessfully added %players% to all %count% lands you own'
@@ -52,6 +52,19 @@ Commands:
     success: '&bSuccessfully cleared %count% lands in world %world%'
     successPlayer: '&bSuccessfully cleared %count% lands from player %player%'
     noPlayer: '&eCould not find following players: %players%'
+  Manage:
+    notOwn: '&eYou do not own this chunk. It is owned by %owner%'
+    notOwnFreeLand: '&eYou do not own this chunk!'
+    toggle: '&8toggle'
+    list:
+      - '&8=========== &aManage %land% &8==========='
+      - '&fClick any line in order to manage your land'
+      - '&eFriends: &2%friends%'
+      - '&eAllow for everyone %allow%'
+      - '&eGreet-Message: %greet%'
+      - '&eFarewell-Message: %farewell%'
+      - '&eRegenerate %regen%'
+    toggledAllow: 'Building for everyone is now on %state%'
 
 Alerts:
   defaultGreeting: 'Welcome in the glory lands!'
