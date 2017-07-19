@@ -78,7 +78,6 @@
             <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>biz.princeps</groupId>
             <artifactId>PrincepsLib</artifactId>

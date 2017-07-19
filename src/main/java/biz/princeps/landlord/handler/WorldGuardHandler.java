@@ -13,10 +13,11 @@ import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.World;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by spatium on 17.07.17.
@@ -29,24 +30,27 @@ public class WorldGuardHandler {
         this.wg = wg;
     }
 
-    public void claim(Chunk chunk, Player owner) {
+    public void claim(Chunk chunk, UUID owner) {
         Location down = chunk.getBlock(0, 0, 0).getLocation();
         Location upper = chunk.getBlock(15, 256, 15).getLocation();
 
+        this.claim(owner, OwnedLand.getLandName(chunk), chunk.getWorld(), down, upper);
+    }
+
+    public void claim(UUID owner, String landname, World world, Location down, Location upper) {
         BlockVector vec1 = OwnedLand.locationToVec(down);
         BlockVector vec2 = OwnedLand.locationToVec(upper);
 
-        ProtectedCuboidRegion pr = new ProtectedCuboidRegion(OwnedLand.getLandName(chunk), vec1, vec2);
+        ProtectedCuboidRegion pr = new ProtectedCuboidRegion(landname, vec1, vec2);
 
         DefaultDomain ownerDomain = new DefaultDomain();
-        ownerDomain.addPlayer(owner.getUniqueId());
+        ownerDomain.addPlayer(owner);
         pr.setOwners(ownerDomain);
-
 
         // flag management
         pr = setDefaultFlags(pr);
 
-        RegionManager manager = wg.getRegionContainer().get(chunk.getWorld());
+        RegionManager manager = wg.getRegionContainer().get(world);
 
         manager.addRegion(pr);
     }
@@ -109,5 +113,6 @@ public class WorldGuardHandler {
 
         return lands;
     }
+
 
 }

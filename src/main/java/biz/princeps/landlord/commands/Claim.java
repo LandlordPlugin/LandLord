@@ -40,7 +40,7 @@ public class Claim extends LandlordCommand {
             return;
         }
 
-        plugin.getWgHandler().claim(chunk, player);
+        plugin.getWgHandler().claim(chunk, player.getUniqueId());
         player.sendMessage(lm.getString("Commands.Claim.success")
                 .replaceAll("%chunk%", OwnedLand.getLandName(chunk))
                 .replaceAll("%world%", chunk.getWorld().getName()));

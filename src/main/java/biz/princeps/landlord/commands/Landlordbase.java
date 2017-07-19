@@ -1,12 +1,23 @@
 package biz.princeps.landlord.commands;
 
+import biz.princeps.landlord.Landlord;
+import biz.princeps.lib.PrincepsLib;
+import biz.princeps.lib.storage.AbstractDatabase;
+import biz.princeps.lib.storage.MySQL;
+import biz.princeps.lib.storage.SQLite;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by spatium on 16.07.17.
@@ -131,4 +142,108 @@ public class Landlordbase extends BaseCommand {
         ((Manage) subcommands.get("manage")).onManage(player, args);
     }
 
+
+    @Subcommand("migrate")
+    public void onMigrate(String[] args) {
+        if (getCurrentCommandIssuer().hasPermission("landlord.admin.manage")) {
+            Logger logger = Landlord.getInstance().getLogger();
+
+            if (args.length > 0) {
+
+                if (args[0].equals("v1")) {
+                    // SQLite based migration
+
+                    SQLite sqLite = new SQLite(logger, Landlord.getInstance().getDataFolder() + "/Landlord.db") {
+                    };
+
+                    logger.info("Starting to migrate from v1 Ebean Database...");
+                    migrate(sqLite, "ll_land", "owner_name", "world_name", "x", "z");
+                }
+            } else if (args[0].equals("v2")) {
+                if (args.length == 2) {
+                    if (args[1].equals("sqlite")) {
+                        // SQLite based migration
+                        SQLite sqLite = new SQLite(logger, Landlord.getInstance().getDataFolder() + "/landlord.db") {
+                        };
+
+                        logger.info("Starting to migrate from v2-SQLite Database...");
+                        migrate(sqLite, "ll_land", "owneruuid", "world", "x", "z");
+
+                    } else if (args[1].equals("mysql")) {
+                        // mysql based migration
+
+                        logger.info("In your plugin folder a file called MySQL.yml has been generated. You need to enter the credentials of your former landlord database.");
+                        FileConfiguration mysqlConfig = PrincepsLib.prepareDatabaseFile();
+                        MySQL mySQL = new MySQL(Landlord.getInstance().getLogger(), mysqlConfig.getString("MySQL.Hostname"),
+                                mysqlConfig.getInt("MySQL.Port"),
+                                mysqlConfig.getString("MySQL.Database"),
+                                mysqlConfig.getString("MySQL.User"),
+                                mysqlConfig.getString("MySQL.Password")) {
+                        };
+                        logger.info("Starting to migrate from v2-MySQL Database...");
+                        migrate(mySQL, "ll_land", "owneruuid", "world", "x", "z");
+                    }
+                }
+            }
+        }
+    }
+
+    class DataObject {
+        UUID owner;
+        String world;
+        int x, z;
+
+        public DataObject(UUID owner, String world, int x, int z) {
+            this.owner = owner;
+            this.world = world;
+            this.x = x;
+            this.z = z;
+        }
+    }
+
+
+    public void migrate(AbstractDatabase db, String tablename, String ownerColumn, String worldColumn, String xColumn, String zColumn) {
+        List<DataObject> objs = new ArrayList<>();
+
+        db.handleResultSet("SELECT * FROM ?", res -> {
+
+            try {
+                while (res.next()) {
+                    UUID owner = UUID.fromString(res.getString(ownerColumn));
+                    String world = res.getString(worldColumn);
+                    int x = res.getInt(xColumn);
+                    int z = res.getInt(zColumn);
+
+                    objs.add(new DataObject(owner, world, x, z));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, tablename);
+        db.getLogger().info("Finished fetching data from old database. Size: " + objs.size() + " lands");
+        db.getLogger().info("The next step will take around " + objs.size() / 20 / 60 + " minutes");
+
+        new BukkitRunnable() {
+            int counter = 0;
+
+            @Override
+            public void run() {
+                DataObject next = objs.get(counter);
+                World world1 = Bukkit.getWorld(next.world);
+                if (world1 != null) {
+                    Chunk chunk = world1.getChunkAt(next.x, next.z);
+                    Landlord.getInstance().getWgHandler().claim(chunk, next.owner);
+                }
+                counter++;
+
+                if (counter % 600 == 0)
+                    db.getLogger().info("Processed " + counter + " lands already. " + (objs.size() - counter) / 20 / 60 + " minutes remaining!");
+
+                if (counter >= objs.size()) {
+                    db.getLogger().info("Finished migrating database. Migrated " + objs.size() + " lands!");
+                    cancel();
+                }
+            }
+        }.runTaskTimer(Landlord.getInstance(), 0, 1);
+    }
 }
