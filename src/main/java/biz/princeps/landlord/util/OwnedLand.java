@@ -117,9 +117,14 @@ public class OwnedLand {
         double maxCost = plugin.getConfig().getDouble("Formula.maxCost");
         double multiplier = plugin.getConfig().getDouble("Formula.multiplier");
         int x = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
-        double var = Math.pow(multiplier, x);
+        int freeLands = plugin.getConfig().getInt("Freelands");
 
-        return maxCost - (maxCost - minCost) * var;
+        double var = Math.pow(multiplier, x - freeLands);
+
+        if (x < freeLands)
+            return 0;
+        else
+            return maxCost - (maxCost - minCost) * var;
     }
 
 }

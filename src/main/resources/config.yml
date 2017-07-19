@@ -20,7 +20,9 @@ Formula:
   multiplier: 0.95
 # on unclaim, this percentage of the original price is paid back.
 Payback: 0.8
+Freelands: 1
 
+# -----------        Map Stuff        ------------
 Map:
   enable: true
 # Refreshrate in Ticks. 20 ticks is equal to one seocnd. The lower you set the value the more laggy it might be
