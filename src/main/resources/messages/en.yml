@@ -61,10 +61,13 @@ Commands:
       - '&fClick any line in order to manage your land'
       - '&eFriends: &2%friends%'
       - '&eAllow for everyone %allow%'
-      - '&eGreet-Message: %greet%'
-      - '&eFarewell-Message: %farewell%'
+      - '&eGreet-Message: &8%greet%'
+      - '&eFarewell-Message: &8%farewell%'
       - '&eRegenerate %regen%'
     toggledAllow: 'Building for everyone is now on %state%'
+    regenerate: '&4Clicking on this message will reset your land! %nextline%&4This action will cost you %cost%!'
+    regenSuccess: '&bSuccessfully resetted your land %name% for %cost%'
+    notEnoughMoney: '&eYou dont have enough money to regenerate the land %name% (Cost: %cost%)'
 
 Alerts:
   defaultGreeting: 'Welcome in the glory lands!'

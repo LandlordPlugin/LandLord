@@ -21,6 +21,7 @@ Formula:
 # on unclaim, this percentage of the original price is paid back.
 Payback: 0.8
 Freelands: 1
+ResetCost: 1000.0
 
 # -----------        Map Stuff        ------------
 Map:

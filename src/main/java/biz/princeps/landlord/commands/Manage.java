@@ -94,13 +94,52 @@ public class Manage extends LandlordCommand {
                 player.sendMessage(lm.getString("Commands.Manage.toggledAllow")
                         .replaceAll("%state%", state.name()));
                 break;
+
             case "regen":
-                player.sendMessage("regeb");
+                double cost = plugin.getConfig().getDouble("ResetCost");
+
+                if (args.length == 1) {
+                    ComponentBuilder builder = new ComponentBuilder("");
+                    builder.append(lm.getRawString("Commands.Manage.regenerate")
+                            .replaceAll("%nextline%", "\n")
+                            .replaceAll("%cost%", plugin.getVaultHandler().format(cost)));
+                    builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/land manage regen yes"));
+
+                    player.spigot().sendMessage(builder.create());
+                } else if (args[1].equals("yes")) {
+
+                    if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
+                        plugin.getVaultHandler().take(player.getUniqueId(), cost);
+                        player.getWorld().regenerateChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
+
+                        player.sendMessage(lm.getString("Commands.Manage.regenSuccess")
+                                .replaceAll("%cost%", plugin.getVaultHandler().format(cost))
+                                .replaceAll("%name%", land.getLandName()));
+                    } else
+                        player.sendMessage(lm.getString("Commands.Manage.notEnoughMoney")
+                                .replaceAll("%cost%", plugin.getVaultHandler().format(cost))
+                                .replaceAll("%name%", land.getLandName()));
+                }
                 break;
+
             case "setgreet":
+                StringBuilder sb = new StringBuilder();
+                for (int i = 1; i < args.length; i++) {
+                    sb.append(args[i]).append(" ");
+                }
+                String newmsg = sb.toString();
+
+                land.getLand().setFlag(DefaultFlag.GREET_MESSAGE, newmsg);
                 break;
 
             case "setfarewell":
+                sb = new StringBuilder();
+                for (int i = 1; i < args.length; i++) {
+                    sb.append(args[i]).append(" ");
+                }
+                newmsg = sb.toString();
+
+                land.getLand().setFlag(DefaultFlag.FAREWELL_MESSAGE, newmsg);
                 break;
         }
     }
