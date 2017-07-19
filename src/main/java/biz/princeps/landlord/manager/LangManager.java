@@ -55,4 +55,9 @@ public class LangManager {
         }
         return finishedFormatting;
     }
+
+    public String getRawString(String path) {
+        String message = msg.getString(path);
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
 }

@@ -6,6 +6,7 @@ import biz.princeps.landlord.handler.WorldGuardHandler;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.manager.LangManager;
+import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.Requests;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.storage.DatabaseAPI;
@@ -30,6 +31,7 @@ public class Landlord extends JavaPlugin {
 
     private LangManager langManager;
     private LPlayerManager lPlayerManager;
+    private MapManager mapManager;
 
     @Override
     public void onEnable() {
@@ -60,11 +62,14 @@ public class Landlord extends JavaPlugin {
         databaseAPI = new DatabaseAPI(DatabaseType.valueOf(getConfig().getString("DatabaseType")), getConfig(), new Requests(), "biz.princeps.landlord.persistent");
 
         lPlayerManager = new LPlayerManager(databaseAPI);
+
+        mapManager = new MapManager();
     }
 
 
     @Override
     public void onDisable() {
+        mapManager.removeAllMaps();
 
     }
 
@@ -118,5 +123,9 @@ public class Landlord extends JavaPlugin {
 
     public LPlayerManager getPlayerManager() {
         return lPlayerManager;
+    }
+
+    public MapManager getMapManager() {
+        return mapManager;
     }
 }

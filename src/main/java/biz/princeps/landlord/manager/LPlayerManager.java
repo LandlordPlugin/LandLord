@@ -4,7 +4,6 @@ import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.manager.MappedManager;
 import biz.princeps.lib.storage.DatabaseAPI;
 
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -26,9 +25,4 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
 
     }
 
-
-    @Override
-    public void addAll(Map<UUID, LPlayer> map) {
-
-    }
 }

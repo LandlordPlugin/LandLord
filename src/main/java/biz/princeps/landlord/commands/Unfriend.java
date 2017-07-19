@@ -37,6 +37,8 @@ public class Unfriend extends LandlordCommand {
                 land.removeFriends(defaultDomain);
                 player.sendMessage(lm.getString("Commands.Unfriend.success")
                         .replaceAll("%players%", Arrays.asList(names).toString()));
+                plugin.getMapManager().updateAll();
+
             }
 
             @Override

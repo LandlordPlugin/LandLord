@@ -32,6 +32,7 @@ public class Unclaim extends LandlordCommand {
                 .replaceAll("%money%", plugin.getVaultHandler().format(payback)));
 
 
+        plugin.getMapManager().updateAll();
 
     }
 

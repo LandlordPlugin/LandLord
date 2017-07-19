@@ -45,11 +45,12 @@ public class AddfriendAll extends LandlordCommand {
                                 }
                             }
                         }
-                        if (i > 0)
+                        if (i > 0) {
                             player.sendMessage(lm.getString("Commands.AddfriendAll.success")
                                     .replaceAll("%count%", String.valueOf(i))
                                     .replaceAll("%players%", Arrays.asList(names).toString()));
-                        else
+                            plugin.getMapManager().updateAll();
+                        } else
                             player.sendMessage(lm.getString("Commands.AddfriendAll.alreadyOwn"));
 
                     }

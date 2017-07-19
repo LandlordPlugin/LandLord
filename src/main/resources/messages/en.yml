@@ -1,5 +1,6 @@
 Tag: '&8[&aLandLord&8]'
 Disabled-World: '&eThis world is disabled!'
+noPermissions: '&eYou dont have the permissions to do that!'
 Commands:
   Claim:
     success: '&bYou successfully claimed chunk %chunk% in world %world%'
@@ -40,3 +41,14 @@ Commands:
     noLands: '&eYou dont own any lands!'
     header: '&bHere is a list of all %count% lands you own:'
     landSegment: '&eLand: &b%info%'
+  LandMap:
+    header: '&6>>LandMap<<'
+    yours: 'Yours'
+    friends: 'Friends'
+    others: 'Others'
+  ClearWorld:
+    success: '&bSuccessfully cleared %count% lands in world %world%'
+    successPlayer: '&bSuccessfully cleared %count% lands from player %player%'
+    noPlayer: '&eCould not find following players: %players%'
+
+

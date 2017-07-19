@@ -39,6 +39,8 @@ public class Addfriend extends LandlordCommand {
                         land.getLand().getMembers().addPlayer(uuid);
                         player.sendMessage(lm.getString("Commands.Addfriend.success")
                                 .replaceAll("%players%", Arrays.asList(names).toString()));
+                        plugin.getMapManager().updateAll();
+
                     } else {
                         player.sendMessage(lm.getString("Commands.Addfriend.alreadyOwn"));
                     }

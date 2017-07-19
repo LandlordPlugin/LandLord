@@ -46,6 +46,8 @@ public class Claim extends LandlordCommand {
                 .replaceAll("%world%", chunk.getWorld().getName()));
 
         OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
+
+        plugin.getMapManager().updateAll();
     }
 
 

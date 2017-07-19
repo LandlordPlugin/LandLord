@@ -14,6 +14,11 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by spatium on 17.07.17.
  */
@@ -81,5 +86,20 @@ public class WorldGuardHandler {
 
     public WorldGuardPlugin getWG() {
         return wg;
+    }
+
+    public Map<Chunk, OwnedLand> getNearbyLands(Location loc, int offsetX, int offsetZ) {
+
+        Map<Chunk, OwnedLand> lands = new HashMap<>();
+        int xCoord = loc.getChunk().getX();
+        int zCoord = loc.getChunk().getZ();
+        for(int x = xCoord - offsetX; x < xCoord + offsetX; x++){
+            for(int z = zCoord - offsetZ; z < zCoord + offsetZ; z++){
+                Chunk chunk = loc.getWorld().getChunkAt(x, z);
+                lands.put(chunk, getRegion(chunk));
+            }
+        }
+
+        return lands;
     }
 }
