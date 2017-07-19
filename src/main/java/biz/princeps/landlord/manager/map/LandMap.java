@@ -38,7 +38,7 @@ public class LandMap {
                     currDir = getPlayerDirection(mapViewer);
                 }
             }
-        }.runTaskTimer(plugin, 0L, plugin.getConfig().getLong("landMapRefresh")).getTaskId();
+        }.runTaskTimer(plugin, 0L, plugin.getConfig().getLong("Map.LandMapRefreshRate", 10)).getTaskId();
 
         displayMap(this.mapViewer);
     }

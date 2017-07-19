@@ -15,7 +15,11 @@ public class LandMap extends LandlordCommand {
             return;
         }
 
-        plugin.getMapManager().toggleMap(player);
+        if (plugin.getConfig().getBoolean("Map.enable"))
+            plugin.getMapManager().toggleMap(player);
+        else{
+            player.sendMessage(lm.getString("Commands.LandMap.disabled"));
+        }
 
     }
 }

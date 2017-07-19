@@ -42,6 +42,7 @@ Commands:
     header: '&bHere is a list of all %count% lands you own:'
     landSegment: '&eLand: &b%info%'
   LandMap:
+    disabled: '&eLandMap is disabled!'
     header: '&6>>LandMap<<'
     yours: 'Yours'
     friends: 'Friends'
