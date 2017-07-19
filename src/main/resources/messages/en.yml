@@ -53,4 +53,6 @@ Commands:
     successPlayer: '&bSuccessfully cleared %count% lands from player %player%'
     noPlayer: '&eCould not find following players: %players%'
 
-
+Alerts:
+  defaultGreeting: 'Welcome in the glory lands!'
+  defaultFarewell: 'Good bye, come back soon!'

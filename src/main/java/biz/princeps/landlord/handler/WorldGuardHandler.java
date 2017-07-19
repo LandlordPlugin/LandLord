@@ -1,5 +1,6 @@
 package biz.princeps.landlord.handler;
 
+import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -14,9 +15,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,6 +57,10 @@ public class WorldGuardHandler {
         return (pr != null ? new OwnedLand(pr, chunk) : null);
     }
 
+    public OwnedLand getRegion(Location loc) {
+        return getRegion(loc.getChunk());
+    }
+
     public void unclaim(Chunk chunk, String name) {
         wg.getRegionManager(chunk.getWorld()).removeRegion(name);
     }
@@ -81,6 +84,12 @@ public class WorldGuardHandler {
 
         region.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
         region.setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+
+        region.setFlag(DefaultFlag.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell"));
+        region.setFlag(DefaultFlag.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting"));
+
+
+
         return region;
     }
 
@@ -93,8 +102,8 @@ public class WorldGuardHandler {
         Map<Chunk, OwnedLand> lands = new HashMap<>();
         int xCoord = loc.getChunk().getX();
         int zCoord = loc.getChunk().getZ();
-        for(int x = xCoord - offsetX; x < xCoord + offsetX; x++){
-            for(int z = zCoord - offsetZ; z < zCoord + offsetZ; z++){
+        for (int x = xCoord - offsetX; x < xCoord + offsetX; x++) {
+            for (int z = zCoord - offsetZ; z < zCoord + offsetZ; z++) {
                 Chunk chunk = loc.getWorld().getChunkAt(x, z);
                 lands.put(chunk, getRegion(chunk));
             }
@@ -102,4 +111,5 @@ public class WorldGuardHandler {
 
         return lands;
     }
+
 }
