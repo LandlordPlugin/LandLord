@@ -27,7 +27,8 @@ public class LangManager {
             if (!folder.exists())
                 folder.mkdir();
 
-            pl.saveResource(filename, false);
+            if (!f.exists())
+                pl.saveResource(filename, false);
 
             this.msg.load(f);
         } catch (IOException e) {
