@@ -24,7 +24,7 @@ public class Unclaim extends LandlordCommand {
 
         if (!pr.isOwner(player.getUniqueId())) {
             player.sendMessage(lm.getString("Commands.Unclaim.notOwn")
-                    .replaceAll("%owner%", pr.printOwners()));
+                    .replace("%owner%", pr.printOwners()));
             return;
         }
 
@@ -41,9 +41,9 @@ public class Unclaim extends LandlordCommand {
         plugin.getWgHandler().unclaim(chunk, pr.getLandName());
 
         player.sendMessage(lm.getString("Commands.Unclaim.success")
-                .replaceAll("%chunk%", OwnedLand.getLandName(chunk))
-                .replaceAll("%world%", chunk.getWorld().getName())
-                .replaceAll("%money%", plugin.getVaultHandler().format(payback)));
+                .replace("%chunk%", OwnedLand.getLandName(chunk))
+                .replace("%world%", chunk.getWorld().getName())
+                .replace("%money%", plugin.getVaultHandler().format(payback)));
 
 
         plugin.getMapManager().updateAll();

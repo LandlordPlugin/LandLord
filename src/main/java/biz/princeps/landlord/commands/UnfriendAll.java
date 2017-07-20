@@ -41,12 +41,12 @@ public class UnfriendAll extends LandlordCommand {
                         }
                         if (i > 0) {
                             player.sendMessage(lm.getString("Commands.UnfriendAll.success")
-                                    .replaceAll("%count%", String.valueOf(i))
-                                    .replaceAll("%players%", Arrays.asList(names).toString()));
+                                    .replace("%count%", String.valueOf(i))
+                                    .replace("%players%", Arrays.asList(names).toString()));
                             plugin.getMapManager().updateAll();
                         } else
                             player.sendMessage(lm.getString("Commands.UnfriendAll.noFriend")
-                                    .replaceAll("%player%", Arrays.asList(names).toString()));
+                                    .replace("%player%", Arrays.asList(names).toString()));
 
                     }
                 }.runTaskAsynchronously(plugin);
@@ -56,7 +56,7 @@ public class UnfriendAll extends LandlordCommand {
             @Override
             public void onFailure(Throwable throwable) {
                 player.sendMessage(lm.getString("Commands.UnfriendAll.noPlayer")
-                        .replaceAll("%players%", Arrays.asList(names).toString()));
+                        .replace("%players%", Arrays.asList(names).toString()));
             }
         });
 

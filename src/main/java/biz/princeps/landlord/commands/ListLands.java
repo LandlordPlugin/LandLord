@@ -29,10 +29,10 @@ public class ListLands extends LandlordCommand {
             }
         }
         if (lands.size() > 0) {
-            lands.forEach(s -> s = segment.replaceAll("%info%", s));
+            lands.forEach(s -> s = segment.replace("%info%", s));
             BaseComponent[] baseComponents = ChatAPI.createMultiPagedMessge()
                     .setPerSite(10)
-                    .setHeaderString(header.replaceAll("%count%", String.valueOf(lands.size())))
+                    .setHeaderString(header.replace("%count%", String.valueOf(lands.size())))
                     .setPreviousString("&a<<<< Previous >>>>          ")
                     .setNextString("&a<<<< Next >>>>")
                     .setCommand("landlist", args)

@@ -244,8 +244,6 @@ public class Landlordbase extends BaseCommand {
 
                 if (counter % 600 == 0)
                     db.getLogger().info("Processed " + counter + " lands already. " + (objs.size() - counter) / 20 / 60 + " minutes remaining!");
-
-
             }
         }.runTaskTimer(Landlord.getInstance(), 0, 1);
     }

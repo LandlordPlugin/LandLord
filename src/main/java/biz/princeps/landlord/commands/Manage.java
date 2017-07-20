@@ -29,7 +29,8 @@ public class Manage extends LandlordCommand {
         }
 
         if (!land.isOwner(player.getUniqueId())) {
-            player.sendMessage(lm.getString("Commands.Manage.notOwn"));
+            player.sendMessage(lm.getString("Commands.Manage.notOwn")
+                    .replace("%owner%", land.printOwners()));
             return;
         }
         if (args.length == 0) {
@@ -41,21 +42,21 @@ public class Manage extends LandlordCommand {
             lines.forEach(s -> {
                 boolean flag = true;
                 if (s.contains("%allow%")) {
-                    builder.append(s.replaceAll("%allow%", toggle));
+                    builder.append(s.replace("%allow%", toggle));
                     builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/land manage allow"));
                 } else if (s.contains("%regen%")) {
-                    builder.append(s.replaceAll("%regen%", toggle));
+                    builder.append(s.replace("%regen%", toggle));
                     builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/land manage regen"));
                 } else if (s.contains("%greet%")) {
-                    builder.append(s.replaceAll("%greet%", land.getLand().getFlag(DefaultFlag.GREET_MESSAGE)));
+                    builder.append(s.replace("%greet%", land.getLand().getFlag(DefaultFlag.GREET_MESSAGE)));
                     builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreet "));
                 } else if (s.contains("%farewell%")) {
-                    builder.append(s.replaceAll("%farewell%", land.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)));
+                    builder.append(s.replace("%farewell%", land.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)));
                     builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewell "));
                 } else if (s.contains("%friends%")) {
                     if (land.getLand().getMembers().getUniqueIds().size() == 0) flag = false;
 
-                    builder.append(s.replaceAll("%friends%", ""));
+                    builder.append(s.replace("%friends%", ""));
                     Iterator<UUID> iterator = land.getLand().getMembers().getUniqueIds().iterator();
 
                     while (iterator.hasNext()) {
@@ -68,7 +69,7 @@ public class Manage extends LandlordCommand {
                             builder.append(", ");
                     }
                 } else if (s.contains("%land%"))
-                    builder.append(s.replaceAll("%land%", land.getLandName()));
+                    builder.append(s.replace("%land%", land.getLandName()));
                 else
                     flag = false;
 
@@ -92,7 +93,7 @@ public class Manage extends LandlordCommand {
                 land.getLand().setFlag(DefaultFlag.BUILD, state);
 
                 player.sendMessage(lm.getString("Commands.Manage.toggledAllow")
-                        .replaceAll("%state%", state.name()));
+                        .replace("%state%", state.name()));
                 break;
 
             case "regen":
@@ -101,8 +102,8 @@ public class Manage extends LandlordCommand {
                 if (args.length == 1) {
                     ComponentBuilder builder = new ComponentBuilder("");
                     builder.append(lm.getRawString("Commands.Manage.regenerate")
-                            .replaceAll("%nextline%", "\n")
-                            .replaceAll("%cost%", plugin.getVaultHandler().format(cost)));
+                            .replace("%nextline%", "\n")
+                            .replace("%cost%", plugin.getVaultHandler().format(cost)));
                     builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/land manage regen yes"));
 
                     player.spigot().sendMessage(builder.create());
@@ -113,12 +114,12 @@ public class Manage extends LandlordCommand {
                         player.getWorld().regenerateChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
 
                         player.sendMessage(lm.getString("Commands.Manage.regenSuccess")
-                                .replaceAll("%cost%", plugin.getVaultHandler().format(cost))
-                                .replaceAll("%name%", land.getLandName()));
+                                .replace("%cost%", plugin.getVaultHandler().format(cost))
+                                .replace("%name%", land.getLandName()));
                     } else
                         player.sendMessage(lm.getString("Commands.Manage.notEnoughMoney")
-                                .replaceAll("%cost%", plugin.getVaultHandler().format(cost))
-                                .replaceAll("%name%", land.getLandName()));
+                                .replace("%cost%", plugin.getVaultHandler().format(cost))
+                                .replace("%name%", land.getLandName()));
                 }
                 break;
 

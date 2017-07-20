@@ -50,9 +50,9 @@ public class Info extends LandlordCommand {
         // claimed
         if (land != null) {
             player.sendMessage(owned
-                    .replaceAll("%landid%", land.getLandName())
-                    .replaceAll("%owner%", land.printOwners())
-                    .replaceAll("%member%", land.printMembers().isEmpty() ? "-" : land.printMembers()));
+                    .replace("%landid%", land.getLandName())
+                    .replace("%owner%", land.printOwners())
+                    .replace("%member%", land.printMembers().isEmpty() ? "-" : land.printMembers()));
             OwnedLand.highlightLand(player, Particle.DRIP_WATER);
 
             land.getLand().getFlags().keySet().forEach(System.out::println);
@@ -60,8 +60,8 @@ public class Info extends LandlordCommand {
         } else {
             // unclaimed
             player.sendMessage(free
-                    .replaceAll("%landid%", OwnedLand.getLandName(chunk))
-                    .replaceAll("%price%", plugin.getVaultHandler().format(OwnedLand.calculateCost(player))));
+                    .replace("%landid%", OwnedLand.getLandName(chunk))
+                    .replace("%price%", plugin.getVaultHandler().format(OwnedLand.calculateCost(player))));
             OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
         }
 

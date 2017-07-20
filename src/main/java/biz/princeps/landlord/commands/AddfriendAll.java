@@ -47,8 +47,8 @@ public class AddfriendAll extends LandlordCommand {
                         }
                         if (i > 0) {
                             player.sendMessage(lm.getString("Commands.AddfriendAll.success")
-                                    .replaceAll("%count%", String.valueOf(i))
-                                    .replaceAll("%players%", Arrays.asList(names).toString()));
+                                    .replace("%count%", String.valueOf(i))
+                                    .replace("%players%", Arrays.asList(names).toString()));
                             plugin.getMapManager().updateAll();
                         } else
                             player.sendMessage(lm.getString("Commands.AddfriendAll.alreadyOwn"));
@@ -61,7 +61,7 @@ public class AddfriendAll extends LandlordCommand {
             @Override
             public void onFailure(Throwable throwable) {
                 player.sendMessage(lm.getString("Commands.AddfriendAll.noPlayer")
-                        .replaceAll("%players%", Arrays.asList(names).toString()));
+                        .replace("%players%", Arrays.asList(names).toString()));
             }
         });
 

@@ -24,7 +24,7 @@ public class Addfriend extends LandlordCommand {
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
         if (!land.isOwner(player.getUniqueId())) {
             player.sendMessage(lm.getString("Commands.Addfriend.notOwn")
-                    .replaceAll("%owner%", land.printOwners()));
+                    .replace("%owner%", land.printOwners()));
             return;
         }
 
@@ -38,7 +38,7 @@ public class Addfriend extends LandlordCommand {
                     if (!land.getLand().getOwners().getUniqueIds().contains(uuid)) {
                         land.getLand().getMembers().addPlayer(uuid);
                         player.sendMessage(lm.getString("Commands.Addfriend.success")
-                                .replaceAll("%players%", Arrays.asList(names).toString()));
+                                .replace("%players%", Arrays.asList(names).toString()));
                         plugin.getMapManager().updateAll();
 
                     } else {
@@ -51,7 +51,7 @@ public class Addfriend extends LandlordCommand {
             @Override
             public void onFailure(Throwable throwable) {
                 player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
-                        .replaceAll("%players%", Arrays.asList(names).toString()));
+                        .replace("%players%", Arrays.asList(names).toString()));
             }
         });
 

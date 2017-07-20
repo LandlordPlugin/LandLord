@@ -37,8 +37,8 @@ public class Clear extends LandlordCommand {
                     regions.keySet().forEach(regionManager::removeRegion);
 
                     player.sendMessage(lm.getString("Commands.ClearWorld.success")
-                            .replaceAll("%count%", String.valueOf(count))
-                            .replaceAll("%world%", world.getName()));
+                            .replace("%count%", String.valueOf(count))
+                            .replace("%world%", world.getName()));
                 } else {
 
                     UUIDFetcher.getInstance().namesToUUID(new String[]{target}, new FutureCallback<DefaultDomain>() {
@@ -53,14 +53,14 @@ public class Clear extends LandlordCommand {
 
                             todelete.forEach(regionManager::removeRegion);
                             player.sendMessage(lm.getString("Commands.ClearWorld.successPlayer")
-                                    .replaceAll("%count%", String.valueOf(count))
-                                    .replaceAll("%player%", target));
+                                    .replace("%count%", String.valueOf(count))
+                                    .replace("%player%", target));
                         }
 
                         @Override
                         public void onFailure(Throwable throwable) {
                             player.sendMessage(lm.getString("Commands.ClearWorld.noPlayer")
-                                    .replaceAll("%players%", Arrays.asList(target).toString()));
+                                    .replace("%players%", Arrays.asList(target).toString()));
                         }
                     });
 

@@ -20,7 +20,7 @@ public class Claim extends LandlordCommand {
         OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
         if (pr != null) {
             player.sendMessage(lm.getString("Commands.Claim.alreadyClaimed")
-                    .replaceAll("%owner%", pr.printOwners()));
+                    .replace("%owner%", pr.printOwners()));
             return;
         }
 
@@ -29,21 +29,21 @@ public class Claim extends LandlordCommand {
         if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
             plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
             player.sendMessage(lm.getString("Commands.Claim.moneyTook")
-                    .replaceAll("%money%", plugin.getVaultHandler().format(calculatedCost))
-                    .replaceAll("%chunk%", OwnedLand.getLandName(chunk)));
+                    .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                    .replace("%chunk%", OwnedLand.getLandName(chunk)));
 
         } else {
             // NOT ENOUG MONEY
             player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
-                    .replaceAll("%money%", plugin.getVaultHandler().format(calculatedCost))
-                    .replaceAll("%chunk%", OwnedLand.getLandName(chunk)));
+                    .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                    .replace("%chunk%", OwnedLand.getLandName(chunk)));
             return;
         }
 
         plugin.getWgHandler().claim(chunk, player.getUniqueId());
         player.sendMessage(lm.getString("Commands.Claim.success")
-                .replaceAll("%chunk%", OwnedLand.getLandName(chunk))
-                .replaceAll("%world%", chunk.getWorld().getName()));
+                .replace("%chunk%", OwnedLand.getLandName(chunk))
+                .replace("%world%", chunk.getWorld().getName()));
 
         OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
 

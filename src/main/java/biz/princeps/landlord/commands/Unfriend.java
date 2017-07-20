@@ -26,7 +26,7 @@ public class Unfriend extends LandlordCommand {
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
         if (!land.isOwner(player.getUniqueId())) {
             player.sendMessage(lm.getString("Commands.Unfriend.notOwn")
-                    .replaceAll("%owner%", land.printOwners()));
+                    .replace("%owner%", land.printOwners()));
             return;
         }
 
@@ -36,7 +36,7 @@ public class Unfriend extends LandlordCommand {
             public void onSuccess(@Nullable DefaultDomain defaultDomain) {
                 land.removeFriends(defaultDomain);
                 player.sendMessage(lm.getString("Commands.Unfriend.success")
-                        .replaceAll("%players%", Arrays.asList(names).toString()));
+                        .replace("%players%", Arrays.asList(names).toString()));
                 plugin.getMapManager().updateAll();
 
             }
@@ -44,7 +44,7 @@ public class Unfriend extends LandlordCommand {
             @Override
             public void onFailure(Throwable throwable) {
                 player.sendMessage(lm.getString("Commands.Unfriend.noPlayer")
-                        .replaceAll("%players%", Arrays.asList(names).toString()));
+                        .replace("%players%", Arrays.asList(names).toString()));
             }
         });
 
