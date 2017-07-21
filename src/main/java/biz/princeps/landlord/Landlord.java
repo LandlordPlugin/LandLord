@@ -69,8 +69,8 @@ public class Landlord extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        mapManager.removeAllMaps();
-
+        if (mapManager != null)
+            mapManager.removeAllMaps();
     }
 
 

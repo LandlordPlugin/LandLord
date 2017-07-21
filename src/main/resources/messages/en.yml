@@ -56,6 +56,7 @@ Commands:
     notOwn: '&eYou do not own this chunk. It is owned by %owner%'
     notOwnFreeLand: '&eYou do not own this chunk!'
     header: '&bManaging &e%info%'
+    invalidArguments: '&4Invalid arguments'
     AllowBuild:
       title: '&bAllow building'
       description:
@@ -77,19 +78,25 @@ Commands:
         - '&aOneLine'
         - '&aTwoLine'
         - '%var%'
-
+      clickMsg: '&aClick here to set a new greet message'
+      successful: '&aSuccessfully set greet message to %msg%'
     SetFarewell:
       title: '&bFarewell message'
       description:
         - '&aOneLine'
         - '&aTwoLine'
         - '%var%'
+      clickMsg: '&aClick here to set a new farewell message'
+      successful: '&aSuccessfully set farewell message to %msg%'
     ManageFriends:
       title: '&bManage friends'
       description:
         - '&aOneLine'
         - '&aTwoLine'
-        - '%var%'
+      friendSegment:
+        - 'Last seen: %seen%'
+        - '&4Click to remove'
+      unfriend: 'Unfriending player %player%'
 
 Alerts:
   defaultGreeting: 'Welcome in the glory lands!'
