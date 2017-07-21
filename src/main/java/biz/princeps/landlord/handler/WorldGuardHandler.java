@@ -10,7 +10,6 @@ import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -57,7 +56,7 @@ public class WorldGuardHandler {
 
     public OwnedLand getRegion(Chunk chunk) {
         RegionManager manager = wg.getRegionContainer().get(chunk.getWorld());
-        ProtectedRegion pr = manager.getRegion(OwnedLand.getLandName(chunk));
+        com.sk89q.worldguard.protection.regions.ProtectedRegion pr = manager.getRegion(OwnedLand.getLandName(chunk));
         return (pr != null ? new OwnedLand(pr, chunk) : null);
     }
 

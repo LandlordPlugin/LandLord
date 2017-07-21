@@ -1,15 +1,14 @@
 package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.persistent.LPlayer;
+import biz.princeps.lib.storage.requests.Conditions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by spatium on 17.07.17.
@@ -24,9 +23,7 @@ public class JoinListener extends BasicListener {
 
             @Override
             public void run() {
-                Map<String, Object> condis = new HashMap<>();
-                condis.put("uuid", p.getUniqueId().toString());
-                List<Object> lPlayer = plugin.getDatabaseAPI().retrieveObjects(LPlayer.class, condis);
+                List<Object> lPlayer = plugin.getDatabaseAPI().retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", p.getUniqueId().toString()).create());
                 LPlayer lp;
                 if (lPlayer.size() > 0)
                     lp = (LPlayer) lPlayer.get(0);

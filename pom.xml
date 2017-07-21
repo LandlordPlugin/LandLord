@@ -72,16 +72,18 @@
             <version>1.6</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
             <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>biz.princeps</groupId>
             <artifactId>PrincepsLib</artifactId>
-            <version>1.2</version>
+            <version>1.2.8</version>
             <scope>compile</scope>
         </dependency>
 

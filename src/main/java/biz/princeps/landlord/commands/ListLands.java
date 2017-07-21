@@ -1,10 +1,12 @@
 package biz.princeps.landlord.commands;
 
-import chat.ChatAPI;
+import biz.princeps.landlord.util.ManageGUI;
+import biz.princeps.lib.gui.MultiPagedGUI;
+import biz.princeps.lib.gui.simple.Icon;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,30 +16,33 @@ import java.util.List;
  */
 public class ListLands extends LandlordCommand {
 
+    private String header = plugin.getLangManager().getRawString("Commands.ListLands.header");
 
-    String segment = plugin.getLangManager().getString("Commands.ListLands.landSegment");
-    String header = plugin.getLangManager().getString("Commands.ListLands.header");
+    public void onListLands(Player player) {
 
-    public void onListLands(Player player, String[] args) {
+        List<ProtectedRegion> lands = new ArrayList<>();
 
-        List<String> lands = new ArrayList<>();
-
-        int i = 0;
         for (ProtectedRegion protectedRegion : plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegions().values()) {
             if (protectedRegion.isOwner(plugin.getWgHandler().getWG().wrapPlayer(player))) {
-                lands.add(ChatColor.GOLD + String.valueOf(++i) + " " + ChatColor.WHITE + protectedRegion.getId());
+                lands.add(protectedRegion);
             }
         }
         if (lands.size() > 0) {
-            lands.forEach(s -> s = segment.replace("%info%", s));
-            BaseComponent[] baseComponents = ChatAPI.createMultiPagedMessge()
-                    .setPerSite(10)
-                    .setHeaderString(header.replace("%count%", String.valueOf(lands.size())))
-                    .setPreviousString("&a<<<< Previous >>>>          ")
-                    .setNextString("&a<<<< Next >>>>")
-                    .setCommand("landlist", args)
-                    .setElements(lands).build().create();
-            player.spigot().sendMessage(baseComponents);
+
+            MultiPagedGUI landGui = new MultiPagedGUI(player, 5, header);
+
+            lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
+                    .setName(land.getId())
+                    .addClickAction((p) -> {
+                                ManageGUI manageGui = new ManageGUI(player, land, landGui);
+                                manageGui.setTitle(manageGui.getRawTitle().replace("%info%", land.getId()));
+                                manageGui.display();
+                            }
+                    )
+            ));
+
+            landGui.display();
+
         } else {
             player.sendMessage(plugin.getLangManager().getString("Commands.ListLands.noLands"));
         }

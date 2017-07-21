@@ -114,7 +114,7 @@ public class Landlordbase extends BaseCommand {
             } catch (NumberFormatException e) {
             }
         }
-        ((ListLands) subcommands.get("listlands")).onListLands(player, new String[]{String.valueOf(i == -1 ? 0 : i)});
+        ((ListLands) subcommands.get("listlands")).onListLands(player);
     }
 
     @Subcommand("map")
@@ -206,7 +206,7 @@ public class Landlordbase extends BaseCommand {
     public void migrate(AbstractDatabase db, String tablename, String ownerColumn, String worldColumn, String xColumn, String zColumn) {
         List<DataObject> objs = new ArrayList<>();
 
-        db.handleResultSet("SELECT * FROM " + tablename, res -> {
+        db.executeQuery("SELECT * FROM " + tablename, res -> {
 
             try {
                 while (res.next()) {

@@ -40,7 +40,7 @@ Commands:
     noFriend: '&e%player% is not friended on any of your lands!'
   ListLands:
     noLands: '&eYou dont own any lands!'
-    header: '&bHere is a list of all %count% lands you own:'
+    header: '&bYour lands (%site%/%maxsite%):'
     landSegment: '&eLand: &b%info%'
   LandMap:
     disabled: '&eLandMap is disabled!'
@@ -55,15 +55,7 @@ Commands:
   Manage:
     notOwn: '&eYou do not own this chunk. It is owned by %owner%'
     notOwnFreeLand: '&eYou do not own this chunk!'
-    toggle: '&8toggle'
-    list:
-      - '&8=========== &aManage %land% &8==========='
-      - '&fClick any line in order to manage your land'
-      - '&eFriends: &2%friends%'
-      - '&eAllow for everyone %allow%'
-      - '&eGreet-Message: &8%greet%'
-      - '&eFarewell-Message: &8%farewell%'
-      - '&eRegenerate %regen%'
+    header: '&bManaging &e%info%'
     toggledAllow: 'Building for everyone is now on %state%'
     regenerate: '&4Clicking on this message will reset your land! %nextline%&4This action will cost you %cost%!'
     regenSuccess: '&bSuccessfully resetted your land %name% for %cost%'

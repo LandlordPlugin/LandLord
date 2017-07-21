@@ -15,14 +15,5 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
         super(api);
     }
 
-    @Override
-    public void saveAll() {
-
-    }
-
-    @Override
-    public void loadAll() {
-
-    }
 
 }
