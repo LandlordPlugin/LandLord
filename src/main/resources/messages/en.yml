@@ -56,10 +56,40 @@ Commands:
     notOwn: '&eYou do not own this chunk. It is owned by %owner%'
     notOwnFreeLand: '&eYou do not own this chunk!'
     header: '&bManaging &e%info%'
-    toggledAllow: 'Building for everyone is now on %state%'
-    regenerate: '&4Clicking on this message will reset your land! %nextline%&4This action will cost you %cost%!'
-    regenSuccess: '&bSuccessfully resetted your land %name% for %cost%'
-    notEnoughMoney: '&eYou dont have enough money to regenerate the land %name% (Cost: %cost%)'
+    AllowBuild:
+      title: '&bAllow building'
+      description:
+        - '&aOneLine'
+        - '&aTwoLine'
+        - '%var%'
+    Regenerate:
+      title: '&bRegneration'
+      description:
+        - '&aClick here to regenerate your land'
+        - '&aCost: %var%'
+      confirmation: '&4Regeneration cost %cost%'
+      success: '&aRegenerating land %land% successful'
+      abort: '&eAborted regeneration for land %land%!'
+      notEnoughMoney: '&eYou dont have enough money to regenerate the land %name% (Cost: %cost%)'
+    SetGreet:
+      title: '&bGreeting message'
+      description:
+        - '&aOneLine'
+        - '&aTwoLine'
+        - '%var%'
+
+    SetFarewell:
+      title: '&bFarewell message'
+      description:
+        - '&aOneLine'
+        - '&aTwoLine'
+        - '%var%'
+    ManageFriends:
+      title: '&bManage friends'
+      description:
+        - '&aOneLine'
+        - '&aTwoLine'
+        - '%var%'
 
 Alerts:
   defaultGreeting: 'Welcome in the glory lands!'
