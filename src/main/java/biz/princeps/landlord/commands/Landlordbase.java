@@ -49,7 +49,7 @@ public class Landlordbase extends BaseCommand {
     @UnknownHandler
     @Subcommand("help")
     @CommandPermission("landlord.use")
-    public void onDefault(CommandSender sender, String[] args) {
+    public void onDefault(Player sender, String[] args) {
         LangManager lm = Landlord.getInstance().getLangManager();
         List<String> toDisplay = lm.getStringList("Commands.Help.list");
         int perSite = Landlord.getInstance().getConfig().getInt("HelpCommandPerSite");

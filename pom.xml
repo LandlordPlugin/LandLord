@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>paper</artifactId>
-            <version>LATEST</version>
+            <version>RELEASE</version>
             <scope>provided</scope>
         </dependency>
 
