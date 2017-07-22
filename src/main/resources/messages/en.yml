@@ -97,7 +97,14 @@ Commands:
         - 'Last seen: %seen%'
         - '&4Click to remove'
       unfriend: 'Unfriending player %player%'
-
+  Help:
+    header: '&a==== &6LandLord Help &a===='
+    list:
+      - 'line1'
+      - 'line2'
+      - 'line3'
+    previous: '&6<<< Previous        '
+    next: '&6Next >>>'
 Alerts:
   defaultGreeting: 'Welcome in the glory lands!'
   defaultFarewell: 'Good bye, come back soon!'

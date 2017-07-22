@@ -3,26 +3,20 @@ package biz.princeps.landlord.commands;
 import biz.princeps.landlord.util.ManageGUI;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
 
 /**
- * Created by spatium on 19.07.17.
+ * Created by spatium on 19.07.17 / 11:55.
  */
-public class Manage extends LandlordCommand {
+class Manage extends LandlordCommand {
 
 
-    public void onManage(Player player, @Nullable String[] args) {
+    void onManage(Player player, @Nullable String[] args) {
 
         OwnedLand land = plugin.getWgHandler().getRegion(player.getLocation().getChunk());
 
@@ -39,7 +33,6 @@ public class Manage extends LandlordCommand {
         if (args.length == 0) {
             ManageGUI gui = new ManageGUI(player, land.getLand());
             gui.display();
-            return;
         } else if (args.length >= 3) {
 
             World world;

@@ -1,7 +1,10 @@
 package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.lib.PrincepsLib;
+import biz.princeps.lib.chat.ChatAPI;
+import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.storage.AbstractDatabase;
 import biz.princeps.lib.storage.MySQL;
 import biz.princeps.lib.storage.SQLite;
@@ -42,13 +45,28 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("manage", new Manage());
     }
 
-    //TODO
     @Default
     @UnknownHandler
     @Subcommand("help")
     @CommandPermission("landlord.use")
-    public void onDefault(CommandSender sender) {
-        sender.sendMessage("help command");
+    public void onDefault(CommandSender sender, String[] args) {
+        LangManager lm = Landlord.getInstance().getLangManager();
+        List<String> toDisplay = lm.getStringList("Commands.Help.list");
+        int perSite = Landlord.getInstance().getConfig().getInt("HelpCommandPerSite");
+
+        String[] argsN = new String[1];
+        if (args.length == 2) {
+            argsN[0] = (args[1] == null ? "0" : args[1]);
+        }
+
+        MultiPagedMessage msg = ChatAPI.createMultiPagedMessge()
+                .setElements(toDisplay)
+                .setPerSite(perSite)
+                .setHeaderString(lm.getString("Commands.Help.header"))
+                .setNextString(lm.getRawString("Commands.Help.next"))
+                .setPreviousString(lm.getRawString("Commands.Help.previous"))
+                .setCommand("ll help", argsN).build();
+        sender.spigot().sendMessage(msg.create());
     }
 
     @Subcommand("claim|buy|cl")
@@ -107,13 +125,6 @@ public class Landlordbase extends BaseCommand {
     @Syntax("land list - lists all your lands")
     @CommandPermission("landlord.player.own")
     public void onLandList(Player player) {
-        int i = -1;
-        for (String s : getOrigArgs()) {
-            try {
-                i = Integer.parseInt(s);
-            } catch (NumberFormatException e) {
-            }
-        }
         ((ListLands) subcommands.get("listlands")).onListLands(player);
     }
 
@@ -194,7 +205,7 @@ public class Landlordbase extends BaseCommand {
         String world;
         int x, z;
 
-        public DataObject(UUID owner, String world, int x, int z) {
+        DataObject(UUID owner, String world, int x, int z) {
             this.owner = owner;
             this.world = world;
             this.x = x;
@@ -203,7 +214,7 @@ public class Landlordbase extends BaseCommand {
     }
 
 
-    public void migrate(AbstractDatabase db, String tablename, String ownerColumn, String worldColumn, String xColumn, String zColumn) {
+    void migrate(AbstractDatabase db, String tablename, String ownerColumn, String worldColumn, String xColumn, String zColumn) {
         List<DataObject> objs = new ArrayList<>();
 
         db.executeQuery("SELECT * FROM " + tablename, res -> {
@@ -218,7 +229,7 @@ public class Landlordbase extends BaseCommand {
                     objs.add(new DataObject(owner, world, x, z));
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                Landlord.getInstance().getLogger().warning("There was an error while trying to fetching original data: " + e);
             }
         });
         db.getLogger().info("Finished fetching data from old database. Size: " + objs.size() + " lands");

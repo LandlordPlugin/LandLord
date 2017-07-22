@@ -10,6 +10,7 @@ disabled-worlds:
   world_nether
   world_the_end
 language: en
+HelpCommandPerSite: 10
 # -----------        Cost Stuff        ------------
 # this formula uses limited growth. Cost will raise and raise until it reaches a certain point
 # Formula: maxCost - ( maxCost - minCost ) * multiplier ^ amountOfOwnedLands

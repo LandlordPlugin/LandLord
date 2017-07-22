@@ -5,7 +5,6 @@ import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
-import biz.princeps.lib.gui.simple.ClickAction;
 import biz.princeps.lib.gui.simple.Icon;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
