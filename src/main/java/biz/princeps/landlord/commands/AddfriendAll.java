@@ -35,9 +35,7 @@ public class AddfriendAll extends LandlordCommand {
                         int i = 0;
                         for (ProtectedRegion protectedRegion : plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegions().values()) {
                             if (protectedRegion.isOwner(plugin.getWgHandler().getWG().wrapPlayer(player))) {
-                                Iterator<UUID> iterator = defaultDomain.getUniqueIds().iterator();
-                                while (iterator.hasNext()) {
-                                    UUID uuid = iterator.next();
+                                for (UUID uuid : defaultDomain.getUniqueIds()) {
                                     if (!protectedRegion.getOwners().getUniqueIds().contains(uuid)) {
                                         protectedRegion.getMembers().addPlayer(uuid);
                                         i++;

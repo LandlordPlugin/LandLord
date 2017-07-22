@@ -32,9 +32,7 @@ public class Addfriend extends LandlordCommand {
         UUIDFetcher.getInstance().namesToUUID(names, new FutureCallback<DefaultDomain>() {
             @Override
             public void onSuccess(@Nullable DefaultDomain defaultDomain) {
-                Iterator<UUID> iterator = defaultDomain.getUniqueIds().iterator();
-                while (iterator.hasNext()) {
-                    UUID uuid = iterator.next();
+                for (UUID uuid : defaultDomain.getUniqueIds()) {
                     if (!land.getLand().getOwners().getUniqueIds().contains(uuid)) {
                         land.getLand().getMembers().addPlayer(uuid);
                         player.sendMessage(lm.getString("Commands.Addfriend.success")

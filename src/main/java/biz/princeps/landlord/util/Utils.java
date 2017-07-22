@@ -28,13 +28,7 @@ public class Utils {
             Object packet = titleConstructor.newInstance(basecomponent, chatType);
 
             sendPacket(player, packet);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }

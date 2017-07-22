@@ -31,9 +31,7 @@ public class LangManager {
                 pl.saveResource(filename, false);
 
             this.msg.load(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidConfigurationException e) {
+        } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }

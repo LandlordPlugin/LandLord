@@ -319,7 +319,6 @@ public class LandMap {
                 }
             }
 
-
             //todo THIS BETTER NOT STAY!!!!!!
             class myOfflinePlayer implements OfflinePlayer {
                 String name;
@@ -354,7 +353,6 @@ public class LandMap {
 
                 @Deprecated
                 public void setBanned(boolean b) {
-                    return;
                 }
 
                 public Map<String, Object> serialize() {
@@ -366,7 +364,6 @@ public class LandMap {
                 }
 
                 public void setWhitelisted(boolean b) {
-                    return;
                 }
 
                 public Location getBedSpawnLocation() {
@@ -386,7 +383,6 @@ public class LandMap {
                 }
 
                 public void setOp(boolean b) {
-                    return;
                 }
 
             }
