@@ -57,6 +57,10 @@
             <id>aikar</id>
             <url>https://ci.emc.gs/nexus/content/groups/aikar/</url>
         </repository>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -98,6 +102,12 @@
             <groupId>me.tigerhix.lib</groupId>
             <artifactId>scoreboard</artifactId>
             <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib-API</artifactId>
+            <version>4.3.0</version>
         </dependency>
     </dependencies>
 

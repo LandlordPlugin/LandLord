@@ -12,12 +12,22 @@ import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
 import co.aikar.commands.BukkitCommandManager;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * Created by spatium on 16.07.17.
@@ -57,7 +67,7 @@ public class Landlord extends JavaPlugin {
         langManager = new LangManager(this, getConfig().getString("Language", "en"));
 
         manageCommands();
-        manageListners();
+        manageListeners();
 
         PrincepsLib.setPluginInstance(this);
         databaseAPI = new DatabaseAPI(DatabaseType.valueOf(getConfig().getString("DatabaseType")), getConfig(), new Requests(), "biz.princeps.landlord.persistent");
@@ -81,7 +91,7 @@ public class Landlord extends JavaPlugin {
         cmdmanager.registerCommand(new Landlordbase());
     }
 
-    private void manageListners() {
+    private void manageListeners() {
         new JoinListener();
     }
 

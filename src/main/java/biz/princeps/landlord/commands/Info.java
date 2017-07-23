@@ -62,6 +62,5 @@ public class Info extends LandlordCommand {
                     .replace("%price%", plugin.getVaultHandler().format(OwnedLand.calculateCost(player))));
             OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
         }
-
     }
 }

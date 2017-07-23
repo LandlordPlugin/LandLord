@@ -71,7 +71,6 @@ class Manage extends LandlordCommand {
                             .replace("%msg%", newmsg));
                     break;
             }
-
         }
 
 
