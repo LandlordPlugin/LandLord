@@ -298,18 +298,13 @@ public class LandMap {
          * therefore it will be truncated if too long.
          */
 
-        if (header.length() <= 14) {
-            objective.setDisplayName(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH +
-                    "==" + ChatColor.RESET + "" + ChatColor.GOLD + " " +
-                    header
-                    + " " + ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "==");
-        } else {
-            objective.setDisplayName(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH +
-                    "==" + ChatColor.RESET + "" + ChatColor.GOLD + " " +
-                    header.substring(0, 14)
-                    + " " + ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "==");
-        }
+        // &e&m==&r&6
 
+        if (header.length() <= 14) {
+            objective.setDisplayName(header);
+        } else {
+            objective.setDisplayName(header.substring(0, 14));
+        }
 
         String[] mapData = buildMap(p);
         for (int i = 0; i < mapData.length; i++) {
@@ -442,7 +437,7 @@ public class LandMap {
                 int zz = z - radius;
                 //  Chunk chunk = p.getLocation().getWorld().getChunkAt();
 
-              //  System.out.println("xx:" + xx + " zz: " + zz);
+                //  System.out.println("xx:" + xx + " zz: " + zz);
                 OwnedLand land = nearby.get(p.getWorld().getChunkAt(xx + p.getLocation().getChunk().getX(), zz + p.getLocation().getChunk().getZ()));
 
                 String currSpot = mapBoard[z][x];

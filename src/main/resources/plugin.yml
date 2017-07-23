@@ -82,6 +82,9 @@ permissions:
     default: false
 
 
+  landlord.admin.help:
+    description: will have an advanced ll help menu
+    default: op
 
   landlord.admin.unclaim:
     description: Unclaim anyone's land

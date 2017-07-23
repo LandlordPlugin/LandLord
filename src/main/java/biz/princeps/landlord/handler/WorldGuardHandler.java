@@ -47,7 +47,7 @@ public class WorldGuardHandler {
         pr.setOwners(ownerDomain);
 
         // flag management
-        pr = setDefaultFlags(pr);
+        pr = setDefaultFlags(pr, down.getChunk());
 
         RegionManager manager = wg.getRegionContainer().get(world);
 
@@ -68,7 +68,7 @@ public class WorldGuardHandler {
         wg.getRegionManager(chunk.getWorld()).removeRegion(name);
     }
 
-    public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region) {
+    public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region, Chunk chunk) {
         // region.setFlag(new StateFlag("build", false, RegionGroup.OWNERS), StateFlag.State.ALLOW);
         //region.setFlag(new StateFlag("interact", false, RegionGroup.OWNERS), StateFlag.State.ALLOW);
         //region.setFlag(new StateFlag("pvp", false, RegionGroup.OWNERS), StateFlag.State.ALLOW);
@@ -85,11 +85,15 @@ public class WorldGuardHandler {
         //  region.setFlag(new StateFlag("pvp", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
         //  region.setFlag(new StateFlag("tnt", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
 
+        OwnedLand land = new OwnedLand(region, chunk);
+
         region.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
         region.setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
 
-        region.setFlag(DefaultFlag.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell"));
-        region.setFlag(DefaultFlag.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting"));
+        region.setFlag(DefaultFlag.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell")
+                .replace("%owner%", land.printOwners()));
+        region.setFlag(DefaultFlag.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting")
+                .replace("%owner%", land.printOwners()));
 
         return region;
     }

@@ -51,7 +51,9 @@ public class Landlordbase extends BaseCommand {
     @CommandPermission("landlord.use")
     public void onDefault(Player sender, String[] args) {
         LangManager lm = Landlord.getInstance().getLangManager();
-        List<String> toDisplay = lm.getStringList("Commands.Help.list");
+        List<String> playersList = lm.getStringList("Commands.Help.players");
+        List<String> adminList = lm.getStringList("Commands.Help.admins");
+
         int perSite = Landlord.getInstance().getConfig().getInt("HelpCommandPerSite");
 
         String[] argsN = new String[1];
@@ -59,10 +61,15 @@ public class Landlordbase extends BaseCommand {
             argsN[0] = (args[1] == null ? "0" : args[1]);
         }
 
+        List<String> toDisplay = new ArrayList<>();
+        if (sender.hasPermission("landlord.admin.help"))
+            adminList.forEach(toDisplay::add);
+        playersList.forEach(toDisplay::add);
+
         MultiPagedMessage msg = ChatAPI.createMultiPagedMessge()
                 .setElements(toDisplay)
                 .setPerSite(perSite)
-                .setHeaderString(lm.getString("Commands.Help.header"))
+                .setHeaderString(lm.getRawString("Commands.Help.header"))
                 .setNextString(lm.getRawString("Commands.Help.next"))
                 .setPreviousString(lm.getRawString("Commands.Help.previous"))
                 .setCommand("ll help", argsN).build();
