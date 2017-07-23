@@ -69,22 +69,6 @@ public class WorldGuardHandler {
     }
 
     public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region, Chunk chunk) {
-        // region.setFlag(new StateFlag("build", false, RegionGroup.OWNERS), StateFlag.State.ALLOW);
-        //region.setFlag(new StateFlag("interact", false, RegionGroup.OWNERS), StateFlag.State.ALLOW);
-        //region.setFlag(new StateFlag("pvp", false, RegionGroup.OWNERS), StateFlag.State.ALLOW);
-        //region.setFlag(new StateFlag("tnt", false, RegionGroup.OWNERS), StateFlag.State.ALLOW);
-
-
-        //   region.setFlag(new StateFlag("build", true), StateFlag.State.DENY);
-        //   region.setFlag(new StateFlag("interact", true), StateFlag.State.DENY);
-        //   region.setFlag(new StateFlag("pvp", true), StateFlag.State.DENY);
-        //region.setFlag(new StateFlag("tnt", true), StateFlag.State.DENY);
-
-        // region.setFlag(new StateFlag("build", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
-        //  region.setFlag(new StateFlag("interact", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
-        //  region.setFlag(new StateFlag("pvp", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
-        //  region.setFlag(new StateFlag("tnt", true, RegionGroup.OWNERS), StateFlag.State.ALLOW);
-
         OwnedLand land = new OwnedLand(region, chunk);
 
         region.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * File created by jcdesimp on 3/1/14.
+ * File created by jcdesimp on 3/1/14. updated on 23/09/17 by SpatiumPrinceps
  */
 public class LandMap {
 
@@ -33,17 +33,6 @@ public class LandMap {
         this.currChunk = p.getLocation().getChunk();
 
         this.currDir = getPlayerDirection(mapViewer);
-
-        /*
-        this.schedulerId = new BukkitRunnable() {
-            public void run() {
-                if (!currDir.equals(getPlayerDirection(mapViewer)) || !currChunk.equals(mapViewer.getLocation().getChunk())) {
-                    displayMap(mapViewer);
-                    currDir = getPlayerDirection(mapViewer);
-                }
-            }
-        }.runTaskTimer(plugin, 0L, plugin.getConfig().getLong("Map.LandMapRefreshRate", 10)).getTaskId();
-*/
         this.displayMap(this.mapViewer);
     }
 
@@ -311,6 +300,7 @@ public class LandMap {
                 EntryBuilder eb = new EntryBuilder();
                 String[] mapData = buildMap(p);
                 for (int i = 0; i < mapData.length; i++) {
+                    // Not sure what this part does. It works without lol
                     /*if (mapData[i].length() < 21) {
                         for (int f = 0; f < (21 - mapData[i].length()); f++) {
                             mapData[i] += ChatColor.RESET;
@@ -334,8 +324,6 @@ public class LandMap {
     }
 
     private String[] buildMap(Player p) {
-        //String st ="▒▒▒▓▒▒▒\n▒▒▓▓▓▒▒\n▒▓▓▓▓▓▒\n▓▓▓█▓▓▓\n▓▓▒▒▒▓▓\n▓▒▒▒▒▒▓\n▒▒▒▒▒▒▒";
-
         final int radius = 3;
 
         String[][] mapBoard = getMapDir(getPlayerDirection(p));
@@ -355,13 +343,7 @@ public class LandMap {
                 int xx = x - radius;
                 int zz = z - radius;
 
-                //     System.out.println(xx + p.getLocation().getChunk().getX() + ":" + (zz + p.getLocation().getChunk().getZ()));
-
                 OwnedLand land = nearby.get(p.getWorld().getChunkAt(xx + p.getLocation().getChunk().getX(), zz + p.getLocation().getChunk().getZ()));
-
-                if (land == null) {
-                    System.out.println("Foudn null land:" + (xx + p.getLocation().getChunk().getX()) + ":" + (zz + p.getLocation().getChunk().getZ()));
-                }
 
                 String currSpot = mapBoard[z][x];
 
@@ -383,7 +365,6 @@ public class LandMap {
                 row.append(currSpot);
 
             }
-            //if currchunk changed
             mapRows[z] = row.toString();
         }
 
