@@ -13,6 +13,7 @@ import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
 import co.aikar.commands.BukkitCommandManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -64,6 +65,7 @@ public class Landlord extends JavaPlugin {
         lPlayerManager = new LPlayerManager(databaseAPI);
 
         mapManager = new MapManager();
+        ScoreboardLib.setPluginInstance(this);
     }
 
 

@@ -94,6 +94,11 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>me.tigerhix.lib</groupId>
+            <artifactId>scoreboard</artifactId>
+            <version>1.0.1</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -55,8 +55,6 @@ public class Info extends LandlordCommand {
                     .replace("%member%", land.printMembers().isEmpty() ? "-" : land.printMembers()));
             OwnedLand.highlightLand(player, Particle.DRIP_WATER);
 
-            land.getLand().getFlags().keySet().forEach(System.out::println);
-            land.getLand().getFlags().values().forEach(System.out::println);
         } else {
             // unclaimed
             player.sendMessage(free

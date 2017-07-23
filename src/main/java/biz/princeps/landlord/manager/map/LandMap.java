@@ -3,11 +3,17 @@ package biz.princeps.landlord.manager.map;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.util.OwnedLand;
+import me.tigerhix.lib.scoreboard.ScoreboardLib;
+import me.tigerhix.lib.scoreboard.common.EntryBuilder;
+import me.tigerhix.lib.scoreboard.type.Entry;
+import me.tigerhix.lib.scoreboard.type.Scoreboard;
+import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
+import me.tigerhix.lib.scoreboard.type.SimpleScoreboard;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,10 +22,10 @@ import java.util.UUID;
  */
 public class LandMap {
 
-    Player mapViewer;
-    int schedulerId;
-    Chunk currChunk;
-    String currDir;
+    private Player mapViewer;
+    private SimpleScoreboard scoreboard;
+    private Chunk currChunk;
+    private String currDir;
     private Landlord plugin;
 
     public LandMap(Player p, Landlord plugin) {
@@ -29,8 +35,7 @@ public class LandMap {
 
         this.currDir = getPlayerDirection(mapViewer);
 
-        displayMap(mapViewer);
-
+        /*
         this.schedulerId = new BukkitRunnable() {
             public void run() {
                 if (!currDir.equals(getPlayerDirection(mapViewer)) || !currChunk.equals(mapViewer.getLocation().getChunk())) {
@@ -39,8 +44,8 @@ public class LandMap {
                 }
             }
         }.runTaskTimer(plugin, 0L, plugin.getConfig().getLong("Map.LandMapRefreshRate", 10)).getTaskId();
-
-        displayMap(this.mapViewer);
+*/
+        this.displayMap(this.mapViewer);
     }
 
     public static String getPlayerDirection(Player playerSelf) {
@@ -101,168 +106,184 @@ public class LandMap {
                 {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
         };
 
-        if (dir.equals("west")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                    {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                    {"∞", "∞", "∞", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                    {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("west northwest")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"∞", "▓", "▒", "▓", "▒", "▓", "▒"},
-                    {"▒", "∞", "∞", "▒", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                    {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("northwest")) {
-            mapDir = new String[][]{
-                    {"∞", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "∞", "▒", "▓", "▒", "▓", "▒"},
-                    {"▒", "▒", "∞", "▒", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                    {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("north northwest")) {
-            mapDir = new String[][]{
-                    {"▓", "∞", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "▓", "∞", "▓", "▒", "▓", "▒"},
-                    {"▒", "▒", "∞", "▒", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                    {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("north")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "∞", "▒", "▒", "▓"},
-                    {"▒", "▓", "▒", "∞", "▒", "▓", "▒"},
-                    {"▒", "▒", "▓", "∞", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                    {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("north northeast")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "∞", "▓"},
-                    {"▒", "▓", "▒", "▓", "∞", "▓", "▒"},
-                    {"▒", "▒", "▓", "▒", "∞", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                    {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("northeast")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "∞"},
-                    {"▒", "▓", "▒", "▓", "▒", "∞", "▒"},
-                    {"▒", "▒", "▓", "▒", "∞", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                    {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("east northeast")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "▓", "▒", "▓", "▒", "▓", "∞"},
-                    {"▒", "▒", "▓", "▒", "∞", "∞", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                    {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("east")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                /**/{"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "∞", "∞", "∞"},
-                    {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                    {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("east southeast")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                    {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "▒", "∞", "∞", "▓"},
-                    {"▓", "▒", "▓", "▓", "▓", "▒", "∞"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("southeast")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                    {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "▒", "∞", "▓", "▓"},
-                    {"▓", "▒", "▓", "▓", "▓", "∞", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "∞"}
-            };
-        } else if (dir.equals("south southeast")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                    {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "▒", "∞", "▓", "▓"},
-                    {"▓", "▒", "▓", "▓", "∞", "▒", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "∞", "▒"}
-            };
-        } else if (dir.equals("south")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                    {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "▒", "∞", "▒", "▓", "▓"},
-                    {"▓", "▒", "▓", "∞", "▓", "▒", "▓"},
-                    {"▒", "▓", "▓", "∞", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("south southwest")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                    {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "∞", "▒", "▒", "▓", "▓"},
-                    {"▓", "▒", "∞", "▓", "▓", "▒", "▓"},
-                    {"▒", "∞", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("southwest")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                    {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "▓", "∞", "▒", "▒", "▓", "▓"},
-                    {"▓", "∞", "▓", "▓", "▓", "▒", "▓"},
-                    {"∞", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
-        } else if (dir.equals("west southwest")) {
-            mapDir = new String[][]{
-                    {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                    {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                    {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                    {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                    {"▓", "∞", "∞", "▒", "▒", "▓", "▓"},
-                    {"∞", "▒", "▓", "▓", "▓", "▒", "▓"},
-                    {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-            };
+        switch (dir) {
+            case "west":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
+                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
+                        {"∞", "∞", "∞", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
+                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "west northwest":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"∞", "▓", "▒", "▓", "▒", "▓", "▒"},
+                        {"▒", "∞", "∞", "▒", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
+                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "northwest":
+                mapDir = new String[][]{
+                        {"∞", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "∞", "▒", "▓", "▒", "▓", "▒"},
+                        {"▒", "▒", "∞", "▒", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
+                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "north northwest":
+                mapDir = new String[][]{
+                        {"▓", "∞", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "▓", "∞", "▓", "▒", "▓", "▒"},
+                        {"▒", "▒", "∞", "▒", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
+                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "north":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "∞", "▒", "▒", "▓"},
+                        {"▒", "▓", "▒", "∞", "▒", "▓", "▒"},
+                        {"▒", "▒", "▓", "∞", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
+                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "north northeast":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "∞", "▓"},
+                        {"▒", "▓", "▒", "▓", "∞", "▓", "▒"},
+                        {"▒", "▒", "▓", "▒", "∞", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
+                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "northeast":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "∞"},
+                        {"▒", "▓", "▒", "▓", "▒", "∞", "▒"},
+                        {"▒", "▒", "▓", "▒", "∞", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
+                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "east northeast":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "▓", "▒", "▓", "▒", "▓", "∞"},
+                        {"▒", "▒", "▓", "▒", "∞", "∞", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
+                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "east":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
+                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "∞", "∞", "∞"},
+                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
+                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "east southeast":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
+                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "▒", "∞", "∞", "▓"},
+                        {"▓", "▒", "▓", "▓", "▓", "▒", "∞"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "southeast":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
+                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "▒", "∞", "▓", "▓"},
+                        {"▓", "▒", "▓", "▓", "▓", "∞", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "∞"}
+                };
+                break;
+            case "south southeast":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
+                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "▒", "∞", "▓", "▓"},
+                        {"▓", "▒", "▓", "▓", "∞", "▒", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "∞", "▒"}
+                };
+                break;
+            case "south":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
+                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "▒", "∞", "▒", "▓", "▓"},
+                        {"▓", "▒", "▓", "∞", "▓", "▒", "▓"},
+                        {"▒", "▓", "▓", "∞", "▓", "▓", "▒"}
+                };
+                break;
+            case "south southwest":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
+                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "∞", "▒", "▒", "▓", "▓"},
+                        {"▓", "▒", "∞", "▓", "▓", "▒", "▓"},
+                        {"▒", "∞", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "southwest":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
+                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "▓", "∞", "▒", "▒", "▓", "▓"},
+                        {"▓", "∞", "▓", "▓", "▓", "▒", "▓"},
+                        {"∞", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
+            case "west southwest":
+                mapDir = new String[][]{
+                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
+                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
+                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
+                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
+                        {"▓", "∞", "∞", "▒", "▒", "▓", "▓"},
+                        {"∞", "▒", "▓", "▓", "▓", "▒", "▓"},
+                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                };
+                break;
         }
-
         return mapDir;
     }
 
@@ -271,145 +292,44 @@ public class LandMap {
     }
 
     public void removeMap() {
-        mapViewer.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        Bukkit.getServer().getScheduler().cancelTask(schedulerId);
+        scoreboard.deactivate();
     }
 
-    private Scoreboard displayMap(Player p) {
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        final Scoreboard board = manager.getNewScoreboard();
+    private SimpleScoreboard displayMap(Player p) {
+        Scoreboard board = ScoreboardLib.createScoreboard(p).setHandler(new ScoreboardHandler() {
+            LangManager messages = plugin.getLangManager();
 
-        //Scoreboard board = manager.getMainScoreboard();
-        Team team = board.registerNewTeam("teamname");
-        team.addPlayer(p);
-
-        LangManager messages = plugin.getLangManager();
-        final String header = messages.getRawString("Commands.LandMap.header");
-
-        Objective objective = board.registerNewObjective("Land Map", "dummy");
-        /*ChatColor.STRIKETHROUGH+""+ChatColor.DARK_GREEN+
-        "=== "+ChatColor.RESET+""+ChatColor.DARK_GREEN +"Land Map"
-                +ChatColor.STRIKETHROUGH+""+ChatColor.DARK_GREEN+" ==="*/
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-        /**
-         * Locale string is retrieved from file for use in map header.
-         * Scoreboards do not cooperate with headers longer than 14 characters,
-         * therefore it will be truncated if too long.
-         */
-
-        // &e&m==&r&6
-
-        if (header.length() <= 14) {
-            objective.setDisplayName(header);
-        } else {
-            objective.setDisplayName(header.substring(0, 14));
-        }
-
-        String[] mapData = buildMap(p);
-        for (int i = 0; i < mapData.length; i++) {
-            if (mapData[i].length() < 21) {
-                for (int f = 0; f < (21 - mapData[i].length()); f++) {
-                    mapData[i] += ChatColor.RESET;
-                }
+            @Override
+            public String getTitle(Player p) {
+                return messages.getRawString("Commands.LandMap.header");
             }
 
-            //todo THIS BETTER NOT STAY!!!!!!
-            class myOfflinePlayer implements OfflinePlayer {
-                String name;
-
-                public myOfflinePlayer(String name) {
-                    this.name = name;
+            @Override
+            public List<Entry> getEntries(Player player) {
+                if (!currDir.equals(getPlayerDirection(mapViewer)) || !currChunk.equals(mapViewer.getLocation().getChunk())) {
+                    currDir = getPlayerDirection(mapViewer);
                 }
-
-                public Player getPlayer() {
-                    return null;
+                EntryBuilder eb = new EntryBuilder();
+                String[] mapData = buildMap(p);
+                for (int i = 0; i < mapData.length; i++) {
+                    /*if (mapData[i].length() < 21) {
+                        for (int f = 0; f < (21 - mapData[i].length()); f++) {
+                            mapData[i] += ChatColor.RESET;
+                        }
+                    }*/
+                    eb.next(mapData[i]);
                 }
-
-                public boolean hasPlayedBefore() {
-                    return false;
-                }
-
-                public String getName() {
-                    return name;
-                }
-
-                public UUID getUniqueId() {
-                    return null;
-                }
-
-                public long getFirstPlayed() {
-                    return 0;
-                }
-
-                public boolean isBanned() {
-                    return false;
-                }
-
-                @Deprecated
-                public void setBanned(boolean b) {
-                }
-
-                public Map<String, Object> serialize() {
-                    return null;
-                }
-
-                public boolean isWhitelisted() {
-                    return true;
-                }
-
-                public void setWhitelisted(boolean b) {
-                }
-
-                public Location getBedSpawnLocation() {
-                    return null;
-                }
-
-                public boolean isOnline() {
-                    return false;
-                }
-
-                public long getLastPlayed() {
-                    return 0;
-                }
-
-                public boolean isOp() {
-                    return false;
-                }
-
-                public void setOp(boolean b) {
-                }
-
+                return eb.build();
             }
+        }).setUpdateInterval(plugin.getConfig().getLong("Map.LandMapRefreshRate", 10));
 
-            //todo
-            OfflinePlayer ofp = new myOfflinePlayer(mapData[i].substring(5, 17));
-
-            Score score = objective.getScore(ofp.getName());
-
-            score.setScore(mapData.length - i);
-
-            Team t = board.registerNewTeam(i + "");
-            t.setPrefix(mapData[i].substring(0, 5));
-            t.setSuffix(mapData[i].substring(17));
-            t.addPlayer(ofp);
-            t.setDisplayName(mapData[i]);
-
-
-            //Score score = objective.getScore(Bukkit.getOfflinePlayer(i + ""));
-            //score.setScore((mapData.length)-i);
-        }
-        //Score score = objective.getScore(Bukkit.getOfflinePlayer()); //Get a fake offline player
-        //board.
-        p.setScoreboard(board);
-
-        return board;
+        SimpleScoreboard simpleScoreboard = (SimpleScoreboard) board;
+        simpleScoreboard.activate();
+        this.scoreboard = simpleScoreboard;
+        return simpleScoreboard;
     }
 
     public void updateMap() {
-
-        // nearbyLand.clear();
-
         currChunk = mapViewer.getLocation().getChunk();
         currDir = "";
     }
@@ -430,21 +350,19 @@ public class LandMap {
         Map<Chunk, OwnedLand> nearby = plugin.getWgHandler().getNearbyLands(p.getLocation(), radius, radius);
 
         for (int z = 0; z < mapBoard.length; z++) {
-            String row = "";
+            StringBuilder row = new StringBuilder();
             for (int x = 0; x < mapBoard[z].length; x++) {
 
                 int xx = x - radius;
                 int zz = z - radius;
-                //  Chunk chunk = p.getLocation().getWorld().getChunkAt();
 
-                //  System.out.println("xx:" + xx + " zz: " + zz);
+                System.out.println(xx + p.getLocation().getChunk().getX() + ":" + (zz + p.getLocation().getChunk().getZ()));
+
                 OwnedLand land = nearby.get(p.getWorld().getChunkAt(xx + p.getLocation().getChunk().getX(), zz + p.getLocation().getChunk().getZ()));
 
                 String currSpot = mapBoard[z][x];
-
+//TODO
                 if (land != null) {
-                    //plugin.getLandManager().insertOrReplaceIntoCache(land);
-                    //System.out.println(nearby.size()  + ":" + land.getData().getX() + ":_" + land.getData().getZ());
                     if (land.getLand().getOwners().getUniqueIds().contains(p.getUniqueId())) {
                         currSpot = ChatColor.GREEN + currSpot;
                     } else if (land.getLand().getMembers().getUniqueIds().contains(p.getUniqueId())) {
@@ -459,21 +377,12 @@ public class LandMap {
                         currSpot = ChatColor.GRAY + currSpot;
                     }
                 }
-                //System.out.println(currSpot);
-                row += currSpot;
+                row.append(currSpot);
 
             }
             //if currchunk changed
-            mapRows[z] = row;
-
+            mapRows[z] = row.toString();
         }
-        //mapRows[0] = "";
-
-        /**
-         * Locale strings are retrieved from file for use in map legend.
-         * Scoreboards do not cooperate with strings longer than 28 characters,
-         * therefore they will be truncated if too long.
-         */
 
         LangManager messages = plugin.getLangManager();
 
