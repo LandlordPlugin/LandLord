@@ -9,13 +9,12 @@ import me.tigerhix.lib.scoreboard.type.Entry;
 import me.tigerhix.lib.scoreboard.type.Scoreboard;
 import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
 import me.tigerhix.lib.scoreboard.type.SimpleScoreboard;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * File created by jcdesimp on 3/1/14.
@@ -356,12 +355,16 @@ public class LandMap {
                 int xx = x - radius;
                 int zz = z - radius;
 
-                System.out.println(xx + p.getLocation().getChunk().getX() + ":" + (zz + p.getLocation().getChunk().getZ()));
+                //     System.out.println(xx + p.getLocation().getChunk().getX() + ":" + (zz + p.getLocation().getChunk().getZ()));
 
                 OwnedLand land = nearby.get(p.getWorld().getChunkAt(xx + p.getLocation().getChunk().getX(), zz + p.getLocation().getChunk().getZ()));
 
+                if (land == null) {
+                    System.out.println("Foudn null land:" + (xx + p.getLocation().getChunk().getX()) + ":" + (zz + p.getLocation().getChunk().getZ()));
+                }
+
                 String currSpot = mapBoard[z][x];
-//TODO
+
                 if (land != null) {
                     if (land.getLand().getOwners().getUniqueIds().contains(p.getUniqueId())) {
                         currSpot = ChatColor.GREEN + currSpot;

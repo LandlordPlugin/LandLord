@@ -107,8 +107,8 @@ public class WorldGuardHandler {
         Map<Chunk, OwnedLand> lands = new HashMap<>();
         int xCoord = loc.getChunk().getX();
         int zCoord = loc.getChunk().getZ();
-        for (int x = xCoord - offsetX; x < xCoord + offsetX; x++) {
-            for (int z = zCoord - offsetZ; z < zCoord + offsetZ; z++) {
+        for (int x = xCoord - offsetX; x <= xCoord + offsetX; x++) {
+            for (int z = zCoord - offsetZ; z <= zCoord + offsetZ; z++) {
                 Chunk chunk = loc.getWorld().getChunkAt(x, z);
                 lands.put(chunk, getRegion(chunk));
             }
