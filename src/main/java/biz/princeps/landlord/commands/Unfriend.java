@@ -24,7 +24,7 @@ public class Unfriend extends LandlordCommand {
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
-        if (!land.isOwner(player.getUniqueId())) {
+        if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
             player.sendMessage(lm.getString("Commands.Unfriend.notOwn")
                     .replace("%owner%", land.printOwners()));
             return;
