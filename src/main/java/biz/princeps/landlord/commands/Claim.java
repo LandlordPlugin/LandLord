@@ -5,6 +5,8 @@ import org.bukkit.Chunk;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 /**
  * Created by spatium on 16.07.17.
  */
@@ -23,6 +25,17 @@ public class Claim extends LandlordCommand {
                     .replace("%owner%", pr.printOwners()));
             return;
         }
+        int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
+        List<Integer> extras = plugin.getConfig().getIntegerList("Extra");
+        for (Integer extra : extras) {
+            if (regionCount > extra) {
+                if (!player.hasPermission("landlord.player.limit." + extra)) {
+                    player.sendMessage(lm.getString("Commands.Claim.limit"));
+                    return;
+                }
+            }
+        }
+
 
         // Money stuff
         double calculatedCost = OwnedLand.calculateCost(player);

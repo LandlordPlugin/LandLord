@@ -23,7 +23,12 @@ Formula:
 Payback: 0.8
 Freelands: 1
 ResetCost: 1000.0
-
+# to buy more than 10 lands you need the permission landlord.player.extra.10 and so on
+Extra:
+  - 10
+  - 20
+  - 30
+  - 40
 # -----------        Map Stuff        ------------
 Map:
   enable: true

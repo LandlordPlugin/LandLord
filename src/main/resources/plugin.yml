@@ -58,23 +58,8 @@ permissions:
     description: Permission to use land info
     default: true
 
+
   landlord.limit.extra:
-    description: gives a larger land limit
-    default: false
-
-  landlord.limit.extra2:
-    description: gives a larger land limit
-    default: false
-
-  landlord.limit.extra3:
-    description: gives a larger land limit
-    default: false
-
-  landlord.limit.extra4:
-    description: gives a larger land limit
-    default: false
-
-  landlord.limit.extra5:
     description: gives a larger land limit
     default: false
 

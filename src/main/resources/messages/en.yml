@@ -7,6 +7,7 @@ Commands:
     notEnoughMoney: '&eYou dont have enough money (%money%) to claim this chunk (%chunk%)'
     moneyTook: '&4You have been charged %money% for the land %chunk%'
     alreadyClaimed: '&eThis chunk is already claimed by %owner%'
+    limit: '&eYou are not allowed to claim more lands than you already did'
   Info:
     owned:
       - '&f&lLand&c&lLord'

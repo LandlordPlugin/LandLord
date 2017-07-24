@@ -13,22 +13,12 @@ import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
 import co.aikar.commands.BukkitCommandManager;
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.reflect.StructureModifier;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  * Created by spatium on 16.07.17.
@@ -94,7 +84,10 @@ public class Landlord extends JavaPlugin {
 
     private void manageListeners() {
         new JoinListener();
-        new LandAlerter();
+        if (getServer().getPluginManager().getPlugin("ProtocolLib") != null)
+            new LandAlerter();
+        else
+            getLogger().warning("ProtocolLib has not been found. This plugin might not function properly!");
     }
 
 
