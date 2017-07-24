@@ -7,6 +7,7 @@ import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -47,6 +48,11 @@ public class ManageGUI extends AbstractGUI {
 
     @Override
     public Inventory display() {
+        if (!land.getFlags().keySet().contains(DefaultFlag.USE)) {
+            land.setFlag(DefaultFlag.USE, StateFlag.State.DENY);
+            land.setFlag(DefaultFlag.USE.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+            System.out.println("added new flags");
+        }
         create();
         this.player.openInventory(this.getInventory());
         return this.getInventory();
@@ -55,6 +61,7 @@ public class ManageGUI extends AbstractGUI {
     @Override
     protected void create() {
         List<String> allowDesc = lm.getStringList("Commands.Manage.AllowBuild.description");
+        List<String> allowUseDesc = lm.getStringList("Commands.Manage.AllowUse.description");
         List<String> regenerateDesc = lm.getStringList("Commands.Manage.Regenerate.description");
         List<String> greedDesc = lm.getStringList("Commands.Manage.SetGreet.description");
         List<String> farewellDesc = lm.getStringList("Commands.Manage.SetFarewell.description");
@@ -74,9 +81,23 @@ public class ManageGUI extends AbstractGUI {
                 })
         );
 
+        // Allow use icon
+        this.setIcon(1, new Icon(createItem(Material.REDSTONE_TORCH_ON, 1,
+                lm.getRawString("Commands.Manage.AllowUse.title"), formatList(allowUseDesc, land.getFlag(DefaultFlag.USE).name())))
+                .addClickAction((p) -> {
+                    StateFlag.State state = StateFlag.State.ALLOW;
+
+                    if (land.getFlag(DefaultFlag.USE) == StateFlag.State.ALLOW)
+                        state = StateFlag.State.DENY;
+
+                    land.setFlag(DefaultFlag.USE, state);
+                    updateLore(1, formatList(allowUseDesc, land.getFlag(DefaultFlag.USE).name()));
+                })
+        );
+
         // Regenerate icon
         double cost = Landlord.getInstance().getConfig().getDouble("ResetCost");
-        this.setIcon(1, new Icon(createItem(Material.BARRIER, 1,
+        this.setIcon(2, new Icon(createItem(Material.BARRIER, 1,
                 lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, Landlord.getInstance().getVaultHandler().format(cost))))
                 .addClickAction((p) -> {
                     ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
@@ -103,7 +124,7 @@ public class ManageGUI extends AbstractGUI {
 
         // Set greet icon
         String currentGreet = land.getFlag(DefaultFlag.GREET_MESSAGE);
-        this.setIcon(2, new Icon(createItem(Material.BAKED_POTATO, 1,
+        this.setIcon(3, new Icon(createItem(Material.BAKED_POTATO, 1,
                 lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greedDesc, currentGreet)))
                 .addClickAction((p -> {
                     p.closeInventory();
@@ -115,7 +136,7 @@ public class ManageGUI extends AbstractGUI {
 
         // set farewell icon
         String currentFarewell = land.getFlag(DefaultFlag.FAREWELL_MESSAGE);
-        this.setIcon(3, new Icon(createItem(Material.BEETROOT, 1,
+        this.setIcon(4, new Icon(createItem(Material.BEETROOT, 1,
                 lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
                 .addClickAction((p -> {
                     p.closeInventory();
@@ -149,7 +170,7 @@ public class ManageGUI extends AbstractGUI {
                     confirmationGUI.display();
                 })));
 
-        this.setIcon(4, new Icon(skull)
+        this.setIcon(5, new Icon(skull)
                 .setName(lm.getRawString("Commands.Manage.ManageFriends.title"))
                 .addClickAction(p -> friendsGui.display())
         );

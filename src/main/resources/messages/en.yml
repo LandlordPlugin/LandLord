@@ -64,6 +64,12 @@ Commands:
         - ' &7Toggle the ability for players to'
         - ' &7build in this chunk'
         - ' &7Status&8: &c%var%'
+    AllowUse:
+      title: '&cAllow use'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7use (e.g. redstone contraptions)'
+        - ' &7Status&8: &c%var%'
     Regenerate:
       title: '&cRegneration'
       description:

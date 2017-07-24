@@ -3,6 +3,8 @@ package biz.princeps.landlord.commands;
 import biz.princeps.landlord.util.ManageGUI;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.RegionGroup;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -30,6 +32,7 @@ class Manage extends LandlordCommand {
                     .replace("%owner%", land.printOwners()));
             return;
         }
+
         if (args.length == 0) {
             ManageGUI gui = new ManageGUI(player, land.getLand());
             gui.display();
