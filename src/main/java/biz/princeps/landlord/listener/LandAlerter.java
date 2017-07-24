@@ -64,21 +64,21 @@ public class LandAlerter extends BasicListener {
                         if (obj != null && obj.get("text") instanceof String) {
                             String msg = (String) obj.get("text");
 
-                            boolean goingOn = true;
-                            if (regionInsideNow != null)
-                                if (!msg.equals(ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE))) &&
-                                        !msg.equals(ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)))) {
+                            boolean goingOn = false;
+                            if (regionInsideNow != null) {
+                                if (msg.equals(ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE))) ||
+                                        msg.equals(ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)))) {
                                     //         System.out.println(msg + " |" + ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE)) + "|" + ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)));
-                                    goingOn = false;
+                                    goingOn = true;
                                 }
+                            }
 
                             if (before != null) {
-                                if (!msg.equals(ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.GREET_MESSAGE))) &&
-                                        !msg.equals(ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)))) {
+                                if (msg.equals(ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.GREET_MESSAGE))) ||
+                                        msg.equals(ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)))) {
                                     //         System.out.println(msg + " |" + ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.GREET_MESSAGE)) + "|" + ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)));
-                                    goingOn = false;
-                                } else
                                     goingOn = true;
+                                }
                             }
 
 

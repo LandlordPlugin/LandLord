@@ -25,7 +25,7 @@ class Manage extends LandlordCommand {
             return;
         }
 
-        if (!land.isOwner(player.getUniqueId())) {
+        if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.manage")) {
             player.sendMessage(lm.getString("Commands.Manage.notOwn")
                     .replace("%owner%", land.printOwners()));
             return;
