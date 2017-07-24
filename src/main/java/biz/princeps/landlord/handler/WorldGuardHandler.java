@@ -10,13 +10,12 @@ import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by spatium on 17.07.17.
@@ -102,6 +101,15 @@ public class WorldGuardHandler {
         }
 
         return lands;
+    }
+
+    public List<ProtectedRegion> getRegions(UUID id, World world) {
+        List<ProtectedRegion> regions = new ArrayList<>();
+        for (ProtectedRegion protectedRegion : this.getWG().getRegionManager(world).getRegions().values()) {
+            if (protectedRegion.getOwners().getUniqueIds().contains(id))
+                regions.add(protectedRegion);
+        }
+        return regions;
     }
 
 

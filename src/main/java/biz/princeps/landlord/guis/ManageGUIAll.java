@@ -1,4 +1,4 @@
-package biz.princeps.landlord.util;
+package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.manager.LangManager;
@@ -20,39 +20,28 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
- * Created by spatium on 21.07.17.
+ * Created by spatium on 24.07.17.
  */
-public class ManageGUI extends AbstractGUI {
+public class ManageGUIAll extends AbstractGUI {
 
-    private ProtectedRegion land;
     private LangManager lm;
 
-    public ManageGUI(Player player, ProtectedRegion land) {
-        super(player, 9, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.header").replace("%info%", land.getId()));
-        this.land = land;
+    public ManageGUIAll(Player player) {
+        super(player, 9, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.all.header"));
         lm = Landlord.getInstance().getLangManager();
     }
 
-    public ManageGUI(Player player, ProtectedRegion land, MultiPagedGUI landGui) {
-        super(player, 18, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.header").replace("%info%", land.getId()), landGui);
-        this.land = land;
+    public ManageGUIAll(Player player, MultiPagedGUI landGui) {
+        super(player, 18, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.all.header"), landGui);
         lm = Landlord.getInstance().getLangManager();
     }
 
 
     @Override
     public Inventory display() {
-        if (!land.getFlags().keySet().contains(DefaultFlag.USE)) {
-            land.setFlag(DefaultFlag.USE, StateFlag.State.DENY);
-            land.setFlag(DefaultFlag.USE.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-            System.out.println("added new flags");
-        }
         create();
         this.player.openInventory(this.getInventory());
         return this.getInventory();
@@ -66,6 +55,13 @@ public class ManageGUI extends AbstractGUI {
         List<String> greedDesc = lm.getStringList("Commands.Manage.SetGreet.description");
         List<String> farewellDesc = lm.getStringList("Commands.Manage.SetFarewell.description");
 
+        Collection<ProtectedRegion> lands = Landlord.getInstance().getWgHandler().getWG().getRegionManager(player.getWorld()).getRegions().values();
+        ProtectedRegion land = lands.iterator().next();
+
+        if (!land.getFlags().keySet().contains(DefaultFlag.USE)) {
+            land.setFlag(DefaultFlag.USE, StateFlag.State.DENY);
+            land.setFlag(DefaultFlag.USE.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+        }
 
         // Allow building icon
         this.setIcon(0, new Icon(createItem(Material.GRASS, 1,
@@ -76,7 +72,10 @@ public class ManageGUI extends AbstractGUI {
                     if (land.getFlag(DefaultFlag.BUILD) == StateFlag.State.ALLOW)
                         state = StateFlag.State.DENY;
 
-                    land.setFlag(DefaultFlag.BUILD, state);
+                    for (ProtectedRegion landi : lands) {
+                        landi.setFlag(DefaultFlag.BUILD, state);
+                    }
+
                     updateLore(0, formatList(allowDesc, land.getFlag(DefaultFlag.BUILD).name()));
                 })
         );
@@ -90,13 +89,16 @@ public class ManageGUI extends AbstractGUI {
                     if (land.getFlag(DefaultFlag.USE) == StateFlag.State.ALLOW)
                         state = StateFlag.State.DENY;
 
-                    land.setFlag(DefaultFlag.USE, state);
+                    for (ProtectedRegion landi : lands) {
+                        landi.setFlag(DefaultFlag.USE, state);
+                    }
+
                     updateLore(1, formatList(allowUseDesc, land.getFlag(DefaultFlag.USE).name()));
                 })
         );
 
         // Regenerate icon
-        double cost = Landlord.getInstance().getConfig().getDouble("ResetCost");
+        double cost = Landlord.getInstance().getConfig().getDouble("ResetCost") * lands.size();
         this.setIcon(2, new Icon(createItem(Material.BARRIER, 1,
                 lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, Landlord.getInstance().getVaultHandler().format(cost))))
                 .addClickAction((p) -> {
@@ -105,7 +107,12 @@ public class ManageGUI extends AbstractGUI {
                             (p1) -> {
                                 if (Landlord.getInstance().getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
                                     Landlord.getInstance().getVaultHandler().take(player.getUniqueId(), cost);
-                                    player.getWorld().regenerateChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
+
+                                    for (ProtectedRegion protectedRegion : lands) {
+                               //         System.out.println(protectedRegion.getMinimumPoint().getBlockX() / 16 + ":" + protectedRegion.getMinimumPoint().getBlockZ() / 16);
+                                        player.getWorld().regenerateChunk(protectedRegion.getMinimumPoint().getBlockX() / 16, protectedRegion.getMinimumPoint().getBlockZ() / 16);
+                                    }
+
                                     player.sendMessage(lm.getString("Commands.Manage.Regenerate.success")
                                             .replace("%land%", land.getId()));
                                     display();
@@ -129,7 +136,10 @@ public class ManageGUI extends AbstractGUI {
                 .addClickAction((p -> {
                     p.closeInventory();
                     ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetGreet.clickMsg"));
-                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage " + land.getId() + " setgreet "));
+
+
+                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreetall "));
+
                     p.spigot().sendMessage(builder.create());
                 }))
         );
@@ -141,7 +151,7 @@ public class ManageGUI extends AbstractGUI {
                 .addClickAction((p -> {
                     p.closeInventory();
                     ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetFarewell.clickMsg"));
-                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage " + land.getId() + " setfarewell "));
+                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewellall "));
                     p.spigot().sendMessage(builder.create());
                 }))
         );
@@ -159,7 +169,7 @@ public class ManageGUI extends AbstractGUI {
                             .replace("%player%", Bukkit.getOfflinePlayer(id).getName()),
                             p -> {
                                 friendsGui.removeIcon(friendsGui.filter(Bukkit.getOfflinePlayer(id).getName()).get(0));
-                                Bukkit.dispatchCommand(player, "land unfriend " + Bukkit.getOfflinePlayer(id).getName());
+                                Bukkit.dispatchCommand(player, "land unfriendall " + Bukkit.getOfflinePlayer(id).getName());
                                 player.closeInventory();
                                 friendsGui.display();
                             },

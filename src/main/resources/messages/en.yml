@@ -43,6 +43,7 @@ Commands:
     noLands: '&7You do not own any land'
     header: '&7Your lands &7(&c%site%&8/%maxsite%&7)&8:'
     landSegment: '&7Land&8: &c%info%'
+    manageAll: '&7Manage all lands'
   LandMap:
     disabled: '&7Land map is &cdisabled'
     header: '&e&m==&r&6&c&lLand&r&e&m=='
@@ -54,6 +55,8 @@ Commands:
     successPlayer: '&7Successfully cleared &c%count% &7lands from player &c%player%'
     noPlayer: '&7Could not find following players&8: &c%players%'
   Manage:
+    all:
+      header: '&7Managing&8 &call lands'
     notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
     notOwnFreeLand: '&7You do not own this chunk'
     header: '&7Managing&8: &c%info%'

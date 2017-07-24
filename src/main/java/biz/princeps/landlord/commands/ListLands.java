@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands;
 
-import biz.princeps.landlord.util.ManageGUI;
+import biz.princeps.landlord.guis.ManageGUI;
+import biz.princeps.landlord.guis.ManageGUIAll;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -40,6 +41,13 @@ public class ListLands extends LandlordCommand {
                             }
                     )
             ));
+
+            landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
+                    .setName(lm.getRawString("Commands.ListLands.manageAll"))
+                    .addClickAction((p) -> {
+                        ManageGUIAll manageGUIAll = new ManageGUIAll(player, landGui);
+                        manageGUIAll.display();
+                    }));
 
             landGui.display();
 
