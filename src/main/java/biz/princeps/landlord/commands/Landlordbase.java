@@ -146,7 +146,7 @@ public class Landlordbase extends BaseCommand {
 
     @Subcommand("clear|clearworld")
     @CommandAlias("clearworld")
-    @Syntax("land clear - toggles the landmap")
+    @Syntax("land clear - clearing")
     @CommandPermission("landlord.admin.clearworld")
     public void onClearWorld(Player player, @Default("null") String target) {
         ((Clear) subcommands.get("clearworld")).onClearWorld(player, target);

@@ -57,8 +57,8 @@
     <orderEntry type="library" name="Maven: co.aikar:minecraft-timings:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" name="Maven: me.tigerhix.lib:scoreboard:1.0.1" level="project" />
-    <orderEntry type="library" name="Maven: com.comphenix.protocol:ProtocolLib-API:4.3.0" level="project" />
-    <orderEntry type="library" name="Maven: cglib:cglib-nodep:3.2.5" level="project" />
-    <orderEntry type="library" name="Maven: com.comphenix.executors:BukkitExecutors:1.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.comphenix.protocol:ProtocolLib-API:4.3.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: cglib:cglib-nodep:3.2.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.comphenix.executors:BukkitExecutors:1.1-SNAPSHOT" level="project" />
   </component>
 </module>

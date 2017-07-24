@@ -4,6 +4,7 @@ import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.handler.VaultHandler;
 import biz.princeps.landlord.handler.WorldGuardHandler;
 import biz.princeps.landlord.listener.JoinListener;
+import biz.princeps.landlord.listener.LandAlerter;
 import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.manager.map.MapManager;
@@ -25,7 +26,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -93,6 +94,7 @@ public class Landlord extends JavaPlugin {
 
     private void manageListeners() {
         new JoinListener();
+        new LandAlerter();
     }
 
 

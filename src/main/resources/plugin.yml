@@ -4,6 +4,7 @@ main: biz.princeps.landlord.Landlord
 author: SpatiumPrinceps
 website: http://dev.bukkit.org/bukkit-plugins/landlord/
 depends: [Vault, WorldGuard]
+softdepend: [ProtocolLib]
 
 commands:
 
