@@ -2,6 +2,7 @@ package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.landlord.util.Utils;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -10,7 +11,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,6 +32,9 @@ public class LandAlerter extends BasicListener {
     private Landlord pl = Landlord.getInstance();
     private HashMap<UUID, OwnedLand> playerInLand;
 
+    /**
+     * such a mess, but I cant think of a less intrusive way
+     */
     public LandAlerter() {
         playerInLand = new HashMap<>();
 
@@ -43,41 +47,70 @@ public class LandAlerter extends BasicListener {
                 StructureModifier<WrappedChatComponent> componets = packet.getChatComponents();
                 Player p = event.getPlayer();
 
-                if (playerInLand.containsKey(event.getPlayer().getUniqueId())) {
-                    OwnedLand regionInsideNow = pl.getWgHandler().getRegion(p.getLocation());
-                    OwnedLand before = playerInLand.get(p.getUniqueId());
+                OwnedLand regionInsideNow = pl.getWgHandler().getRegion(p.getLocation());
+                OwnedLand before = playerInLand.get(p.getUniqueId());
 
-                    JSONObject json = null;
-                    try {
-                        if (componets.read(0) != null)
-                            json = (JSONObject) parser.parse(componets.read(0).getJson());
-                    } catch (ParseException e) {
+                JSONObject json = null;
+                try {
+                    if (componets.read(0) != null)
+                        json = (JSONObject) parser.parse(componets.read(0).getJson());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (json != null && json.get("extra") instanceof JSONArray) {
+                    JSONArray array = ((JSONArray) json.get("extra"));
+                    if (array != null && array.get(0) instanceof JSONObject) {
+                        JSONObject obj = (JSONObject) array.get(0);
+                        if (obj != null && obj.get("text") instanceof String) {
+                            String msg = (String) obj.get("text");
 
-                    }
-                    if (json != null && json.get("extra") instanceof JSONArray) {
-                        JSONArray array = ((JSONArray) json.get("extra"));
-                        if (array != null && array.get(0) instanceof JSONObject) {
-                            JSONObject obj = (JSONObject) array.get(0);
-                            if (obj != null && obj.get("text") instanceof String) {
-                                String msg = (String) obj.get("text");
-                                if (regionInsideNow != null) {
+                            boolean goingOn = true;
+                            if (regionInsideNow != null)
+                                if (!msg.equals(ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE))) &&
+                                        !msg.equals(ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)))) {
+                                    //         System.out.println(msg + " |" + ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE)) + "|" + ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)));
+                                    goingOn = false;
+                                }
 
-                                    if (msg.equals(ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE))) ||
-                                            msg.equals(ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE))) ||
-                                            msg.equals(ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.GREET_MESSAGE))) ||
-                                            msg.equals(ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)))) {
+                            if (before != null) {
+                                if (!msg.equals(ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.GREET_MESSAGE))) &&
+                                        !msg.equals(ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)))) {
+                                    //         System.out.println(msg + " |" + ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.GREET_MESSAGE)) + "|" + ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)));
+                                    goingOn = false;
+                                } else
+                                    goingOn = true;
+                            }
 
+
+                            //on leave: da wo man her kam
+                            // on enter null
+                            //  if (regionInsideNow == null)
+                            //       System.out.println("1. null");
+                            //   else
+                            //      System.out.println(regionInsideNow.getLandName());
+
+                            //on leave null
+                            // on enter da wo man nun ist
+                            if (goingOn)
+                                if (before == null) {
+                                    //          System.out.println("2. null");
+                                    Utils.sendActionBar(p, msg);
+                                    event.setCancelled(true);
+                                } else {
+                                    //          System.out.println(before.getLandName());
+                                    if (regionInsideNow == null) {
+                                        Utils.sendActionBar(p, msg);
+                                        event.setCancelled(true);
+                                    } else {
                                         boolean flag = true;
                                         for (UUID uuid : regionInsideNow.getLand().getOwners().getUniqueIds()) {
                                             if (!before.isOwner(uuid))
                                                 flag = false;
                                         }
-                                        if (flag)
-                                            event.setCancelled(true);
+                                        if (!flag) Utils.sendActionBar(p, msg);
+                                        event.setCancelled(true);
                                     }
-
                                 }
-                            }
                         }
                     }
                 }
@@ -96,12 +129,16 @@ public class LandAlerter extends BasicListener {
         OwnedLand landTowards = pl.getWgHandler().getRegion(headingTowards);
 
 
-        if (landTowards == null)
+        if (landTowards == null) {
+            // System.out.println(playerInLand.get(p.getUniqueId()) + " removed");
             playerInLand.remove(p.getUniqueId());
+        }
 
         if (landTowards != null)
-            if (!landTowards.equals(landFrom))
+            if (!landTowards.equals(landFrom)) {
                 playerInLand.put(p.getUniqueId(), landTowards);
+                //     System.out.println(landTowards.getLandName() + " added");
+            }
 
     }
 
