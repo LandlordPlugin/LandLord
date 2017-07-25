@@ -1,11 +1,12 @@
 package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.util.OwnedLand;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Chunk;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 /**
  * Created by spatium on 16.07.17.
@@ -26,16 +27,17 @@ public class Claim extends LandlordCommand {
             return;
         }
         int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
-        List<Integer> extras = plugin.getConfig().getIntegerList("Extra");
-        for (Integer extra : extras) {
-            if (regionCount > extra) {
-                if (!player.hasPermission("landlord.player.limit." + extra)) {
-                    player.sendMessage(lm.getString("Commands.Claim.limit"));
-                    return;
-                }
-            }
-        }
+        int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
 
+        if (regionCount >= claims) {
+            ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Claim.limit")
+                    .replace("%regions%", regionCount + "")
+                    .replace("%claims%", claims + ""))
+                    .color(ChatColor.YELLOW)
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
+            player.spigot().sendMessage(builder.create());
+            return;
+        }
 
         // Money stuff
         double calculatedCost = OwnedLand.calculateCost(player);

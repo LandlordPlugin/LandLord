@@ -7,7 +7,7 @@ Commands:
     notEnoughMoney: '&eYou dont have enough money (%money%) to claim this chunk (%chunk%)'
     moneyTook: '&4You have been charged %money% for the land %chunk%'
     alreadyClaimed: '&eThis chunk is already claimed by %owner%'
-    limit: '&eYou are not allowed to claim more lands than you already did'
+    limit: '&eYou need to buy more claims first (%regions%/%claims%)! Click to buy more!'
   Info:
     owned:
       - '&f&lLand&c&lLord'
@@ -127,3 +127,14 @@ Commands:
 Alerts:
   defaultGreeting: '&7Now entering claimed land of %owner%'
   defaultFarewell: '&7Leaving claimed land of %owner%'
+Shop:
+  title: 'Claims Shop. Your claims (%regions%/%claims%)'
+  notEnoughMoney: '&7You dont have enough money buy %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
+  success: '&aYou successfully bought %number% claims for %cost%'
+  item:
+    header: '%number% extra claims'
+    lore:
+      - 'Click here to buy %number%'
+      - 'claims. You will be able to purchase'
+      - '%number% more claims than before'
+      - 'Cost: %cost%'

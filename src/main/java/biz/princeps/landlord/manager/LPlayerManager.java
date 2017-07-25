@@ -14,6 +14,4 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
     public LPlayerManager(DatabaseAPI api) {
         super(api);
     }
-
-
 }

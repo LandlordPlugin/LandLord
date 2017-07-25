@@ -43,6 +43,7 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("clearworld", new Clear());
         subcommands.put("manage", new Manage());
         subcommands.put("manageall", new ManageAll());
+        subcommands.put("shop", new Shop());
     }
 
     @Default
@@ -167,6 +168,11 @@ public class Landlordbase extends BaseCommand {
         ((ManageAll) subcommands.get("manageall")).onManageAll(player);
     }
 
+    @Subcommand("shop")
+    @CommandPermission("landlord.player.shop")
+    public void onShop(Player player) {
+        ((Shop) subcommands.get("shop")).onShop(player);
+    }
 
     @Subcommand("migrate")
     public void onMigrate(String[] args) {

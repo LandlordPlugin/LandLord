@@ -23,12 +23,18 @@ Formula:
 Payback: 0.8
 Freelands: 1
 ResetCost: 1000.0
-# to buy more than 10 lands you need the permission landlord.player.extra.10 and so on
-Extra:
-  - 10
-  - 20
-  - 30
-  - 40
+# here you can manage your claims shop.
+# - ClaimsQuantity:Price
+# e.g. 10:5000
+# which means, an user can buy 10 additional claims for 5000 dollars
+Shop:
+  enable: true
+  extras:
+    - PAPER:10:5000.0
+    - PAPER:20:9000.0
+    - PAPER:30:13500.0
+    - PAPER:50:45000.0
+
 # -----------        Map Stuff        ------------
 Map:
   enable: true

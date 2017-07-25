@@ -29,6 +29,7 @@ permissions:
       landlord.player.own: true
       landlord.player.map: true
       landlord.player.info: true
+      landlord.player.shop: true
 
   landlord.admin.*:
     description: Gives access to admin commands.
@@ -58,15 +59,13 @@ permissions:
     description: Permission to use land info
     default: true
 
-
-  landlord.limit.extra:
-    description: gives a larger land limit
-    default: false
+  landlord.player.shop:
+    description: Permission to use the shop
+    default: true
 
   landlord.limit.override:
     description: allows unlimited land ownership
     default: false
-
 
   landlord.admin.help:
     description: will have an advanced ll help menu

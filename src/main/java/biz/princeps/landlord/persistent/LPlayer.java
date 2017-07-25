@@ -17,9 +17,14 @@ public class LPlayer {
     @Column(name = "uuid", length = 36)
     private UUID uuid;
 
+    @Column(name = "claims")
+    private int claims;
+
     @Constructor
-    public LPlayer(@Column(name = "uuid") String uuid) {
+    public LPlayer(@Column(name = "uuid") String uuid,
+                   @Column(name = "claims") int claims) {
         this.uuid = UUID.fromString(uuid);
+        this.claims = claims;
     }
 
     public LPlayer(UUID uuid) {
@@ -32,5 +37,13 @@ public class LPlayer {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public int getClaims() {
+        return claims;
+    }
+
+    public void addClaims(int amount) {
+        claims += amount;
     }
 }
