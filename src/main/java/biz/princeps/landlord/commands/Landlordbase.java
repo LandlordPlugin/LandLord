@@ -13,7 +13,6 @@ import co.aikar.commands.annotation.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -43,6 +42,7 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("landmap", new LandMap());
         subcommands.put("clearworld", new Clear());
         subcommands.put("manage", new Manage());
+        subcommands.put("manageall", new ManageAll());
     }
 
     @Default
@@ -158,6 +158,13 @@ public class Landlordbase extends BaseCommand {
     @CommandPermission("landlord.player.own")
     public void onLandManage(Player player, @Default("null") String[] args) {
         ((Manage) subcommands.get("manage")).onManage(player, args);
+    }
+
+    @Subcommand("manageall|mall")
+    @Syntax("land manage all - manages all your lands at the same time")
+    @CommandPermission("landlord.player.own")
+    public void onLandManageAll(Player player) {
+        ((ManageAll) subcommands.get("manageall")).onManageAll(player);
     }
 
 
