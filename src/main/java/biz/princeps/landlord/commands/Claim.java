@@ -8,6 +8,8 @@ import org.bukkit.Chunk;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 /**
  * Created by spatium on 16.07.17.
  */
@@ -26,17 +28,33 @@ public class Claim extends LandlordCommand {
                     .replace("%owner%", pr.printOwners()));
             return;
         }
-        int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
-        int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
 
-        if (regionCount >= claims) {
-            ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Claim.limit")
-                    .replace("%regions%", regionCount + "")
-                    .replace("%claims%", claims + ""))
-                    .color(ChatColor.YELLOW)
-                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
-            player.spigot().sendMessage(builder.create());
-            return;
+        int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
+        if (plugin.getConfig().getBoolean("Shop.enable")) {
+            int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
+
+            if (regionCount >= claims) {
+                ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Claim.limit")
+                        .replace("%regions%", regionCount + "")
+                        .replace("%claims%", claims + ""))
+                        .color(ChatColor.YELLOW)
+                        .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
+                player.spigot().sendMessage(builder.create());
+                return;
+            }
+        } else {
+            List<Integer> limitlist = plugin.getConfig().getIntegerList("limits");
+
+            boolean prohibited = false;
+            for (Integer integer : limitlist) {
+                if (regionCount >= integer && !player.hasPermission("landlord.limit." + integer)) {
+                    prohibited = true;
+                }
+                if (prohibited) {
+                    player.sendMessage(lm.getString("Commands.Claim.limit").replace("%regions%", regionCount + ""));
+                    return;
+                }
+            }
         }
 
         // Money stuff
