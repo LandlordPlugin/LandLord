@@ -13,10 +13,13 @@ import co.aikar.commands.annotation.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -172,6 +175,18 @@ public class Landlordbase extends BaseCommand {
     @CommandPermission("landlord.player.shop")
     public void onShop(Player player) {
         ((Shop) subcommands.get("shop")).onShop(player);
+    }
+
+    @Subcommand("reload|rl")
+    @CommandPermission("landlord.admin.reload")
+    public void onReload(){
+        try {
+            Landlord.getInstance().getConfig().load(new File(Landlord.getInstance().getDataFolder(), "config.yml"));
+            Landlord.getInstance().getLangManager().reload();
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        getCurrentCommandIssuer().sendMessage(Landlord.getInstance().getLangManager().getString("Commands.Reload.success"));
     }
 
     @Subcommand("migrate")

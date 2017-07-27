@@ -125,6 +125,8 @@ Commands:
       - '&c/land map &8- &7Toggle the land map'
     previous: '&8[&7Previous&8]'
     next: '&8[&7Next&8]'
+  Reload:
+    success: '&aSuccessfully reloaded landlord'
 Alerts:
   defaultGreeting: '&7Now entering claimed land of %owner%'
   defaultFarewell: '&7Leaving claimed land of %owner%'

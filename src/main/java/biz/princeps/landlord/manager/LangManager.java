@@ -17,9 +17,16 @@ import java.util.List;
 public class LangManager {
 
     private FileConfiguration msg;
+    private Landlord pl;
+    private String filename;
 
     public LangManager(Landlord pl, String lang) {
-        String filename = "messages/" + lang + ".yml";
+        this.pl = pl;
+        filename = "messages/" + lang + ".yml";
+        reload();
+    }
+
+    public void reload() {
         File f = new File(pl.getDataFolder(), filename);
         this.msg = new YamlConfiguration();
         try {
