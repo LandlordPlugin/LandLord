@@ -8,6 +8,7 @@ Commands:
     moneyTook: '&4You have been charged %money% for the land %chunk%'
     alreadyClaimed: '&eThis chunk is already claimed by %owner%'
     limit: '&eYou need to buy more claims first (%regions%/%claims%)! Click to buy more!'
+    hardcap: '&eYou cant claim more lands than %regions%!!'
   Info:
     owned:
       - '&f&lLand&c&lLord'
@@ -131,6 +132,7 @@ Shop:
   title: 'Claims Shop. Your claims (%regions%/%claims%)'
   notEnoughMoney: '&7You dont have enough money buy %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
   success: '&aYou successfully bought %number% claims for %cost%'
+  notAllowed: '&eYou are not allowed to buy more claims'
   item:
     header: '%number% extra claims'
     lore:

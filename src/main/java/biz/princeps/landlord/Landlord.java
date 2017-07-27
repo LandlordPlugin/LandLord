@@ -87,7 +87,7 @@ public class Landlord extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("ProtocolLib") != null)
             new LandAlerter();
         else
-            getLogger().warning("ProtocolLib has not been found. This plugin might not function properly!");
+            getLogger().warning("ProtocolLib has not been found. This plugin may not function properly!");
     }
 
 

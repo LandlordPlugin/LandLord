@@ -30,6 +30,24 @@ public class Claim extends LandlordCommand {
         }
 
         int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
+        List<Integer> limitlist = plugin.getConfig().getIntegerList("limits");
+
+        if (!player.hasPermission("landlord.limit.override")) {
+
+            int highestAllowedLandCount = -1;
+            for (Integer integer : limitlist) {
+                if (regionCount <= integer)
+                    if (player.hasPermission("landlord.limit." + integer)) {
+                        highestAllowedLandCount = integer;
+                    }
+            }
+
+            if (regionCount >= highestAllowedLandCount) {
+                player.sendMessage(lm.getString("Commands.Claim.hardcap").replace("%regions%", highestAllowedLandCount + ""));
+                return;
+            }
+        }
+
         if (plugin.getConfig().getBoolean("Shop.enable")) {
             int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
 
@@ -41,19 +59,6 @@ public class Claim extends LandlordCommand {
                         .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
                 player.spigot().sendMessage(builder.create());
                 return;
-            }
-        } else {
-            List<Integer> limitlist = plugin.getConfig().getIntegerList("limits");
-
-            boolean prohibited = false;
-            for (Integer integer : limitlist) {
-                if (regionCount >= integer && !player.hasPermission("landlord.limit." + integer)) {
-                    prohibited = true;
-                }
-                if (prohibited) {
-                    player.sendMessage(lm.getString("Commands.Claim.limit").replace("%regions%", regionCount + ""));
-                    return;
-                }
             }
         }
 

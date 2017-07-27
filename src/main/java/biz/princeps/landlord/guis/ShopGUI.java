@@ -61,27 +61,57 @@ public class ShopGUI extends AbstractGUI {
                     .setName(pl.getLangManager().getRawString("Shop.item.header").replace("%number%", buyable.amount + ""))
                     .setLore(list)
                     .addClickAction((p) -> {
-                        if (pl.getVaultHandler().hasBalance(p.getUniqueId(), cost)) {
-                            pl.getVaultHandler().take(p.getUniqueId(), cost);
-                            pl.getPlayerManager().get(p.getUniqueId()).addClaims(buyable.amount);
-                            p.sendMessage(pl.getLangManager().getString("Shop.success")
-                                    .replace("%number%", buyable.amount + "")
-                                    .replace("%cost%", pl.getVaultHandler().format(cost)));
-                            p.closeInventory();
-                        } else {
-                            p.sendMessage(pl.getLangManager().getString("Shop.notEnoughMoney")
-                                    .replace("%number%", buyable.amount + "")
-                                    .replace("%cost%", pl.getVaultHandler().format(cost)));
-                            p.closeInventory();
-                        }
-                    })
-            );
+                                if (!player.hasPermission("landlord.limit.override")) {
+                                    // int regionCount = pl.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(pl.getWgHandler().getWG().wrapPlayer(player));
+                                    int claimcount = pl.getPlayerManager().get(player.getUniqueId()).getClaims();
+                                    List<Integer> limitlist = pl.getConfig().getIntegerList("limits");
+
+                                    int highestAllowedLandCount = -1;
+                                    for (Integer integer : limitlist) {
+                                        if (claimcount + buyable.amount <= integer)
+                                            if (player.hasPermission("landlord.limit." + integer)) {
+                                                highestAllowedLandCount = integer;
+                                            }
+                                    }
+                                    if (claimcount + buyable.amount > highestAllowedLandCount) {
+                                        player.sendMessage(pl.getLangManager().getString("Shop.notAllowed"));
+                                        p.closeInventory();
+                                        return;
+                                    }
+                                }
+
+
+                                if (pl.getVaultHandler().hasBalance(p.getUniqueId(), cost)) {
+                                    pl.getVaultHandler().take(p.getUniqueId(), cost);
+                                    pl.getPlayerManager().get(p.getUniqueId()).addClaims(buyable.amount);
+                                    p.sendMessage(pl.getLangManager().getString("Shop.success")
+                                            .replace("%number%", buyable.amount + "")
+                                            .replace("%cost%", pl.getVaultHandler().format(cost)));
+                                    p.closeInventory();
+                                } else {
+                                    p.sendMessage(pl.getLangManager().getString("Shop.notEnoughMoney")
+                                            .replace("%number%", buyable.amount + "")
+                                            .replace("%cost%", pl.getVaultHandler().format(cost)));
+                                    p.closeInventory();
+                                }
+                            }
+                    ));
             i++;
         }
 
-        setIcon((int) Math.ceil((double) rawList.size() / 9.0) * 9 + 8, new Icon(new ItemStack(Material.BARRIER))
-                .setName(ChatColor.RED + "Close")
-                .addClickAction(HumanEntity::closeInventory));
+        setIcon((int) Math.
+
+                ceil((double) rawList.
+
+                        size() / 9.0) * 9 + 8, new
+
+                Icon(new ItemStack(Material.BARRIER))
+                .
+
+                        setName(ChatColor.RED + "Close")
+                .
+
+                        addClickAction(HumanEntity::closeInventory));
     }
 
     class Buyable {
