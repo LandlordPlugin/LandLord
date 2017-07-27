@@ -58,11 +58,11 @@ public class Landlord extends JavaPlugin {
         saveDefaultConfig();
         langManager = new LangManager(this, getConfig().getString("Language", "en"));
 
-        manageCommands();
-        manageListeners();
-
         PrincepsLib.setPluginInstance(this);
         databaseAPI = new DatabaseAPI(DatabaseType.valueOf(getConfig().getString("DatabaseType")), getConfig(), new Requests(), "biz.princeps.landlord.persistent");
+
+        manageCommands();
+        manageListeners();
 
         lPlayerManager = new LPlayerManager(databaseAPI);
 
