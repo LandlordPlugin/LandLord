@@ -16,6 +16,7 @@ import co.aikar.commands.BukkitCommandManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -74,6 +75,8 @@ public class Landlord extends JavaPlugin {
     public void onDisable() {
         if (mapManager != null)
             mapManager.removeAllMaps();
+
+        Bukkit.getOnlinePlayers().forEach(p -> getPlayerManager().save(p.getUniqueId()));
     }
 
 

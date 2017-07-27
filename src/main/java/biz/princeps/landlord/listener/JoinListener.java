@@ -43,10 +43,8 @@ public class JoinListener extends BasicListener {
 
             @Override
             public void run() {
-                LPlayer lp = plugin.getPlayerManager().get(p.getUniqueId());
-                plugin.getDatabaseAPI().saveObject(lp);
-
-                plugin.getPlayerManager().remove(lp.getUuid());
+                plugin.getPlayerManager().save(p.getUniqueId());
+                plugin.getPlayerManager().remove(p.getUniqueId());
             }
         }.runTaskAsynchronously(plugin);
     }
