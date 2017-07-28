@@ -83,11 +83,50 @@
             <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
     </repositories>
+
+
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>paper</artifactId>
+            <artifactId>spigot-1.12</artifactId>
             <version>1.12</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-1.11.2</artifactId>
+            <version>1.11.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-1.10.2</artifactId>
+            <version>1.10.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-1.9.4</artifactId>
+            <version>1.9.4</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-1.8.8</artifactId>
+            <version>1.8.8</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib-API</artifactId>
+            <version>4.3.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -125,12 +164,7 @@
             <version>1.0.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib-API</artifactId>
-            <version>4.3.0</version>
-            <scope>provided</scope>
-        </dependency>
+
     </dependencies>
 
 </project>

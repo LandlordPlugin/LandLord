@@ -28,7 +28,7 @@ public class Claims extends LandlordCommand {
             } else {
                 BaseComponent text = new TextComponent(noClaims);
                 text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
-                player.sendMessage(text);
+                player.spigot().sendMessage(text);
             }
         } else {
             player.sendMessage(lm.getString("Commands.Claims.disabled"));

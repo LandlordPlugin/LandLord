@@ -1,8 +1,8 @@
 package biz.princeps.landlord.commands;
 
+import biz.princeps.landlord.crossversion.CParticle;
 import biz.princeps.landlord.util.OwnedLand;
 import org.bukkit.Chunk;
-import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
 import java.util.Iterator;
@@ -53,14 +53,14 @@ public class Info extends LandlordCommand {
                     .replace("%landid%", land.getLandName())
                     .replace("%owner%", land.printOwners())
                     .replace("%member%", land.printMembers().isEmpty() ? "-" : land.printMembers()));
-            OwnedLand.highlightLand(player, Particle.DRIP_WATER);
+            OwnedLand.highlightLand(player, CParticle.DRIPWATER);
 
         } else {
             // unclaimed
             player.sendMessage(free
                     .replace("%landid%", OwnedLand.getLandName(chunk))
                     .replace("%price%", plugin.getVaultHandler().format(OwnedLand.calculateCost(player))));
-            OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
+            OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
         }
     }
 }

@@ -1,6 +1,7 @@
 package biz.princeps.landlord.util;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.crossversion.CParticle;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -75,11 +76,11 @@ public class OwnedLand {
      * @param p player
      * @param e effect to play
      */
-    public static void highlightLand(Player p, Particle e) {
+    public static void highlightLand(Player p, CParticle e) {
         highlightLand(p, e, 5);
     }
 
-    public static void highlightLand(Player p, Particle e, int amt) {
+    public static void highlightLand(Player p, CParticle e, int amt) {
         if (!Landlord.getInstance().getConfig().getBoolean("options.particleEffects", true)) {
             return;
         }
@@ -96,7 +97,8 @@ public class OwnedLand {
         for (Location edgeBlock : edgeBlocks) {
             edgeBlock.setZ(edgeBlock.getBlockZ() + .5);
             edgeBlock.setX(edgeBlock.getBlockX() + .5);
-            p.getWorld().spawnParticle(e, edgeBlock, amt, 0.2, 0.2, 0.2, 20.0);
+           // p.getWorld().spawnParticle(e, edgeBlock, amt, 0.2, 0.2, 0.2, 20.0);
+            Landlord.getInstance().getCrossVersion().spawnParticle(edgeBlock, e, amt);
         }
     }
 

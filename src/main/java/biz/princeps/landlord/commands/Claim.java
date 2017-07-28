@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands;
 
+import biz.princeps.landlord.crossversion.CParticle;
 import biz.princeps.landlord.util.OwnedLand;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -83,7 +84,7 @@ public class Claim extends LandlordCommand {
                 .replace("%chunk%", OwnedLand.getLandName(chunk))
                 .replace("%world%", chunk.getWorld().getName()));
 
-        OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
+        OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
 
         plugin.getMapManager().updateAll();
     }

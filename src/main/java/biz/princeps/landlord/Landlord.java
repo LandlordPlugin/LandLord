@@ -1,6 +1,7 @@
 package biz.princeps.landlord;
 
 import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.landlord.crossversion.CrossVersion;
 import biz.princeps.landlord.handler.VaultHandler;
 import biz.princeps.landlord.handler.WorldGuardHandler;
 import biz.princeps.landlord.listener.JoinListener;
@@ -28,6 +29,7 @@ public class Landlord extends JavaPlugin {
 
     private static Landlord instance;
     private static DatabaseAPI databaseAPI;
+    private CrossVersion crossVersion;
 
     private WorldGuardHandler wgHandler;
     private VaultHandler vaultHandler;
@@ -68,6 +70,8 @@ public class Landlord extends JavaPlugin {
 
         mapManager = new MapManager();
         ScoreboardLib.setPluginInstance(this);
+
+        this.crossVersion = new CrossVersion();
     }
 
 
@@ -137,5 +141,9 @@ public class Landlord extends JavaPlugin {
 
     public MapManager getMapManager() {
         return mapManager;
+    }
+
+    public CrossVersion getCrossVersion() {
+        return crossVersion;
     }
 }

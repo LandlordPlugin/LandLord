@@ -1,7 +1,6 @@
 package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.Landlord;
-import biz.princeps.landlord.crossversion.CrossVersion;
 import biz.princeps.landlord.util.OwnedLand;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -53,7 +52,8 @@ public class LandAlerter extends BasicListener {
                 JSONObject json = null;
                 try {
                     if (componets.read(0) != null)
-                        json = (JSONObject) parser.parse(componets.read(0).getJson());
+                        if (parser.parse(componets.read(0).getJson()) instanceof JSONObject)
+                            json = (JSONObject) parser.parse(componets.read(0).getJson());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -94,12 +94,12 @@ public class LandAlerter extends BasicListener {
                             if (goingOn)
                                 if (before == null) {
                                     //          System.out.println("2. null");
-                                    CrossVersion.sendActionBar(p, msg);
+                                    pl.getCrossVersion().sendActionBar(p, msg);
                                     event.setCancelled(true);
                                 } else {
                                     //          System.out.println(before.getLandName());
                                     if (regionInsideNow == null) {
-                                        CrossVersion.sendActionBar(p, msg);
+                                        pl.getCrossVersion().sendActionBar(p, msg);
                                         event.setCancelled(true);
                                     } else {
                                         boolean flag = true;
@@ -107,7 +107,7 @@ public class LandAlerter extends BasicListener {
                                             if (!before.isOwner(uuid))
                                                 flag = false;
                                         }
-                                        if (!flag) CrossVersion.sendActionBar(p, msg);
+                                        if (!flag) pl.getCrossVersion().sendActionBar(p, msg);
                                         event.setCancelled(true);
                                     }
                                 }
