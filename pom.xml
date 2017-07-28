@@ -33,6 +33,26 @@
                             <outputFile>
                                 ${project.build.directory}/Testserver/plugins/Landlord-v2.jar
                             </outputFile>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.google</pattern>
+                                    <shadedPattern>shaded.com.google</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.reflections:reflections</include>
+                                    <include>com.google.guava:guava</include>
+                                    <include>org.javassist:javassist</include>
+                                    <include>com.zaxxer.hikari:HikariCP</include>
+                                    <include>co.aikar:acf-bukkit</include>
+                                    <include>co.aikar:acf-core</include>
+                                    <include>co.aikar:locales</include>
+                                    <include>co.aikar:minecraft-timings</include>
+                                    <include>me.tigerhix.lib:scoreboard</include>
+                                    <inclde>biz.princeps:PrincepsLib</inclde>
+                                </includes>
+                            </artifactSet>
 
                         </configuration>
                     </execution>
@@ -66,8 +86,8 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigotapi</artifactId>
-            <version>1.11.2</version>
+            <artifactId>paper</artifactId>
+            <version>1.12</version>
             <scope>provided</scope>
         </dependency>
 
@@ -88,7 +108,7 @@
         <dependency>
             <groupId>biz.princeps</groupId>
             <artifactId>PrincepsLib</artifactId>
-            <version>1.2.24</version>
+            <version>1.2.25</version>
             <scope>compile</scope>
         </dependency>
 
