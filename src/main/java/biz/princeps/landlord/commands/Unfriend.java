@@ -24,30 +24,31 @@ public class Unfriend extends LandlordCommand {
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
-        if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
-            player.sendMessage(lm.getString("Commands.Unfriend.notOwn")
-                    .replace("%owner%", land.printOwners()));
-            return;
+        if(land!= null) {
+            if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
+                player.sendMessage(lm.getString("Commands.Unfriend.notOwn")
+                        .replace("%owner%", land.printOwners()));
+                return;
+            }
+
+
+            UUIDFetcher.getInstance().namesToUUID(names, new FutureCallback<DefaultDomain>() {
+                @Override
+                public void onSuccess(@Nullable DefaultDomain defaultDomain) {
+                    land.removeFriends(defaultDomain);
+                    player.sendMessage(lm.getString("Commands.Unfriend.success")
+                            .replace("%players%", Arrays.asList(names).toString()));
+                    plugin.getMapManager().updateAll();
+
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    player.sendMessage(lm.getString("Commands.Unfriend.noPlayer")
+                            .replace("%players%", Arrays.asList(names).toString()));
+                }
+            });
         }
-
-
-        UUIDFetcher.getInstance().namesToUUID(names, new FutureCallback<DefaultDomain>() {
-            @Override
-            public void onSuccess(@Nullable DefaultDomain defaultDomain) {
-                land.removeFriends(defaultDomain);
-                player.sendMessage(lm.getString("Commands.Unfriend.success")
-                        .replace("%players%", Arrays.asList(names).toString()));
-                plugin.getMapManager().updateAll();
-
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                player.sendMessage(lm.getString("Commands.Unfriend.noPlayer")
-                        .replace("%players%", Arrays.asList(names).toString()));
-            }
-        });
-
 
     }
 }
