@@ -33,6 +33,7 @@
                             <outputFile>
                                 ${project.build.directory}/Testserver/plugins/Landlord-v2.jar
                             </outputFile>
+
                         </configuration>
                     </execution>
                 </executions>
@@ -65,8 +66,8 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>paper</artifactId>
-            <version>RELEASE</version>
+            <artifactId>spigotapi</artifactId>
+            <version>1.11.2</version>
             <scope>provided</scope>
         </dependency>
 
@@ -87,7 +88,7 @@
         <dependency>
             <groupId>biz.princeps</groupId>
             <artifactId>PrincepsLib</artifactId>
-            <version>1.2.20</version>
+            <version>1.2.24</version>
             <scope>compile</scope>
         </dependency>
 

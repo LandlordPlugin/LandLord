@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -22,37 +21,38 @@ public class Addfriend extends LandlordCommand {
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
-        if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
-            player.sendMessage(lm.getString("Commands.Addfriend.notOwn")
-                    .replace("%owner%", land.printOwners()));
-            return;
-        }
+        if (land != null) {
+            if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
+                player.sendMessage(lm.getString("Commands.Addfriend.notOwn")
+                        .replace("%owner%", land.printOwners()));
+                return;
+            }
 
 
-        UUIDFetcher.getInstance().namesToUUID(names, new FutureCallback<DefaultDomain>() {
-            @Override
-            public void onSuccess(@Nullable DefaultDomain defaultDomain) {
-                for (UUID uuid : defaultDomain.getUniqueIds()) {
-                    if (!land.getLand().getOwners().getUniqueIds().contains(uuid)) {
-                        land.getLand().getMembers().addPlayer(uuid);
-                        player.sendMessage(lm.getString("Commands.Addfriend.success")
-                                .replace("%players%", Arrays.asList(names).toString()));
-                        plugin.getMapManager().updateAll();
+            UUIDFetcher.getInstance().namesToUUID(names, new FutureCallback<DefaultDomain>() {
+                @Override
+                public void onSuccess(@Nullable DefaultDomain defaultDomain) {
+                    for (UUID uuid : defaultDomain.getUniqueIds()) {
+                        if (!land.getLand().getOwners().getUniqueIds().contains(uuid)) {
+                            land.getLand().getMembers().addPlayer(uuid);
+                            player.sendMessage(lm.getString("Commands.Addfriend.success")
+                                    .replace("%players%", Arrays.asList(names).toString()));
+                            plugin.getMapManager().updateAll();
 
-                    } else {
-                        player.sendMessage(lm.getString("Commands.Addfriend.alreadyOwn"));
+                        } else {
+                            player.sendMessage(lm.getString("Commands.Addfriend.alreadyOwn"));
+                        }
                     }
+
                 }
 
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
-                        .replace("%players%", Arrays.asList(names).toString()));
-            }
-        });
-
+                @Override
+                public void onFailure(Throwable throwable) {
+                    player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
+                            .replace("%players%", Arrays.asList(names).toString()));
+                }
+            });
+        }
 
     }
 
