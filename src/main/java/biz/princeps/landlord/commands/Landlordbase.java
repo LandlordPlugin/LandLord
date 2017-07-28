@@ -47,6 +47,7 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("manage", new Manage());
         subcommands.put("manageall", new ManageAll());
         subcommands.put("shop", new Shop());
+        subcommands.put("claims", new Claims());
     }
 
     @Default
@@ -179,7 +180,7 @@ public class Landlordbase extends BaseCommand {
 
     @Subcommand("reload|rl")
     @CommandPermission("landlord.admin.reload")
-    public void onReload(){
+    public void onReload() {
         try {
             Landlord.getInstance().getConfig().load(new File(Landlord.getInstance().getDataFolder(), "config.yml"));
             Landlord.getInstance().getLangManager().reload();
@@ -187,6 +188,12 @@ public class Landlordbase extends BaseCommand {
             e.printStackTrace();
         }
         getCurrentCommandIssuer().sendMessage(Landlord.getInstance().getLangManager().getString("Commands.Reload.success"));
+    }
+
+    @Subcommand("claims")
+    @CommandPermission("landlord.player.shop")
+    public void onClaims(Player player) {
+        ((Claims) subcommands.get("claims")).onClaims(player);
     }
 
     @Subcommand("migrate")

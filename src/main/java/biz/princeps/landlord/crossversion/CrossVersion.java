@@ -1,6 +1,5 @@
 package biz.princeps.landlord.crossversion;
 
-import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.crossversion.v1_11_R1.ActionBar;
 import org.bukkit.entity.Player;
 

@@ -5,6 +5,7 @@ import biz.princeps.landlord.util.UUIDFetcher;
 import com.google.common.util.concurrent.FutureCallback;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import org.bukkit.Chunk;
+import org.bukkit.block.Lockable;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
@@ -39,7 +40,6 @@ public class Unfriend extends LandlordCommand {
                     player.sendMessage(lm.getString("Commands.Unfriend.success")
                             .replace("%players%", Arrays.asList(names).toString()));
                     plugin.getMapManager().updateAll();
-
                 }
 
                 @Override
