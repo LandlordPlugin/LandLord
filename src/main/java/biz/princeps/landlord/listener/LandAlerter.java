@@ -2,6 +2,7 @@ package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.lib.PrincepsLib;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -94,12 +95,12 @@ public class LandAlerter extends BasicListener {
                             if (goingOn)
                                 if (before == null) {
                                     //          System.out.println("2. null");
-                                    pl.getCrossVersion().sendActionBar(p, msg);
+                                    PrincepsLib.crossVersion().sendActionBar(p, msg);
                                     event.setCancelled(true);
                                 } else {
                                     //          System.out.println(before.getLandName());
                                     if (regionInsideNow == null) {
-                                        pl.getCrossVersion().sendActionBar(p, msg);
+                                        PrincepsLib.crossVersion().sendActionBar(p, msg);
                                         event.setCancelled(true);
                                     } else {
                                         boolean flag = true;
@@ -107,7 +108,7 @@ public class LandAlerter extends BasicListener {
                                             if (!before.isOwner(uuid))
                                                 flag = false;
                                         }
-                                        if (!flag) pl.getCrossVersion().sendActionBar(p, msg);
+                                        if (!flag) PrincepsLib.crossVersion().sendActionBar(p, msg);
                                         event.setCancelled(true);
                                     }
                                 }

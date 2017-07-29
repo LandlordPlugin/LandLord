@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands;
 
+import biz.princeps.lib.util.CommandDelayManager;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Location;
@@ -10,8 +11,24 @@ import org.bukkit.entity.Player;
  */
 public class Home extends LandlordCommand {
 
+    private CommandDelayManager delayManager;
+
+    public Home() {
+        this.delayManager = new CommandDelayManager(lm.getString("Commands.Home.dontMove"),
+                lm.getString("Commands.Home.youMoved"),
+                lm.getRawString("Commands.Home.countdown"),
+                plugin.getConfig().getBoolean("Homes.spawnParticles"));
+        this.delayManager.delayCommand("/ll home", 3);
+    }
+
     // requires permission landlord.player.home, if target equals own, else requires .homeother
     public void onHome(Player player, String targetPlayer) {
+
+        double cost = plugin.getConfig().getDouble("Homes.teleportCost");
+        if (!plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
+            player.sendMessage(lm.getString("Commands.Homes.notEnoughMoney").replace("%cost%", plugin.getVaultHandler().format(cost)));
+            return;
+        }
 
         if (targetPlayer.equals("own")) {
             Location toGo = plugin.getPlayerManager().get(player.getUniqueId()).getHome();
@@ -22,14 +39,17 @@ public class Home extends LandlordCommand {
                 player.spigot().sendMessage(builder.create());
                 return;
             }
-            // add slow teleport to lib with animation
 
-
-
-
-
+            if(cost > 0){
+                plugin.getVaultHandler().take(player.getUniqueId(), cost);
+                player.sendMessage(lm.getString("Commands.Home.costing"));
+            }
+            player.teleport(toGo);
+            player.sendMessage(lm.getString("Commands.Home.welcomeHome"));
         } else {
 
+
+            // teleporting to other homes
 
         }
 

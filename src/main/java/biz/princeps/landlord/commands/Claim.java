@@ -1,7 +1,7 @@
 package biz.princeps.landlord.commands;
 
-import biz.princeps.landlord.crossversion.CParticle;
 import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.lib.crossversion.CParticle;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;

@@ -45,6 +45,8 @@ limits:
 
 Homes:
   enable: true
+  spawnParticles: true
+  teleportCost: 100.0
 
 # -----------        Map Stuff        ------------
 Map:

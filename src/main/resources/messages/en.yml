@@ -142,8 +142,12 @@ Commands:
     disabled: '&eThis feature is currently disabled'
   Home:
     noHome: '&4You do not have a home yet. Click to set a home on your current location'
-
-
+    dontMove: '&cThis command will be executed in %time% seconds. Dont move!'
+    youMoved: '&cYou moved! Teleportation aborted'
+    countdown: '&bDont move! &6-- &4&l%countdown% &6-- &bDont move!'
+    notEnoughMoney: '&7You dont have enough money to teleport! (Cost&8&o: &c&o%cost%&7&o)'
+    costing: '&aYou were charged %cost% for teleporting home'
+    welcomeHome: '&aWelcome at your home!'
 Alerts:
   defaultGreeting: '&7Now entering claimed land of %owner%'
   defaultFarewell: '&7Leaving claimed land of %owner%'
