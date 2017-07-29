@@ -9,14 +9,28 @@ import org.bukkit.entity.Player;
  */
 public class Unclaim extends LandlordCommand {
 
-    public void onUnclaim(Player player) {
+    public void onUnclaim(Player player, String chunkname) {
 
         if (this.worldDisabled(player)) {
             player.sendMessage(lm.getString("Disabled-World"));
             return;
         }
-        Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
+        Chunk chunk = null;
+        if (chunkname.equals("null")) {
+            chunk = player.getWorld().getChunkAt(player.getLocation());
+        } else {
+            String[] split = chunkname.split("_");
+            try {
+                int x = Integer.valueOf(split[1]);
+                int z = Integer.valueOf(split[2]);
+                chunk = player.getWorld().getChunkAt(x, z);
+
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
         OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
+
         if (pr == null) {
             player.sendMessage(lm.getString("Commands.Unclaim.notOwnFreeLand"));
             return;
@@ -38,7 +52,7 @@ public class Unclaim extends LandlordCommand {
             payback = OwnedLand.calculateCost(player) * plugin.getConfig().getDouble("Payback");
 
         plugin.getVaultHandler().give(player.getUniqueId(), payback);
-        plugin.getWgHandler().unclaim(chunk, pr.getLandName());
+        plugin.getWgHandler().unclaim(player.getWorld(), pr.getLandName());
 
         player.sendMessage(lm.getString("Commands.Unclaim.success")
                 .replace("%chunk%", OwnedLand.getLandName(chunk))

@@ -105,6 +105,11 @@ Commands:
         - ' &7Last seen&8: &c%seen%'
         - ' &7&oClick to remove'
       unfriend: '&7Unfriending player &c%player%'
+    Unclaim:
+      title: '&cUnclaim'
+      description:
+        - '&7Click here to unclaim this chunk!'
+      confirmationTitle: '&aUnclaiming %land%'
   Help:
     header: '&f&lLand&c&lLord'
     admins:
@@ -131,6 +136,14 @@ Commands:
     message: '&aClaims: %regions%/%claims%'
     noClaims: '&eYou need to buy claims first. Click here to open the shop'
     disabled: '&eThis feature is currently disabled'
+  SetHome:
+    notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
+    success: '&aSuccessfully set your home to your current location'
+    disabled: '&eThis feature is currently disabled'
+  Home:
+    noHome: '&4You do not have a home yet. Click to set a home on your current location'
+
+
 Alerts:
   defaultGreeting: '&7Now entering claimed land of %owner%'
   defaultFarewell: '&7Leaving claimed land of %owner%'

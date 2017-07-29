@@ -4,6 +4,7 @@ import biz.princeps.lib.storage.annotation.Column;
 import biz.princeps.lib.storage.annotation.Constructor;
 import biz.princeps.lib.storage.annotation.Table;
 import biz.princeps.lib.storage.annotation.Unique;
+import org.bukkit.Location;
 
 import java.util.UUID;
 
@@ -20,11 +21,16 @@ public class LPlayer {
     @Column(name = "claims")
     private int claims;
 
+    @Column(name = "home")
+    private Location home;
+
     @Constructor
     public LPlayer(@Column(name = "uuid") String uuid,
-                   @Column(name = "claims") int claims) {
+                   @Column(name = "claims") int claims,
+                   @Column(name = "home") Location home) {
         this.uuid = UUID.fromString(uuid);
         this.claims = claims;
+        this.home = home;
     }
 
     public LPlayer(UUID uuid) {
@@ -45,5 +51,13 @@ public class LPlayer {
 
     public void addClaims(int amount) {
         claims += amount;
+    }
+
+    public Location getHome() {
+        return home;
+    }
+
+    public void setHome(Location home) {
+        this.home = home;
     }
 }

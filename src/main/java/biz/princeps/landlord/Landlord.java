@@ -38,6 +38,10 @@ public class Landlord extends JavaPlugin {
     private LPlayerManager lPlayerManager;
     private MapManager mapManager;
 
+    public static Landlord getInstance() {
+        return instance;
+    }
+
     @Override
     public void onEnable() {
         // Dependency stuff
@@ -74,7 +78,6 @@ public class Landlord extends JavaPlugin {
         this.crossVersion = new CrossVersion();
     }
 
-
     @Override
     public void onDisable() {
         if (mapManager != null)
@@ -82,7 +85,6 @@ public class Landlord extends JavaPlugin {
 
         Bukkit.getOnlinePlayers().forEach(p -> getPlayerManager().save(p.getUniqueId()));
     }
-
 
     private void manageCommands() {
         BukkitCommandManager cmdmanager = new BukkitCommandManager(this);
@@ -96,7 +98,6 @@ public class Landlord extends JavaPlugin {
         else
             getLogger().warning("ProtocolLib has not been found. This plugin may not function properly!");
     }
-
 
     private WorldGuardPlugin getWorldGuard() {
         Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
@@ -113,10 +114,6 @@ public class Landlord extends JavaPlugin {
         }
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         return (rsp == null ? null : rsp.getProvider());
-    }
-
-    public static Landlord getInstance() {
-        return instance;
     }
 
     public DatabaseAPI getDatabaseAPI() {

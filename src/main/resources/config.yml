@@ -43,6 +43,9 @@ limits:
   - 30
   - 40
 
+Homes:
+  enable: true
+
 # -----------        Map Stuff        ------------
 Map:
   enable: true

@@ -146,7 +146,7 @@ public class ManageGUIAll extends AbstractGUI {
 
         // set farewell icon
         String currentFarewell = land.getFlag(DefaultFlag.FAREWELL_MESSAGE);
-        this.setIcon(4, new Icon(createItem(Material.CARROT, 1,
+        this.setIcon(4, new Icon(createItem(Material.CARROT_ITEM, 1,
                 lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
                 .addClickAction((p -> {
                     p.closeInventory();

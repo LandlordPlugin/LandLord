@@ -30,6 +30,7 @@ permissions:
       landlord.player.map: true
       landlord.player.info: true
       landlord.player.shop: true
+      landlord.player.home: true
 
   landlord.admin.*:
     description: Gives access to admin commands.
@@ -62,6 +63,14 @@ permissions:
   landlord.player.shop:
     description: Permission to use the shop
     default: true
+
+  landlord.player.home:
+    description: Permission to set home and teleport back
+    default: true
+
+  landlord.player.homeother:
+    description: Permission to teleport to other homes
+    default: false
 
   landlord.limit.override:
     description: allows unlimited land ownership

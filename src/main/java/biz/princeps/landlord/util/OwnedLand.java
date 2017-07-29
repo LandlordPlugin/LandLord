@@ -1,7 +1,8 @@
 package biz.princeps.landlord.util;
 
 import biz.princeps.landlord.Landlord;
-import biz.princeps.landlord.crossversion.CParticle;
+import biz.princeps.lib.PrincepsLib;
+import biz.princeps.lib.crossversion.CParticle;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -98,7 +99,7 @@ public class OwnedLand {
             edgeBlock.setZ(edgeBlock.getBlockZ() + .5);
             edgeBlock.setX(edgeBlock.getBlockX() + .5);
            // p.getWorld().spawnParticle(e, edgeBlock, amt, 0.2, 0.2, 0.2, 20.0);
-            Landlord.getInstance().getCrossVersion().spawnParticle(edgeBlock, e, amt);
+           PrincepsLib.crossVersion().spawnParticle(edgeBlock, e, amt);
         }
     }
 

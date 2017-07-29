@@ -63,8 +63,8 @@ public class WorldGuardHandler {
         return getRegion(loc.getChunk());
     }
 
-    public void unclaim(Chunk chunk, String name) {
-        wg.getRegionManager(chunk.getWorld()).removeRegion(name);
+    public void unclaim(World world, String regionname) {
+        wg.getRegionManager(world).removeRegion(regionname);
     }
 
     public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region, Chunk chunk) {

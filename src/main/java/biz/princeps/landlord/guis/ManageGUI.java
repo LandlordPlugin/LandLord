@@ -135,7 +135,7 @@ public class ManageGUI extends AbstractGUI {
 
         // set farewell icon
         String currentFarewell = land.getFlag(DefaultFlag.FAREWELL_MESSAGE);
-        this.setIcon(4, new Icon(createItem(Material.CARROT, 1,
+        this.setIcon(4, new Icon(createItem(Material.CARROT_ITEM, 1,
                 lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
                 .addClickAction((p -> {
                     p.closeInventory();
@@ -173,6 +173,21 @@ public class ManageGUI extends AbstractGUI {
                 .setName(lm.getRawString("Commands.Manage.ManageFriends.title"))
                 .addClickAction(p -> friendsGui.display())
         );
+
+
+        this.setIcon(8, new Icon(createItem(Material.BLAZE_POWDER, 1, lm.getRawString("Commands.Manage.Unclaim.title"), lm.getStringList("Commands.Manage.Unclaim.description")))
+                .addClickAction((player1 -> {
+                    ConfirmationGUI gui = new ConfirmationGUI(player1, lm.getRawString("Commands.Manage.Unclaim.confirmationTitle").replace("%land%", land.getId()),
+                            p -> {
+                                Bukkit.dispatchCommand(p, "ll unclaim " + land.getId());
+                                p.closeInventory();
+                            },
+                            (p) -> {
+                                p.closeInventory();
+                                display();
+                            }, this);
+                    gui.display();
+                })));
     }
 
     private void updateLore(int index, List<String> lore) {

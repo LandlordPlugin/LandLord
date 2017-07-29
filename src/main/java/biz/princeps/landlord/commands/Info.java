@@ -1,7 +1,7 @@
 package biz.princeps.landlord.commands;
 
-import biz.princeps.landlord.crossversion.CParticle;
 import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.lib.crossversion.CParticle;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 

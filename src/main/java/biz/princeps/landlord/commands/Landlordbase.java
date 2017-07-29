@@ -48,6 +48,8 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("manageall", new ManageAll());
         subcommands.put("shop", new Shop());
         subcommands.put("claims", new Claims());
+        subcommands.put("sethome", new SetHome());
+        subcommands.put("home", new Home());
     }
 
     @Default
@@ -100,8 +102,8 @@ public class Landlordbase extends BaseCommand {
     @Subcommand("unclaim|sell")
     @Syntax("land sell - Unclaim the chunk you are standing on")
     @CommandPermission("landlord.player.own")
-    public void onUnClaim(Player player) {
-        ((Unclaim) subcommands.get("unclaim")).onUnclaim(player);
+    public void onUnClaim(Player player, @Default("null") String landname) {
+        ((Unclaim) subcommands.get("unclaim")).onUnclaim(player, landname);
     }
 
     @Subcommand("addfriend|friendadd")
@@ -194,6 +196,18 @@ public class Landlordbase extends BaseCommand {
     @CommandPermission("landlord.player.shop")
     public void onClaims(Player player) {
         ((Claims) subcommands.get("claims")).onClaims(player);
+    }
+
+    @Subcommand("sethome")
+    @CommandPermission("landlord.player.home")
+    public void onSetHome(Player player) {
+        ((SetHome) subcommands.get("sethome")).onSetHome(player);
+    }
+
+    @Subcommand("home|h")
+    @CommandPermission("landlord.player.home")
+    public void onHome(Player player, @Default("own") String target) {
+        ((Home) subcommands.get("home")).onHome(player, target);
     }
 
     @Subcommand("migrate")
