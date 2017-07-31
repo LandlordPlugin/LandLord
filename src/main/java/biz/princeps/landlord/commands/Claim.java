@@ -49,7 +49,7 @@ public class Claim extends LandlordCommand {
             }
         }
 
-        if (plugin.getConfig().getBoolean("Shop.enable")) {
+        if (plugin.getConfig().getBoolean("Shop.enable") && plugin.isVaultEnabled()) {
             int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
 
             if (regionCount >= claims) {
@@ -64,19 +64,21 @@ public class Claim extends LandlordCommand {
         }
 
         // Money stuff
-        double calculatedCost = OwnedLand.calculateCost(player);
-        if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
-            plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
-            player.sendMessage(lm.getString("Commands.Claim.moneyTook")
-                    .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
-                    .replace("%chunk%", OwnedLand.getLandName(chunk)));
+        if (plugin.isVaultEnabled()) {
+            double calculatedCost = OwnedLand.calculateCost(player);
+            if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
+                plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
+                player.sendMessage(lm.getString("Commands.Claim.moneyTook")
+                        .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                        .replace("%chunk%", OwnedLand.getLandName(chunk)));
 
-        } else {
-            // NOT ENOUG MONEY
-            player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
-                    .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
-                    .replace("%chunk%", OwnedLand.getLandName(chunk)));
-            return;
+            } else {
+                // NOT ENOUG MONEY
+                player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
+                        .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                        .replace("%chunk%", OwnedLand.getLandName(chunk)));
+                return;
+            }
         }
 
         plugin.getWgHandler().claim(chunk, player.getUniqueId());

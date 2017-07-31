@@ -15,6 +15,8 @@ HelpCommandPerSite: 10
 # this formula uses limited growth. Cost will raise and raise until it reaches a certain point
 # Formula: maxCost - ( maxCost - minCost ) * multiplier ^ amountOfOwnedLands
 # you can play around with the formula here: https://www.geogebra.org/m/S6uSGV7c
+Economy:
+  enable: true
 Formula:
   maxCost: 3000.0
   minCost: 500.0

@@ -25,10 +25,11 @@ public class Home extends LandlordCommand {
     public void onHome(Player player, String targetPlayer) {
 
         double cost = plugin.getConfig().getDouble("Homes.teleportCost");
-        if (!plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
-            player.sendMessage(lm.getString("Commands.Homes.notEnoughMoney").replace("%cost%", plugin.getVaultHandler().format(cost)));
-            return;
-        }
+        if (plugin.isVaultEnabled())
+            if (!plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
+                player.sendMessage(lm.getString("Commands.Home.notEnoughMoney").replace("%cost%", plugin.getVaultHandler().format(cost)));
+                return;
+            }
 
         if (targetPlayer.equals("own")) {
             Location toGo = plugin.getPlayerManager().get(player.getUniqueId()).getHome();
@@ -40,7 +41,7 @@ public class Home extends LandlordCommand {
                 return;
             }
 
-            if(cost > 0){
+            if (cost > 0 && plugin.isVaultEnabled()) {
                 plugin.getVaultHandler().take(player.getUniqueId(), cost);
                 player.sendMessage(lm.getString("Commands.Home.costing"));
             }

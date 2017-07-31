@@ -45,13 +45,16 @@ public class Unclaim extends LandlordCommand {
         int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
         int freeLands = plugin.getConfig().getInt("Freelands");
 
-        double payback;
-        if (regionCount <= freeLands)
-            payback = 0;
-        else
-            payback = OwnedLand.calculateCost(player) * plugin.getConfig().getDouble("Payback");
+        double payback = -1;
+        if (plugin.isVaultEnabled()) {
+            if (regionCount <= freeLands)
+                payback = 0;
+            else
+                payback = OwnedLand.calculateCost(player) * plugin.getConfig().getDouble("Payback");
 
-        plugin.getVaultHandler().give(player.getUniqueId(), payback);
+            plugin.getVaultHandler().give(player.getUniqueId(), payback);
+        }
+
         plugin.getWgHandler().unclaim(player.getWorld(), pr.getLandName());
 
         player.sendMessage(lm.getString("Commands.Unclaim.success")

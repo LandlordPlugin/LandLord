@@ -3,8 +3,8 @@ version: 1.0
 main: biz.princeps.landlord.Landlord
 author: SpatiumPrinceps
 website: http://dev.bukkit.org/bukkit-plugins/landlord/
-depends: [Vault, WorldGuard]
-softdepend: [ProtocolLib]
+depends: [WorldGuard]
+softdepend: [ProtocolLib, Vault]
 
 commands:
 
@@ -71,6 +71,10 @@ permissions:
   landlord.player.homeother:
     description: Permission to teleport to other homes
     default: false
+
+  landlord.limit.10:
+    description: Allows a user to claim up to 10 lands
+    default: true
 
   landlord.limit.override:
     description: allows unlimited land ownership

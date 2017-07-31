@@ -102,16 +102,23 @@ public class ManageGUI extends AbstractGUI {
                     ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
                             .replace("%cost%", Landlord.getInstance().getVaultHandler().format(cost)),
                             (p1) -> {
+                                boolean flag = false;
                                 if (Landlord.getInstance().getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
                                     Landlord.getInstance().getVaultHandler().take(player.getUniqueId(), cost);
-                                    player.getWorld().regenerateChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
-                                    player.sendMessage(lm.getString("Commands.Manage.Regenerate.success")
-                                            .replace("%land%", land.getId()));
-                                    display();
+                                    flag = true;
                                 } else
                                     player.sendMessage(lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
                                             .replace("%cost%", Landlord.getInstance().getVaultHandler().format(cost))
                                             .replace("%name%", land.getId()));
+
+                                if (flag) {
+                                    player.getWorld().regenerateChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
+                                    player.sendMessage(lm.getString("Commands.Manage.Regenerate.success")
+                                            .replace("%land%", land.getId()));
+                                    display();
+                                }
+
+
                             }, (p2) -> {
                         player.sendMessage(lm.getString("Commands.Manage.Regenerate.abort")
                                 .replace("%land%", land.getId()));

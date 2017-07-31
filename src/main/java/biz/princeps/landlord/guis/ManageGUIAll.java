@@ -105,21 +105,26 @@ public class ManageGUIAll extends AbstractGUI {
                     ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
                             .replace("%cost%", Landlord.getInstance().getVaultHandler().format(cost)),
                             (p1) -> {
-                                if (Landlord.getInstance().getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
-                                    Landlord.getInstance().getVaultHandler().take(player.getUniqueId(), cost);
-
+                                boolean flag = false;
+                                if (Landlord.getInstance().isVaultEnabled()) {
+                                    if (Landlord.getInstance().getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
+                                        Landlord.getInstance().getVaultHandler().take(player.getUniqueId(), cost);
+                                        flag = true;
+                                    } else
+                                        player.sendMessage(lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
+                                                .replace("%cost%", Landlord.getInstance().getVaultHandler().format(cost))
+                                                .replace("%name%", land.getId()));
+                                }
+                                if (flag) {
                                     for (ProtectedRegion protectedRegion : lands) {
-                               //         System.out.println(protectedRegion.getMinimumPoint().getBlockX() / 16 + ":" + protectedRegion.getMinimumPoint().getBlockZ() / 16);
+                                        //         System.out.println(protectedRegion.getMinimumPoint().getBlockX() / 16 + ":" + protectedRegion.getMinimumPoint().getBlockZ() / 16);
                                         player.getWorld().regenerateChunk(protectedRegion.getMinimumPoint().getBlockX() / 16, protectedRegion.getMinimumPoint().getBlockZ() / 16);
                                     }
 
                                     player.sendMessage(lm.getString("Commands.Manage.Regenerate.success")
                                             .replace("%land%", land.getId()));
                                     display();
-                                } else
-                                    player.sendMessage(lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
-                                            .replace("%cost%", Landlord.getInstance().getVaultHandler().format(cost))
-                                            .replace("%name%", land.getId()));
+                                }
                             }, (p2) -> {
                         player.sendMessage(lm.getString("Commands.Manage.Regenerate.abort")
                                 .replace("%land%", land.getId()));
@@ -132,11 +137,9 @@ public class ManageGUIAll extends AbstractGUI {
         // Set greet icon
         String currentGreet = land.getFlag(DefaultFlag.GREET_MESSAGE);
         this.setIcon(3, new Icon(createItem(Material.BAKED_POTATO, 1,
-                lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greedDesc, currentGreet)))
-                .addClickAction((p -> {
+                lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greedDesc, currentGreet))).addClickAction((p -> {
                     p.closeInventory();
                     ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetGreet.clickMsg"));
-
 
                     builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreetall "));
 
@@ -146,9 +149,7 @@ public class ManageGUIAll extends AbstractGUI {
 
         // set farewell icon
         String currentFarewell = land.getFlag(DefaultFlag.FAREWELL_MESSAGE);
-        this.setIcon(4, new Icon(createItem(Material.CARROT_ITEM, 1,
-                lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
-                .addClickAction((p -> {
+        this.setIcon(4, new Icon(createItem(Material.CARROT_ITEM, 1, lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell))).addClickAction((p -> {
                     p.closeInventory();
                     ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetFarewell.clickMsg"));
                     builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewellall "));
@@ -163,26 +164,23 @@ public class ManageGUIAll extends AbstractGUI {
 
         };
         friends.forEach(id -> friendsGui.addIcon(new Icon(createSkull(Bukkit.getOfflinePlayer(id).getName(),
-                Bukkit.getOfflinePlayer(id).getName(), lm.getStringList("Commands.Manage.ManageFriends.friendSegment")))
-                .addClickAction(player -> {
-                    ConfirmationGUI confirmationGUI = new ConfirmationGUI(player, lm.getRawString("Commands.Manage.ManageFriends.unfriend")
-                            .replace("%player%", Bukkit.getOfflinePlayer(id).getName()),
-                            p -> {
-                                friendsGui.removeIcon(friendsGui.filter(Bukkit.getOfflinePlayer(id).getName()).get(0));
-                                Bukkit.dispatchCommand(player, "land unfriendall " + Bukkit.getOfflinePlayer(id).getName());
-                                player.closeInventory();
-                                friendsGui.display();
-                            },
-                            p -> {
-                                player.closeInventory();
-                                friendsGui.display();
-                            }, friendsGui);
-                    confirmationGUI.display();
-                })));
+                Bukkit.getOfflinePlayer(id).getName(), lm.getStringList("Commands.Manage.ManageFriends.friendSegment"))).addClickAction(player -> {
+            ConfirmationGUI confirmationGUI = new ConfirmationGUI(player, lm.getRawString("Commands.Manage.ManageFriends.unfriend")
+                    .replace("%player%", Bukkit.getOfflinePlayer(id).getName()),
+                    p -> {
+                        friendsGui.removeIcon(friendsGui.filter(Bukkit.getOfflinePlayer(id).getName()).get(0));
+                        Bukkit.dispatchCommand(player, "land unfriendall " + Bukkit.getOfflinePlayer(id).getName());
+                        player.closeInventory();
+                        friendsGui.display();
+                    },
+                    p -> {
+                        player.closeInventory();
+                        friendsGui.display();
+                    }, friendsGui);
+            confirmationGUI.display();
+        })));
 
-        this.setIcon(5, new Icon(skull)
-                .setName(lm.getRawString("Commands.Manage.ManageFriends.title"))
-                .addClickAction(p -> friendsGui.display())
+        this.setIcon(5, new Icon(skull).setName(lm.getRawString("Commands.Manage.ManageFriends.title")).addClickAction(p -> friendsGui.display())
         );
     }
 

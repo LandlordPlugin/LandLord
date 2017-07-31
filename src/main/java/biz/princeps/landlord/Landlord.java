@@ -51,9 +51,7 @@ public class Landlord extends JavaPlugin {
             wgHandler = new WorldGuardHandler(getWorldGuard());
 
         if (getVault() == null) {
-            getLogger().warning("Vault not found! Please ensure you have the correct version of Vault in order to use LandLord");
-            getPluginLoader().disablePlugin(this);
-            return;
+            getLogger().warning("Vault not found! Not all features of landlord are working.");
         } else
             vaultHandler = new VaultHandler(getVault());
 
@@ -134,5 +132,9 @@ public class Landlord extends JavaPlugin {
 
     public MapManager getMapManager() {
         return mapManager;
+    }
+
+    public boolean isVaultEnabled(){
+        return getConfig().getBoolean("Economy.enable");
     }
 }

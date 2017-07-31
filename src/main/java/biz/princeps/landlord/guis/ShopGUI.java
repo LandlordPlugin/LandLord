@@ -99,19 +99,8 @@ public class ShopGUI extends AbstractGUI {
             i++;
         }
 
-        setIcon((int) Math.
-
-                ceil((double) rawList.
-
-                        size() / 9.0) * 9 + 8, new
-
-                Icon(new ItemStack(Material.BARRIER))
-                .
-
-                        setName(ChatColor.RED + "Close")
-                .
-
-                        addClickAction(HumanEntity::closeInventory));
+        setIcon((int) Math.ceil((double) rawList.size() / 9.0) * 9 + 8, new Icon(new ItemStack(Material.BARRIER)).
+                setName(ChatColor.RED + "Close").addClickAction(HumanEntity::closeInventory));
     }
 
     class Buyable {
