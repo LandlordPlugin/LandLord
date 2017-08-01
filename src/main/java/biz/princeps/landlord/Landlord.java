@@ -8,10 +8,12 @@ import biz.princeps.landlord.listener.LandAlerter;
 import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.manager.map.MapManager;
+import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Requests;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
+import biz.princeps.lib.storage.requests.Conditions;
 import co.aikar.commands.BukkitCommandManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
@@ -20,6 +22,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.List;
 
 /**
  * Created by spatium on 16.07.17.
@@ -70,6 +74,18 @@ public class Landlord extends JavaPlugin {
 
         mapManager = new MapManager();
         ScoreboardLib.setPluginInstance(this);
+
+
+        //Retrieve the LPlayer objects for all online players (in case of reload)
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            List<Object> lPlayer = this.getDatabaseAPI().retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", p.getUniqueId().toString()).create());
+            LPlayer lp;
+            if (lPlayer.size() > 0)
+                lp = (LPlayer) lPlayer.get(0);
+            else
+                lp = new LPlayer(p.getUniqueId());
+            this.getPlayerManager().add(p.getUniqueId(), lp);
+        });
     }
 
     @Override
@@ -134,7 +150,7 @@ public class Landlord extends JavaPlugin {
         return mapManager;
     }
 
-    public boolean isVaultEnabled(){
+    public boolean isVaultEnabled() {
         return getConfig().getBoolean("Economy.enable");
     }
 }
