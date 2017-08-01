@@ -141,6 +141,8 @@ Commands:
     notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
     success: '&aSuccessfully set your home to your current location'
     disabled: '&eThis feature is currently disabled'
+    removed: '&eYour home was removed, because you unclaimed the corresponding chunk'
+    nullLand: '&eYou need to claim this land first'
   Home:
     noHome: '&4You do not have a home yet. Click to set a home on your current location'
     dontMove: '&cThis command will be executed in %time% seconds. Dont move!'

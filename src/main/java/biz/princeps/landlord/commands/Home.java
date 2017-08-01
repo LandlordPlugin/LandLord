@@ -48,7 +48,8 @@ public class Home extends LandlordCommand {
 
             if (cost > 0 && plugin.isVaultEnabled()) {
                 plugin.getVaultHandler().take(player.getUniqueId(), cost);
-                player.sendMessage(lm.getString("Commands.Home.costing"));
+                player.sendMessage(lm.getString("Commands.Home.costing")
+                        .replace("%cost%", plugin.getVaultHandler().format(cost)));
             }
             player.teleport(toGo);
             player.sendMessage(lm.getString("Commands.Home.welcomeHome"));

@@ -4,6 +4,7 @@ import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import biz.princeps.landlord.util.OwnedLand;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -62,6 +63,13 @@ public class Unclaim extends LandlordCommand {
             }
 
             plugin.getWgHandler().unclaim(player.getWorld(), pr.getLandName());
+
+            // remove possible homes
+            Location home = plugin.getPlayerManager().get(player.getUniqueId()).getHome();
+            if (pr.getLand().contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
+                player.sendMessage(lm.getString("Commands.SetHome.removed"));
+                plugin.getPlayerManager().get(player.getUniqueId()).setHome(null);
+            }
 
             player.sendMessage(lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", OwnedLand.getLandName(chunk))

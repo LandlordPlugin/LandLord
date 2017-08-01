@@ -26,12 +26,13 @@ public class SetHome extends LandlordCommand {
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
 
         if (land == null) {
-            player.sendMessage(lm.getString("Commands.SetHome.notOwn"));
+            player.sendMessage(lm.getString("Commands.SetHome.nullLand"));
             return;
         }
 
         if (!land.isOwner(player.getUniqueId())) {
-            player.sendMessage(lm.getString("Commands.SetHome.notOwn"));
+            player.sendMessage(lm.getString("Commands.SetHome.notOwn")
+                    .replace("%owner%", land.printOwners()));
             return;
         }
 
