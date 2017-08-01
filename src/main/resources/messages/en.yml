@@ -9,6 +9,7 @@ Commands:
     alreadyClaimed: '&eThis chunk is already claimed by %owner%'
     limit: '&eYou need to buy more claims first (%regions%/%claims%)! Click to buy more!'
     hardcap: '&eYou cant claim more lands than %regions%!!'
+    notAllowed: '&eYou are not allowed to claim this land!'
   Info:
     owned:
       - '&f&lLand&c&lLord'

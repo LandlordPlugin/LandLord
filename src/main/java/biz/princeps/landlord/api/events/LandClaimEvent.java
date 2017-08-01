@@ -53,7 +53,7 @@ public class LandClaimEvent extends Event implements Cancellable {
     public enum ClaimState {
         SUCCESS,
         NOTENOUGHMONEY,
-        ALREADYCLAIMED
+        OVERLAPPINGREGION, ALREADYCLAIMED
     }
 
 }

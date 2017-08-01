@@ -25,6 +25,18 @@ public class Claim extends LandlordCommand {
         }
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
         OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
+
+        // Check if there is an overlapping wg-region
+        if (!plugin.getWgHandler().canClaim(player, chunk)) {
+            LandClaimEvent event = new LandClaimEvent(player, pr, LandClaimEvent.ClaimState.OVERLAPPINGREGION);
+            Bukkit.getServer().getPluginManager().callEvent(event);
+
+            if (!event.isCancelled()) {
+                player.sendMessage(lm.getString("Commands.Claim.notAllowed"));
+                return;
+            }
+        }
+
         if (pr != null) {
             LandClaimEvent event = new LandClaimEvent(player, pr, LandClaimEvent.ClaimState.ALREADYCLAIMED);
             Bukkit.getServer().getPluginManager().callEvent(event);
@@ -35,6 +47,7 @@ public class Claim extends LandlordCommand {
                 return;
             }
         }
+
 
         int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
         List<Integer> limitlist = plugin.getConfig().getIntegerList("limits");

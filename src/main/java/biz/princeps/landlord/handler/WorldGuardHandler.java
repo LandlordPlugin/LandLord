@@ -14,8 +14,11 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.util.*;
+
+import static com.sk89q.worldguard.bukkit.BukkitUtil.toVector;
 
 /**
  * Created by spatium on 17.07.17.
@@ -55,7 +58,7 @@ public class WorldGuardHandler {
 
     public OwnedLand getRegion(Chunk chunk) {
         RegionManager manager = wg.getRegionContainer().get(chunk.getWorld());
-        com.sk89q.worldguard.protection.regions.ProtectedRegion pr = manager.getRegion(OwnedLand.getLandName(chunk));
+        ProtectedRegion pr = manager.getRegion(OwnedLand.getLandName(chunk));
         return (pr != null ? new OwnedLand(pr, chunk) : null);
     }
 
@@ -112,5 +115,18 @@ public class WorldGuardHandler {
         return regions;
     }
 
+    public boolean canClaim(Player player, Chunk currChunk) {
+        RegionManager regionManager = wg.getRegionManager(player.getWorld());
+        if (regionManager != null) {
+            ProtectedRegion check = new ProtectedCuboidRegion("check", toVector(currChunk.getBlock(0, 0, 0)), toVector(currChunk.getBlock(15, 127, 15)));
+            List<ProtectedRegion> intersects = check.getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
+            for (ProtectedRegion intersect : intersects) {
+                if (!regionManager.getApplicableRegions(intersect).canBuild(wg.wrapPlayer(player))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
 }
