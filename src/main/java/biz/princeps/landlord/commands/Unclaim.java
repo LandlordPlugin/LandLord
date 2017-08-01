@@ -1,6 +1,8 @@
 package biz.princeps.landlord.commands;
 
+import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import biz.princeps.landlord.util.OwnedLand;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
@@ -42,29 +44,33 @@ public class Unclaim extends LandlordCommand {
             return;
         }
 
-        int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
-        int freeLands = plugin.getConfig().getInt("Freelands");
+        LandUnclaimEvent event = new LandUnclaimEvent(player, pr);
+        Bukkit.getServer().getPluginManager().callEvent(event);
 
-        double payback = -1;
-        if (plugin.isVaultEnabled()) {
-            if (regionCount <= freeLands)
-                payback = 0;
-            else
-                payback = OwnedLand.calculateCost(player) * plugin.getConfig().getDouble("Payback");
+        if (!event.isCancelled()) {
+            int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
+            int freeLands = plugin.getConfig().getInt("Freelands");
 
-            plugin.getVaultHandler().give(player.getUniqueId(), payback);
+            double payback = -1;
+            if (plugin.isVaultEnabled()) {
+                if (regionCount <= freeLands)
+                    payback = 0;
+                else
+                    payback = OwnedLand.calculateCost(player) * plugin.getConfig().getDouble("Payback");
+
+                plugin.getVaultHandler().give(player.getUniqueId(), payback);
+            }
+
+            plugin.getWgHandler().unclaim(player.getWorld(), pr.getLandName());
+
+            player.sendMessage(lm.getString("Commands.Unclaim.success")
+                    .replace("%chunk%", OwnedLand.getLandName(chunk))
+                    .replace("%world%", chunk.getWorld().getName())
+                    .replace("%money%", plugin.getVaultHandler().format(payback)));
+
+
+            plugin.getMapManager().updateAll();
         }
-
-        plugin.getWgHandler().unclaim(player.getWorld(), pr.getLandName());
-
-        player.sendMessage(lm.getString("Commands.Unclaim.success")
-                .replace("%chunk%", OwnedLand.getLandName(chunk))
-                .replace("%world%", chunk.getWorld().getName())
-                .replace("%money%", plugin.getVaultHandler().format(payback)));
-
-
-        plugin.getMapManager().updateAll();
-
     }
 
 }
