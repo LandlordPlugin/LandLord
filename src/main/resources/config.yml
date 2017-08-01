@@ -50,6 +50,17 @@ Homes:
   spawnParticles: true
   teleportCost: 100.0
 
+# you can remove items from the /ll manage gui by setting values to false
+Manage:
+  building: true
+  use: true
+  regenerate: true
+  setgreet: true
+  setfarewell: true
+  friends: true
+  unclaim: true
+
+
 # -----------        Map Stuff        ------------
 Map:
   enable: true
