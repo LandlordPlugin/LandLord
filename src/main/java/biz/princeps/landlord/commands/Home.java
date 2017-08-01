@@ -24,6 +24,11 @@ public class Home extends LandlordCommand {
     // requires permission landlord.player.home, if target equals own, else requires .homeother
     public void onHome(Player player, String targetPlayer) {
 
+        if (!plugin.getConfig().getBoolean("Homes.enable")) {
+            player.sendMessage(lm.getString("Commands.SetHome.disabled"));
+            return;
+        }
+
         double cost = plugin.getConfig().getDouble("Homes.teleportCost");
         if (plugin.isVaultEnabled())
             if (!plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {

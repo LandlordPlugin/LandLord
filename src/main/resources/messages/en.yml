@@ -148,6 +148,8 @@ Commands:
     notEnoughMoney: '&7You dont have enough money to teleport! (Cost&8&o: &c&o%cost%&7&o)'
     costing: '&aYou were charged %cost% for teleporting home'
     welcomeHome: '&aWelcome at your home!'
+    disabled: '&eThis feature is currently disabled'
+
 Alerts:
   defaultGreeting: '&7Now entering claimed land of %owner%'
   defaultFarewell: '&7Leaving claimed land of %owner%'
