@@ -32,14 +32,14 @@ public class ManageGUIAll extends AbstractGUI {
 
     public ManageGUIAll(Player player) {
         super(player, 9, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.all.header"));
-        lm = plugin.getLangManager();
         plugin = Landlord.getInstance();
+        lm = plugin.getLangManager();
     }
 
     public ManageGUIAll(Player player, MultiPagedGUI landGui) {
         super(player, 18, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.all.header"), landGui);
-        lm = plugin.getLangManager();
         plugin = Landlord.getInstance();
+        lm = plugin.getLangManager();
     }
 
 

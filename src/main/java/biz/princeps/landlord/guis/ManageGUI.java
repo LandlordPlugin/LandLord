@@ -37,15 +37,15 @@ public class ManageGUI extends AbstractGUI {
     public ManageGUI(Player player, ProtectedRegion land) {
         super(player, 9, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.header").replace("%info%", land.getId()));
         this.land = land;
-        lm = plugin.getLangManager();
         plugin = Landlord.getInstance();
+        lm = plugin.getLangManager();
     }
 
     public ManageGUI(Player player, ProtectedRegion land, MultiPagedGUI landGui) {
         super(player, 18, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.header").replace("%info%", land.getId()), landGui);
         this.land = land;
-        lm = plugin.getLangManager();
         plugin = Landlord.getInstance();
+        lm = plugin.getLangManager();
     }
 
 

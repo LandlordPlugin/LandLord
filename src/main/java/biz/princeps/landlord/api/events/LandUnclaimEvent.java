@@ -8,21 +8,20 @@ import org.bukkit.event.HandlerList;
 
 public class LandUnclaimEvent extends Event implements Cancellable {
 
-    private HandlerList list = this.getHandlers();
+    private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
 
     private Player player;
     private OwnedLand land;
 
     public LandUnclaimEvent(Player player, OwnedLand land) {
-        this.list = this.getHandlers();
         this.player = player;
         this.land = land;
     }
 
     @Override
     public HandlerList getHandlers() {
-        return list;
+        return handlers;
     }
 
     public Player getPlayer() {

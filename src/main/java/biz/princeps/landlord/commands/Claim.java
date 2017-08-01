@@ -29,7 +29,11 @@ public class Claim extends LandlordCommand {
         // Check if there is an overlapping wg-region
         if (!plugin.getWgHandler().canClaim(player, chunk)) {
             LandClaimEvent event = new LandClaimEvent(player, pr, LandClaimEvent.ClaimState.OVERLAPPINGREGION);
-            Bukkit.getServer().getPluginManager().callEvent(event);
+            if (plugin.getServer() == null)
+                System.out.println("null1");
+            if (plugin.getServer().getPluginManager() == null)
+                System.out.println("null");
+            plugin.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
                 player.sendMessage(lm.getString("Commands.Claim.notAllowed"));
@@ -105,7 +109,7 @@ public class Claim extends LandlordCommand {
             }
         }
 
-        LandClaimEvent event = new LandClaimEvent(player, pr, LandClaimEvent.ClaimState.ALREADYCLAIMED);
+        LandClaimEvent event = new LandClaimEvent(player, pr, LandClaimEvent.ClaimState.SUCCESS);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {

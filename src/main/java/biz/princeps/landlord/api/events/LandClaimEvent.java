@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
 
 public class LandClaimEvent extends Event implements Cancellable {
 
-    private HandlerList list = this.getHandlers();
+    private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
 
     private Player player;
@@ -16,7 +16,6 @@ public class LandClaimEvent extends Event implements Cancellable {
     private ClaimState claimState;
 
     public LandClaimEvent(Player player, OwnedLand land, ClaimState claimState) {
-        this.list = this.getHandlers();
         this.player = player;
         this.land = land;
         this.claimState = claimState;
@@ -24,7 +23,7 @@ public class LandClaimEvent extends Event implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return list;
+        return handlers;
     }
 
     public Player getPlayer() {
@@ -53,7 +52,8 @@ public class LandClaimEvent extends Event implements Cancellable {
     public enum ClaimState {
         SUCCESS,
         NOTENOUGHMONEY,
-        OVERLAPPINGREGION, ALREADYCLAIMED
+        OVERLAPPINGREGION,
+        ALREADYCLAIMED
     }
 
 }
