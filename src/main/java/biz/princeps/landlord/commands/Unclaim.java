@@ -66,10 +66,11 @@ public class Unclaim extends LandlordCommand {
 
             // remove possible homes
             Location home = plugin.getPlayerManager().get(player.getUniqueId()).getHome();
-            if (pr.getLand().contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
-                player.sendMessage(lm.getString("Commands.SetHome.removed"));
-                plugin.getPlayerManager().get(player.getUniqueId()).setHome(null);
-            }
+            if (home != null)
+                if (pr.getLand().contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
+                    player.sendMessage(lm.getString("Commands.SetHome.removed"));
+                    plugin.getPlayerManager().get(player.getUniqueId()).setHome(null);
+                }
 
             player.sendMessage(lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", OwnedLand.getLandName(chunk))
