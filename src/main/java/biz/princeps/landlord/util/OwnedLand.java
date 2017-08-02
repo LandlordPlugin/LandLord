@@ -35,6 +35,9 @@ public class OwnedLand {
         return region.getOwners().getUniqueIds().contains(uuid);
     }
 
+    public UUID getOwner(){
+        return region.getOwners().getUniqueIds().iterator().next();
+    }
     public void addFriends(DefaultDomain domain) {
         region.getMembers().addAll(domain);
     }

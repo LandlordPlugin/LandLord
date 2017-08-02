@@ -2,10 +2,12 @@ package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.manager.LangManager;
+import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
+import biz.princeps.lib.storage.requests.Conditions;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
@@ -14,6 +16,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -21,6 +24,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by spatium on 24.07.17.
@@ -186,7 +191,7 @@ public class ManageGUIAll extends AbstractGUI {
 
             };
             friends.forEach(id -> friendsGui.addIcon(new Icon(createSkull(Bukkit.getOfflinePlayer(id).getName(),
-                    Bukkit.getOfflinePlayer(id).getName(), lm.getStringList("Commands.Manage.ManageFriends.friendSegment"))).addClickAction(player -> {
+                    Bukkit.getOfflinePlayer(id).getName(), formatFriendsSegment(id))).addClickAction(player -> {
                 ConfirmationGUI confirmationGUI = new ConfirmationGUI(player, lm.getRawString("Commands.Manage.ManageFriends.unfriend")
                         .replace("%player%", Bukkit.getOfflinePlayer(id).getName()),
                         p -> {
@@ -204,6 +209,36 @@ public class ManageGUIAll extends AbstractGUI {
 
             this.setIcon(position, new Icon(skull).setName(lm.getRawString("Commands.Manage.ManageFriends.title")).addClickAction(p -> friendsGui.display()));
             position++;
+        }
+    }
+
+
+    private List<String> formatFriendsSegment(UUID id) {
+        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+
+        CompletableFuture<List<Object>> future = new CompletableFuture<>();
+        plugin.getExecutorService().submit(() -> {
+            List<Object> listi = plugin.getDatabaseAPI().retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", op.getUniqueId().toString()).create());
+            future.complete(listi);
+        });
+        List<String> stringList = lm.getStringList("Commands.Manage.ManageFriends.friendSegment");
+        List<String> newlist = new ArrayList<>();
+        try {
+            final String lastseen;
+            if (op.isOnline()) {
+                lastseen = lm.getRawString("Commands.Info.online");
+            } else {
+                lastseen = ((LPlayer) future.get().get(0)).getLastSeenAsString();
+            }
+            stringList.forEach(s -> {
+                String ss = s.replace("%seen%", lastseen);
+                newlist.add(ss);
+            });
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } finally {
+            return newlist;
         }
     }
 

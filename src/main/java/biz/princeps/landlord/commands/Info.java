@@ -1,12 +1,19 @@
 package biz.princeps.landlord.commands;
 
+import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.crossversion.CParticle;
+import biz.princeps.lib.storage.requests.Conditions;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 /**
  * Created by spatium on 17.07.17.
@@ -47,20 +54,35 @@ public class Info extends LandlordCommand {
 
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
 
-        // claimed
-        if (land != null) {
-            player.sendMessage(owned
-                    .replace("%landid%", land.getLandName())
-                    .replace("%owner%", land.printOwners())
-                    .replace("%member%", land.printMembers().isEmpty() ? "-" : land.printMembers()));
-            OwnedLand.highlightLand(player, CParticle.DRIPWATER);
+        new BukkitRunnable(){
 
-        } else {
-            // unclaimed
-            player.sendMessage(free
-                    .replace("%landid%", OwnedLand.getLandName(chunk))
-                    .replace("%price%", plugin.getVaultHandler().format(OwnedLand.calculateCost(player))));
-            OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
-        }
+            @Override
+            public void run() {
+                // claimed
+                if (land != null) {
+                    String lastseen = null;
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(land.getOwner());
+                    if (op.isOnline()) {
+                        lastseen = lm.getRawString("Commands.Info.online");
+                    } else {
+                        List<Object> list = plugin.getDatabaseAPI().retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", op.getUniqueId().toString()).create());
+                        lastseen = ((LPlayer) list.get(0)).getLastSeenAsString();
+                    }
+                    player.sendMessage(owned
+                            .replace("%landid%", land.getLandName())
+                            .replace("%owner%", land.printOwners())
+                            .replace("%member%", land.printMembers().isEmpty() ? "-" : land.printMembers())
+                            .replace("%lastseen%", lastseen));
+                    OwnedLand.highlightLand(player, CParticle.DRIPWATER);
+
+                } else {
+                    // unclaimed
+                    player.sendMessage(free
+                            .replace("%landid%", OwnedLand.getLandName(chunk))
+                            .replace("%price%", plugin.getVaultHandler().format(OwnedLand.calculateCost(player))));
+                    OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
+                }
+            }
+        }.runTaskAsynchronously(plugin);
     }
 }

@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -44,6 +45,7 @@ public class JoinListener extends BasicListener {
 
             @Override
             public void run() {
+                plugin.getPlayerManager().get(p.getUniqueId()).setLastSeen(LocalDateTime.now());
                 plugin.getPlayerManager().save(p.getUniqueId());
                 plugin.getPlayerManager().remove(p.getUniqueId());
             }

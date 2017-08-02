@@ -38,6 +38,7 @@ public class LandAlerter extends BasicListener {
     public LandAlerter() {
         playerInLand = new HashMap<>();
 
+
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(pl, PacketType.Play.Server.CHAT) {
             private JSONParser parser = new JSONParser();
 

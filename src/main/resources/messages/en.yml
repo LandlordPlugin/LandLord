@@ -11,10 +11,11 @@ Commands:
     hardcap: '&eYou cant claim more lands than %regions%!!'
     notAllowed: '&eYou are not allowed to claim this land!'
   Info:
+    online: '&bONLINE'
     owned:
       - '&f&lLand&c&lLord'
       - '&7Landname&8: &c%landid%'
-      - '&7Owner&8: &c%owner%'
+      - '&7Owner&8: &c%owner%   &7Last seen: &c%lastseen%'
       - '&7Member&8: &c%member%'
     free:
       - '&f&lLand&c&lLord'

@@ -15,6 +15,9 @@ import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
 import biz.princeps.lib.storage.requests.Conditions;
 import co.aikar.commands.BukkitCommandManager;
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainFactory;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import net.milkbowl.vault.economy.Economy;
@@ -24,6 +27,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by spatium on 16.07.17.
@@ -32,6 +37,7 @@ public class Landlord extends JavaPlugin {
 
     private static Landlord instance;
     private static DatabaseAPI databaseAPI;
+    private ExecutorService executorService;
 
     private WorldGuardHandler wgHandler;
     private VaultHandler vaultHandler;
@@ -75,6 +81,7 @@ public class Landlord extends JavaPlugin {
         mapManager = new MapManager();
         ScoreboardLib.setPluginInstance(this);
 
+        executorService = Executors.newCachedThreadPool();
 
         //Retrieve the LPlayer objects for all online players (in case of reload)
         Bukkit.getOnlinePlayers().forEach(p -> {
@@ -152,5 +159,9 @@ public class Landlord extends JavaPlugin {
 
     public boolean isVaultEnabled() {
         return getConfig().getBoolean("Economy.enable");
+    }
+
+    public ExecutorService getExecutorService() {
+        return executorService;
     }
 }
