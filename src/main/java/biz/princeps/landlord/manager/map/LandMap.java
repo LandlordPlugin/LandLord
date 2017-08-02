@@ -3,6 +3,7 @@ package biz.princeps.landlord.manager.map;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.lib.crossversion.CParticle;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import me.tigerhix.lib.scoreboard.common.EntryBuilder;
 import me.tigerhix.lib.scoreboard.type.Entry;
@@ -12,6 +13,8 @@ import me.tigerhix.lib.scoreboard.type.SimpleScoreboard;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +29,7 @@ public class LandMap {
     private Chunk currChunk;
     private String currDir;
     private Landlord plugin;
+    private BukkitTask showBorders;
 
     public LandMap(Player p, Landlord plugin) {
         this.plugin = plugin;
@@ -281,8 +285,16 @@ public class LandMap {
 
     public void removeMap() {
         scoreboard.deactivate();
+        if(showBorders != null)
+            showBorders.cancel();
     }
 
+    /**
+     * core method
+     *
+     * @param p
+     * @return
+     */
     private SimpleScoreboard displayMap(Player p) {
         Scoreboard board = ScoreboardLib.createScoreboard(p).setHandler(new ScoreboardHandler() {
             LangManager messages = plugin.getLangManager();
@@ -310,11 +322,18 @@ public class LandMap {
                 }
                 return eb.build();
             }
-        }).setUpdateInterval(plugin.getConfig().getLong("Map.LandMapRefreshRate", 10));
+        }).setUpdateInterval(plugin.getConfig().getLong("Map.refreshRate", 10));
 
         SimpleScoreboard simpleScoreboard = (SimpleScoreboard) board;
         simpleScoreboard.activate();
         this.scoreboard = simpleScoreboard;
+        if (plugin.getConfig().getBoolean("Map.chunkBorders.enable"))
+            this.showBorders = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    OwnedLand.highlightLand(p, CParticle.DRIPLAVA);
+                }
+            }.runTaskTimer(plugin, 0, plugin.getConfig().getInt("Map.chunkBorders.refreshRate") * 20);
         return simpleScoreboard;
     }
 
