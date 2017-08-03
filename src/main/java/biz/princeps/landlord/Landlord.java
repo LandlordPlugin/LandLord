@@ -11,6 +11,7 @@ import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Requests;
 import biz.princeps.lib.PrincepsLib;
+import biz.princeps.lib.config.Config;
 import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
 import biz.princeps.lib.storage.requests.Conditions;
@@ -63,11 +64,14 @@ public class Landlord extends JavaPlugin {
             vaultHandler = new VaultHandler(getVault());
 
         instance = this;
+        PrincepsLib.setPluginInstance(this);
 
         saveDefaultConfig();
-        langManager = new LangManager(this, getConfig().getString("Language", "en"));
+        Config cfg = new Config(this.getDataFolder().getAbsolutePath(), "config.yml");
+        cfg.updateConfig();
 
-        PrincepsLib.setPluginInstance(this);
+        langManager = new LangManager(getConfig().getString("Language", "en"));
+
         databaseAPI = new DatabaseAPI(DatabaseType.valueOf(getConfig().getString("DatabaseType")), getConfig(), new Requests(), "biz.princeps.landlord.persistent");
 
         manageCommands();

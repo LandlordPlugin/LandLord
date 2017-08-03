@@ -9,9 +9,9 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -64,24 +64,32 @@ public class LandAlerter extends BasicListener {
                     if (array != null && array.get(0) instanceof JSONObject) {
                         JSONObject obj = (JSONObject) array.get(0);
                         if (obj != null && obj.get("text") instanceof String) {
-                            String msg = (String) obj.get("text");
-
+                            String msg = ((String) obj.get("text")).replaceAll("&([a-f]|[0-7])", "");
                             boolean goingOn = false;
+
                             if (regionInsideNow != null) {
-                                if (msg.equals(ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE))) ||
-                                        msg.equals(ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)))) {
-                                    //         System.out.println(msg + " |" + ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE)) + "|" + ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)));
+                                //System.out.println(msg + " | " + regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE) + " | " + regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE));
+                                String greet = regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE).replaceAll("&([a-f]|[0-7])", "");
+                                String farewell = regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE).replaceAll("&([a-f]|[0-7])", "");
+                                //                      System.out.println(msg + ":" + greet + ":" + farewell);
+
+                                if (msg.equals(greet) || msg.equals(farewell)) {
+                                    //       System.out.println(msg + " |" + ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE)) + "|" + ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)));
                                     goingOn = true;
                                 }
                             }
 
                             if (before != null) {
-                                if (msg.equals(ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.GREET_MESSAGE))) ||
-                                        msg.equals(ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)))) {
-                                    //         System.out.println(msg + " |" + ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.GREET_MESSAGE)) + "|" + ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)));
+                                String greet = before.getLand().getFlag(DefaultFlag.GREET_MESSAGE).replaceAll("&([a-f]|[0-7])", "");
+                                String farewell = before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE).replaceAll("&([a-f]|[0-7])", "");
+                                //                     System.out.println(msg + ":" + greet + ":" + farewell);
+                                //   System.out.println(msg + " | " + before.getLand().getFlag(DefaultFlag.GREET_MESSAGE) + " | " + before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE));
+
+                                if (msg.equals(greet) || msg.equals(farewell)) {
                                     goingOn = true;
                                 }
                             }
+                            //               System.out.println(goingOn);
 
 
                             //on leave: da wo man her kam
@@ -93,15 +101,20 @@ public class LandAlerter extends BasicListener {
 
                             //on leave null
                             // on enter da wo man nun ist
-                            if (goingOn)
+                            if (goingOn) {
+                                //  PacketContainer chat = event.getPacket();
+                                //  chat.getChatTypes().write(0, EnumWrappers.ChatType.GAME_INFO);
+                                //  chat.getChatComponents().write(0, WrappedChatComponent.fromJson(json.toJSONString()));
+
                                 if (before == null) {
                                     //          System.out.println("2. null");
-                                    PrincepsLib.crossVersion().sendActionBar(p, msg);
+
+                                    PrincepsLib.crossVersion().sendActionBar(p, (String) obj.get("text"));
                                     event.setCancelled(true);
                                 } else {
                                     //          System.out.println(before.getLandName());
                                     if (regionInsideNow == null) {
-                                        PrincepsLib.crossVersion().sendActionBar(p, msg);
+                                        PrincepsLib.crossVersion().sendActionBar(p, (String) obj.get("text"));
                                         event.setCancelled(true);
                                     } else {
                                         boolean flag = true;
@@ -109,10 +122,14 @@ public class LandAlerter extends BasicListener {
                                             if (!before.isOwner(uuid))
                                                 flag = false;
                                         }
-                                        if (!flag) PrincepsLib.crossVersion().sendActionBar(p, msg);
+                                        if (!flag) {
+                                            PrincepsLib.crossVersion().sendActionBar(p, (String) obj.get("text"));
+
+                                        }
                                         event.setCancelled(true);
                                     }
                                 }
+                            }
                         }
                     }
                 }
@@ -143,5 +160,6 @@ public class LandAlerter extends BasicListener {
             }
 
     }
+
 
 }

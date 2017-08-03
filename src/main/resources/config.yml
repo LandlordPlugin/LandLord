@@ -1,5 +1,5 @@
 # -----------        General Stuff        -----------
-# Avaiable: SQLite / MySQL
+# Available: SQLite / MySQL
 DatabaseType: SQLite
 MySQL:
   Hostname: localhost
@@ -8,8 +8,8 @@ MySQL:
   User: root
   Password: passy
 disabled-worlds:
-  world_nether
-  world_the_end
+  - world_nether
+  - world_the_end
 language: en
 HelpCommandPerSite: 10
 # -----------        Cost Stuff        ------------
@@ -45,7 +45,6 @@ limits:
   - 20
   - 30
   - 40
-
 Homes:
   enable: true
   spawnParticles: true
@@ -61,11 +60,10 @@ Manage:
   friends: true
   unclaim: true
 
-
 # -----------        Map Stuff        ------------
 Map:
   enable: true
-# Refreshrate in Ticks. 20 ticks is equal to one seocnd. The lower you set the value the more laggy it might be
+# Refreshrate in Ticks. 20 ticks is equal to one second. The lower you set the value the more laggy it might be
   refreshRate: 10
   chunkBorders:
     # show the chunkborders with particles

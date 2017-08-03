@@ -1,6 +1,7 @@
 package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.lib.config.Config;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,31 +17,17 @@ import java.util.List;
  */
 public class LangManager {
 
-    private FileConfiguration msg;
-    private Landlord pl;
-    private String filename;
+    private Config msg;
 
-    public LangManager(Landlord pl, String lang) {
-        this.pl = pl;
-        filename = "messages/" + lang + ".yml";
+    public LangManager(String lang) {
+        msg = new Config(Landlord.getInstance().getDataFolder().getAbsolutePath(), "messages/" + lang + ".yml");
+        msg.updateConfig();
         reload();
+
     }
 
     public void reload() {
-        File f = new File(pl.getDataFolder(), filename);
-        this.msg = new YamlConfiguration();
-        try {
-            File folder = new File(pl.getDataFolder(), "messages");
-            if (!folder.exists())
-                folder.mkdir();
-
-            if (!f.exists())
-                pl.saveResource(filename, false);
-
-            this.msg.load(f);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
+        msg.reload();
     }
 
     public String getString(String path) {
