@@ -30,6 +30,9 @@ public class LPlayer {
     private String lastseen;
     private LocalDateTime localDateTime;
 
+    @Column(name = "tesut")
+    private int tesut;
+
     @Constructor
     public LPlayer(@Column(name = "uuid") String uuid,
                    @Column(name = "claims") int claims,

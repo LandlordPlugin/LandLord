@@ -133,8 +133,13 @@ public class Landlord extends JavaPlugin {
                                 sb.append(")");
                             }
 
-                            String query = "ALTER TABLE ll_players " +
-                                    "ADD COLUMN '" + anno.name() + "' " + sb.toString();
+                            String query;
+                            if (DatabaseType.valueOf(getConfig().getString("DatabaseType")) == DatabaseType.SQLite)
+                                query = "ALTER TABLE ll_players " +
+                                        "ADD COLUMN '" + anno.name() + "' " + sb.toString();
+                            else
+                                query = "ALTER TABLE ll_players " +
+                                        "ADD COLUMN " + anno.name() + " " + sb.toString();
                             toExecute.add(query);
                         }
                     }
