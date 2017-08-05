@@ -24,6 +24,7 @@ public class LangManager {
     public LangManager(Landlord pl, String lang) {
         this.pl = pl;
         filename = "messages/" + lang + ".yml";
+        reload();
         ConfigUtil.handleConfigUpdate(pl.getDataFolder() + "/" + filename, "/" + filename);
         reload();
     }
