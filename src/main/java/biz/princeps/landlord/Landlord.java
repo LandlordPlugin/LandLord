@@ -10,8 +10,8 @@ import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Requests;
+import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.lib.PrincepsLib;
-import biz.princeps.lib.config.Config;
 import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
 import biz.princeps.lib.storage.requests.Conditions;
@@ -67,10 +67,10 @@ public class Landlord extends JavaPlugin {
         PrincepsLib.setPluginInstance(this);
 
         saveDefaultConfig();
-        Config cfg = new Config(this.getDataFolder().getAbsolutePath(), "config.yml");
-        cfg.updateConfig();
+        ConfigUtil.handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
+        saveDefaultConfig();
 
-        langManager = new LangManager(getConfig().getString("Language", "en"));
+        langManager = new LangManager(this, getConfig().getString("Language", "en"));
 
         databaseAPI = new DatabaseAPI(DatabaseType.valueOf(getConfig().getString("DatabaseType")), getConfig(), new Requests(), "biz.princeps.landlord.persistent");
 

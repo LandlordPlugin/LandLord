@@ -153,7 +153,6 @@ Commands:
     costing: '&aYou were charged %cost% for teleporting home'
     welcomeHome: '&aWelcome at your home!'
     disabled: '&eThis feature is currently disabled'
-
 Alerts:
   defaultGreeting: '&7Now entering claimed land of %owner%'
   defaultFarewell: '&7Leaving claimed land of %owner%'
@@ -169,4 +168,4 @@ Shop:
       - 'claims. You will be able to purchase'
       - '%number% more claims than before'
       - 'Cost: %cost%'
-  Testenty: 'asd'
+version: 1

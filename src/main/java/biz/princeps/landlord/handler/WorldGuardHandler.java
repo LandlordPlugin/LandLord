@@ -84,6 +84,8 @@ public class WorldGuardHandler {
         region.setFlag(DefaultFlag.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting")
                 .replace("%owner%", land.printOwners()));
 
+        region.setFlag(DefaultFlag.CREEPER_EXPLOSION, StateFlag.State.DENY);
+
         return region;
     }
 
