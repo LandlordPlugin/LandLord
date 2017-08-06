@@ -49,9 +49,8 @@ public class LandAlerter extends BasicListener {
             public void onPacketSending(PacketEvent event) {
                 PacketContainer packet = event.getPacket();
 
-                packet.getChatTypes().getValues().forEach(System.out::println);
-                //   System.out.println(packet.getChatTypes().getValues().size());
-                if (Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3].equals("v1_11_R1")) {
+             //   packet.getChatTypes().getValues().forEach(System.out::println);
+                if (Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3].split("_")[1]) < 12) {
                     if (packet.getBytes().getValues().get(0) != 1)
                         return;
                 } else if (!packet.getChatTypes().getValues().contains(EnumWrappers.ChatType.SYSTEM))
@@ -74,17 +73,17 @@ public class LandAlerter extends BasicListener {
                 if (json.get("extra") instanceof JSONArray) {
                     JSONArray array = ((JSONArray) json.get("extra"));
                     if (array != null) {
-
                         StringBuilder sb = new StringBuilder();
                         for (Object anArray : array) {
                             if (anArray instanceof JSONObject) {
                                 sb.append(((JSONObject) anArray).get("text"));
+                            } else if (anArray instanceof String) {
+                                sb.append(anArray);
                             }
                         }
 
                         String msg = sb.toString().trim();
 
-                       // System.out.println(msg);
                         boolean goingOn = false;
 
                         if (regionInsideNow != null) {
@@ -180,6 +179,8 @@ public class LandAlerter extends BasicListener {
                 if (obj.get("color") != null)
                     sb.append(ChatColor.valueOf(String.valueOf(obj.get("color")).toUpperCase()));
                 sb.append(obj.get("text"));
+            } else if (anArray instanceof String) {
+                sb.append(anArray);
             }
         }
         return sb.toString();
