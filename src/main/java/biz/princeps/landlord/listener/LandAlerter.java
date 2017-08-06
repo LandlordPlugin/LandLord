@@ -69,11 +69,6 @@ public class LandAlerter extends BasicListener {
                     JSONArray array = ((JSONArray) json.get("extra"));
                     if (array != null) {
 
-                        if (type == LandMessageDisplay.Disabled) {
-                            event.setCancelled(true);
-                            return;
-                        }
-
                         StringBuilder sb = new StringBuilder();
                         for (Object anArray : array) {
                             if (anArray instanceof JSONObject) {
@@ -118,6 +113,11 @@ public class LandAlerter extends BasicListener {
                         //on leave null
                         // on enter da wo man nun ist
                         if (goingOn) {
+
+                            if (type == LandMessageDisplay.Disabled) {
+                                event.setCancelled(true);
+                                return;
+                            }
                             // PacketContainer chat = event.getPacket();
                             // chat.getChatTypes().write(0, EnumWrappers.ChatType.GAME_INFO);
                             // chat.getChatComponents().write(0, WrappedChatComponent.fromJson(json.toJSONString()));

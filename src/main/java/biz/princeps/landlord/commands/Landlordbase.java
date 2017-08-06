@@ -50,6 +50,7 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("claims", new Claims());
         subcommands.put("sethome", new SetHome());
         subcommands.put("home", new Home());
+        subcommands.put("giveclaims", new GiveClaims());
     }
 
     @Default
@@ -208,6 +209,12 @@ public class Landlordbase extends BaseCommand {
     @CommandPermission("landlord.player.home")
     public void onHome(Player player, @Default("own") String target) {
         ((Home) subcommands.get("home")).onHome(player, target);
+    }
+
+    @Subcommand("giveclaims|gcl")
+    @CommandPermission("landlord.claims.give")
+    public void onGiveClaims(String target, Double price, Integer amount){
+        ((GiveClaims) subcommands.get("giveclaims")).onGiveClaims(getCurrentCommandIssuer(), target, price, amount);
     }
 
     @Subcommand("migrate")

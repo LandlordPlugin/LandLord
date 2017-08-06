@@ -3,6 +3,7 @@ package biz.princeps.landlord.guis;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -56,44 +57,11 @@ public class ShopGUI extends AbstractGUI {
                 s = s.replace("%number%", buyable.amount + "").replace("%cost%", buyable.price + "");
                 list.add(s);
             }
-            double cost = buyable.price;
             setIcon(i, new Icon(new ItemStack(buyable.mat))
                     .setName(pl.getLangManager().getRawString("Shop.item.header").replace("%number%", buyable.amount + ""))
                     .setLore(list)
                     .addClickAction((p) -> {
-                                if (!player.hasPermission("landlord.limit.override")) {
-                                    // int regionCount = pl.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(pl.getWgHandler().getWG().wrapPlayer(player));
-                                    int claimcount = pl.getPlayerManager().get(player.getUniqueId()).getClaims();
-                                    List<Integer> limitlist = pl.getConfig().getIntegerList("limits");
-
-                                    int highestAllowedLandCount = -1;
-                                    for (Integer integer : limitlist) {
-                                        if (claimcount + buyable.amount <= integer)
-                                            if (player.hasPermission("landlord.limit." + integer)) {
-                                                highestAllowedLandCount = integer;
-                                            }
-                                    }
-                                    if (claimcount + buyable.amount > highestAllowedLandCount) {
-                                        player.sendMessage(pl.getLangManager().getString("Shop.notAllowed"));
-                                        p.closeInventory();
-                                        return;
-                                    }
-                                }
-
-
-                                if (pl.getVaultHandler().hasBalance(p.getUniqueId(), cost)) {
-                                    pl.getVaultHandler().take(p.getUniqueId(), cost);
-                                    pl.getPlayerManager().get(p.getUniqueId()).addClaims(buyable.amount);
-                                    p.sendMessage(pl.getLangManager().getString("Shop.success")
-                                            .replace("%number%", buyable.amount + "")
-                                            .replace("%cost%", pl.getVaultHandler().format(cost)));
-                                    p.closeInventory();
-                                } else {
-                                    p.sendMessage(pl.getLangManager().getString("Shop.notEnoughMoney")
-                                            .replace("%number%", buyable.amount + "")
-                                            .replace("%cost%", pl.getVaultHandler().format(cost)));
-                                    p.closeInventory();
-                                }
+                                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ll giveclaims " + p.getName() + " " + buyable.price + " " + buyable.amount);
                             }
                     ));
             i++;

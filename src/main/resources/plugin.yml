@@ -43,6 +43,7 @@ permissions:
       landlord.admin.reload: true
       landlord.admin.modifyfriends: true
       landlord.admin.friends: true
+      landlord.admin.giveclaims: true
 
   landlord.use:
     description: required to use any Landlord commands
@@ -114,4 +115,8 @@ permissions:
 
   landlord.admin.modifyfriends:
     description: add/remove friends of any land
+    default: op
+
+  landlord.admin.giveclaims:
+    description: give someone claims
     default: op
