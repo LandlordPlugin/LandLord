@@ -32,12 +32,14 @@ public class LandAlerter extends BasicListener {
 
     private Landlord pl = Landlord.getInstance();
     private HashMap<UUID, OwnedLand> playerInLand;
+    private LandMessageDisplay type;
 
     /**
      * such a mess, but I cant think of a less intrusive way
      */
     public LandAlerter() {
         playerInLand = new HashMap<>();
+        type = LandMessageDisplay.valueOf(pl.getConfig().getString("LandMessage"));
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(pl, PacketType.Play.Server.CHAT) {
             private JSONParser parser = new JSONParser();
@@ -67,6 +69,11 @@ public class LandAlerter extends BasicListener {
                     JSONArray array = ((JSONArray) json.get("extra"));
                     if (array != null) {
 
+                        if (type == LandMessageDisplay.Disabled) {
+                            event.setCancelled(true);
+                            return;
+                        }
+
                         StringBuilder sb = new StringBuilder();
                         for (Object anArray : array) {
                             if (anArray instanceof JSONObject) {
@@ -76,13 +83,13 @@ public class LandAlerter extends BasicListener {
 
                         String msg = sb.toString().trim();
 
-               //         System.out.println(msg);
+                        //         System.out.println(msg);
                         boolean goingOn = false;
 
                         if (regionInsideNow != null) {
                             String greet = ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
                             String farewell = ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
-                       //     System.out.println(msg + ":" + greet + ":" + farewell);
+                            //     System.out.println(msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
                                 goingOn = true;
@@ -92,13 +99,13 @@ public class LandAlerter extends BasicListener {
                         if (before != null) {
                             String greet = ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.GREET_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
                             String farewell = ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
-                  //          System.out.println(msg + ":" + greet + ":" + farewell);
+                            //          System.out.println(msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
                                 goingOn = true;
                             }
                         }
-                //        System.out.println(goingOn);
+                        //        System.out.println(goingOn);
 
 
                         //on leave: da wo man her kam
@@ -115,27 +122,40 @@ public class LandAlerter extends BasicListener {
                             // chat.getChatTypes().write(0, EnumWrappers.ChatType.GAME_INFO);
                             // chat.getChatComponents().write(0, WrappedChatComponent.fromJson(json.toJSONString()));
 
+                            if (type == LandMessageDisplay.Chat) {
+                                if (before != null && regionInsideNow != null) {
+                                    if (before.isOwner(p.getUniqueId()) && regionInsideNow.isOwner(p.getUniqueId())) {
+                                        event.setCancelled(true);
+                                    }
+                                }
+                            }
+
                             if (before == null) {
                                 //          System.out.println("2. null");
-
-                                PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
-                                event.setCancelled(true);
+                                if (type == LandMessageDisplay.ActionBar) {
+                                    PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
+                                    event.setCancelled(true);
+                                }
                             } else {
                                 //          System.out.println(before.getLandName());
                                 if (regionInsideNow == null) {
-                                    PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
-                                    event.setCancelled(true);
-                                } else {
-                                    boolean flag = true;
-                                    for (UUID uuid : regionInsideNow.getLand().getOwners().getUniqueIds()) {
-                                        if (!before.isOwner(uuid))
-                                            flag = false;
-                                    }
-                                    if (!flag) {
+                                    if (type == LandMessageDisplay.ActionBar) {
                                         PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
-
+                                        event.setCancelled(true);
                                     }
-                                    event.setCancelled(true);
+                                } else {
+                                    if (type == LandMessageDisplay.ActionBar) {
+                                        boolean flag = true;
+                                        for (UUID uuid : regionInsideNow.getLand().getOwners().getUniqueIds()) {
+                                            if (!before.isOwner(uuid))
+                                                flag = false;
+                                        }
+                                        if (!flag) {
+                                            PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
+
+                                        }
+                                        event.setCancelled(true);
+                                    }
                                 }
                             }
                         }
@@ -183,5 +203,10 @@ public class LandAlerter extends BasicListener {
 
     }
 
+    enum LandMessageDisplay {
+        ActionBar,
+        Chat,
+        Disabled;
+    }
 
 }

@@ -59,6 +59,9 @@ Manage:
   friends: true
   unclaim: true
 
+# Where should the "Entering XXX's land" be displayed? Available are ActionBar, Chat, Disabled
+LandMessage: ActionBar
+
 # -----------        Map Stuff        ------------
 Map:
   enable: true
@@ -69,4 +72,4 @@ Map:
     enable: false
     # interval in seconds
     refreshRate: 10
-version: 1
+version: 2
