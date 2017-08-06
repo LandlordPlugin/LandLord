@@ -184,12 +184,8 @@ public class Landlordbase extends BaseCommand {
     @Subcommand("reload|rl")
     @CommandPermission("landlord.admin.reload")
     public void onReload() {
-        try {
-            Landlord.getInstance().getConfig().load(new File(Landlord.getInstance().getDataFolder(), "config.yml"));
-            Landlord.getInstance().getLangManager().reload();
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
+        Landlord.getInstance().getPluginLoader().disablePlugin(Landlord.getInstance());
+        Landlord.getInstance().getPluginLoader().enablePlugin(Landlord.getInstance());
         getCurrentCommandIssuer().sendMessage(Landlord.getInstance().getLangManager().getString("Commands.Reload.success"));
     }
 
