@@ -29,10 +29,6 @@ public class Claim extends LandlordCommand {
         // Check if there is an overlapping wg-region
         if (!plugin.getWgHandler().canClaim(player, chunk)) {
             LandClaimEvent event = new LandClaimEvent(player, pr, LandClaimEvent.ClaimState.OVERLAPPINGREGION);
-            if (plugin.getServer() == null)
-                System.out.println("null1");
-            if (plugin.getServer().getPluginManager() == null)
-                System.out.println("null");
             plugin.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
@@ -91,9 +87,10 @@ public class Claim extends LandlordCommand {
             double calculatedCost = OwnedLand.calculateCost(player);
             if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
                 plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
-                player.sendMessage(lm.getString("Commands.Claim.moneyTook")
-                        .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
-                        .replace("%chunk%", OwnedLand.getLandName(chunk)));
+                if (calculatedCost > 0)
+                    player.sendMessage(lm.getString("Commands.Claim.moneyTook")
+                            .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                            .replace("%chunk%", OwnedLand.getLandName(chunk)));
 
             } else {
                 // NOT ENOUG MONEY
