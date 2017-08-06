@@ -28,7 +28,7 @@ public class Claim extends LandlordCommand {
 
         // Check if there is an overlapping wg-region
         if (!plugin.getWgHandler().canClaim(player, chunk)) {
-            LandClaimEvent event = new LandClaimEvent(player, pr, LandClaimEvent.ClaimState.OVERLAPPINGREGION);
+            LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.OVERLAPPINGREGION);
             plugin.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
@@ -38,7 +38,7 @@ public class Claim extends LandlordCommand {
         }
 
         if (pr != null) {
-            LandClaimEvent event = new LandClaimEvent(player, pr, LandClaimEvent.ClaimState.ALREADYCLAIMED);
+            LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.ALREADYCLAIMED);
             Bukkit.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
@@ -94,7 +94,7 @@ public class Claim extends LandlordCommand {
 
             } else {
                 // NOT ENOUG MONEY
-                LandClaimEvent event = new LandClaimEvent(player, pr, LandClaimEvent.ClaimState.NOTENOUGHMONEY);
+                LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.NOTENOUGHMONEY);
                 Bukkit.getServer().getPluginManager().callEvent(event);
 
                 if (!event.isCancelled()) {
@@ -105,8 +105,7 @@ public class Claim extends LandlordCommand {
                 }
             }
         }
-
-        LandClaimEvent event = new LandClaimEvent(player, pr, LandClaimEvent.ClaimState.SUCCESS);
+        LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.SUCCESS);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {

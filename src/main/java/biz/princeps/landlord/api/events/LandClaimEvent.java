@@ -12,17 +12,17 @@ public class LandClaimEvent extends Event implements Cancellable {
     private boolean cancelled;
 
     private Player player;
-    private OwnedLand land;
     private ClaimState claimState;
+    private int x, z;
 
-    public LandClaimEvent(Player player, OwnedLand land, ClaimState claimState) {
+    public LandClaimEvent(Player player, int x, int z, ClaimState claimState) {
         this.player = player;
-        this.land = land;
+        this.x = x;
+        this.z = z;
         this.claimState = claimState;
     }
 
-    @Override
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
@@ -30,8 +30,12 @@ public class LandClaimEvent extends Event implements Cancellable {
         return player;
     }
 
-    public OwnedLand getLand() {
-        return land;
+    public int getX() {
+        return x;
+    }
+
+    public int getZ() {
+        return z;
     }
 
     public ClaimState getClaimState() {
@@ -46,6 +50,11 @@ public class LandClaimEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(boolean b) {
         this.cancelled = b;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
 
