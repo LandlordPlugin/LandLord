@@ -12,6 +12,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -47,8 +48,13 @@ public class LandAlerter extends BasicListener {
             @Override
             public void onPacketSending(PacketEvent event) {
                 PacketContainer packet = event.getPacket();
-                //        packet.getChatTypes().getValues().forEach(System.out::println);
-                if (!packet.getChatTypes().getValues().contains(EnumWrappers.ChatType.SYSTEM))
+
+                packet.getChatTypes().getValues().forEach(System.out::println);
+                //   System.out.println(packet.getChatTypes().getValues().size());
+                if (Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3].equals("v1_11_R1")) {
+                    if (packet.getBytes().getValues().get(0) != 1)
+                        return;
+                } else if (!packet.getChatTypes().getValues().contains(EnumWrappers.ChatType.SYSTEM))
                     return;
 
                 StructureModifier<WrappedChatComponent> componets = packet.getChatComponents();
@@ -78,7 +84,7 @@ public class LandAlerter extends BasicListener {
 
                         String msg = sb.toString().trim();
 
-                        //         System.out.println(msg);
+                       // System.out.println(msg);
                         boolean goingOn = false;
 
                         if (regionInsideNow != null) {
