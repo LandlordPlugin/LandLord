@@ -12,6 +12,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,13 +39,16 @@ public class LandAlerter extends BasicListener {
     public LandAlerter() {
         playerInLand = new HashMap<>();
 
-
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(pl, PacketType.Play.Server.CHAT) {
             private JSONParser parser = new JSONParser();
 
             @Override
             public void onPacketSending(PacketEvent event) {
                 PacketContainer packet = event.getPacket();
+                //        packet.getChatTypes().getValues().forEach(System.out::println);
+                if (!packet.getChatTypes().getValues().contains(EnumWrappers.ChatType.SYSTEM))
+                    return;
+
                 StructureModifier<WrappedChatComponent> componets = packet.getChatComponents();
                 Player p = event.getPlayer();
 
@@ -59,82 +63,100 @@ public class LandAlerter extends BasicListener {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                if (json != null && json.get("extra") instanceof JSONArray) {
+                if (json.get("extra") instanceof JSONArray) {
                     JSONArray array = ((JSONArray) json.get("extra"));
-                    if (array != null && array.get(0) instanceof JSONObject) {
-                        JSONObject obj = (JSONObject) array.get(0);
-                        if (obj != null && obj.get("text") instanceof String) {
-                            String msg = ((String) obj.get("text")).replaceAll("&([a-f]|[0-7])", "");
-                            boolean goingOn = false;
+                    if (array != null) {
 
-                            if (regionInsideNow != null) {
-                                //System.out.println(msg + " | " + regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE) + " | " + regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE));
-                                String greet = regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE).replaceAll("&([a-f]|[0-7])", "");
-                                String farewell = regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE).replaceAll("&([a-f]|[0-7])", "");
-                                //                      System.out.println(msg + ":" + greet + ":" + farewell);
-
-                                if (msg.equals(greet) || msg.equals(farewell)) {
-                                    //       System.out.println(msg + " |" + ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE)) + "|" + ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)));
-                                    goingOn = true;
-                                }
+                        StringBuilder sb = new StringBuilder();
+                        for (Object anArray : array) {
+                            if (anArray instanceof JSONObject) {
+                                sb.append(((JSONObject) anArray).get("text"));
                             }
+                        }
 
-                            if (before != null) {
-                                String greet = before.getLand().getFlag(DefaultFlag.GREET_MESSAGE).replaceAll("&([a-f]|[0-7])", "");
-                                String farewell = before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE).replaceAll("&([a-f]|[0-7])", "");
-                                //                     System.out.println(msg + ":" + greet + ":" + farewell);
-                                //   System.out.println(msg + " | " + before.getLand().getFlag(DefaultFlag.GREET_MESSAGE) + " | " + before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE));
+                        String msg = sb.toString().trim();
 
-                                if (msg.equals(greet) || msg.equals(farewell)) {
-                                    goingOn = true;
-                                }
+               //         System.out.println(msg);
+                        boolean goingOn = false;
+
+                        if (regionInsideNow != null) {
+                            String greet = ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
+                            String farewell = ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
+                       //     System.out.println(msg + ":" + greet + ":" + farewell);
+
+                            if (msg.equals(greet) || msg.equals(farewell)) {
+                                goingOn = true;
                             }
-                            //               System.out.println(goingOn);
+                        }
+
+                        if (before != null) {
+                            String greet = ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.GREET_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
+                            String farewell = ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
+                  //          System.out.println(msg + ":" + greet + ":" + farewell);
+
+                            if (msg.equals(greet) || msg.equals(farewell)) {
+                                goingOn = true;
+                            }
+                        }
+                //        System.out.println(goingOn);
 
 
-                            //on leave: da wo man her kam
-                            // on enter null
-                            //  if (regionInsideNow == null)
-                            //       System.out.println("1. null");
-                            //   else
-                            //      System.out.println(regionInsideNow.getLandName());
+                        //on leave: da wo man her kam
+                        // on enter null
+                        //  if (regionInsideNow == null)
+                        //       System.out.println("1. null");
+                        //   else
+                        //      System.out.println(regionInsideNow.getLandName());
 
-                            //on leave null
-                            // on enter da wo man nun ist
-                            if (goingOn) {
-                                //  PacketContainer chat = event.getPacket();
-                                //  chat.getChatTypes().write(0, EnumWrappers.ChatType.GAME_INFO);
-                                //  chat.getChatComponents().write(0, WrappedChatComponent.fromJson(json.toJSONString()));
+                        //on leave null
+                        // on enter da wo man nun ist
+                        if (goingOn) {
+                            // PacketContainer chat = event.getPacket();
+                            // chat.getChatTypes().write(0, EnumWrappers.ChatType.GAME_INFO);
+                            // chat.getChatComponents().write(0, WrappedChatComponent.fromJson(json.toJSONString()));
 
-                                if (before == null) {
-                                    //          System.out.println("2. null");
+                            if (before == null) {
+                                //          System.out.println("2. null");
 
-                                    PrincepsLib.crossVersion().sendActionBar(p, (String) obj.get("text"));
+                                PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
+                                event.setCancelled(true);
+                            } else {
+                                //          System.out.println(before.getLandName());
+                                if (regionInsideNow == null) {
+                                    PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
                                     event.setCancelled(true);
                                 } else {
-                                    //          System.out.println(before.getLandName());
-                                    if (regionInsideNow == null) {
-                                        PrincepsLib.crossVersion().sendActionBar(p, (String) obj.get("text"));
-                                        event.setCancelled(true);
-                                    } else {
-                                        boolean flag = true;
-                                        for (UUID uuid : regionInsideNow.getLand().getOwners().getUniqueIds()) {
-                                            if (!before.isOwner(uuid))
-                                                flag = false;
-                                        }
-                                        if (!flag) {
-                                            PrincepsLib.crossVersion().sendActionBar(p, (String) obj.get("text"));
-
-                                        }
-                                        event.setCancelled(true);
+                                    boolean flag = true;
+                                    for (UUID uuid : regionInsideNow.getLand().getOwners().getUniqueIds()) {
+                                        if (!before.isOwner(uuid))
+                                            flag = false;
                                     }
+                                    if (!flag) {
+                                        PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
+
+                                    }
+                                    event.setCancelled(true);
                                 }
                             }
                         }
                     }
                 }
+
             }
         });
+    }
+
+    private String craftColoredMessage(JSONArray array) {
+        StringBuilder sb = new StringBuilder();
+        for (Object anArray : array) {
+            if (anArray instanceof JSONObject) {
+                JSONObject obj = (JSONObject) anArray;
+                if (obj.get("color") != null)
+                    sb.append(ChatColor.valueOf(String.valueOf(obj.get("color")).toUpperCase()));
+                sb.append(obj.get("text"));
+            }
+        }
+        return sb.toString();
     }
 
     @EventHandler
