@@ -159,6 +159,9 @@ Commands:
 Alerts:
   defaultGreeting: '&7Now entering claimed land of %owner%'
   defaultFarewell: '&7Leaving claimed land of %owner%'
+Confirmation:
+  accept: '&bAccept!'
+  decline: '&eDecline!'
 Shop:
   title: 'Claims Shop. Your claims (%regions%/%claims%)'
   notEnoughMoney: '&7You dont have enough money buy %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
@@ -171,4 +174,4 @@ Shop:
       - 'claims. You will be able to purchase'
       - '%number% more claims than before'
       - 'Cost: %cost%'
-version: 2
+version: 3

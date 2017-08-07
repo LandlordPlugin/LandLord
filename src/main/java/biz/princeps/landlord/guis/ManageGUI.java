@@ -141,6 +141,9 @@ public class ManageGUI extends AbstractGUI {
                                     .replace("%land%", land.getId()));
                             display();
                         }, this);
+                        confi.setConfirm(lm.getRawString("Confirmation.confirm"));
+                        confi.setDecline(lm.getRawString("Confirmation.decline"));
+
                         confi.display();
                     })
             );
@@ -200,6 +203,8 @@ public class ManageGUI extends AbstractGUI {
                                     player.closeInventory();
                                     friendsGui.display();
                                 }, friendsGui);
+                        confirmationGUI.setConfirm(lm.getRawString("Confirmation.confirm"));
+                        confirmationGUI.setDecline(lm.getRawString("Confirmation.decline"));
                         confirmationGUI.display();
                     })));
 
@@ -223,6 +228,8 @@ public class ManageGUI extends AbstractGUI {
                                     p.closeInventory();
                                     display();
                                 }, this);
+                        gui.setConfirm(lm.getRawString("Confirmation.confirm"));
+                        gui.setDecline(lm.getRawString("Confirmation.decline"));
                         gui.display();
                     })));
             position++;
