@@ -11,6 +11,7 @@ import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Requests;
 import biz.princeps.landlord.persistent.Version;
+import biz.princeps.landlord.placeholder.OwnedLandsPlaceholder;
 import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.storage.DatabaseAPI;
@@ -84,6 +85,7 @@ public class Landlord extends JavaPlugin {
 
         manageCommands();
         manageListeners();
+        managePlaceholders();
 
         lPlayerManager = new LPlayerManager(databaseAPI);
 
@@ -102,6 +104,12 @@ public class Landlord extends JavaPlugin {
                 lp = new LPlayer(p.getUniqueId());
             this.getPlayerManager().add(p.getUniqueId(), lp);
         });
+    }
+
+    private void managePlaceholders() {
+        if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+            new OwnedLandsPlaceholder(this).hook();
+        }
     }
 
     private void handleDatabase() {
