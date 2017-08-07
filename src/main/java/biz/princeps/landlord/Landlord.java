@@ -68,6 +68,12 @@ public class Landlord extends JavaPlugin {
         } else
             vaultHandler = new VaultHandler(getVault());
 
+        if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+            getLogger().warning("ProtocolLib not found! Please ensure you have the correct version of ProtocolLib in order to use LandLord");
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
+
         instance = this;
         PrincepsLib.setPluginInstance(this);
 
