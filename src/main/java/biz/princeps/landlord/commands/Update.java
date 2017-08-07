@@ -3,6 +3,7 @@ package biz.princeps.landlord.commands;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -10,8 +11,9 @@ public class Update extends LandlordCommand {
 
 
     public void onUpdateLands(World w) {
+        plugin.getLogger().info("Starting to update lands...");
 
-        plugin.getWgHandler().getWG().getRegionManager(w).getRegions().values().forEach(pr -> {
+        for (ProtectedRegion pr : plugin.getWgHandler().getWG().getRegionManager(w).getRegions().values()) {
 
             if (!pr.getFlags().keySet().contains(DefaultFlag.USE)) {
                 pr.setFlag(DefaultFlag.USE, StateFlag.State.DENY);
@@ -24,15 +26,15 @@ public class Update extends LandlordCommand {
             String actualGreetign = pr.getFlag(DefaultFlag.GREET_MESSAGE);
             String actualFarewell = pr.getFlag(DefaultFlag.FAREWELL_MESSAGE);
 
-            if(!greeting.equals(actualGreetign)){
+            if (!greeting.equals(actualGreetign)) {
                 pr.setFlag(DefaultFlag.GREET_MESSAGE, greeting);
             }
-            if(!farewell.equals(actualFarewell)){
+            if (!farewell.equals(actualFarewell)) {
                 pr.setFlag(DefaultFlag.FAREWELL_MESSAGE, farewell);
             }
 
-
-        });
+        }
+        plugin.getLogger().info("Finished updating lands!");
 
     }
 
