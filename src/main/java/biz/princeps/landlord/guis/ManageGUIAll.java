@@ -66,11 +66,6 @@ public class ManageGUIAll extends AbstractGUI {
         Collection<ProtectedRegion> lands = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegions().values();
         ProtectedRegion land = lands.iterator().next();
 
-        if (!land.getFlags().keySet().contains(DefaultFlag.USE)) {
-            land.setFlag(DefaultFlag.USE, StateFlag.State.DENY);
-            land.setFlag(DefaultFlag.USE.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-        }
-
         int position = 0;
 
         // Allow building icon

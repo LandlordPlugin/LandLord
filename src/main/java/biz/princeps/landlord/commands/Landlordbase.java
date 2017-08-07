@@ -48,6 +48,7 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("sethome", new SetHome());
         subcommands.put("home", new Home());
         subcommands.put("giveclaims", new GiveClaims());
+        subcommands.put("update", new Update());
     }
 
     @Default
@@ -170,6 +171,13 @@ public class Landlordbase extends BaseCommand {
     @CommandPermission("landlord.player.own")
     public void onLandManageAll(Player player) {
         ((ManageAll) subcommands.get("manageall")).onManageAll(player);
+    }
+
+    @Subcommand("update")
+    @Syntax("<worldName> - updates all lands in one world")
+    @CommandPermission("landlord.admin.update")
+    public void onLandUpdate(String world) {
+        ((Update) subcommands.get("update")).onUpdateLands(Bukkit.getWorld(world));
     }
 
     @Subcommand("shop")

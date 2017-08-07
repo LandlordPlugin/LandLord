@@ -56,10 +56,6 @@ public class ManageGUI extends AbstractGUI {
 
     @Override
     public Inventory display() {
-        if (!land.getFlags().keySet().contains(DefaultFlag.USE)) {
-            land.setFlag(DefaultFlag.USE, StateFlag.State.DENY);
-            land.setFlag(DefaultFlag.USE.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-        }
         create();
         this.player.openInventory(this.getInventory());
         return this.getInventory();
