@@ -11,13 +11,12 @@ import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Requests;
 import biz.princeps.landlord.persistent.Version;
-import biz.princeps.landlord.placeholder.OwnedLandsPlaceholder;
+import biz.princeps.landlord.util.LandLordPlaceholder;
 import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
 import biz.princeps.lib.storage.annotation.Column;
-import biz.princeps.lib.storage.annotation.Table;
 import biz.princeps.lib.storage.requests.Conditions;
 import co.aikar.commands.BukkitCommandManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -28,7 +27,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +106,7 @@ public class Landlord extends JavaPlugin {
 
     private void managePlaceholders() {
         if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-            new OwnedLandsPlaceholder(this).hook();
+            new LandLordPlaceholder(this).hook();
         }
     }
 
