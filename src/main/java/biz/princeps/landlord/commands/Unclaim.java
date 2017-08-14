@@ -26,7 +26,7 @@ public class Unclaim extends LandlordCommand {
             try {
                 int x = Integer.valueOf(split[1]);
                 int z = Integer.valueOf(split[2]);
-                chunk = player.getWorld().getChunkAt(x, z);
+                chunk = Bukkit.getWorld(split[0]).getChunkAt(x, z);
 
             } catch (NumberFormatException e) {
                 e.printStackTrace();
