@@ -1,5 +1,6 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.friends;
 
+import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.UUIDFetcher;
 import com.google.common.util.concurrent.FutureCallback;
 import com.sk89q.worldguard.domains.DefaultDomain;
@@ -15,15 +16,9 @@ import java.util.UUID;
 /**
  * Created by spatium on 17.07.17.
  */
-public class AddfriendAll extends LandlordCommand {
+public class UnfriendAll extends LandlordCommand {
 
-    public void onAddfriend(Player player, String[] names) {
-
-        if (this.worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
-            return;
-        }
-
+    public void onUnfriendall(Player player, String[] names) {
 
         UUIDFetcher.getInstance().namesToUUID(names, new FutureCallback<DefaultDomain>() {
             @Override
@@ -37,19 +32,20 @@ public class AddfriendAll extends LandlordCommand {
                             if (protectedRegion.isOwner(plugin.getWgHandler().getWG().wrapPlayer(player))) {
                                 for (UUID uuid : defaultDomain.getUniqueIds()) {
                                     if (!protectedRegion.getOwners().getUniqueIds().contains(uuid)) {
-                                        protectedRegion.getMembers().addPlayer(uuid);
+                                        protectedRegion.getMembers().removePlayer(uuid);
                                         i++;
                                     }
                                 }
                             }
                         }
                         if (i > 0) {
-                            player.sendMessage(lm.getString("Commands.AddfriendAll.success")
+                            player.sendMessage(lm.getString("Commands.UnfriendAll.success")
                                     .replace("%count%", String.valueOf(i))
                                     .replace("%players%", Arrays.asList(names).toString()));
                             plugin.getMapManager().updateAll();
                         } else
-                            player.sendMessage(lm.getString("Commands.AddfriendAll.alreadyOwn"));
+                            player.sendMessage(lm.getString("Commands.UnfriendAll.noFriend")
+                                    .replace("%player%", Arrays.asList(names).toString()));
 
                     }
                 }.runTaskAsynchronously(plugin);
@@ -58,7 +54,7 @@ public class AddfriendAll extends LandlordCommand {
 
             @Override
             public void onFailure(Throwable throwable) {
-                player.sendMessage(lm.getString("Commands.AddfriendAll.noPlayer")
+                player.sendMessage(lm.getString("Commands.UnfriendAll.noPlayer")
                         .replace("%players%", Arrays.asList(names).toString()));
             }
         });

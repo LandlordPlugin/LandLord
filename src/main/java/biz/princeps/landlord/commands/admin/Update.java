@@ -1,5 +1,6 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.admin;
 
+import biz.princeps.landlord.commands.LandlordCommand;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;

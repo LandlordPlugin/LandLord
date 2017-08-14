@@ -1,5 +1,6 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.homes;
 
+import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.util.CommandDelayManager;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;

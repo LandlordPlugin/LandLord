@@ -92,6 +92,7 @@ public class Landlord extends JavaPlugin {
         managePlaceholders();
 
         lPlayerManager = new LPlayerManager(databaseAPI);
+        lPlayerManager.onStartup();
 
         mapManager = new MapManager();
         ScoreboardLib.setPluginInstance(this);

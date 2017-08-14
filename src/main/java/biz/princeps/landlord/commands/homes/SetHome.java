@@ -1,5 +1,6 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.homes;
 
+import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;

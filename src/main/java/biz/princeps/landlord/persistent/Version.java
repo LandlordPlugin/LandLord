@@ -11,7 +11,7 @@ public class Version {
     @Column(name = "version")
     private int version;
 
-    public static int latestVersion = 1;
+    public static int latestVersion = 2;
 
     public Version(@Column(name = "version") int version) {
         this.version = version;

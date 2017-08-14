@@ -1,5 +1,6 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGUI;
 import biz.princeps.landlord.guis.ManageGUIAll;
 import biz.princeps.lib.gui.MultiPagedGUI;

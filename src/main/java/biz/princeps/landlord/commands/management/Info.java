@@ -1,6 +1,8 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
+import biz.princeps.landlord.persistent.Offers;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.crossversion.CParticle;
 import biz.princeps.lib.storage.requests.Conditions;
@@ -54,13 +56,13 @@ public class Info extends LandlordCommand {
 
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
 
-        new BukkitRunnable(){
+        new BukkitRunnable() {
 
             @Override
             public void run() {
                 // claimed
                 if (land != null) {
-                    String lastseen = null;
+                    String lastseen;
                     OfflinePlayer op = Bukkit.getOfflinePlayer(land.getOwner());
                     if (op.isOnline()) {
                         lastseen = lm.getRawString("Commands.Info.online");
@@ -75,6 +77,11 @@ public class Info extends LandlordCommand {
                             .replace("%lastseen%", lastseen));
                     OwnedLand.highlightLand(player, CParticle.DRIPWATER);
 
+                    Offers offer = plugin.getPlayerManager().getOffer(land.getLandName());
+                    if (offer != null) {
+                        player.sendMessage(lm.getString("Commands.Info.advertise")
+                                .replace("%price%", offer.getPrice() + ""));
+                    }
                 } else {
                     // unclaimed
                     player.sendMessage(free

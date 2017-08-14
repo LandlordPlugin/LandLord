@@ -1,6 +1,7 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.claiming;
 
 import biz.princeps.landlord.api.events.LandUnclaimEvent;
+import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;

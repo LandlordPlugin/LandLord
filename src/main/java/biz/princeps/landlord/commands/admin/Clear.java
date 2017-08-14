@@ -1,5 +1,6 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.admin;
 
+import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.UUIDFetcher;
 import com.google.common.util.concurrent.FutureCallback;
 import com.sk89q.worldguard.domains.DefaultDomain;

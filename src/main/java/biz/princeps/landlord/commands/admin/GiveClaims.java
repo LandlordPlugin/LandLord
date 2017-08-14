@@ -1,5 +1,6 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.admin;
 
+import biz.princeps.landlord.commands.LandlordCommand;
 import co.aikar.commands.CommandIssuer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

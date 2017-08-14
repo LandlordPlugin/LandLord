@@ -1,6 +1,7 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.claiming;
 
 import biz.princeps.landlord.api.events.LandClaimEvent;
+import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.crossversion.CParticle;
 import net.md_5.bungee.api.ChatColor;

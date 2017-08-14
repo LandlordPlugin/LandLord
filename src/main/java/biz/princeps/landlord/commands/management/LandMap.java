@@ -1,5 +1,6 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.commands.LandlordCommand;
 import org.bukkit.entity.Player;
 
 /**

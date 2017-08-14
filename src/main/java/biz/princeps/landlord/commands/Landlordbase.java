@@ -1,6 +1,18 @@
 package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.commands.admin.Clear;
+import biz.princeps.landlord.commands.admin.GiveClaims;
+import biz.princeps.landlord.commands.admin.Update;
+import biz.princeps.landlord.commands.claiming.*;
+import biz.princeps.landlord.commands.claiming.adv.Advertise;
+import biz.princeps.landlord.commands.friends.Addfriend;
+import biz.princeps.landlord.commands.friends.AddfriendAll;
+import biz.princeps.landlord.commands.friends.Unfriend;
+import biz.princeps.landlord.commands.friends.UnfriendAll;
+import biz.princeps.landlord.commands.homes.Home;
+import biz.princeps.landlord.commands.homes.SetHome;
+import biz.princeps.landlord.commands.management.*;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.chat.ChatAPI;
@@ -221,8 +233,16 @@ public class Landlordbase extends BaseCommand {
 
     @Subcommand("advertise|adv")
     @CommandPermission("landlord.player.advertise")
-    public void onAdvertise(Player player, @Default("this") String landlandname, double price) {
-        ((Advertise) subcommands.get("giveclaims")).onAdvertise(player, landlandname, price);
+    public void onAdvertise(Player player, String landlandname, Double price) {
+        if (Landlord.getInstance().isVaultEnabled())
+            ((Advertise) subcommands.get("advertise")).onAdvertise(player, landlandname, price);
+    }
+
+    @Subcommand("advertise|adv")
+    @CommandPermission("landlord.player.advertise")
+    public void onAdvertise1(Player player, Double price) {
+        if (Landlord.getInstance().isVaultEnabled())
+            ((Advertise) subcommands.get("advertise")).onAdvertise(player, "this", price);
     }
 
     @Subcommand("migrate")

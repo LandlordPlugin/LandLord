@@ -1,5 +1,6 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGUI;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
@@ -13,10 +14,10 @@ import javax.annotation.Nullable;
 /**
  * Created by spatium on 19.07.17 / 11:55.
  */
-class Manage extends LandlordCommand {
+public class Manage extends LandlordCommand {
 
 
-    void onManage(Player player, @Nullable String[] args) {
+    public void onManage(Player player, @Nullable String[] args) {
 
         OwnedLand land = plugin.getWgHandler().getRegion(player.getLocation().getChunk());
 
