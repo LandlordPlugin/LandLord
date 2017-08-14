@@ -39,37 +39,44 @@ public class Unclaim extends LandlordCommand {
             return;
         }
 
-        if (!pr.isOwner(player.getUniqueId())) {
-            player.sendMessage(lm.getString("Commands.Unclaim.notOwn")
-                    .replace("%owner%", pr.printOwners()));
-            return;
-        }
+        // is admin - allowed to unclaim
+        boolean isAdmin = false;
+        if(!player.hasPermission("landlord.admin.unclaim")) {
+            if (!pr.isOwner(player.getUniqueId())) {
+                player.sendMessage(lm.getString("Commands.Unclaim.notOwn")
+                        .replace("%owner%", pr.printOwners()));
+                return;
+            }
+        }else
+            isAdmin = true;
 
+        // Normal unclaim
         LandUnclaimEvent event = new LandUnclaimEvent(player, pr);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
-            int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
-            int freeLands = plugin.getConfig().getInt("Freelands");
-
             double payback = -1;
-            if (plugin.isVaultEnabled()) {
-                if (regionCount <= freeLands)
-                    payback = 0;
-                else
-                    payback = OwnedLand.calculateCost(player) * plugin.getConfig().getDouble("Payback");
+            if(!isAdmin) {
+                int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
+                int freeLands = plugin.getConfig().getInt("Freelands");
 
-                plugin.getVaultHandler().give(player.getUniqueId(), payback);
+                if (plugin.isVaultEnabled()) {
+                    if (regionCount <= freeLands)
+                        payback = 0;
+                    else
+                        payback = OwnedLand.calculateCost(player) * plugin.getConfig().getDouble("Payback");
+
+                    plugin.getVaultHandler().give(player.getUniqueId(), payback);
+                }
             }
-
             plugin.getWgHandler().unclaim(player.getWorld(), pr.getLandName());
 
             // remove possible homes
-            Location home = plugin.getPlayerManager().get(player.getUniqueId()).getHome();
+            Location home = plugin.getPlayerManager().get(pr.getOwner()).getHome();
             if (home != null)
                 if (pr.getLand().contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
                     player.sendMessage(lm.getString("Commands.SetHome.removed"));
-                    plugin.getPlayerManager().get(player.getUniqueId()).setHome(null);
+                    plugin.getPlayerManager().get(pr.getOwner()).setHome(null);
                 }
 
             player.sendMessage(lm.getString("Commands.Unclaim.success")
@@ -80,6 +87,7 @@ public class Unclaim extends LandlordCommand {
 
             plugin.getMapManager().updateAll();
         }
+
     }
 
 }

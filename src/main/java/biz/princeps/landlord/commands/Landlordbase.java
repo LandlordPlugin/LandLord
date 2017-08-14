@@ -214,7 +214,7 @@ public class Landlordbase extends BaseCommand {
 
     @Subcommand("giveclaims|gcl")
     @CommandPermission("landlord.claims.give")
-    public void onGiveClaims(String target, Double price, Integer amount){
+    public void onGiveClaims(String target, Double price, Integer amount) {
         ((GiveClaims) subcommands.get("giveclaims")).onGiveClaims(getCurrentCommandIssuer(), target, price, amount);
     }
 
