@@ -7,6 +7,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -38,7 +39,13 @@ public class Unfriend extends LandlordCommand {
                     land.removeFriends(defaultDomain);
                     player.sendMessage(lm.getString("Commands.Unfriend.success")
                             .replace("%players%", Arrays.asList(names).toString()));
-                    plugin.getMapManager().updateAll();
+                    new BukkitRunnable(){
+
+                        @Override
+                        public void run() {
+                            plugin.getMapManager().updateAll();
+                        }
+                    }.runTask(plugin);
                 }
 
                 @Override

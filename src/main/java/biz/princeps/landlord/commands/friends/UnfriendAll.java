@@ -42,7 +42,13 @@ public class UnfriendAll extends LandlordCommand {
                             player.sendMessage(lm.getString("Commands.UnfriendAll.success")
                                     .replace("%count%", String.valueOf(i))
                                     .replace("%players%", Arrays.asList(names).toString()));
-                            plugin.getMapManager().updateAll();
+                            new BukkitRunnable(){
+
+                                @Override
+                                public void run() {
+                                    plugin.getMapManager().updateAll();
+                                }
+                            }.runTask(plugin);
                         } else
                             player.sendMessage(lm.getString("Commands.UnfriendAll.noFriend")
                                     .replace("%player%", Arrays.asList(names).toString()));

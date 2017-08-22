@@ -48,7 +48,13 @@ public class AddfriendAll extends LandlordCommand {
                             player.sendMessage(lm.getString("Commands.AddfriendAll.success")
                                     .replace("%count%", String.valueOf(i))
                                     .replace("%players%", Arrays.asList(names).toString()));
-                            plugin.getMapManager().updateAll();
+                            new BukkitRunnable(){
+
+                                @Override
+                                public void run() {
+                                    plugin.getMapManager().updateAll();
+                                }
+                            }.runTask(plugin);
                         } else
                             player.sendMessage(lm.getString("Commands.AddfriendAll.alreadyOwn"));
 
