@@ -21,6 +21,7 @@ import biz.princeps.lib.storage.AbstractDatabase;
 import biz.princeps.lib.storage.MySQL;
 import biz.princeps.lib.storage.SQLite;
 import co.aikar.commands.BaseCommand;
+import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -202,9 +203,11 @@ public class Landlordbase extends BaseCommand {
     @Subcommand("reload|rl")
     @CommandPermission("landlord.admin.reload")
     public void onReload() {
+        String msg = Landlord.getInstance().getLangManager().getString("Commands.Reload.success");
+        CommandIssuer issuer = getCurrentCommandIssuer();
         Landlord.getInstance().getPluginLoader().disablePlugin(Landlord.getInstance());
         Landlord.getInstance().getPluginLoader().enablePlugin(Landlord.getInstance());
-        getCurrentCommandIssuer().sendMessage(Landlord.getInstance().getLangManager().getString("Commands.Reload.success"));
+        issuer.sendMessage(msg);
     }
 
     @Subcommand("claims")
