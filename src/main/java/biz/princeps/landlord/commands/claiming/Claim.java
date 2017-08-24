@@ -117,6 +117,12 @@ public class Claim extends LandlordCommand {
 
             OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
 
+            if (plugin.getConfig().getBoolean("Homes.enable")) {
+                if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null)
+                    Bukkit.dispatchCommand(player, "ll sethome");
+            }
+
+
             plugin.getMapManager().updateAll();
         }
     }
