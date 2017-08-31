@@ -137,7 +137,7 @@ public class ManageGUI extends AbstractGUI {
                                     .replace("%land%", land.getId()));
                             display();
                         }, this);
-                        confi.setConfirm(lm.getRawString("Confirmation.confirm"));
+                        confi.setConfirm(lm.getRawString("Confirmation.accept"));
                         confi.setDecline(lm.getRawString("Confirmation.decline"));
 
                         confi.display();
@@ -224,7 +224,7 @@ public class ManageGUI extends AbstractGUI {
                                     p.closeInventory();
                                     display();
                                 }, this);
-                        gui.setConfirm(lm.getRawString("Confirmation.confirm"));
+                        gui.setConfirm(lm.getRawString("Confirmation.accept"));
                         gui.setDecline(lm.getRawString("Confirmation.decline"));
                         gui.display();
                     })));

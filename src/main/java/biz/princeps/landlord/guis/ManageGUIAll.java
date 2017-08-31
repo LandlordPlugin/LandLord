@@ -9,7 +9,6 @@ import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import biz.princeps.lib.storage.requests.Conditions;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -142,7 +141,7 @@ public class ManageGUIAll extends AbstractGUI {
                                     .replace("%land%", land.getId()));
                             display();
                         }, this);
-                        confi.setConfirm(lm.getRawString("Confirmation.confirm"));
+                        confi.setConfirm(lm.getRawString("Confirmation.accept"));
                         confi.setDecline(lm.getRawString("Confirmation.decline"));
 
                         confi.display();
