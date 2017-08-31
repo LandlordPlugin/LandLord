@@ -202,7 +202,7 @@ public class ManageGUIAll extends AbstractGUI {
                             player.closeInventory();
                             friendsGui.display();
                         }, friendsGui);
-                confirmationGUI.setConfirm(lm.getRawString("Confirmation.confirm"));
+                confirmationGUI.setConfirm(lm.getRawString("Confirmation.accept"));
                 confirmationGUI.setDecline(lm.getRawString("Confirmation.decline"));
                 confirmationGUI.display();
             })));
