@@ -111,10 +111,10 @@ public class ManageGUIAll extends AbstractGUI {
         if (plugin.getConfig().getBoolean("Manage.regenerate")) {
             double cost = plugin.getConfig().getDouble("ResetCost") * lands.size();
             this.setIcon(position, new Icon(createItem(Material.BARRIER, 1,
-                    lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, plugin.getVaultHandler().format(cost))))
+                    lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1"))))
                     .addClickAction((p) -> {
                         ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
-                                .replace("%cost%", plugin.getVaultHandler().format(cost)),
+                                .replace("%cost%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1")),
                                 (p1) -> {
                                     boolean flag = false;
                                     if (plugin.isVaultEnabled()) {
@@ -125,7 +125,8 @@ public class ManageGUIAll extends AbstractGUI {
                                             player.sendMessage(lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
                                                     .replace("%cost%", plugin.getVaultHandler().format(cost))
                                                     .replace("%name%", land.getId()));
-                                    }
+                                    } else
+                                        flag = true;
                                     if (flag) {
                                         for (ProtectedRegion protectedRegion : lands) {
                                             //         System.out.println(protectedRegion.getMinimumPoint().getBlockX() / 16 + ":" + protectedRegion.getMinimumPoint().getBlockZ() / 16);

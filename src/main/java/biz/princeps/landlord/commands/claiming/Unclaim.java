@@ -83,7 +83,7 @@ public class Unclaim extends LandlordCommand {
             player.sendMessage(lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", OwnedLand.getLandName(chunk))
                     .replace("%world%", chunk.getWorld().getName())
-                    .replace("%money%", plugin.getVaultHandler().format(payback)));
+                    .replace("%money%", (plugin.isVaultEnabled()? plugin.getVaultHandler().format(payback) : "-1")));
 
 
             plugin.getMapManager().updateAll();

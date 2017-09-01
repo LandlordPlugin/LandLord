@@ -86,7 +86,7 @@ public class Info extends LandlordCommand {
                     // unclaimed
                     player.sendMessage(free
                             .replace("%landid%", OwnedLand.getLandName(chunk))
-                            .replace("%price%", plugin.getVaultHandler().format(OwnedLand.calculateCost(player))));
+                            .replace("%price%", (plugin.isVaultEnabled()? plugin.getVaultHandler().format(OwnedLand.calculateCost(player)) : "-1")));
                     OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
                 }
             }
