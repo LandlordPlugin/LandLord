@@ -53,6 +53,7 @@
                                     <include>biz.princeps:PrincepsLib</include>
                                     <include>org.slf4j:slf4j-api</include>
                                     <include>org.slf4j:slf4j-simple</include>
+                                    <include>net.jodah:expiringmap</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

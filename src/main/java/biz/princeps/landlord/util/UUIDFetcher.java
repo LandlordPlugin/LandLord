@@ -27,7 +27,6 @@ public class UUIDFetcher {
         Futures.addCallback(future, callback);
     }
 
-
     public static UUIDFetcher getInstance() {
         if (instance == null)
             instance = new UUIDFetcher();
