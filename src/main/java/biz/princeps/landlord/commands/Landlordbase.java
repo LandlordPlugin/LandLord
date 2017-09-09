@@ -63,6 +63,7 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("giveclaims", new GiveClaims());
         subcommands.put("update", new Update());
         subcommands.put("advertise", new Advertise());
+        subcommands.put("borders", new Borders());
     }
 
     @Default
@@ -246,6 +247,12 @@ public class Landlordbase extends BaseCommand {
     public void onAdvertise1(Player player, Double price) {
         if (Landlord.getInstance().isVaultEnabled())
             ((Advertise) subcommands.get("advertise")).onAdvertise(player, "this", price);
+    }
+
+    @Subcommand("borders")
+    @CommandPermission("landlord.player.borders")
+    public void onToggleBorder(Player player) {
+        ((Borders) subcommands.get("borders")).onToggleBorder(player);
     }
 
     @Subcommand("migrate")

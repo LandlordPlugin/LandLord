@@ -163,6 +163,9 @@ Commands:
   RemoveAdvertise:
     success: '&aSuccessfully removed advertise from land %landname%'
     noAdvertise: '%eThere is no advertise on land %landname%'
+  Borders:
+    activated: '&aSuccessfully activated border view! Click to disable'
+    deactivated: '&eDisabled border display'
 Alerts:
   defaultGreeting: '&7Now entering claimed land of %owner%'
   defaultFarewell: '&7Leaving claimed land of %owner%'
@@ -181,4 +184,4 @@ Shop:
       - 'claims. You will be able to purchase'
       - '%number% more claims than before'
       - 'Cost: %cost%'
-version: 4
+version: 5

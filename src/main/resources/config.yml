@@ -67,9 +67,11 @@ Map:
   enable: true
 # Refreshrate in Ticks. 20 ticks is equal to one second. The lower you set the value the more laggy it might be
   refreshRate: 10
-  chunkBorders:
-    # show the chunkborders with particles
-    enable: false
-    # interval in seconds
-    refreshRate: 10
-version: 2
+
+Borders:
+  # show the chunkborders with particles
+  enable: false
+  # interval in seconds
+  refreshRate: 10
+
+version: 3

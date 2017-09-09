@@ -29,7 +29,6 @@ public class LandMap {
     private Chunk currChunk;
     private String currDir;
     private Landlord plugin;
-    private BukkitTask showBorders;
 
     public LandMap(Player p, Landlord plugin) {
         this.plugin = plugin;
@@ -285,8 +284,6 @@ public class LandMap {
 
     public void removeMap() {
         scoreboard.deactivate();
-        if(showBorders != null)
-            showBorders.cancel();
     }
 
     /**
@@ -327,13 +324,6 @@ public class LandMap {
         SimpleScoreboard simpleScoreboard = (SimpleScoreboard) board;
         simpleScoreboard.activate();
         this.scoreboard = simpleScoreboard;
-        if (plugin.getConfig().getBoolean("Map.chunkBorders.enable"))
-            this.showBorders = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    OwnedLand.highlightLand(p, CParticle.DRIPLAVA);
-                }
-            }.runTaskTimer(plugin, 0, plugin.getConfig().getInt("Map.chunkBorders.refreshRate") * 20);
         return simpleScoreboard;
     }
 

@@ -58,6 +58,10 @@ permissions:
     description: permission to use the land map
     default: true
 
+  landlord.player.borders:
+    description: permission to use the ll border cmd
+    default: true
+
   landlord.player.info:
     description: Permission to use land info
     default: true
