@@ -79,6 +79,9 @@ public class WorldGuardHandler {
         region.setFlag(DefaultFlag.USE, StateFlag.State.DENY);
         region.setFlag(DefaultFlag.USE.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
 
+        region.setFlag(DefaultFlag.INTERACT, StateFlag.State.DENY);
+        region.setFlag(DefaultFlag.INTERACT.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+
         region.setFlag(DefaultFlag.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell")
                 .replace("%owner%", land.printOwners()));
         region.setFlag(DefaultFlag.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting")

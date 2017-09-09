@@ -32,6 +32,11 @@ public class Update extends LandlordCommand {
                     pr.setFlag(DefaultFlag.USE.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
                 }
 
+                if(!pr.getFlags().keySet().contains(DefaultFlag.INTERACT)){
+                    pr.setFlag(DefaultFlag.INTERACT, StateFlag.State.DENY);
+                    pr.setFlag(DefaultFlag.INTERACT.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+                }
+
                 String name = Bukkit.getOfflinePlayer(pr.getOwners().getUniqueIds().iterator().next()).getName();
 
                 String greeting = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", name);
