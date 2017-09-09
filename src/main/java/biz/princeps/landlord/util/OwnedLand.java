@@ -35,9 +35,10 @@ public class OwnedLand {
         return region.getOwners().getUniqueIds().contains(uuid);
     }
 
-    public UUID getOwner(){
+    public UUID getOwner() {
         return region.getOwners().getUniqueIds().iterator().next();
     }
+
     public void addFriends(DefaultDomain domain) {
         region.getMembers().addAll(domain);
     }
@@ -101,8 +102,8 @@ public class OwnedLand {
         for (Location edgeBlock : edgeBlocks) {
             edgeBlock.setZ(edgeBlock.getBlockZ() + .5);
             edgeBlock.setX(edgeBlock.getBlockX() + .5);
-           // p.getWorld().spawnParticle(e, edgeBlock, amt, 0.2, 0.2, 0.2, 20.0);
-           PrincepsLib.crossVersion().spawnParticle(edgeBlock, e, amt);
+            // p.getWorld().spawnParticle(e, edgeBlock, amt, 0.2, 0.2, 0.2, 20.0);
+            PrincepsLib.crossVersion().spawnParticle(edgeBlock, e, amt);
         }
     }
 
@@ -114,6 +115,18 @@ public class OwnedLand {
 
     public static String getLandName(Chunk chunk) {
         return chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
+    }
+
+    public static Location getLocationFromName(String name) {
+        String[] split = name.split("_");
+        if (split.length == 3) {
+            World w = Bukkit.getWorld(split[0]);
+            int x = Integer.parseInt(split[1]);
+            int z = Integer.parseInt(split[2]);
+            return new Location(w, x * 16, w.getHighestBlockYAt(x * 16, z * 16), z * 16);
+        } else
+            return null;
+
     }
 
     public static double calculateCost(Player player) {

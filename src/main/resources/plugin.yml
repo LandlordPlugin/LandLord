@@ -28,9 +28,11 @@ permissions:
     children:
       landlord.player.own: true
       landlord.player.map: true
+      landlord.player.borders: true
       landlord.player.info: true
       landlord.player.shop: true
       landlord.player.home: true
+
 
   landlord.admin.*:
     description: Gives access to admin commands.
@@ -45,6 +47,7 @@ permissions:
       landlord.admin.friends: true
       landlord.admin.giveclaims: true
       landlord.admin.update: true
+      landlord.admin.admintp: true
 
   landlord.use:
     description: required to use any Landlord commands
@@ -128,4 +131,8 @@ permissions:
 
   landlord.admin.update:
     description: Update existing claims
+    default: op
+
+  landlord.admin.admintp:
+    description: Opens a gui with all available lands of a player to tp to
     default: op

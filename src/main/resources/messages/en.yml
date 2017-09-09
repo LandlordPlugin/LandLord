@@ -166,6 +166,10 @@ Commands:
   Borders:
     activated: '&aSuccessfully activated border view! Click to disable'
     deactivated: '&eDisabled border display'
+  AdminTp:
+    noPlayer: '&eCould not find player %player%'
+    noLands: '&eThe player %player% does not own any lands!'
+    guiHeader: 'Lands of %player%'
 Alerts:
   defaultGreeting: '&7Now entering claimed land of %owner%'
   defaultFarewell: '&7Leaving claimed land of %owner%'

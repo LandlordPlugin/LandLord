@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.commands.admin.AdminTeleport;
 import biz.princeps.landlord.commands.admin.Clear;
 import biz.princeps.landlord.commands.admin.GiveClaims;
 import biz.princeps.landlord.commands.admin.Update;
@@ -64,6 +65,7 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("update", new Update());
         subcommands.put("advertise", new Advertise());
         subcommands.put("borders", new Borders());
+        subcommands.put("admintp", new AdminTeleport());
     }
 
     @Default
@@ -253,6 +255,13 @@ public class Landlordbase extends BaseCommand {
     @CommandPermission("landlord.player.borders")
     public void onToggleBorder(Player player) {
         ((Borders) subcommands.get("borders")).onToggleBorder(player);
+    }
+
+    @Subcommand("admintp|adminteleport")
+    @CommandPermission("landlord.admin.admintp")
+    @Syntax("<Name> - displays all lands of the player")
+    public void onAdminTp(Player player, String target) {
+        ((AdminTeleport) subcommands.get("admintp")).onAdminTeleport(player, target);
     }
 
     @Subcommand("migrate")
