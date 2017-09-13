@@ -25,6 +25,10 @@ public class Unclaim extends LandlordCommand {
         } else {
             String[] split = chunkname.split("_");
             try {
+                if (split.length != 3) {
+                    Bukkit.dispatchCommand(player, "/ll help");
+                    return;
+                }
                 int x = Integer.valueOf(split[1]);
                 int z = Integer.valueOf(split[2]);
                 chunk = Bukkit.getWorld(split[0]).getChunkAt(x, z);
@@ -42,13 +46,13 @@ public class Unclaim extends LandlordCommand {
 
         // is admin - allowed to unclaim
         boolean isAdmin = false;
-        if(!player.hasPermission("landlord.admin.unclaim")) {
+        if (!player.hasPermission("landlord.admin.unclaim")) {
             if (!pr.isOwner(player.getUniqueId())) {
                 player.sendMessage(lm.getString("Commands.Unclaim.notOwn")
                         .replace("%owner%", pr.printOwners()));
                 return;
             }
-        }else
+        } else
             isAdmin = true;
 
         // Normal unclaim
@@ -57,7 +61,7 @@ public class Unclaim extends LandlordCommand {
 
         if (!event.isCancelled()) {
             double payback = -1;
-            if(!isAdmin) {
+            if (!isAdmin) {
                 int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
                 int freeLands = plugin.getConfig().getInt("Freelands");
 
@@ -83,7 +87,7 @@ public class Unclaim extends LandlordCommand {
             player.sendMessage(lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", OwnedLand.getLandName(chunk))
                     .replace("%world%", chunk.getWorld().getName())
-                    .replace("%money%", (plugin.isVaultEnabled()? plugin.getVaultHandler().format(payback) : "-1")));
+                    .replace("%money%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(payback) : "-1")));
 
 
             plugin.getMapManager().updateAll();

@@ -47,7 +47,7 @@ public class RemoveAdvertise extends LandlordCommand {
                     .replace("%landname%", pr.getLandName()));
             return;
         } else {
-            plugin.getPlayerManager().removeOffer(offer);
+            plugin.getPlayerManager().removeOffer(offer.getLandname());
             player.sendMessage(lm.getString("Commands.RemoveAdvertise.success")
                     .replace("%landname%", landname));
         }

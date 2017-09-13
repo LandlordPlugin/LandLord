@@ -2,8 +2,11 @@ package biz.princeps.landlord.commands.claiming;
 
 import biz.princeps.landlord.api.events.LandClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.persistent.Offers;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.crossversion.CParticle;
+import biz.princeps.lib.gui.ConfirmationGUI;
+import biz.princeps.lib.gui.simple.ClickAction;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -26,9 +29,10 @@ public class Claim extends LandlordCommand {
         }
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
         OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
+        Offers offer = plugin.getPlayerManager().getOffer(pr.getLandName());
 
         // Check if there is an overlapping wg-region
-        if (!plugin.getWgHandler().canClaim(player, chunk)) {
+        if (!plugin.getWgHandler().canClaim(player, chunk) && offer == null) {
             LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.OVERLAPPINGREGION);
             plugin.getServer().getPluginManager().callEvent(event);
 
@@ -39,13 +43,15 @@ public class Claim extends LandlordCommand {
         }
 
         if (pr != null) {
-            LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.ALREADYCLAIMED);
-            Bukkit.getServer().getPluginManager().callEvent(event);
+            if (offer == null || pr.getOwner().equals(player.getUniqueId())) {
+                LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.ALREADYCLAIMED);
+                Bukkit.getServer().getPluginManager().callEvent(event);
 
-            if (!event.isCancelled()) {
-                player.sendMessage(lm.getString("Commands.Claim.alreadyClaimed")
-                        .replace("%owner%", pr.printOwners()));
-                return;
+                if (!event.isCancelled()) {
+                    player.sendMessage(lm.getString("Commands.Claim.alreadyClaimed")
+                            .replace("%owner%", pr.printOwners()));
+                    return;
+                }
             }
         }
 
@@ -83,33 +89,70 @@ public class Claim extends LandlordCommand {
             }
         }
 
+        boolean flag = false;
         // Money stuff
         if (plugin.isVaultEnabled()) {
-            double calculatedCost = OwnedLand.calculateCost(player);
-            if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
-                plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
-                if (calculatedCost > 0)
-                    player.sendMessage(lm.getString("Commands.Claim.moneyTook")
-                            .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
-                            .replace("%chunk%", OwnedLand.getLandName(chunk)));
+            if (offer != null) {
+                // Player 2 player sale
+                if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {
 
-            } else {
-                // NOT ENOUG MONEY
-                LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.NOTENOUGHMONEY);
-                Bukkit.getServer().getPluginManager().callEvent(event);
+                    ConfirmationGUI confirm = new ConfirmationGUI(player, pr.getLandName(), player1 -> {
+                        plugin.getVaultHandler().take(player.getUniqueId(), offer.getPrice());
+                        plugin.getVaultHandler().give(offer.getSeller(), offer.getPrice());
 
-                if (!event.isCancelled()) {
+                        plugin.getPlayerManager().removeOffer(offer.getLandname());
+
+                        pr.getLand().getOwners().clear();
+                        pr.getLand().getOwners().addPlayer(player.getUniqueId());
+
+                        player.sendMessage(lm.getString("Commands.Claim.success")
+                                .replace("%chunk%", OwnedLand.getLandName(chunk))
+                                .replace("%world%", chunk.getWorld().getName()));
+
+                        OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
+                        plugin.getMapManager().updateAll();
+
+                        player.closeInventory();
+                    }, player12 -> {
+                        player.sendMessage(lm.getString("Commands.Claim.aborted"));
+                        player.closeInventory();
+                        return;
+                    }, null);
+                    confirm.display();
+
+                } else {
+                    // Not enough money
                     player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
-                            .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                            .replace("%money%", plugin.getVaultHandler().format(offer.getPrice()))
                             .replace("%chunk%", OwnedLand.getLandName(chunk)));
                     return;
                 }
+            } else {
+                // Normal sale
+                flag = true;
+                double calculatedCost = OwnedLand.calculateCost(player);
+                if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
+                    plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
+                    if (calculatedCost > 0)
+                        player.sendMessage(lm.getString("Commands.Claim.moneyTook")
+                                .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                                .replace("%chunk%", OwnedLand.getLandName(chunk)));
+
+                } else {
+                    // NOT ENOUGH MONEY
+                    LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.NOTENOUGHMONEY);
+                    Bukkit.getServer().getPluginManager().callEvent(event);
+
+                    if (!event.isCancelled()) {
+                        player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
+                                .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                                .replace("%chunk%", OwnedLand.getLandName(chunk)));
+                        return;
+                    }
+                }
             }
         }
-        LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.SUCCESS);
-        Bukkit.getServer().getPluginManager().callEvent(event);
-
-        if (!event.isCancelled()) {
+        if (flag) {
             plugin.getWgHandler().claim(chunk, player.getUniqueId());
             player.sendMessage(lm.getString("Commands.Claim.success")
                     .replace("%chunk%", OwnedLand.getLandName(chunk))

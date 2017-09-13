@@ -52,14 +52,13 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
         }.runTaskAsynchronously(plugin);
     }
 
-    public void removeOffer(Offers offer) {
-        offers.remove(offer.getLandname());
-
+    public void removeOffer(String landname) {
         new BukkitRunnable() {
 
             @Override
             public void run() {
-                Landlord.getInstance().getDatabaseAPI().getDatabase().execute("DELETE FROM TABLE ll_advertise WHERE landname = ?", offer.getLandname());
+                Landlord.getInstance().getDatabaseAPI().getDatabase().execute("DELETE FROM ll_advertise WHERE landname = '" + landname + "'");
+                offers.remove(landname);
             }
         }.runTaskAsynchronously(plugin);
 

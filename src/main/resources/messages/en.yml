@@ -10,6 +10,7 @@ Commands:
     limit: '&eYou need to buy more claims first (%regions%/%claims%)! Click to buy more!'
     hardcap: '&eYou cant claim more lands than %regions%!!'
     notAllowed: '&eYou are not allowed to claim this land!'
+    aborted: '&eAborted claim!'
   Info:
     online: '&bONLINE'
     owned:
@@ -188,4 +189,4 @@ Shop:
       - 'claims. You will be able to purchase'
       - '%number% more claims than before'
       - 'Cost: %cost%'
-version: 5
+version: 6
