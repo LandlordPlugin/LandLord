@@ -29,20 +29,23 @@ public class Claim extends LandlordCommand {
         }
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
         OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
-        Offers offer = plugin.getPlayerManager().getOffer(pr.getLandName());
+        String landname = chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
 
         // Check if there is an overlapping wg-region
-        if (!plugin.getWgHandler().canClaim(player, chunk) && offer == null) {
-            LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.OVERLAPPINGREGION);
-            plugin.getServer().getPluginManager().callEvent(event);
+        if (!plugin.getWgHandler().canClaim(player, chunk)) {
+            if (plugin.getPlayerManager().getOffer(landname) == null) {
+                LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.OVERLAPPINGREGION);
+                plugin.getServer().getPluginManager().callEvent(event);
 
-            if (!event.isCancelled()) {
-                player.sendMessage(lm.getString("Commands.Claim.notAllowed"));
-                return;
+                if (!event.isCancelled()) {
+                    player.sendMessage(lm.getString("Commands.Claim.notAllowed"));
+                    return;
+                }
             }
         }
 
         if (pr != null) {
+            Offers offer = plugin.getPlayerManager().getOffer(pr.getLandName());
             if (offer == null || pr.getOwner().equals(player.getUniqueId())) {
                 LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.ALREADYCLAIMED);
                 Bukkit.getServer().getPluginManager().callEvent(event);
@@ -92,6 +95,7 @@ public class Claim extends LandlordCommand {
         boolean flag = false;
         // Money stuff
         if (plugin.isVaultEnabled()) {
+            Offers offer = plugin.getPlayerManager().getOffer(landname);
             if (offer != null) {
                 // Player 2 player sale
                 if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {
