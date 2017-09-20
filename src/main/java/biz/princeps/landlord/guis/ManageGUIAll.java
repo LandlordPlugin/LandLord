@@ -62,7 +62,15 @@ public class ManageGUIAll extends AbstractGUI {
         List<String> greedDesc = lm.getStringList("Commands.Manage.SetGreet.description");
         List<String> farewellDesc = lm.getStringList("Commands.Manage.SetFarewell.description");
 
-        Collection<ProtectedRegion> lands = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegions().values();
+        Collection<ProtectedRegion> landsAll = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegions().values();
+
+        List<ProtectedRegion> lands = new ArrayList<>();
+        for (ProtectedRegion land : landsAll) {
+            if(land.getOwners().getUniqueIds().contains(player.getUniqueId())){
+                lands.add(land);
+            }
+        }
+
         ProtectedRegion land = lands.iterator().next();
 
         int position = 0;
