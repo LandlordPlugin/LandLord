@@ -34,9 +34,15 @@ public class Borders extends LandlordCommand {
             p.spigot().sendMessage(cp.create());
 
             this.tasks.put(p, new BukkitRunnable() {
+                int counter = 0;
+
                 @Override
                 public void run() {
-                    OwnedLand.highlightLand(p, CParticle.DRIPLAVA);
+                    if (counter <= 360 / plugin.getConfig().getInt("Borders.refreshRate"))
+                        OwnedLand.highlightLand(p, CParticle.DRIPLAVA);
+                    else
+                        cancel();
+                    counter++;
                 }
             }.runTaskTimer(plugin, 0, plugin.getConfig().getInt("Borders.refreshRate") * 20));
         } else {
