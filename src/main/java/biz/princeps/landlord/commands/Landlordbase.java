@@ -80,14 +80,16 @@ public class Landlordbase extends BaseCommand {
         int perSite = Landlord.getInstance().getConfig().getInt("HelpCommandPerSite");
 
         String[] argsN = new String[1];
-        if (args.length == 2) {
-            argsN[0] = (args[1] == null ? "0" : args[1]);
+        if (args.length == 1) {
+            argsN[0] = (args[0] == null ? "0" : args[0]);
         }
 
         List<String> toDisplay = new ArrayList<>();
         if (sender.hasPermission("landlord.admin.help"))
             adminList.forEach(toDisplay::add);
         playersList.forEach(toDisplay::add);
+
+        // System.out.println(toDisplay.size());
 
         MultiPagedMessage msg = ChatAPI.createMultiPagedMessge()
                 .setElements(toDisplay)

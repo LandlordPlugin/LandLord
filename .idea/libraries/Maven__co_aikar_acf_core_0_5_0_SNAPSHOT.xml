@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: co.aikar:acf-core:0.5.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/co/aikar/acf-core/0.5.0-SNAPSHOT/acf-core-0.5.0-20170929.030928-55.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/co/aikar/acf-core/0.5.0-SNAPSHOT/acf-core-0.5.0-20170929.030928-55-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/co/aikar/acf-core/0.5.0-SNAPSHOT/acf-core-0.5.0-20170929.030928-55-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
