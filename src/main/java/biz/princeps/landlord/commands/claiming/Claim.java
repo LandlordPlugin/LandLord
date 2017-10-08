@@ -34,27 +34,17 @@ public class Claim extends LandlordCommand {
         // Check if there is an overlapping wg-region
         if (!plugin.getWgHandler().canClaim(player, chunk)) {
             if (plugin.getPlayerManager().getOffer(landname) == null) {
-                LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.OVERLAPPINGREGION);
-                plugin.getServer().getPluginManager().callEvent(event);
-
-                if (!event.isCancelled()) {
-                    player.sendMessage(lm.getString("Commands.Claim.notAllowed"));
-                    return;
-                }
+                player.sendMessage(lm.getString("Commands.Claim.notAllowed"));
+                return;
             }
         }
 
         if (pr != null) {
             Offers offer = plugin.getPlayerManager().getOffer(pr.getLandName());
             if (offer == null || pr.getOwner().equals(player.getUniqueId())) {
-                LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.ALREADYCLAIMED);
-                Bukkit.getServer().getPluginManager().callEvent(event);
-
-                if (!event.isCancelled()) {
-                    player.sendMessage(lm.getString("Commands.Claim.alreadyClaimed")
-                            .replace("%owner%", pr.printOwners()));
-                    return;
-                }
+                player.sendMessage(lm.getString("Commands.Claim.alreadyClaimed")
+                        .replace("%owner%", pr.printOwners()));
+                return;
             }
         }
 
@@ -144,15 +134,10 @@ public class Claim extends LandlordCommand {
 
                 } else {
                     // NOT ENOUGH MONEY
-                    LandClaimEvent event = new LandClaimEvent(player, player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(), LandClaimEvent.ClaimState.NOTENOUGHMONEY);
-                    Bukkit.getServer().getPluginManager().callEvent(event);
-
-                    if (!event.isCancelled()) {
-                        player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
-                                .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
-                                .replace("%chunk%", OwnedLand.getLandName(chunk)));
-                        return;
-                    }
+                    player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
+                            .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                            .replace("%chunk%", OwnedLand.getLandName(chunk)));
+                    return;
                 }
             }
         } else {
@@ -173,7 +158,7 @@ public class Claim extends LandlordCommand {
                     Bukkit.dispatchCommand(player, "ll sethome");
             }
 
-
+            Bukkit.getPluginManager().callEvent(new LandClaimEvent(player, chunk.getX(), chunk.getZ()));
             plugin.getMapManager().updateAll();
         }
     }
