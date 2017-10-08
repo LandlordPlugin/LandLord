@@ -48,6 +48,7 @@ Homes:
   enable: true
   spawnParticles: true
   teleportCost: 100.0
+  delay: 3
 
 # you can remove items from the /ll manage gui by setting values to false
 Manage:
@@ -74,4 +75,4 @@ Borders:
   # interval in seconds
   refreshRate: 10
 
-version: 3
+version: 4

@@ -284,6 +284,7 @@ public class LandMap {
 
     public void removeMap() {
         scoreboard.deactivate();
+
     }
 
     /**
