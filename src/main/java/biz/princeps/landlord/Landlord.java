@@ -112,8 +112,8 @@ public class Landlord extends JavaPlugin {
     }
 
     private void managePlaceholders() {
-        if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-           new LandLordPlacehodlers(this).hook();
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new LandLordPlacehodlers(this).hook();
         }
     }
 
@@ -226,7 +226,7 @@ public class Landlord extends JavaPlugin {
     }
 
     public boolean isVaultEnabled() {
-        return getConfig().getBoolean("Economy.enable");
+        return getConfig().getBoolean("Economy.enable") && getVault() != null;
     }
 
     public ExecutorService getExecutorService() {

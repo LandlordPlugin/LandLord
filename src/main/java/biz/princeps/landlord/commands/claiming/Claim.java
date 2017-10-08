@@ -96,7 +96,7 @@ public class Claim extends LandlordCommand {
         // Money stuff
         if (plugin.isVaultEnabled()) {
             Offers offer = plugin.getPlayerManager().getOffer(landname);
-            if (offer != null) {
+            if (offer != null && plugin.isVaultEnabled()) {
                 // Player 2 player sale
                 if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {
 
@@ -155,7 +155,11 @@ public class Claim extends LandlordCommand {
                     }
                 }
             }
+        } else {
+            // flag is always true, if eco is disabled
+            flag = true;
         }
+
         if (flag) {
             plugin.getWgHandler().claim(chunk, player.getUniqueId());
             player.sendMessage(lm.getString("Commands.Claim.success")
