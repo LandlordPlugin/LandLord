@@ -11,36 +11,38 @@ import java.util.List;
 import java.util.UUID;
 
 public class LandLordAPI {
-    private static LandLordAPI ourInstance = new LandLordAPI();
+
+    private static LandLordAPI ourInstance;
 
     public static LandLordAPI getInstance() {
+        if (ourInstance == null)
+            ourInstance = new LandLordAPI();
         return ourInstance;
     }
 
     private LandLordAPI() {
     }
 
-
     private Landlord pl = Landlord.getInstance();
 
-    public LPlayerManager getPlayerManager(){
+    public LPlayerManager getPlayerManager() {
         return pl.getPlayerManager();
     }
 
-    public int getRegionCount(Player player){
+    public int getRegionCount(Player player) {
         int regionCount = pl.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(pl.getWgHandler().getWG().wrapOfflinePlayer(player));
         return regionCount;
     }
 
-    public void claim(Chunk chunk, UUID uuid){
+    public void claim(Chunk chunk, UUID uuid) {
         pl.getWgHandler().claim(chunk, uuid);
     }
 
-    public void unclaim(World world, String name){
+    public void unclaim(World world, String name) {
         pl.getWgHandler().unclaim(world, name);
     }
 
-    public OwnedLand getLand(Location loc){
+    public OwnedLand getLand(Location loc) {
         return pl.getWgHandler().getRegion(loc);
     }
 
