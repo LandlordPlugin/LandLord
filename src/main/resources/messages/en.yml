@@ -72,11 +72,29 @@ Commands:
         - ' &7Toggle the ability for players to'
         - ' &7build in this chunk'
         - ' &7Status&8: &c%var%'
-    AllowUse:
-      title: '&cAllow use'
+    AllowInteract:
+      title: '&cAllow interaction'
       description:
         - ' &7Toggle the ability for players to'
-        - ' &7use (e.g. redstone contraptions)'
+        - ' &7interact with objects (e.g. redstone contraptions)'
+        - ' &7Status&8: &c%var%'
+    AllowChest_access:
+      title: '&cAllow Chest Access'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7access all kinds of containers'
+        - ' &7Status&8: &c%var%'
+    AllowCreeper_explosion:
+      title: '&cAllow Creeper explosions'
+      description:
+        - ' &7Toggle the ability for creepers to'
+        - ' &7destroy blocks'
+        - ' &7Status&8: &c%var%'
+    AllowPvp:
+      title: '&cAllow pvp'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7hit other players'
         - ' &7Status&8: &c%var%'
     Regenerate:
       title: '&cRegneration'
@@ -189,4 +207,4 @@ Shop:
       - 'claims. You will be able to purchase'
       - '%number% more claims than before'
       - 'Cost: %cost%'
-version: 6
+version: 7

@@ -1,6 +1,8 @@
 package biz.princeps.landlord.handler;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.flags.Build;
+import biz.princeps.landlord.flags.IFlag;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -11,6 +13,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -66,28 +69,97 @@ public class WorldGuardHandler {
         return getRegion(loc.getChunk());
     }
 
+    public OwnedLand getRegion(ProtectedRegion pr) {
+        String name = pr.getId();
+        String[] splitted = name.split("_");
+
+        if (splitted.length != 3) {
+            return null;
+        }
+
+        World world = Bukkit.getWorld(splitted[0]);
+        if (world == null)
+            return null;
+
+        try {
+            int x = Integer.parseInt(splitted[1]);
+            int z = Integer.parseInt(splitted[2]);
+            Chunk chunk = world.getChunkAt(x, z);
+            return getRegion(chunk);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
     public void unclaim(World world, String regionname) {
         wg.getRegionManager(world).removeRegion(regionname);
     }
 
     public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region, Chunk chunk) {
-        OwnedLand land = new OwnedLand(region, chunk);
-
-        region.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
-        region.setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-
-        region.setFlag(DefaultFlag.USE, StateFlag.State.DENY);
-        region.setFlag(DefaultFlag.USE.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-
-        region.setFlag(DefaultFlag.INTERACT, StateFlag.State.DENY);
-        region.setFlag(DefaultFlag.INTERACT.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+        OwnedLand land = new OwnedLand(region, chunk, false);
 
         region.setFlag(DefaultFlag.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell")
                 .replace("%owner%", land.printOwners()));
         region.setFlag(DefaultFlag.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting")
                 .replace("%owner%", land.printOwners()));
 
-        region.setFlag(DefaultFlag.CREEPER_EXPLOSION, StateFlag.State.DENY);
+
+        List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
+
+        for (String localFlag : flaggy) {
+            String[] split = localFlag.split(" ");
+            if (split.length != 2) {
+                continue;
+            }
+            StateFlag.State state = StateFlag.State.valueOf(split[1].toUpperCase());
+            switch (split[0]) {
+
+                case "build":
+                    if (region.getFlag(DefaultFlag.BUILD) == null) {
+                        if (state == StateFlag.State.DENY) {
+                            region.setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+                            region.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
+                        } else {
+                            region.setFlag(DefaultFlag.BUILD, StateFlag.State.ALLOW);
+                        }
+                    }
+                    break;
+
+                case "chest-access":
+                    if (state == StateFlag.State.DENY) {
+                        region.setFlag(DefaultFlag.CHEST_ACCESS.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+                        region.setFlag(DefaultFlag.CHEST_ACCESS, StateFlag.State.DENY);
+                    } else {
+                        region.setFlag(DefaultFlag.CHEST_ACCESS, StateFlag.State.ALLOW);
+                    }
+                    break;
+
+                case "interact":
+                    if (state == StateFlag.State.DENY) {
+                        region.setFlag(DefaultFlag.INTERACT.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+                        region.setFlag(DefaultFlag.INTERACT, StateFlag.State.DENY);
+                    } else {
+                        region.setFlag(DefaultFlag.INTERACT, StateFlag.State.ALLOW);
+                    }
+                    break;
+
+                case "creeper-explosion":
+                    if (state == StateFlag.State.DENY) {
+                        region.setFlag(DefaultFlag.CREEPER_EXPLOSION, StateFlag.State.DENY);
+                    } else {
+                        region.setFlag(DefaultFlag.CREEPER_EXPLOSION, StateFlag.State.ALLOW);
+                    }
+                    break;
+
+                case "pvp":
+                    if (state == StateFlag.State.DENY) {
+                        region.setFlag(DefaultFlag.PVP, StateFlag.State.ALLOW);
+                    } else {
+                        region.setFlag(DefaultFlag.PVP, StateFlag.State.DENY);
+                    }
+                    break;
+            }
+        }
 
         return region;
     }

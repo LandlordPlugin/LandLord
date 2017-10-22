@@ -44,21 +44,12 @@ limits:
   - 20
   - 30
   - 40
+
 Homes:
   enable: true
   spawnParticles: true
   teleportCost: 100.0
   delay: 3
-
-# you can remove items from the /ll manage gui by setting values to false
-Manage:
-  building: true
-  use: true
-  regenerate: true
-  setgreet: true
-  setfarewell: true
-  friends: true
-  unclaim: true
 
 # Where should the "Entering XXX's land" be displayed? Available are ActionBar, Chat, Disabled
 LandMessage: ActionBar
@@ -75,4 +66,25 @@ Borders:
   # interval in seconds
   refreshRate: 10
 
-version: 4
+# define your default flags here. Every flag will be manageable in ll manage
+Flags:
+  - interact allow
+  - chest-access deny
+  - creeper-explosion deny
+  - pvp deny
+  - build deny
+
+# These options will be manageable in ll manage
+Manage:
+  friends: true
+  regenerate: true
+  setgreet: true
+  setfarewell: true
+  unclaim: true
+  build: true
+  interact: true
+  chest_access: true
+  creeper_explosion: true
+  pvp: true
+
+version: 5

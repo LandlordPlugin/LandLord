@@ -36,7 +36,7 @@ public class ListLands extends LandlordCommand {
             lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
                     .setName(land.getId())
                     .addClickAction((p) -> {
-                                ManageGUI manageGui = new ManageGUI(player, land, landGui);
+                                ManageGUI manageGui = new ManageGUI(player, plugin.getWgHandler().getRegion(land), landGui);
                                 manageGui.setTitle(manageGui.getRawTitle().replace("%info%", land.getId()));
                                 manageGui.display();
                             }

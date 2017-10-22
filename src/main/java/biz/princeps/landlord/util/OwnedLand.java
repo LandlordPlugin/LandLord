@@ -1,18 +1,19 @@
 package biz.princeps.landlord.util;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.flags.*;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.crossversion.CParticle;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.RegionGroup;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by spatium on 17.07.17.
@@ -21,10 +22,50 @@ public class OwnedLand {
 
     private ProtectedRegion region;
     private Chunk chunk;
+    private Map<Class<? extends IFlag>, IFlag> flags;
 
     public OwnedLand(ProtectedRegion region, Chunk chunk) {
+        this(region, chunk, true);
+    }
+
+    public OwnedLand(ProtectedRegion region, Chunk chunk, boolean initFlags) {
         this.region = region;
         this.chunk = chunk;
+        this.flags = new HashMap<>();
+        this.initFlags(initFlags);
+    }
+
+
+    private void initFlags(boolean setDefaultState) {
+        List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
+
+        for (String localFlag : flaggy) {
+            String[] split = localFlag.split(" ");
+            switch (split[0]) {
+
+                case "build":
+                    flags.put(Build.class, new Build(this, setDefaultState));
+                    break;
+
+                case "chest-access":
+                    flags.put(Chest_Access.class, new Chest_Access(this, setDefaultState));
+                    break;
+
+                case "interact":
+                    flags.put(Interact.class, new Interact(this, setDefaultState));
+                    break;
+
+                case "creeper-explosion":
+                    flags.put(Creeper_Explosion.class, new Creeper_Explosion(this, setDefaultState));
+                    break;
+
+                case "pvp":
+                    flags.put(Pvp.class, new Pvp(this, setDefaultState));
+                    break;
+            }
+        }
+
+
     }
 
     public String getLandName() {
@@ -146,4 +187,11 @@ public class OwnedLand {
             return maxCost - (maxCost - minCost) * var;
     }
 
+    public IFlag getFlag(Class<? extends IFlag> classy) {
+        return flags.get(classy);
+    }
+
+    public Map<Class<? extends IFlag>, IFlag> getFlags() {
+        return flags;
+    }
 }

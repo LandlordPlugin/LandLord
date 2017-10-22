@@ -34,7 +34,7 @@ public class Manage extends LandlordCommand {
 
         // land manage
         if (args.length == 0) {
-            ManageGUI gui = new ManageGUI(player, land.getLand());
+            ManageGUI gui = new ManageGUI(player, land);
             gui.display();
         } else
             // land manage landid cmd (args[1])

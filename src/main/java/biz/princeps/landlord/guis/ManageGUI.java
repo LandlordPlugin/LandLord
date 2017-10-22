@@ -1,8 +1,10 @@
 package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.flags.IFlag;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.persistent.LPlayer;
+import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
@@ -17,6 +19,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -35,19 +38,36 @@ import java.util.concurrent.ExecutionException;
  */
 public class ManageGUI extends AbstractGUI {
 
-    private ProtectedRegion land;
+
+    private static int SIZE;
+
+    static {
+        ConfigurationSection section = Landlord.getInstance().getConfig().getConfigurationSection("Manage");
+
+        Set<String> keys = section.getKeys(true);
+
+        int trues = 0;
+        for (String key : keys) {
+            if (section.getBoolean(key))
+                trues++;
+        }
+
+        SIZE = ( trues / 9 + (trues % 9 == 0 ? 0 : 1)) * 9;
+    }
+
+    private OwnedLand land;
     private LangManager lm;
     private Landlord plugin;
 
-    public ManageGUI(Player player, ProtectedRegion land) {
-        super(player, 9, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.header").replace("%info%", land.getId()));
+    public ManageGUI(Player player, OwnedLand land) {
+        super(player, SIZE, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.header").replace("%info%", land.getLandName()));
         this.land = land;
         plugin = Landlord.getInstance();
         lm = plugin.getLangManager();
     }
 
-    public ManageGUI(Player player, ProtectedRegion land, MultiPagedGUI landGui) {
-        super(player, 18, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.header").replace("%info%", land.getId()), landGui);
+    public ManageGUI(Player player, OwnedLand land, MultiPagedGUI landGui) {
+        super(player, SIZE + 9, Landlord.getInstance().getLangManager().getRawString("Commands.Manage.header").replace("%info%", land.getLandName()), landGui);
         this.land = land;
         plugin = Landlord.getInstance();
         lm = plugin.getLangManager();
@@ -63,8 +83,6 @@ public class ManageGUI extends AbstractGUI {
 
     @Override
     protected void create() {
-        List<String> allowDesc = lm.getStringList("Commands.Manage.AllowBuild.description");
-        List<String> allowUseDesc = lm.getStringList("Commands.Manage.AllowUse.description");
         List<String> regenerateDesc = lm.getStringList("Commands.Manage.Regenerate.description");
         List<String> greedDesc = lm.getStringList("Commands.Manage.SetGreet.description");
         List<String> farewellDesc = lm.getStringList("Commands.Manage.SetFarewell.description");
@@ -72,39 +90,28 @@ public class ManageGUI extends AbstractGUI {
 
         int position = 0;
 
-        // Allow building icon
-        if (plugin.getConfig().getBoolean("Manage.building")) {
-            this.setIcon(position, new Icon(createItem(Material.GRASS, 1,
-                    lm.getRawString("Commands.Manage.AllowBuild.title"), formatList(allowDesc, land.getFlag(DefaultFlag.BUILD).name())))
-                    .addClickAction((p) -> {
-                        StateFlag.State state = StateFlag.State.ALLOW;
 
-                        if (land.getFlag(DefaultFlag.BUILD) == StateFlag.State.ALLOW)
-                            state = StateFlag.State.DENY;
+        for (IFlag iFlag : land.getFlags().values()) {
 
-                        land.setFlag(DefaultFlag.BUILD, state);
-                        updateLore(0, formatList(allowDesc, land.getFlag(DefaultFlag.BUILD).name()));
-                    })
-            );
-            position++;
+            // For every IFlag of the land we wanna display an icon in the gui IF the flag is enabled for change
+            String flagName = iFlag.getClass().getSimpleName().toLowerCase();
+            String title = lm.getRawString("Commands.Manage.Allow" + flagName.substring(0, 1).toUpperCase() + flagName.substring(1) + ".title");
+            List<String> description = lm.getStringList("Commands.Manage.Allow" + flagName.substring(0, 1).toUpperCase() + flagName.substring(1) + ".description");
+
+            if (plugin.getConfig().getBoolean("Manage." + flagName)) {
+
+                int finalPosition = position;
+                this.setIcon(position, new Icon(createItem(iFlag.getMaterial(), 1,
+                        title, formatList(description, iFlag.getStatus())))
+                        .addClickAction((p) -> {
+                            iFlag.toggle();
+                            updateLore(finalPosition, formatList(description, iFlag.getStatus()));
+                        })
+                );
+                position++;
+            }
         }
 
-        // Allow use icon
-        if (plugin.getConfig().getBoolean("Manage.use")) {
-            this.setIcon(position, new Icon(createItem(Material.REDSTONE_TORCH_ON, 1,
-                    lm.getRawString("Commands.Manage.AllowUse.title"), formatList(allowUseDesc, land.getFlag(DefaultFlag.USE).name())))
-                    .addClickAction((p) -> {
-                        StateFlag.State state = StateFlag.State.ALLOW;
-
-                        if (land.getFlag(DefaultFlag.USE) == StateFlag.State.ALLOW)
-                            state = StateFlag.State.DENY;
-
-                        land.setFlag(DefaultFlag.USE, state);
-                        updateLore(1, formatList(allowUseDesc, land.getFlag(DefaultFlag.USE).name()));
-                    })
-            );
-            position++;
-        }
 
         // Regenerate icon
         if (plugin.getConfig().getBoolean("Manage.regenerate")) {
@@ -123,19 +130,19 @@ public class ManageGUI extends AbstractGUI {
                                         } else
                                             player.sendMessage(lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
                                                     .replace("%cost%", plugin.getVaultHandler().format(cost))
-                                                    .replace("%name%", land.getId()));
+                                                    .replace("%name%", land.getLandName()));
                                     else flag = true;
                                     if (flag) {
                                         player.getWorld().regenerateChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
                                         player.sendMessage(lm.getString("Commands.Manage.Regenerate.success")
-                                                .replace("%land%", land.getId()));
+                                                .replace("%land%", land.getLandName()));
                                         display();
                                     }
 
 
                                 }, (p2) -> {
                             player.sendMessage(lm.getString("Commands.Manage.Regenerate.abort")
-                                    .replace("%land%", land.getId()));
+                                    .replace("%land%", land.getLandName()));
                             display();
                         }, this);
                         confi.setConfirm(lm.getRawString("Confirmation.accept"));
@@ -150,13 +157,13 @@ public class ManageGUI extends AbstractGUI {
 
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet")) {
-            String currentGreet = land.getFlag(DefaultFlag.GREET_MESSAGE);
+            String currentGreet = land.getLand().getFlag(DefaultFlag.GREET_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.BAKED_POTATO, 1,
                     lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greedDesc, currentGreet)))
                     .addClickAction((p -> {
                         p.closeInventory();
                         ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetGreet.clickMsg"));
-                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage " + land.getId() + " setgreet "));
+                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage " + land.getLandName() + " setgreet "));
                         p.spigot().sendMessage(builder.create());
                     }))
             );
@@ -165,13 +172,13 @@ public class ManageGUI extends AbstractGUI {
 
         // set farewell icon
         if (plugin.getConfig().getBoolean("Manage.setfarewell")) {
-            String currentFarewell = land.getFlag(DefaultFlag.FAREWELL_MESSAGE);
+            String currentFarewell = land.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.CARROT_ITEM, 1,
                     lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
                     .addClickAction((p -> {
                         p.closeInventory();
                         ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetFarewell.clickMsg"));
-                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage " + land.getId() + " setfarewell "));
+                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage " + land.getLandName() + " setfarewell "));
                         p.spigot().sendMessage(builder.create());
                     }))
             );
@@ -181,7 +188,7 @@ public class ManageGUI extends AbstractGUI {
         // set friends icon
         if (plugin.getConfig().getBoolean("Manage.friends")) {
             ItemStack skull = createSkull(player.getName(), lm.getRawString("Commands.Manage.ManageFriends.title"), lm.getStringList("Commands.Manage.ManageFriends.description"));
-            Set<UUID> friends = land.getMembers().getUniqueIds();
+            Set<UUID> friends = land.getLand().getMembers().getUniqueIds();
             MultiPagedGUI friendsGui = new MultiPagedGUI(player, (int) Math.ceil((double) friends.size() / 9.0), lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
 
             };
@@ -216,9 +223,9 @@ public class ManageGUI extends AbstractGUI {
         if (plugin.getConfig().getBoolean("Manage.unclaim")) {
             this.setIcon(position, new Icon(createItem(Material.BLAZE_POWDER, 1, lm.getRawString("Commands.Manage.Unclaim.title"), lm.getStringList("Commands.Manage.Unclaim.description")))
                     .addClickAction((player1 -> {
-                        ConfirmationGUI gui = new ConfirmationGUI(player1, lm.getRawString("Commands.Manage.Unclaim.confirmationTitle").replace("%land%", land.getId()),
+                        ConfirmationGUI gui = new ConfirmationGUI(player1, lm.getRawString("Commands.Manage.Unclaim.confirmationTitle").replace("%land%", land.getLandName()),
                                 p -> {
-                                    Bukkit.dispatchCommand(p, "ll unclaim " + land.getId());
+                                    Bukkit.dispatchCommand(p, "ll unclaim " + land.getLandName());
                                     p.closeInventory();
                                 },
                                 (p) -> {
@@ -231,6 +238,7 @@ public class ManageGUI extends AbstractGUI {
                     })));
             position++;
         }
+
     }
 
     private List<String> formatFriendsSegment(UUID id) {
