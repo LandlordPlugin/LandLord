@@ -12,12 +12,11 @@ public class LandClaimEvent extends Event implements Cancellable {
     private boolean cancelled;
 
     private Player player;
-    private int x, z;
+    private OwnedLand land;
 
-    public LandClaimEvent(Player player, int x, int z) {
+    public LandClaimEvent(Player player, OwnedLand land) {
         this.player = player;
-        this.x = x;
-        this.z = z;
+        this.land = land;
     }
 
     public static HandlerList getHandlerList() {
@@ -28,12 +27,8 @@ public class LandClaimEvent extends Event implements Cancellable {
         return player;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getZ() {
-        return z;
+    public OwnedLand getLand() {
+        return land;
     }
 
     @Override

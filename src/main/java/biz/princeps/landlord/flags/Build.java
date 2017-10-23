@@ -25,7 +25,7 @@ public class Build extends Flag {
 
     @Override
     public void toggle() {
-        ProtectedRegion pr = land.getLand();
+        ProtectedRegion pr = land.getWGLand();
 
         if (pr.getFlags().get(DefaultFlag.BUILD) == StateFlag.State.ALLOW) {
             // Switch flag to: members are allowed
@@ -48,7 +48,7 @@ public class Build extends Flag {
 
     @Override
     public void setDefaultStatus() {
-        this.status = land.getLand().getFlags().get(DefaultFlag.BUILD).toString().toUpperCase();
+        this.status = land.getWGLand().getFlags().get(DefaultFlag.BUILD).toString().toUpperCase();
     }
 
 }

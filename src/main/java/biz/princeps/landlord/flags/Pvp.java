@@ -2,7 +2,6 @@ package biz.princeps.landlord.flags;
 
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Material;
@@ -24,7 +23,7 @@ public class Pvp extends Flag {
 
     @Override
     public void toggle() {
-        ProtectedRegion pr = land.getLand();
+        ProtectedRegion pr = land.getWGLand();
 
         if (pr.getFlags().get(DefaultFlag.PVP) == StateFlag.State.ALLOW) {
             pr.setFlag(DefaultFlag.PVP, StateFlag.State.DENY);
@@ -44,6 +43,6 @@ public class Pvp extends Flag {
 
     @Override
     public void setDefaultStatus() {
-        this.status = land.getLand().getFlags().get(DefaultFlag.PVP).toString().toUpperCase();
+        this.status = land.getWGLand().getFlags().get(DefaultFlag.PVP).toString().toUpperCase();
     }
 }

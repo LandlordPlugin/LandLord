@@ -25,7 +25,7 @@ public class Interact extends Flag {
 
     @Override
     public void toggle() {
-        ProtectedRegion pr = land.getLand();
+        ProtectedRegion pr = land.getWGLand();
 
         if (pr.getFlags().get(DefaultFlag.INTERACT) == StateFlag.State.ALLOW) {
 
@@ -47,6 +47,6 @@ public class Interact extends Flag {
 
     @Override
     public void setDefaultStatus() {
-        this.status = land.getLand().getFlags().get(DefaultFlag.INTERACT).toString().toUpperCase();
+        this.status = land.getWGLand().getFlags().get(DefaultFlag.INTERACT).toString().toUpperCase();
     }
 }

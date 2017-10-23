@@ -1,54 +1,39 @@
 package biz.princeps.landlord.api;
 
-import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import org.bukkit.*;
-import org.bukkit.entity.Player;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.util.List;
 import java.util.UUID;
 
-public class LandLordAPI {
+public interface LandLordAPI {
 
-    private static LandLordAPI ourInstance;
 
-    public static LandLordAPI getInstance() {
-        if (ourInstance == null)
-            ourInstance = new LandLordAPI();
-        return ourInstance;
-    }
+    LPlayerManager getPlayerManager() ;
 
-    private LandLordAPI() {
-    }
-
-    private Landlord pl = Landlord.getInstance();
-
-    public LPlayerManager getPlayerManager() {
-        return pl.getPlayerManager();
-    }
-
+    /*
     public int getRegionCount(Player player) {
         int regionCount = pl.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(pl.getWgHandler().getWG().wrapOfflinePlayer(player));
         return regionCount;
     }
+    */
 
-    public void claim(Chunk chunk, UUID uuid) {
-        pl.getWgHandler().claim(chunk, uuid);
-    }
 
-    public void unclaim(World world, String name) {
-        pl.getWgHandler().unclaim(world, name);
-    }
+    OwnedLand getLand(Location loc);
 
-    public OwnedLand getLand(Location loc) {
-        return pl.getWgHandler().getRegion(loc);
-    }
+    OwnedLand getLand(Chunk chunk);
 
-    public List<ProtectedRegion> getRegions(UUID id, World world) {
-        return pl.getWgHandler().getRegions(id, world);
-    }
+    OwnedLand getLand(ProtectedRegion protectedRegion);
+
+
+
+    List<ProtectedRegion> getRegions(UUID id, World world);
+
+
 
 }
 

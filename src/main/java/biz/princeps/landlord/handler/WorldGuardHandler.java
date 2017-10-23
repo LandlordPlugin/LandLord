@@ -1,8 +1,6 @@
 package biz.princeps.landlord.handler;
 
 import biz.princeps.landlord.Landlord;
-import biz.princeps.landlord.flags.Build;
-import biz.princeps.landlord.flags.IFlag;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -38,7 +36,7 @@ public class WorldGuardHandler {
         Location down = chunk.getBlock(0, 0, 0).getLocation();
         Location upper = chunk.getBlock(15, 256, 15).getLocation();
 
-        this.claim(owner, OwnedLand.getLandName(chunk), chunk.getWorld(), down, upper);
+        this.claim(owner, OwnedLand.getName(chunk), chunk.getWorld(), down, upper);
     }
 
     public void claim(UUID owner, String landname, World world, Location down, Location upper) {
@@ -61,7 +59,7 @@ public class WorldGuardHandler {
 
     public OwnedLand getRegion(Chunk chunk) {
         RegionManager manager = wg.getRegionContainer().get(chunk.getWorld());
-        ProtectedRegion pr = manager.getRegion(OwnedLand.getLandName(chunk));
+        ProtectedRegion pr = manager.getRegion(OwnedLand.getName(chunk));
         return (pr != null ? new OwnedLand(pr, chunk) : null);
     }
 

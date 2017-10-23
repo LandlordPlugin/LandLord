@@ -87,8 +87,8 @@ public class LandAlerter extends BasicListener {
                         boolean goingOn = false;
 
                         if (regionInsideNow != null) {
-                            String greet = ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.GREET_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
-                            String farewell = ChatColor.stripColor(regionInsideNow.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
+                            String greet = ChatColor.stripColor(regionInsideNow.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
+                            String farewell = ChatColor.stripColor(regionInsideNow.getWGLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
                             //     System.out.println(msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
@@ -97,8 +97,8 @@ public class LandAlerter extends BasicListener {
                         }
 
                         if (before != null) {
-                            String greet = ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.GREET_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
-                            String farewell = ChatColor.stripColor(before.getLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
+                            String greet = ChatColor.stripColor(before.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
+                            String farewell = ChatColor.stripColor(before.getWGLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
                             //          System.out.println(msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
@@ -113,7 +113,7 @@ public class LandAlerter extends BasicListener {
                         //  if (regionInsideNow == null)
                         //       System.out.println("1. null");
                         //   else
-                        //      System.out.println(regionInsideNow.getLandName());
+                        //      System.out.println(regionInsideNow.getName());
 
                         //on leave null
                         // on enter da wo man nun ist
@@ -142,7 +142,7 @@ public class LandAlerter extends BasicListener {
                                     event.setCancelled(true);
                                 }
                             } else {
-                                //          System.out.println(before.getLandName());
+                                //          System.out.println(before.getName());
                                 if (regionInsideNow == null) {
                                     if (type == LandMessageDisplay.ActionBar) {
                                         PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
@@ -151,7 +151,7 @@ public class LandAlerter extends BasicListener {
                                 } else {
                                     if (type == LandMessageDisplay.ActionBar) {
                                         boolean flag = true;
-                                        for (UUID uuid : regionInsideNow.getLand().getOwners().getUniqueIds()) {
+                                        for (UUID uuid : regionInsideNow.getWGLand().getOwners().getUniqueIds()) {
                                             if (!before.isOwner(uuid))
                                                 flag = false;
                                         }
@@ -205,7 +205,7 @@ public class LandAlerter extends BasicListener {
         if (landTowards != null)
             if (!landTowards.equals(landFrom)) {
                 playerInLand.put(p.getUniqueId(), landTowards);
-                //     System.out.println(landTowards.getLandName() + " added");
+                //     System.out.println(landTowards.getName() + " added");
             }
 
     }

@@ -2,7 +2,6 @@ package biz.princeps.landlord.flags;
 
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Material;
@@ -25,7 +24,7 @@ public class Creeper_Explosion extends Flag {
 
     @Override
     public void toggle() {
-        ProtectedRegion pr = land.getLand();
+        ProtectedRegion pr = land.getWGLand();
 
         if (pr.getFlags().get(DefaultFlag.CREEPER_EXPLOSION) == StateFlag.State.ALLOW) {
 
@@ -45,7 +44,7 @@ public class Creeper_Explosion extends Flag {
 
     @Override
     public void setDefaultStatus() {
-        this.status = land.getLand().getFlags().get(DefaultFlag.CREEPER_EXPLOSION).toString().toUpperCase();
+        this.status = land.getWGLand().getFlags().get(DefaultFlag.CREEPER_EXPLOSION).toString().toUpperCase();
     }
 
 }

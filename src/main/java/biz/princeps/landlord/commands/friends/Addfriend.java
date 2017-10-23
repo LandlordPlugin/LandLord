@@ -35,8 +35,8 @@ public class Addfriend extends LandlordCommand {
                 @Override
                 public void onSuccess(@Nullable DefaultDomain defaultDomain) {
                     for (UUID uuid : defaultDomain.getUniqueIds()) {
-                        if (!land.getLand().getOwners().getUniqueIds().contains(uuid)) {
-                            land.getLand().getMembers().addPlayer(uuid);
+                        if (!land.getWGLand().getOwners().getUniqueIds().contains(uuid)) {
+                            land.getWGLand().getMembers().addPlayer(uuid);
                             player.sendMessage(lm.getString("Commands.Addfriend.success")
                                     .replace("%players%", Arrays.asList(names).toString()));
                             new BukkitRunnable(){

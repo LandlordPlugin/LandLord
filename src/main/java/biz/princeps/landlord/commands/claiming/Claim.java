@@ -6,7 +6,6 @@ import biz.princeps.landlord.persistent.Offers;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.crossversion.CParticle;
 import biz.princeps.lib.gui.ConfirmationGUI;
-import biz.princeps.lib.gui.simple.ClickAction;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -40,7 +39,7 @@ public class Claim extends LandlordCommand {
         }
 
         if (pr != null) {
-            Offers offer = plugin.getPlayerManager().getOffer(pr.getLandName());
+            Offers offer = plugin.getPlayerManager().getOffer(pr.getName());
             if (offer == null || pr.getOwner().equals(player.getUniqueId())) {
                 player.sendMessage(lm.getString("Commands.Claim.alreadyClaimed")
                         .replace("%owner%", pr.printOwners()));
@@ -90,17 +89,17 @@ public class Claim extends LandlordCommand {
                 // Player 2 player sale
                 if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {
 
-                    ConfirmationGUI confirm = new ConfirmationGUI(player, pr.getLandName(), player1 -> {
+                    ConfirmationGUI confirm = new ConfirmationGUI(player, pr.getName(), player1 -> {
                         plugin.getVaultHandler().take(player.getUniqueId(), offer.getPrice());
                         plugin.getVaultHandler().give(offer.getSeller(), offer.getPrice());
 
                         plugin.getPlayerManager().removeOffer(offer.getLandname());
 
-                        pr.getLand().getOwners().clear();
-                        pr.getLand().getOwners().addPlayer(player.getUniqueId());
+                        pr.getWGLand().getOwners().clear();
+                        pr.getWGLand().getOwners().addPlayer(player.getUniqueId());
 
                         player.sendMessage(lm.getString("Commands.Claim.success")
-                                .replace("%chunk%", OwnedLand.getLandName(chunk))
+                                .replace("%chunk%", OwnedLand.getName(chunk))
                                 .replace("%world%", chunk.getWorld().getName()));
 
                         OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
@@ -118,7 +117,7 @@ public class Claim extends LandlordCommand {
                     // Not enough money
                     player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
                             .replace("%money%", plugin.getVaultHandler().format(offer.getPrice()))
-                            .replace("%chunk%", OwnedLand.getLandName(chunk)));
+                            .replace("%chunk%", OwnedLand.getName(chunk)));
                     return;
                 }
             } else {
@@ -130,13 +129,13 @@ public class Claim extends LandlordCommand {
                     if (calculatedCost > 0)
                         player.sendMessage(lm.getString("Commands.Claim.moneyTook")
                                 .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
-                                .replace("%chunk%", OwnedLand.getLandName(chunk)));
+                                .replace("%chunk%", OwnedLand.getName(chunk)));
 
                 } else {
                     // NOT ENOUGH MONEY
                     player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
                             .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
-                            .replace("%chunk%", OwnedLand.getLandName(chunk)));
+                            .replace("%chunk%", OwnedLand.getName(chunk)));
                     return;
                 }
             }
@@ -147,8 +146,18 @@ public class Claim extends LandlordCommand {
 
         if (flag) {
             plugin.getWgHandler().claim(chunk, player.getUniqueId());
+
+            OwnedLand landy = plugin.getWgHandler().getRegion(chunk);
+            LandClaimEvent event = new LandClaimEvent(player, landy);
+            Bukkit.getPluginManager().callEvent(event);
+
+            if (event.isCancelled()) {
+                plugin.getWgHandler().unclaim(landy.getWorld(), landy.getName());
+                return;
+            }
+
             player.sendMessage(lm.getString("Commands.Claim.success")
-                    .replace("%chunk%", OwnedLand.getLandName(chunk))
+                    .replace("%chunk%", OwnedLand.getName(chunk))
                     .replace("%world%", chunk.getWorld().getName()));
 
             OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
@@ -158,7 +167,6 @@ public class Claim extends LandlordCommand {
                     Bukkit.dispatchCommand(player, "ll sethome");
             }
 
-            Bukkit.getPluginManager().callEvent(new LandClaimEvent(player, chunk.getX(), chunk.getZ()));
             plugin.getMapManager().updateAll();
         }
     }

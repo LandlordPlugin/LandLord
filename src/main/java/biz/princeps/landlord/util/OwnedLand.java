@@ -6,9 +6,6 @@ import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.crossversion.CParticle;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
-import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -23,6 +20,7 @@ public class OwnedLand {
     private ProtectedRegion region;
     private Chunk chunk;
     private Map<Class<? extends IFlag>, IFlag> flags;
+    private World world;
 
     public OwnedLand(ProtectedRegion region, Chunk chunk) {
         this(region, chunk, true);
@@ -32,6 +30,7 @@ public class OwnedLand {
         this.region = region;
         this.chunk = chunk;
         this.flags = new HashMap<>();
+        this.world = chunk.getWorld();
         this.initFlags(initFlags);
     }
 
@@ -68,8 +67,8 @@ public class OwnedLand {
 
     }
 
-    public String getLandName() {
-        return getLandName(chunk);
+    public String getName() {
+        return getName(chunk);
     }
 
     public boolean isOwner(UUID uuid) {
@@ -78,6 +77,14 @@ public class OwnedLand {
 
     public UUID getOwner() {
         return region.getOwners().getUniqueIds().iterator().next();
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public Chunk getChunk() {
+        return chunk;
     }
 
     public void addFriends(DefaultDomain domain) {
@@ -111,7 +118,7 @@ public class OwnedLand {
         return sb.toString();
     }
 
-    public ProtectedRegion getLand() {
+    public ProtectedRegion getWGLand() {
         return this.region;
     }
 
@@ -154,7 +161,7 @@ public class OwnedLand {
         return new BlockVector(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
-    public static String getLandName(Chunk chunk) {
+    public static String getName(Chunk chunk) {
         return chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
     }
 

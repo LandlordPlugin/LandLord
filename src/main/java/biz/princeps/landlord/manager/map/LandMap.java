@@ -3,7 +3,6 @@ package biz.princeps.landlord.manager.map;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.util.OwnedLand;
-import biz.princeps.lib.crossversion.CParticle;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import me.tigerhix.lib.scoreboard.common.EntryBuilder;
 import me.tigerhix.lib.scoreboard.type.Entry;
@@ -13,8 +12,6 @@ import me.tigerhix.lib.scoreboard.type.SimpleScoreboard;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
 import java.util.Map;
@@ -358,9 +355,9 @@ public class LandMap {
                 String currSpot = mapBoard[z][x];
 
                 if (land != null) {
-                    if (land.getLand().getOwners().getUniqueIds().contains(p.getUniqueId())) {
+                    if (land.getWGLand().getOwners().getUniqueIds().contains(p.getUniqueId())) {
                         currSpot = ChatColor.GREEN + currSpot;
-                    } else if (land.getLand().getMembers().getUniqueIds().contains(p.getUniqueId())) {
+                    } else if (land.getWGLand().getMembers().getUniqueIds().contains(p.getUniqueId())) {
                         currSpot = ChatColor.YELLOW + currSpot;
                     } else {
                         currSpot = ChatColor.RED + currSpot;

@@ -14,8 +14,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 
 /**
  * Created by spatium on 17.07.17.
@@ -71,13 +69,13 @@ public class Info extends LandlordCommand {
                         lastseen = ((LPlayer) list.get(0)).getLastSeenAsString();
                     }
                     player.sendMessage(owned
-                            .replace("%landid%", land.getLandName())
+                            .replace("%landid%", land.getName())
                             .replace("%owner%", land.printOwners())
                             .replace("%member%", land.printMembers().isEmpty() ? "-" : land.printMembers())
                             .replace("%lastseen%", lastseen));
                     OwnedLand.highlightLand(player, CParticle.DRIPWATER);
 
-                    Offers offer = plugin.getPlayerManager().getOffer(land.getLandName());
+                    Offers offer = plugin.getPlayerManager().getOffer(land.getName());
                     if (offer != null) {
                         player.sendMessage(lm.getString("Commands.Info.advertise")
                                 .replace("%price%", offer.getPrice() + ""));
@@ -85,7 +83,7 @@ public class Info extends LandlordCommand {
                 } else {
                     // unclaimed
                     player.sendMessage(free
-                            .replace("%landid%", OwnedLand.getLandName(chunk))
+                            .replace("%landid%", OwnedLand.getName(chunk))
                             .replace("%price%", (plugin.isVaultEnabled()? plugin.getVaultHandler().format(OwnedLand.calculateCost(player)) : "-1")));
                     OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
                 }

@@ -74,18 +74,18 @@ public class Unclaim extends LandlordCommand {
                     plugin.getVaultHandler().give(player.getUniqueId(), payback);
                 }
             }
-            plugin.getWgHandler().unclaim(player.getWorld(), pr.getLandName());
+            plugin.getWgHandler().unclaim(player.getWorld(), pr.getName());
 
             // remove possible homes
             Location home = plugin.getPlayerManager().get(pr.getOwner()).getHome();
             if (home != null)
-                if (pr.getLand().contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
+                if (pr.getWGLand().contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
                     player.sendMessage(lm.getString("Commands.SetHome.removed"));
                     plugin.getPlayerManager().get(pr.getOwner()).setHome(null);
                 }
 
             player.sendMessage(lm.getString("Commands.Unclaim.success")
-                    .replace("%chunk%", OwnedLand.getLandName(chunk))
+                    .replace("%chunk%", OwnedLand.getName(chunk))
                     .replace("%world%", chunk.getWorld().getName())
                     .replace("%money%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(payback) : "-1")));
 

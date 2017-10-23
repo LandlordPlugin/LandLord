@@ -42,11 +42,11 @@ public class Advertise extends LandlordCommand {
             return;
         }
 
-        Offers offer = new Offers(pr.getLandName(), price, player.getUniqueId());
+        Offers offer = new Offers(pr.getName(), price, player.getUniqueId());
         plugin.getPlayerManager().addOffer(offer);
 
         player.sendMessage(lm.getString("Commands.Advertise.success")
-                .replace("%landname%", pr.getLandName())
+                .replace("%landname%", pr.getName())
                 .replace("%price%", price + ""));
 
     }

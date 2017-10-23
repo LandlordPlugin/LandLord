@@ -1,5 +1,6 @@
 package biz.princeps.landlord;
 
+import biz.princeps.landlord.api.LandLordAPI;
 import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.handler.VaultHandler;
 import biz.princeps.landlord.handler.WorldGuardHandler;
@@ -13,6 +14,7 @@ import biz.princeps.landlord.persistent.Requests;
 import biz.princeps.landlord.persistent.Version;
 import biz.princeps.landlord.placeholderapi.LandLordPlacehodlers;
 import biz.princeps.landlord.util.ConfigUtil;
+import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
@@ -20,9 +22,13 @@ import biz.princeps.lib.storage.annotation.Column;
 import biz.princeps.lib.storage.requests.Conditions;
 import co.aikar.commands.BukkitCommandManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,13 +36,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * Created by spatium on 16.07.17.
  */
-public class Landlord extends JavaPlugin {
+public class Landlord extends JavaPlugin implements LandLordAPI {
 
     private static Landlord instance;
     private static DatabaseAPI databaseAPI;
@@ -232,4 +239,29 @@ public class Landlord extends JavaPlugin {
     public ExecutorService getExecutorService() {
         return executorService;
     }
+
+
+    /**
+     * API Methods
+     **/
+    @Override
+    public OwnedLand getLand(Location loc) {
+        return wgHandler.getRegion(loc);
+    }
+
+    @Override
+    public List<ProtectedRegion> getRegions(UUID id, World world) {
+        return wgHandler.getRegions(id, world);
+    }
+
+    @Override
+    public OwnedLand getLand(Chunk chunk) {
+        return wgHandler.getRegion(chunk);
+    }
+
+    @Override
+    public OwnedLand getLand(ProtectedRegion protectedRegion) {
+        return wgHandler.getRegion(protectedRegion);
+    }
+
 }
