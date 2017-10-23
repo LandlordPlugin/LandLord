@@ -67,12 +67,16 @@ Borders:
   refreshRate: 10
 
 # define your default flags here. Every flag will be manageable in ll manage
+# Construction of a new Flag:
+# flag defaultState:toggleableState
+# You can also set specific groups: e.g. interact allow all:deny nonmembers
+# this allows toggling the flagstate between allowing interaction for everyone and just allow oweners and members
 Flags:
-  - interact allow
-  - chest-access deny
-  - creeper-explosion deny
-  - pvp deny
-  - build deny
+  - 'interact allow all:deny nonmembers'
+  - 'chest-access deny nonmembers:allow all'
+  - 'creeper-explosion deny all:allow all'
+  - 'pvp deny all:allow all'
+  - 'build deny nonmembers:allow all'
 
 # These options will be manageable in ll manage
 Manage:
@@ -83,8 +87,8 @@ Manage:
   unclaim: true
   build: true
   interact: true
-  chest_access: true
-  creeper_explosion: true
+  chest-access: true
+  creeper-explosion: true
   pvp: true
 
-version: 5
+version: 6

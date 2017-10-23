@@ -6,6 +6,7 @@ import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -94,7 +95,7 @@ public class WorldGuardHandler {
     }
 
     public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region, Chunk chunk) {
-        OwnedLand land = new OwnedLand(region, chunk, false);
+        OwnedLand land = new OwnedLand(region, chunk);
 
         region.setFlag(DefaultFlag.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell")
                 .replace("%owner%", land.printOwners()));
@@ -103,61 +104,41 @@ public class WorldGuardHandler {
 
 
         List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
+        Set<String> flags = new HashSet<>();
 
-        for (String localFlag : flaggy) {
-            String[] split = localFlag.split(" ");
-            if (split.length != 2) {
-                continue;
-            }
-            StateFlag.State state = StateFlag.State.valueOf(split[1].toUpperCase());
-            switch (split[0]) {
+        flaggy.forEach(s -> flags.add(s.split(" ")[0]));
 
-                case "build":
-                    if (region.getFlag(DefaultFlag.BUILD) == null) {
-                        if (state == StateFlag.State.DENY) {
-                            region.setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-                            region.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
+        //Iterate over all existing flags
+        for (Flag<?> flag : DefaultFlag.getFlags()) {
+            if (flag instanceof StateFlag) {
+                boolean failed = false;
+                if (flags.contains(flag.getName())) {
+                    // Filters the config list for the right line and split that line in the mid at :
+                    String[] rules = flaggy.stream().filter(s -> s.startsWith(flag.getName())).findFirst().get().split(":");
+                    if (rules.length == 2) {
+
+                        String[] defSplit = rules[0].split(" ");
+                        if (defSplit.length == 3) {
+                            StateFlag.State state = StateFlag.State.valueOf(defSplit[1].toUpperCase());
+                            if (defSplit[2].equals("nonmembers"))
+                                region.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+
+                            region.setFlag((StateFlag) flag, state);
                         } else {
-                            region.setFlag(DefaultFlag.BUILD, StateFlag.State.ALLOW);
+                            failed = true;
                         }
-                    }
-                    break;
-
-                case "chest-access":
-                    if (state == StateFlag.State.DENY) {
-                        region.setFlag(DefaultFlag.CHEST_ACCESS.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-                        region.setFlag(DefaultFlag.CHEST_ACCESS, StateFlag.State.DENY);
                     } else {
-                        region.setFlag(DefaultFlag.CHEST_ACCESS, StateFlag.State.ALLOW);
+                        failed = true;
                     }
-                    break;
+                }
 
-                case "interact":
-                    if (state == StateFlag.State.DENY) {
-                        region.setFlag(DefaultFlag.INTERACT.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-                        region.setFlag(DefaultFlag.INTERACT, StateFlag.State.DENY);
-                    } else {
-                        region.setFlag(DefaultFlag.INTERACT, StateFlag.State.ALLOW);
-                    }
+                if (failed) {
+                    Bukkit.getLogger().warning("ERROR: Your flag definition is invalid!");
                     break;
-
-                case "creeper-explosion":
-                    if (state == StateFlag.State.DENY) {
-                        region.setFlag(DefaultFlag.CREEPER_EXPLOSION, StateFlag.State.DENY);
-                    } else {
-                        region.setFlag(DefaultFlag.CREEPER_EXPLOSION, StateFlag.State.ALLOW);
-                    }
-                    break;
-
-                case "pvp":
-                    if (state == StateFlag.State.DENY) {
-                        region.setFlag(DefaultFlag.PVP, StateFlag.State.ALLOW);
-                    } else {
-                        region.setFlag(DefaultFlag.PVP, StateFlag.State.DENY);
-                    }
-                    break;
+                }
             }
         }
+
 
         return region;
     }

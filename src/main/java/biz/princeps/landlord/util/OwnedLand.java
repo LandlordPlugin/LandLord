@@ -6,6 +6,10 @@ import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.crossversion.CParticle;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.RegionGroup;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -19,48 +23,70 @@ public class OwnedLand {
 
     private ProtectedRegion region;
     private Chunk chunk;
-    private Map<Class<? extends IFlag>, IFlag> flags;
+    private Set<LLFlag> flags;
     private World world;
 
-    public OwnedLand(ProtectedRegion region, Chunk chunk) {
-        this(region, chunk, true);
-    }
 
-    public OwnedLand(ProtectedRegion region, Chunk chunk, boolean initFlags) {
+    public OwnedLand(ProtectedRegion region, Chunk chunk) {
         this.region = region;
         this.chunk = chunk;
-        this.flags = new HashMap<>();
+        this.flags = new HashSet<>();
         this.world = chunk.getWorld();
-        this.initFlags(initFlags);
+        this.initFlags();
     }
 
 
-    private void initFlags(boolean setDefaultState) {
+    private void initFlags() {
         List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
+        Set<String> flags = new HashSet<>();
 
-        for (String localFlag : flaggy) {
-            String[] split = localFlag.split(" ");
-            switch (split[0]) {
+        flaggy.forEach(s -> flags.add(s.split(" ")[0]));
 
-                case "build":
-                    flags.put(Build.class, new Build(this, setDefaultState));
+        //Iterate over all existing flags
+        for (Flag<?> flag : DefaultFlag.getFlags()) {
+            if (flag instanceof StateFlag) {
+                boolean failed = false;
+                if (flags.contains(flag.getName())) {
+                    // Filters the config list for the right line and split that line in the mid at :
+                    String[] rules = flaggy.stream().filter(s -> s.startsWith(flag.getName())).findFirst().get().split(":");
+                    if (rules.length == 2) {
+                        LLFlag llFlag = new LLFlag(flag, this, Material.APPLE);
+
+                        StateFlag.State state1 = null, state2 = null;
+                        String g1 = null, g2 = null;
+
+                        String[] defSplit = rules[0].split(" ");
+                        if (defSplit.length == 3) {
+                            state1 = StateFlag.State.valueOf(defSplit[1].toUpperCase());
+                            g1 = defSplit[2];
+
+                        } else {
+                            failed = true;
+                        }
+
+
+                        String[] toggleSplit = rules[1].split(" ");
+                        if (toggleSplit.length == 2) {
+                            state2 = StateFlag.State.valueOf(toggleSplit[0].toUpperCase());
+                            g2 = toggleSplit[1];
+
+                        } else {
+                            failed = true;
+                        }
+                        if (state1 != null && state2 != null && g1 != null && g2 != null) {
+                            llFlag.setToggle(state1, g1, state2, g2);
+                            this.flags.add(llFlag);
+                        }
+
+                    } else {
+                        failed = true;
+                    }
+                }
+
+                if (failed) {
+                    Bukkit.getLogger().warning("ERROR: Your flag definition is invalid!");
                     break;
-
-                case "chest-access":
-                    flags.put(Chest_Access.class, new Chest_Access(this, setDefaultState));
-                    break;
-
-                case "interact":
-                    flags.put(Interact.class, new Interact(this, setDefaultState));
-                    break;
-
-                case "creeper-explosion":
-                    flags.put(Creeper_Explosion.class, new Creeper_Explosion(this, setDefaultState));
-                    break;
-
-                case "pvp":
-                    flags.put(Pvp.class, new Pvp(this, setDefaultState));
-                    break;
+                }
             }
         }
 
@@ -194,11 +220,15 @@ public class OwnedLand {
             return maxCost - (maxCost - minCost) * var;
     }
 
-    public IFlag getFlag(Class<? extends IFlag> classy) {
-        return flags.get(classy);
+    public LLFlag getFlag(DefaultFlag flag) {
+        for (LLFlag llFlag : flags) {
+            if (llFlag.getWGFlag().equals(flag))
+                return llFlag;
+        }
+        return null;
     }
 
-    public Map<Class<? extends IFlag>, IFlag> getFlags() {
+    public Set<LLFlag> getFlags() {
         return flags;
     }
 }

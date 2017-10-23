@@ -1,7 +1,7 @@
 package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.Landlord;
-import biz.princeps.landlord.flags.IFlag;
+import biz.princeps.landlord.flags.LLFlag;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.util.OwnedLand;
@@ -49,7 +49,7 @@ public class ManageGUI extends AbstractGUI {
                 trues++;
         }
 
-        SIZE = ( trues / 9 + (trues % 9 == 0 ? 0 : 1)) * 9;
+        SIZE = (trues / 9 + (trues % 9 == 0 ? 0 : 1)) * 9;
     }
 
     private OwnedLand land;
@@ -87,11 +87,12 @@ public class ManageGUI extends AbstractGUI {
 
         int position = 0;
 
+        //TODO Fix inital display of the flag state!!!!
 
-        for (IFlag iFlag : land.getFlags().values()) {
+        for (LLFlag iFlag : land.getFlags()) {
 
             // For every IFlag of the land we wanna display an icon in the gui IF the flag is enabled for change
-            String flagName = iFlag.getClass().getSimpleName().toLowerCase();
+            String flagName = iFlag.getWGFlag().getName();
             String title = lm.getRawString("Commands.Manage.Allow" + flagName.substring(0, 1).toUpperCase() + flagName.substring(1) + ".title");
             List<String> description = lm.getStringList("Commands.Manage.Allow" + flagName.substring(0, 1).toUpperCase() + flagName.substring(1) + ".description");
 

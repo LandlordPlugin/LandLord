@@ -78,13 +78,13 @@ Commands:
         - ' &7Toggle the ability for players to'
         - ' &7interact with objects (e.g. redstone contraptions)'
         - ' &7Status&8: &c%var%'
-    AllowChest_access:
+    AllowChest-access:
       title: '&cAllow Chest Access'
       description:
         - ' &7Toggle the ability for players to'
         - ' &7access all kinds of containers'
         - ' &7Status&8: &c%var%'
-    AllowCreeper_explosion:
+    AllowCreeper-explosion:
       title: '&cAllow Creeper explosions'
       description:
         - ' &7Toggle the ability for creepers to'
