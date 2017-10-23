@@ -27,15 +27,34 @@ public class Update extends LandlordCommand {
 
             if (pr.getId().split("_").length == 3 && Bukkit.getWorld(pr.getId().split("_")[0]) == w) {
 
-                if (!pr.getFlags().keySet().contains(DefaultFlag.USE)) {
-                    pr.setFlag(DefaultFlag.USE, StateFlag.State.DENY);
-                    pr.setFlag(DefaultFlag.USE.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+                if (pr.getFlags().keySet().contains(DefaultFlag.USE)) {
+                    pr.getFlags().remove(DefaultFlag.USE);
                 }
 
                 if(!pr.getFlags().keySet().contains(DefaultFlag.INTERACT)){
                     pr.setFlag(DefaultFlag.INTERACT, StateFlag.State.DENY);
                     pr.setFlag(DefaultFlag.INTERACT.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
                 }
+
+                if(!pr.getFlags().keySet().contains(DefaultFlag.CHEST_ACCESS)){
+                    pr.setFlag(DefaultFlag.CHEST_ACCESS, StateFlag.State.DENY);
+                    pr.setFlag(DefaultFlag.CHEST_ACCESS.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+                }
+
+                if(!pr.getFlags().keySet().contains(DefaultFlag.CREEPER_EXPLOSION)){
+                    pr.setFlag(DefaultFlag.CREEPER_EXPLOSION, StateFlag.State.DENY);
+                }
+
+                if(!pr.getFlags().keySet().contains(DefaultFlag.PVP)){
+                    pr.setFlag(DefaultFlag.PVP, StateFlag.State.DENY);
+                }
+
+                if(!pr.getFlags().keySet().contains(DefaultFlag.BUILD)){
+                    pr.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
+                    pr.setFlag(DefaultFlag.BUILD.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+                }
+
+
 
                 String name = Bukkit.getOfflinePlayer(pr.getOwners().getUniqueIds().iterator().next()).getName();
 
