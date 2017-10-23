@@ -193,10 +193,15 @@ public class Landlordbase extends BaseCommand {
     }
 
     @Subcommand("update")
-    @Syntax("<worldName> - updates all lands in one world")
+    @Syntax("<-r> - updates all lands in one world. Parameter -r forces to reset all lands to their default state")
     @CommandPermission("landlord.admin.update")
-    public void onLandUpdate(String world) {
-        ((Update) subcommands.get("update")).onUpdateLands(Bukkit.getWorld(world));
+    public void onLandUpdate(@Default("null") String param) {
+
+        if (param.equals("-r")) {
+            ((Update) subcommands.get("update")).onResetLands();
+        } else {
+            ((Update) subcommands.get("update")).onUpdateLands();
+        }
     }
 
     @Subcommand("shop")
