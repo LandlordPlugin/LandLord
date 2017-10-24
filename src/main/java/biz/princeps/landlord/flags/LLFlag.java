@@ -19,7 +19,6 @@ public class LLFlag {
     private Flag flag;
     private Material mat;
 
-
     private StateFlag.State state1, state2;
     private String g1, g2;
 
@@ -29,7 +28,6 @@ public class LLFlag {
         this.mat = mat;
 
         this.status = "NaN";
-
     }
 
 
