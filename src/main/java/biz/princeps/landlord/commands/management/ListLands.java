@@ -1,7 +1,7 @@
 package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.guis.ManageGUI;
+import biz.princeps.landlord.guis.ManageGUIALT;
 import biz.princeps.landlord.guis.ManageGUIAll;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
@@ -36,7 +36,7 @@ public class ListLands extends LandlordCommand {
             lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
                     .setName(land.getId())
                     .addClickAction((p) -> {
-                                ManageGUI manageGui = new ManageGUI(player, plugin.getWgHandler().getRegion(land), landGui);
+                                ManageGUIALT manageGui = new ManageGUIALT(player, plugin.getWgHandler().getRegion(land), landGui);
                                 manageGui.setTitle(manageGui.getRawTitle().replace("%info%", land.getId()));
                                 manageGui.display();
                             }

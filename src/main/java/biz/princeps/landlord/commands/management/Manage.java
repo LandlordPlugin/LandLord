@@ -1,7 +1,7 @@
 package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.guis.ManageGUI;
+import biz.princeps.landlord.guis.ManageGUIALT;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -34,7 +34,7 @@ public class Manage extends LandlordCommand {
 
         // land manage
         if (args.length == 0) {
-            ManageGUI gui = new ManageGUI(player, land);
+            ManageGUIALT gui = new ManageGUIALT(player, land);
             gui.display();
         } else
             // land manage landid cmd (args[1])
