@@ -48,6 +48,7 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("claim", new Claim());
         subcommands.put("info", new Info());
         subcommands.put("unclaim", new Unclaim());
+        subcommands.put("unclaimall", new UnclaimAll());
         subcommands.put("addfriend", new Addfriend());
         subcommands.put("unfriend", new Unfriend());
         subcommands.put("addfriendall", new AddfriendAll());
@@ -123,6 +124,14 @@ public class Landlordbase extends BaseCommand {
     public void onUnClaim(Player player, @Default("null") String landname) {
         ((Unclaim) subcommands.get("unclaim")).onUnclaim(player, landname);
     }
+
+    @Subcommand("unclaimall|sellall")
+    @Syntax("land unclaimall - Unclaim all lands you are owning")
+    @CommandPermission("landlord.player.own")
+    public void onUnClaimAll(Player player) {
+        ((UnclaimAll) subcommands.get("unclaimall")).onUnclaim(player);
+    }
+
 
     @Subcommand("addfriend|friendadd")
     @Syntax("land addfriend - Adds friends to your land")
