@@ -198,9 +198,9 @@ public class Landlordbase extends BaseCommand {
     public void onLandUpdate(@Default("null") String param) {
 
         if (param.equals("-r")) {
-            ((Update) subcommands.get("update")).onResetLands();
+            ((Update) subcommands.get("update")).onResetLands(getCurrentCommandIssuer());
         } else {
-            ((Update) subcommands.get("update")).onUpdateLands();
+            ((Update) subcommands.get("update")).onUpdateLands(getCurrentCommandIssuer());
         }
     }
 

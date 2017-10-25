@@ -87,8 +87,6 @@ public class ManageGUI extends AbstractGUI {
 
         int position = 0;
 
-        //TODO Fix inital display of the flag state!!!!
-
         for (LLFlag iFlag : land.getFlags()) {
 
             // For every IFlag of the land we wanna display an icon in the gui IF the flag is enabled for change

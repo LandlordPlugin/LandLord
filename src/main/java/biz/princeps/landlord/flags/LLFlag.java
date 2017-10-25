@@ -27,7 +27,10 @@ public class LLFlag {
         this.flag = flag;
         this.mat = mat;
 
-        this.status = "NaN";
+        if (land.getWGLand().getFlags().containsKey(flag))
+            status = land.getWGLand().getFlags().get(flag).toString();
+        else
+            status = "NaN";
     }
 
 
@@ -44,14 +47,19 @@ public class LLFlag {
         if (flag instanceof StateFlag) {
             if (pr.getFlags().get(flag) == state1) {
 
-                if (g1.equals("nonmembers"))
+                if (g2.equals("nonmembers"))
                     pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+                else
+                    pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.ALL);
+
                 pr.setFlag(flag, state2);
                 this.status = state2.name();
 
             } else {
-                if (g2.equals("nonmembers"))
+                if (g1.equals("nonmembers"))
                     pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+                else
+                    pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.ALL);
                 pr.setFlag(flag, state1);
                 this.status = state1.name();
 

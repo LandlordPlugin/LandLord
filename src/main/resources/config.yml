@@ -71,6 +71,7 @@ Borders:
 # flag defaultState:toggleableState
 # You can also set specific groups: e.g. interact allow all:deny nonmembers
 # this allows toggling the flagstate between allowing interaction for everyone and just allow oweners and members
+# if you are adding a new flag, you must implement the necessary strings in the language file! Just copy paste it from an existing flag.
 Flags:
   - 'interact allow all:deny nonmembers'
   - 'chest-access deny nonmembers:allow all'
@@ -80,15 +81,34 @@ Flags:
 
 # These options will be manageable in ll manage
 Manage:
-  friends: true
-  regenerate: true
-  setgreet: true
-  setfarewell: true
-  unclaim: true
-  build: true
-  interact: true
-  chest-access: true
-  creeper-explosion: true
-  pvp: true
+  friends:
+    enable: true
+  regenerate:
+    enable: true
+    item: BARRIER
+  setgreet:
+    enable: true
+    item: BAKED_POTATO
+  setfarewell:
+    enable: true
+    item: CARROT_ITEM
+  unclaim:
+    enable: true
+    item: BLAZE_POWDER
+  build:
+    enable: true
+    item: GRASS
+  interact:
+    enable: true
+    item: STONE_BUTTON
+  chest-access:
+    enable: true
+    item: CHEST
+  creeper-explosion:
+    enable: true
+    item: TNT
+  pvp:
+    enable: true
+    item: DIAMOND_SWORD
 
 version: 6
