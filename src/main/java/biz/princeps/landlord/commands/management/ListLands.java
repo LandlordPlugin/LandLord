@@ -1,12 +1,15 @@
 package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.guis.ManageGUIALT;
+import biz.princeps.landlord.guis.ManageGUI;
 import biz.princeps.landlord.guis.ManageGUIAll;
+import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,7 +39,7 @@ public class ListLands extends LandlordCommand {
             lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
                     .setName(land.getId())
                     .addClickAction((p) -> {
-                                ManageGUIALT manageGui = new ManageGUIALT(player, plugin.getWgHandler().getRegion(land), landGui);
+                                ManageGUI manageGui = new ManageGUI(player, landGui, plugin.getWgHandler().getRegion(land));
                                 manageGui.setTitle(manageGui.getRawTitle().replace("%info%", land.getId()));
                                 manageGui.display();
                             }
@@ -46,7 +49,18 @@ public class ListLands extends LandlordCommand {
             landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
                     .setName(lm.getRawString("Commands.ListLands.manageAll"))
                     .addClickAction((p) -> {
-                        ManageGUIAll manageGUIAll = new ManageGUIAll(player, landGui);
+
+                        List<OwnedLand> landsOfPlayer = new ArrayList<>();
+
+                        for (World world : Bukkit.getWorlds()) {
+                            for(ProtectedRegion pr : plugin.getWgHandler().getRegions(player.getUniqueId(), world)){
+                                landsOfPlayer.add(plugin.getLand(pr));
+                            }
+                        }
+
+
+
+                        ManageGUIAll manageGUIAll = new ManageGUIAll(player, landGui, landsOfPlayer);
                         manageGUIAll.display();
                     }));
 

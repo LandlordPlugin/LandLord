@@ -24,10 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -57,22 +54,18 @@ public abstract class AbstractManage extends AbstractGUI {
     private LangManager lm;
     private Landlord plugin;
 
-    public AbstractManage(Player player, String header, OwnedLand... land) {
+    public AbstractManage(Player player, String header, List<OwnedLand> land) {
         super(player, SIZE, header);
         this.regions = new ArrayList<>();
-        for (OwnedLand ownedLand : land) {
-            regions.add(ownedLand);
-        }
+        regions.addAll(land);
         plugin = Landlord.getInstance();
         lm = plugin.getLangManager();
     }
 
-    public AbstractManage(Player player, MultiPagedGUI landGui, String header, OwnedLand... land) {
+    public AbstractManage(Player player, MultiPagedGUI landGui, String header, List<OwnedLand> land) {
         super(player, SIZE + 9, header, landGui);
         this.regions = new ArrayList<>();
-        for (OwnedLand ownedLand : land) {
-            regions.add(ownedLand);
-        }
+        regions.addAll(land);
         plugin = Landlord.getInstance();
         lm = plugin.getLangManager();
     }
@@ -128,6 +121,7 @@ public abstract class AbstractManage extends AbstractGUI {
         }
 
         // Reminder: Regenerate is not implemented in Manageall, cos it might cos some trouble. Calculating costs might be a bit tedious
+        //TODO Readd regenerate into abstractManage, but dont execute it on manageall
 
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet.enable")) {
