@@ -94,7 +94,7 @@ public class ManageGUI extends AbstractGUI {
             String title = lm.getRawString("Commands.Manage.Allow" + flagName.substring(0, 1).toUpperCase() + flagName.substring(1) + ".title");
             List<String> description = lm.getStringList("Commands.Manage.Allow" + flagName.substring(0, 1).toUpperCase() + flagName.substring(1) + ".description");
 
-            if (plugin.getConfig().getBoolean("Manage." + flagName)) {
+            if (plugin.getConfig().getBoolean("Manage." + flagName + ".enable")) {
 
                 int finalPosition = position;
                 this.setIcon(position, new Icon(createItem(iFlag.getMaterial(), 1,
@@ -110,7 +110,7 @@ public class ManageGUI extends AbstractGUI {
 
 
         // Regenerate icon
-        if (plugin.getConfig().getBoolean("Manage.regenerate")) {
+        if (plugin.getConfig().getBoolean("Manage.regenerate.enable")) {
             double cost = plugin.getConfig().getDouble("ResetCost");
             this.setIcon(position, new Icon(createItem(Material.BARRIER, 1,
                     lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1"))))
@@ -152,7 +152,7 @@ public class ManageGUI extends AbstractGUI {
 
 
         // Set greet icon
-        if (plugin.getConfig().getBoolean("Manage.setgreet")) {
+        if (plugin.getConfig().getBoolean("Manage.setgreet.enable")) {
             String currentGreet = land.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.BAKED_POTATO, 1,
                     lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greedDesc, currentGreet)))
@@ -167,7 +167,7 @@ public class ManageGUI extends AbstractGUI {
         }
 
         // set farewell icon
-        if (plugin.getConfig().getBoolean("Manage.setfarewell")) {
+        if (plugin.getConfig().getBoolean("Manage.setfarewell.enable")) {
             String currentFarewell = land.getWGLand().getFlag(DefaultFlag.FAREWELL_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.CARROT_ITEM, 1,
                     lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
@@ -182,7 +182,7 @@ public class ManageGUI extends AbstractGUI {
         }
 
         // set friends icon
-        if (plugin.getConfig().getBoolean("Manage.friends")) {
+        if (plugin.getConfig().getBoolean("Manage.friends.enable")) {
             ItemStack skull = createSkull(player.getName(), lm.getRawString("Commands.Manage.ManageFriends.title"), lm.getStringList("Commands.Manage.ManageFriends.description"));
             Set<UUID> friends = land.getWGLand().getMembers().getUniqueIds();
             MultiPagedGUI friendsGui = new MultiPagedGUI(player, (int) Math.ceil((double) friends.size() / 9.0), lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
@@ -216,7 +216,7 @@ public class ManageGUI extends AbstractGUI {
             position++;
         }
 
-        if (plugin.getConfig().getBoolean("Manage.unclaim")) {
+        if (plugin.getConfig().getBoolean("Manage.unclaim.enable")) {
             this.setIcon(position, new Icon(createItem(Material.BLAZE_POWDER, 1, lm.getRawString("Commands.Manage.Unclaim.title"), lm.getStringList("Commands.Manage.Unclaim.description")))
                     .addClickAction((player1 -> {
                         ConfirmationGUI gui = new ConfirmationGUI(player1, lm.getRawString("Commands.Manage.Unclaim.confirmationTitle").replace("%land%", land.getName()),

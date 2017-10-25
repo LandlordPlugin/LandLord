@@ -50,7 +50,7 @@ public class OwnedLand {
                     // Filters the config list for the right line and split that line in the mid at :
                     String[] rules = flaggy.stream().filter(s -> s.startsWith(flag.getName())).findFirst().get().split(":");
                     if (rules.length == 2) {
-                        LLFlag llFlag = new LLFlag(flag, this, Material.APPLE);
+                        LLFlag llFlag = new LLFlag(flag, this, Material.getMaterial(Landlord.getInstance().getConfig().getString("Manage." + flag.getName() + ".item")));
 
                         StateFlag.State state1 = null, state2 = null;
                         String g1 = null, g2 = null;
