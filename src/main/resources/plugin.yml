@@ -9,7 +9,7 @@ softdepend: [Vault, PlaceholderAPI]
 commands:
 
   landlord:
-    aliases: [land, ll]
+    aliases: [land, ll, gs, landlord]
     description: The base Landlord command.
     usage: /<command> [command]
     permission: landlord.use

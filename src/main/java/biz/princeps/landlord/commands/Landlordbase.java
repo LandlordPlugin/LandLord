@@ -38,7 +38,7 @@ import java.util.logging.Logger;
 /**
  * Created by spatium on 16.07.17.
  */
-@CommandAlias("ll|land|landlord")
+@CommandAlias("ll|land|landlord|gs")
 public class Landlordbase extends BaseCommand {
 
     private Map<String, LandlordCommand> subcommands;
