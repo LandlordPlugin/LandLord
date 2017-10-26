@@ -18,11 +18,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
+import org.bukkit.material.SpawnEgg;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -126,27 +129,65 @@ public abstract class AbstractManage extends AbstractGUI {
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet.enable")) {
             String currentGreet = land.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE);
-            this.setIcon(position, new Icon(createItem(Material.BAKED_POTATO, 1,
+            this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setgreet.item")), 1,
                     lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greetDesc, currentGreet)))
                     .addClickAction((p -> {
                         p.closeInventory();
                         ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetGreet.clickMsg"));
-                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreetall "));
+                        if (regions.size() > 1)
+                            builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreetall "));
+                        else
+                            builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreet "));
+
                         p.spigot().sendMessage(builder.create());
                     }))
             );
             position++;
         }
 
+        if (plugin.getConfig().getBoolean("Manage.mob-spawning.enable")) {
+            String title = lm.getRawString("Commands.Manage.AllowMob-spawning.title");
+            this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.mob-spawning.item")), 1,
+                    title, lm.getStringList("Commands.Manage.AllowMob-spawning.description")))
+                    .addClickAction(p -> {
+                        // Open a new gui with spawneggs where you can manage the spawns by clicking on them
+
+                        AbstractGUI gui = new AbstractGUI(p, 27, title, this) {
+                            @Override
+                            protected void create() {
+                                EntityType[] types = EntityType.values();
+                                for (int i = 0; i < 27 ; i++) {
+                                    ItemStack spawnEgg = new ItemStack(Material.MONSTER_EGG);
+                                    SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
+                                    meta.setSpawnedType(types[i]);
+                                    spawnEgg.setItemMeta(meta);
+
+                                    //TODO add click actions
+                                    AbstractManage.this.setIcon(i, new Icon(spawnEgg));
+                                }
+                            }
+                        };
+                        gui.display();
+
+
+                    }));
+
+            position++;
+        }
+
         // set farewell icon
         if (plugin.getConfig().getBoolean("Manage.setfarewell.enable")) {
             String currentFarewell = land.getWGLand().getFlag(DefaultFlag.FAREWELL_MESSAGE);
-            this.setIcon(position, new Icon(createItem(Material.CARROT_ITEM, 1,
+            this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setfarewell.item")), 1,
                     lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
                     .addClickAction((p -> {
                         p.closeInventory();
                         ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetFarewell.clickMsg"));
-                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewellall "));
+                        if (regions.size() > 1)
+                            builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewellall "));
+                        else
+                            builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewell "));
+
                         p.spigot().sendMessage(builder.create());
                     }))
             );
@@ -193,7 +234,8 @@ public abstract class AbstractManage extends AbstractGUI {
         }
 
         if (plugin.getConfig().getBoolean("Manage.unclaim.enable")) {
-            this.setIcon(position, new Icon(createItem(Material.BLAZE_POWDER, 1, lm.getRawString("Commands.Manage.Unclaim.title"), lm.getStringList("Commands.Manage.Unclaim.description")))
+            this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.unclaim.item")),
+                    1, lm.getRawString("Commands.Manage.Unclaim.title"), lm.getStringList("Commands.Manage.Unclaim.description")))
                     .addClickAction((player1 -> {
                         ConfirmationGUI gui = new ConfirmationGUI(player1, lm.getRawString("Commands.Manage.Unclaim.confirmationTitle").replace("%land%", land.getName()),
                                 p -> {

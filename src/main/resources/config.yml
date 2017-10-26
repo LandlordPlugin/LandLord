@@ -110,5 +110,9 @@ Manage:
   pvp:
     enable: true
     item: DIAMOND_SWORD
+  mob-spawning:
+    enable: true
+    item: MONSTER_EGG
+    toggleableMobs: ...
 
 version: 7

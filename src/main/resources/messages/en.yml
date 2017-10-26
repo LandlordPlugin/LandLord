@@ -96,6 +96,11 @@ Commands:
         - ' &7Toggle the ability for players to'
         - ' &7hit other players'
         - ' &7Status&8: &c%var%'
+    AllowMob-spawning:
+      title: '&cManage MobSpawning'
+      description:
+        - ' &7Toggle the ability for mobs to'
+        - ' &7spawn inside your lands'
     Regenerate:
       title: '&cRegneration'
       description:
