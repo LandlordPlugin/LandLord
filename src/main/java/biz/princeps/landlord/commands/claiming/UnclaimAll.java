@@ -34,7 +34,7 @@ public class UnclaimAll extends LandlordCommand {
         // Normal unclaim
         for (ProtectedRegion protectedRegion : landsOfPlayer) {
 
-            Bukkit.dispatchCommand(player, "/ll unclaim " + protectedRegion.getId());
+            Bukkit.dispatchCommand(player, "ll unclaim " + protectedRegion.getId());
 
         }
 

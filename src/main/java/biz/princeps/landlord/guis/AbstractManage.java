@@ -19,6 +19,8 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -152,20 +154,24 @@ public abstract class AbstractManage extends AbstractGUI {
                     .addClickAction(p -> {
                         // Open a new gui with spawneggs where you can manage the spawns by clicking on them
 
-                        AbstractGUI gui = new AbstractGUI(p, 27, title, this) {
-                            @Override
-                            protected void create() {
-                                EntityType[] types = EntityType.values();
-                                for (int i = 0; i < 27 ; i++) {
-                                    ItemStack spawnEgg = new ItemStack(Material.MONSTER_EGG);
-                                    SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
-                                    meta.setSpawnedType(types[i]);
-                                    spawnEgg.setItemMeta(meta);
+                        List<Icon> icons = new ArrayList<>();
 
-                                    //TODO add click actions
-                                    AbstractManage.this.setIcon(i, new Icon(spawnEgg));
-                                }
+                        EntityType[] types = EntityType.values();
+
+                        for (EntityType t : types) {
+                            if (t.isAlive() && t.isSpawnable()) {
+                                ItemStack spawnEgg = new ItemStack(Material.MONSTER_EGG);
+                                SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
+                                meta.setSpawnedType(t);
+                                spawnEgg.setItemMeta(meta);
+
+                                //TODO add click actions
+                                icons.add(new Icon(spawnEgg));
                             }
+                        }
+
+
+                        MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
                         };
                         gui.display();
 
