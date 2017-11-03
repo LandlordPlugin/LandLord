@@ -6,17 +6,7 @@ website: http://dev.bukkit.org/bukkit-plugins/landlord/
 depends: [WorldGuard, ProtocolLib]
 softdepend: [Vault, PlaceholderAPI]
 
-commands:
-
-  landlord:
-    aliases: [land, ll, gs, landlord]
-    description: The base Landlord command.
-    usage: /<command> [command]
-    permission: landlord.use
-    permission-message: You don't have permission.
-
 permissions:
-
   landlord.*:
     description: Gives access to all landlord commands
     children:
