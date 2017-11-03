@@ -189,14 +189,14 @@ public class Landlordbase extends BaseCommand {
 
     @Subcommand("manage|mgn")
     @Syntax("land manage - manages the land you are standing on")
-    @CommandPermission("landlord.player.own")
+    @CommandPermission("landlord.player.manage")
     public void onLandManage(Player player, @Default("null") String[] args) {
         ((Manage) subcommands.get("manage")).onManage(player, args);
     }
 
     @Subcommand("manageall|mall")
     @Syntax("land manage all - manages all your lands at the same time")
-    @CommandPermission("landlord.player.own")
+    @CommandPermission("landlord.player.manage")
     public void onLandManageAll(Player player) {
         ((ManageAll) subcommands.get("manageall")).onManageAll(player);
     }

@@ -7,25 +7,32 @@ MySQL:
   Database: minecraft
   User: root
   Password: passy
+
 disabled-worlds:
   - world_nether
   - world_the_end
+
 language: en
+
 HelpCommandPerSite: 10
+
 # -----------        Cost Stuff        ------------
 # this formula uses limited growth. Cost will raise and raise until it reaches a certain point
 # Formula: maxCost - ( maxCost - minCost ) * multiplier ^ amountOfOwnedLands
 # you can play around with the formula here: https://www.geogebra.org/m/S6uSGV7c
 Economy:
   enable: true
+
 Formula:
   maxCost: 3000.0
   minCost: 500.0
   multiplier: 0.95
+
 # on unclaim, this percentage of the original price is paid back.
 Payback: 0.8
 Freelands: 1
 ResetCost: 1000.0
+
 # here you can manage your claims shop.
 # - ClaimsQuantity:Price
 # e.g. 10:5000
@@ -38,6 +45,7 @@ Shop:
     - PAPER:20:9000.0
     - PAPER:30:13500.0
     - PAPER:50:45000.0
+
 # These are hard caps. If a player has the permission "landlord.limit.10" he will be able to buy up to 20 lands, but cant buy more claims than that.
 limits:
   - 10
@@ -65,6 +73,13 @@ Borders:
   enable: false
   # interval in seconds
   refreshRate: 10
+
+CommandSettings:
+  ListLands:
+    enable: true
+# gui or chat
+    mode: gui
+
 
 # define your default flags here. Every flag will be manageable in ll manage
 # Construction of a new Flag:
@@ -115,4 +130,4 @@ Manage:
     item: MONSTER_EGG
     toggleableMobs: ...
 
-version: 7
+version: 8

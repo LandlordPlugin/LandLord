@@ -23,6 +23,7 @@ permissions:
       landlord.player.shop: true
       landlord.player.home: true
       landlord.player.advertise: true
+      landlord.player.manage: true
 
 
   landlord.admin.*:
@@ -58,6 +59,10 @@ permissions:
 
   landlord.player.info:
     description: Permission to use land info
+    default: true
+
+  landlord.player.manage:
+    description: Permission to manage own lands
     default: true
 
   landlord.player.shop:
