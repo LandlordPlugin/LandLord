@@ -185,6 +185,7 @@ public abstract class AbstractManage extends AbstractGUI {
             position++;
         }
 
+        //TODO add functionality for manageall
         if (plugin.getConfig().getBoolean("Manage.mob-spawning.enable")) {
             String title = lm.getRawString("Commands.Manage.AllowMob-spawning.title");
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.mob-spawning.item")), 1,
