@@ -126,7 +126,45 @@ public abstract class AbstractManage extends AbstractGUI {
         }
 
         // Reminder: Regenerate is not implemented in Manageall, cos it might cos some trouble. Calculating costs might be a bit tedious
-        //TODO Readd regenerate into abstractManage, but dont execute it on manageall
+        if (plugin.getConfig().getBoolean("Manage.regenerate.enable") && regions.size() == 1) {
+            double cost = plugin.getConfig().getDouble("ResetCost");
+            this.setIcon(position, new Icon(createItem(Material.BARRIER, 1,
+                    lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1"))))
+                    .addClickAction((p) -> {
+                        ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
+                                .replace("%cost%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1")),
+                                (p1) -> {
+                                    boolean flag = false;
+                                    if (plugin.isVaultEnabled())
+                                        if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
+                                            plugin.getVaultHandler().take(player.getUniqueId(), cost);
+                                            flag = true;
+                                        } else
+                                            player.sendMessage(lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
+                                                    .replace("%cost%", plugin.getVaultHandler().format(cost))
+                                                    .replace("%name%", land.getName()));
+                                    else flag = true;
+                                    if (flag) {
+                                        player.getWorld().regenerateChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
+                                        player.sendMessage(lm.getString("Commands.Manage.Regenerate.success")
+                                                .replace("%land%", land.getName()));
+                                        display();
+                                    }
+
+                                }, (p2) -> {
+                            player.sendMessage(lm.getString("Commands.Manage.Regenerate.abort")
+                                    .replace("%land%", land.getName()));
+                            display();
+                        }, this);
+                        confi.setConfirm(lm.getRawString("Confirmation.accept"));
+                        confi.setDecline(lm.getRawString("Confirmation.decline"));
+
+                        confi.display();
+                    })
+            );
+            position++;
+        }
+
 
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet.enable")) {
