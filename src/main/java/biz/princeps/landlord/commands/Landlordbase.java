@@ -165,8 +165,8 @@ public class Landlordbase extends BaseCommand {
     @CommandAlias("listlands|landlist")
     @Syntax("land list - lists all your lands")
     @CommandPermission("landlord.player.own")
-    public void onLandList(Player player) {
-        ((ListLands) subcommands.get("listlands")).onListLands(player);
+    public void onLandList(Player player, @Default("0") String page) {
+        ((ListLands) subcommands.get("listlands")).onListLands(player, Integer.parseInt(page));
     }
 
     @Subcommand("map")

@@ -79,6 +79,8 @@ CommandSettings:
     enable: true
 # gui or chat
     mode: gui
+# How many lands should be displayed per page?
+    landsPerPage: 15
 
 
 # define your default flags here. Every flag will be manageable in ll manage

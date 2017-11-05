@@ -5,6 +5,7 @@ import biz.princeps.landlord.guis.ManageGUI;
 import biz.princeps.landlord.guis.ManageGUIAll;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.chat.MultiPagedComponentMessage;
+import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -24,7 +25,7 @@ public class ListLands extends LandlordCommand {
 
     private String header = plugin.getLangManager().getRawString("Commands.ListLands.header");
 
-    public void onListLands(Player player) {
+    public void onListLands(Player player, int page) {
 
         List<ProtectedRegion> lands = new ArrayList<>();
 
@@ -62,8 +63,6 @@ public class ListLands extends LandlordCommand {
                         .addClickAction((p) -> {
 
 
-
-
                             ManageGUIAll manageGUIAll = new ManageGUIAll(player, landGui, landsOfPlayer);
                             manageGUIAll.display();
                         }));
@@ -73,7 +72,23 @@ public class ListLands extends LandlordCommand {
             } else {
                 // Chat based system
 
+                List<String> formatted = new ArrayList<>();
 
+                String segment = lm.getRawString("Commands.ListLands.chat.segment");
+
+                lands.forEach(land -> {
+                    OwnedLand ol = plugin.getLand(land);
+                    formatted.add(segment.replace("%landname%", ol.getName()).replace("%members%", ol.printMembers()));
+                });
+
+                String prev = lm.getRawString("Commands.ListLands.chat.previous");
+                String next = lm.getRawString("Commands.ListLands.chat.next");
+
+
+                MultiPagedMessage message = new MultiPagedMessage("/land list", header, plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
+                        formatted, prev, next, page);
+
+                player.spigot().sendMessage(message.create());
             }
         } else {
             player.sendMessage(plugin.getLangManager().getString("Commands.ListLands.noLands"));

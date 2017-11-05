@@ -49,6 +49,10 @@ Commands:
     header: '&7Your lands &7(&c%site%&8/%maxsite%&7)&8:'
     landSegment: '&7Land&8: &c%info%'
     manageAll: '&7Manage all lands'
+    chat:
+      previous: '&8[&7Previous&8]'
+      next: '&8[&7Next&8]'
+      segment: '&eName: &c%landname% &eMembers: &c%members%'
   LandMap:
     disabled: '&7Land map is &cdisabled'
     header: '&e&m==&r&6&c&lLand&r&e&m=='
