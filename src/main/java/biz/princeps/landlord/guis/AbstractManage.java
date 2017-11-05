@@ -196,21 +196,75 @@ public abstract class AbstractManage extends AbstractGUI {
 
                         EntityType[] types = EntityType.values();
 
+                        List<String> lore = lm.getStringList("Commands.Manage.AllowMob-spawning.toggleItem.description");
+
+                        MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
+                        };
+
+                        int iconPos = 0;
+
                         for (EntityType t : types) {
                             if (t.isAlive() && t.isSpawnable()) {
                                 ItemStack spawnEgg = new ItemStack(Material.MONSTER_EGG);
                                 SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
                                 meta.setSpawnedType(t);
+                                meta.setDisplayName(lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title").replace("%mob%", t.name()));
+
+                                Set<EntityType> flag = land.getWGLand().getFlag(DefaultFlag.DENY_SPAWN);
+                                String state;
+                                if (flag != null)
+                                    state = (flag.contains(t) ? "DENY" : "ALLOW");
+                                else
+                                    state = "ALLOW";
+
+                                List<String> formattedLore = new ArrayList<>();
+                                for (String s : lore) {
+                                    formattedLore.add(s.replace("%mob%", t.name()).replace("%value%", state));
+                                }
+
+                                meta.setLore(formattedLore);
                                 spawnEgg.setItemMeta(meta);
 
-                                //TODO add click actions
-                                icons.add(new Icon(spawnEgg));
+                                int finalIconPos = iconPos;
+                                Icon ic = new Icon(spawnEgg).addClickAction(clickingPlayer -> {
+                                    // Toggle spawning of specific mob
+                                    if (flag != null) {
+                                        if (flag.contains(t))
+                                            flag.remove(t);
+                                        else
+                                            flag.add(t);
+                                    } else {
+                                        Set<EntityType> set = new HashSet<>();
+                                        set.add(t);
+                                        land.getWGLand().setFlag(DefaultFlag.DENY_SPAWN, set);
+                                    }
+
+                                    // update icon text
+                                    String iconState;
+                                    if (flag != null)
+                                        iconState = (flag.contains(t) ? "DENY" : "ALLOW");
+                                    else
+                                        iconState = "ALLOW";
+                                    formattedLore.clear();
+                                    for (String s : lore) {
+                                        formattedLore.add(s.replace("%mob%", t.name()).replace("%value%", iconState));
+                                    }
+
+
+                                    ItemStack item = gui.getIcon(finalIconPos).itemStack;
+                                    ItemMeta itemMeta = item.getItemMeta();
+                                    itemMeta.setLore(formattedLore);
+                                    item.setItemMeta(itemMeta);
+                                    gui.refresh();
+
+                                });
+
+                                icons.add(ic);
+                                iconPos++;
                             }
                         }
 
 
-                        MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
-                        };
                         gui.display();
 
 

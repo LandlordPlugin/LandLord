@@ -105,6 +105,10 @@ Commands:
       description:
         - ' &7Toggle the ability for mobs to'
         - ' &7spawn inside your lands'
+      toggleItem:
+        title: 'Spawn %mob%'
+        description:
+          - 'Spawning of %mob%: %value%'
     Regenerate:
       title: '&cRegneration'
       description:
