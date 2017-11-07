@@ -10,6 +10,11 @@ import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import biz.princeps.lib.storage.requests.Conditions;
+import com.comphenix.packetwrapper.WrapperPlayServerSetSlot;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -28,7 +33,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.material.SpawnEgg;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -389,15 +396,39 @@ public abstract class AbstractManage extends AbstractGUI {
 
     //TODO test new update lore
     private void updateLore(int index, List<String> lore) {
-        ItemStack item = this.getIcon(index).itemStack;
+        System.out.println("update lore called" + index);
+        this.getIcon(index).setLore(lore);
+
+        new BukkitRunnable(){
+
+            @Override
+            public void run() {
+                refresh();
+            }
+        }.runTaskLater(plugin, 5);
+        /*
         ItemMeta itemMeta = item.getItemMeta();
         List<String> itemLore = itemMeta.getLore();
 
         for (int i = 0; i < itemLore.size(); i++) {
+            System.out.println(lore.get(i));
             itemLore.set(i, lore.get(i));
         }
+        item.setItemMeta(itemMeta);
 
-        refresh();
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.SET_SLOT);
+        packet.getIntegers().write(0, (int) 3);
+        packet.getIntegers().write(1, (int) index);
+        packet.getItemModifier().write(0, item);
+
+        try {
+            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(
+                    "Cannot send packet " + packet, e);
+        }
+*/
+        //  refresh();
     }
 
     private List<String> formatList(List<String> allowDesc, String flag) {
