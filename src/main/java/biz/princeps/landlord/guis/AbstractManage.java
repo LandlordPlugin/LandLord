@@ -387,11 +387,16 @@ public abstract class AbstractManage extends AbstractGUI {
         }
     }
 
+    //TODO test new update lore
     private void updateLore(int index, List<String> lore) {
         ItemStack item = this.getIcon(index).itemStack;
         ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setLore(lore);
-        item.setItemMeta(itemMeta);
+        List<String> itemLore = itemMeta.getLore();
+
+        for (int i = 0; i < itemLore.size(); i++) {
+            itemLore.set(i, lore.get(i));
+        }
+
         refresh();
     }
 

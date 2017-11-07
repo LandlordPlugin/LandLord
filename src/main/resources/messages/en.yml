@@ -63,6 +63,8 @@ Commands:
     success: '&7Successfully cleared &c%count% &7lands in world &c%world%'
     successPlayer: '&7Successfully cleared &c%count% &7lands from player &c%player%'
     noPlayer: '&7Could not find following players&8: &c%players%'
+  Item:
+    noPlayer: '&7Could not find following players&8: &c%players%'
   Manage:
     all:
       header: '&7Managing&8 &call lands'
@@ -220,4 +222,4 @@ Shop:
       - 'claims. You will be able to purchase'
       - '%number% more claims than before'
       - 'Cost: %cost%'
-version: 7
+version: 8

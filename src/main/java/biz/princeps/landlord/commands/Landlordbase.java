@@ -67,6 +67,7 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("advertise", new Advertise());
         subcommands.put("borders", new Borders());
         subcommands.put("admintp", new AdminTeleport());
+        subcommands.put("item", new LLItem());
     }
 
     @Default
@@ -278,6 +279,13 @@ public class Landlordbase extends BaseCommand {
     @Syntax("<Name> - displays all lands of the player")
     public void onAdminTp(Player player, String target) {
         ((AdminTeleport) subcommands.get("admintp")).onAdminTeleport(player, target);
+    }
+
+    @Subcommand("item")
+    @CommandPermission("landlord.player.item")
+    @Syntax("<Name> - name of the receiving player")
+    public void onItem(Player player, @Default("null") String target){
+
     }
 
     @Subcommand("migrate")
