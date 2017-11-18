@@ -52,7 +52,7 @@ public class ListLands extends LandlordCommand {
                         .setName(land.getId())
                         .addClickAction((p) -> {
                                     ManageGUI manageGui = new ManageGUI(player, landGui, plugin.getWgHandler().getRegion(land));
-                                    manageGui.setTitle(manageGui.getRawTitle().replace("%info%", land.getId()));
+                                    manageGui.setTitle(manageGui.getRawTitle().replace("%realZ", plugin.getLand(land).getChunk().getZ() * 16 + "").replace("%realX", plugin.getLand(land).getChunk().getX() * 16 + ""));
                                     manageGui.display();
                                 }
                         )

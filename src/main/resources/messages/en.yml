@@ -47,7 +47,7 @@ Commands:
   ListLands:
     noLands: '&7You do not own any land'
     header: '&7Your lands &7(&c%site%&8/%maxsite%&7)&8:'
-    landSegment: '&7Land&8: &c%info%'
+    landSegment: '&7Land&8: &cX: %realX%, Z: %realZ%'
     manageAll: '&7Manage all lands'
     chat:
       previous: '&8[&7Previous&8]'

@@ -98,8 +98,8 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.12-R0.1-SNAPSHOT</version>
+            <artifactId>spigot-1.12.2</artifactId>
+            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -134,7 +134,7 @@
         <dependency>
             <groupId>biz.princeps</groupId>
             <artifactId>PrincepsLib</artifactId>
-            <version>1.4.10</version>
+            <version>1.4.12</version>
             <scope>compile</scope>
         </dependency>
 

@@ -45,6 +45,7 @@ import java.util.concurrent.ExecutionException;
  */
 public abstract class AbstractManage extends AbstractGUI {
 
+    //TODO fix this shit
 
     private static int SIZE;
 
@@ -80,14 +81,6 @@ public abstract class AbstractManage extends AbstractGUI {
         regions.addAll(land);
         plugin = Landlord.getInstance();
         lm = plugin.getLangManager();
-    }
-
-
-    @Override
-    public Inventory display() {
-        create();
-        this.player.openInventory(this.getInventory());
-        return this.getInventory();
     }
 
     @Override
@@ -263,7 +256,6 @@ public abstract class AbstractManage extends AbstractGUI {
                                     ItemMeta itemMeta = item.getItemMeta();
                                     itemMeta.setLore(formattedLore);
                                     item.setItemMeta(itemMeta);
-                                    gui.refresh();
 
                                 });
 
@@ -362,7 +354,6 @@ public abstract class AbstractManage extends AbstractGUI {
                     })));
             position++;
         }
-
     }
 
     private List<String> formatFriendsSegment(UUID id) {
@@ -394,41 +385,8 @@ public abstract class AbstractManage extends AbstractGUI {
         }
     }
 
-    //TODO test new update lore
     private void updateLore(int index, List<String> lore) {
-        System.out.println("update lore called" + index);
         this.getIcon(index).setLore(lore);
-
-        new BukkitRunnable(){
-
-            @Override
-            public void run() {
-                refresh();
-            }
-        }.runTaskLater(plugin, 5);
-        /*
-        ItemMeta itemMeta = item.getItemMeta();
-        List<String> itemLore = itemMeta.getLore();
-
-        for (int i = 0; i < itemLore.size(); i++) {
-            System.out.println(lore.get(i));
-            itemLore.set(i, lore.get(i));
-        }
-        item.setItemMeta(itemMeta);
-
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.SET_SLOT);
-        packet.getIntegers().write(0, (int) 3);
-        packet.getIntegers().write(1, (int) index);
-        packet.getItemModifier().write(0, item);
-
-        try {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(
-                    "Cannot send packet " + packet, e);
-        }
-*/
-        //  refresh();
     }
 
     private List<String> formatList(List<String> allowDesc, String flag) {

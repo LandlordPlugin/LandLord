@@ -32,11 +32,12 @@ public class LandLordPlacehodlers extends EZPlaceholderHook {
 
             case "currentLandOwner":
                 OwnedLand land = pl.getWgHandler().getRegion(player.getLocation());
-                if(land != null)
+                if (land != null)
                     return land.printOwners();
 
             case "currentLandName":
                 return OwnedLand.getName(player.getLocation().getChunk());
+
         }
         return null;
     }
