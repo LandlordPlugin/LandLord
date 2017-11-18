@@ -194,9 +194,7 @@ public abstract class AbstractManage extends AbstractGUI {
                         // Open a new gui with spawneggs where you can manage the spawns by clicking on them
 
                         List<Icon> icons = new ArrayList<>();
-
                         EntityType[] types = EntityType.values();
-
                         List<String> lore = lm.getStringList("Commands.Manage.AllowMob-spawning.toggleItem.description");
 
                         MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
@@ -246,30 +244,23 @@ public abstract class AbstractManage extends AbstractGUI {
                                         iconState = (flag.contains(t) ? "DENY" : "ALLOW");
                                     else
                                         iconState = "ALLOW";
-                                    formattedLore.clear();
+
+                                    List<String> newLore = new ArrayList<>();
                                     for (String s : lore) {
-                                        formattedLore.add(s.replace("%mob%", t.name()).replace("%value%", iconState));
+                                        newLore.add(s.replace("%mob%", t.name()).replace("%value%", iconState));
                                     }
 
-
-                                    ItemStack item = gui.getIcon(finalIconPos).itemStack;
-                                    ItemMeta itemMeta = item.getItemMeta();
-                                    itemMeta.setLore(formattedLore);
-                                    item.setItemMeta(itemMeta);
-
+                                    System.out.println(newLore + " :" + finalIconPos);
+                                    //TODO update the lore of the item
+                                    gui.getIcon(finalIconPos).setLore(newLore   );
+                                    gui.refresh();
                                 });
-
                                 icons.add(ic);
                                 iconPos++;
                             }
                         }
-
-
                         gui.display();
-
-
                     }));
-
             position++;
         }
 
@@ -387,6 +378,7 @@ public abstract class AbstractManage extends AbstractGUI {
 
     private void updateLore(int index, List<String> lore) {
         this.getIcon(index).setLore(lore);
+        this.refresh();
     }
 
     private List<String> formatList(List<String> allowDesc, String flag) {
