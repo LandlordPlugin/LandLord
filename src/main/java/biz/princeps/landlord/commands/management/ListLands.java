@@ -50,7 +50,7 @@ public class ListLands extends LandlordCommand {
 
                 lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
                         .setName(land.getId())
-                        .addClickAction((p) -> {
+                        .addClickAction((p, ic) -> {
                                     ManageGUI manageGui = new ManageGUI(player, landGui, plugin.getWgHandler().getRegion(land));
                                     manageGui.setTitle(manageGui.getRawTitle().replace("%realZ", plugin.getLand(land).getChunk().getZ() * 16 + "").replace("%realX", plugin.getLand(land).getChunk().getX() * 16 + ""));
                                     manageGui.display();
@@ -60,7 +60,7 @@ public class ListLands extends LandlordCommand {
 
                 landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
                         .setName(lm.getRawString("Commands.ListLands.manageAll"))
-                        .addClickAction((p) -> {
+                        .addClickAction((p, ic2) -> {
 
 
                             ManageGUIAll manageGUIAll = new ManageGUIAll(player, landGui, landsOfPlayer);

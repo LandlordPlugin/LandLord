@@ -110,7 +110,7 @@ public abstract class AbstractManage extends AbstractGUI {
                 int finalPosition = position;
                 this.setIcon(position, new Icon(createItem(iFlag.getMaterial(), 1,
                         title, formatList(description, iFlag.getStatus())))
-                        .addClickAction((p) -> {
+                        .addClickAction((p, icon) -> {
                             for (OwnedLand region : regions) {
                                 for (LLFlag llFlag : region.getFlags()) {
                                     if (llFlag.getWGFlag().equals(iFlag.getWGFlag())) {
@@ -130,10 +130,10 @@ public abstract class AbstractManage extends AbstractGUI {
             double cost = plugin.getConfig().getDouble("ResetCost");
             this.setIcon(position, new Icon(createItem(Material.BARRIER, 1,
                     lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1"))))
-                    .addClickAction((p) -> {
+                    .addClickAction((p, ic) -> {
                         ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
                                 .replace("%cost%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1")),
-                                (p1) -> {
+                                (p1, ic1) -> {
                                     boolean flag = false;
                                     if (plugin.isVaultEnabled())
                                         if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
@@ -151,7 +151,7 @@ public abstract class AbstractManage extends AbstractGUI {
                                         display();
                                     }
 
-                                }, (p2) -> {
+                                }, (p2, ic2) -> {
                             player.sendMessage(lm.getString("Commands.Manage.Regenerate.abort")
                                     .replace("%land%", land.getName()));
                             display();
@@ -171,7 +171,7 @@ public abstract class AbstractManage extends AbstractGUI {
             String currentGreet = land.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setgreet.item")), 1,
                     lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greetDesc, currentGreet)))
-                    .addClickAction((p -> {
+                    .addClickAction(((p, ic) -> {
                         p.closeInventory();
                         ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetGreet.clickMsg"));
                         if (regions.size() > 1)
@@ -190,7 +190,7 @@ public abstract class AbstractManage extends AbstractGUI {
             String title = lm.getRawString("Commands.Manage.AllowMob-spawning.title");
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.mob-spawning.item")), 1,
                     title, lm.getStringList("Commands.Manage.AllowMob-spawning.description")))
-                    .addClickAction(p -> {
+                    .addClickAction((p, icon) -> {
                         // Open a new gui with spawneggs where you can manage the spawns by clicking on them
 
                         List<Icon> icons = new ArrayList<>();
@@ -199,8 +199,6 @@ public abstract class AbstractManage extends AbstractGUI {
 
                         MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
                         };
-
-                        int iconPos = 0;
 
                         for (EntityType t : types) {
                             if (t.isAlive() && t.isSpawnable()) {
@@ -224,8 +222,7 @@ public abstract class AbstractManage extends AbstractGUI {
                                 meta.setLore(formattedLore);
                                 spawnEgg.setItemMeta(meta);
 
-                                int finalIconPos = iconPos;
-                                Icon ic = new Icon(spawnEgg).addClickAction(clickingPlayer -> {
+                                Icon ic = new Icon(spawnEgg).addClickAction((clickingPlayer, ic3) -> {
                                     // Toggle spawning of specific mob
                                     if (flag != null) {
                                         if (flag.contains(t))
@@ -250,13 +247,11 @@ public abstract class AbstractManage extends AbstractGUI {
                                         newLore.add(s.replace("%mob%", t.name()).replace("%value%", iconState));
                                     }
 
-                                    System.out.println(newLore + " :" + finalIconPos);
-                                    //TODO update the lore of the item
-                                    gui.getIcon(finalIconPos).setLore(newLore   );
+                                    //   System.out.println(newLore + " :" + finalIconPos);
+                                    ic3.setLore(newLore);
                                     gui.refresh();
                                 });
                                 icons.add(ic);
-                                iconPos++;
                             }
                         }
                         gui.display();
@@ -269,7 +264,7 @@ public abstract class AbstractManage extends AbstractGUI {
             String currentFarewell = land.getWGLand().getFlag(DefaultFlag.FAREWELL_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setfarewell.item")), 1,
                     lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
-                    .addClickAction((p -> {
+                    .addClickAction(((p, icon) -> {
                         p.closeInventory();
                         ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetFarewell.clickMsg"));
                         if (regions.size() > 1)
@@ -292,10 +287,10 @@ public abstract class AbstractManage extends AbstractGUI {
             };
             friends.forEach(id -> friendsGui.addIcon(new Icon(createSkull(Bukkit.getOfflinePlayer(id).getName(),
                     Bukkit.getOfflinePlayer(id).getName(), formatFriendsSegment(id)))
-                    .addClickAction(player -> {
+                    .addClickAction((player, icon) -> {
                         ConfirmationGUI confirmationGUI = new ConfirmationGUI(player, lm.getRawString("Commands.Manage.ManageFriends.unfriend")
                                 .replace("%player%", Bukkit.getOfflinePlayer(id).getName()),
-                                p -> {
+                                (p, ic1) -> {
                                     friendsGui.removeIcon(friendsGui.filter(Bukkit.getOfflinePlayer(id).getName()).get(0));
                                     if (regions.size() > 1)
                                         Bukkit.dispatchCommand(player, "land unfriendall " + Bukkit.getOfflinePlayer(id).getName());
@@ -305,7 +300,7 @@ public abstract class AbstractManage extends AbstractGUI {
                                     player.closeInventory();
                                     friendsGui.display();
                                 },
-                                p -> {
+                                (p, ic2) -> {
                                     player.closeInventory();
                                     friendsGui.display();
                                 }, friendsGui);
@@ -317,7 +312,7 @@ public abstract class AbstractManage extends AbstractGUI {
 
             this.setIcon(position, new Icon(skull)
                     .setName(lm.getRawString("Commands.Manage.ManageFriends.title"))
-                    .addClickAction(p -> friendsGui.display())
+                    .addClickAction((p, ic) -> friendsGui.display())
             );
             position++;
         }
@@ -325,9 +320,9 @@ public abstract class AbstractManage extends AbstractGUI {
         if (plugin.getConfig().getBoolean("Manage.unclaim.enable")) {
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.unclaim.item")),
                     1, lm.getRawString("Commands.Manage.Unclaim.title"), lm.getStringList("Commands.Manage.Unclaim.description")))
-                    .addClickAction((player1 -> {
+                    .addClickAction(((player1, icon) -> {
                         ConfirmationGUI gui = new ConfirmationGUI(player1, lm.getRawString("Commands.Manage.Unclaim.confirmationTitle").replace("%land%", land.getName()),
-                                p -> {
+                                (p, ic2) -> {
                                     if (regions.size() > 1)
                                         Bukkit.dispatchCommand(p, "ll unclaimall");
                                     else
@@ -335,7 +330,7 @@ public abstract class AbstractManage extends AbstractGUI {
 
                                     p.closeInventory();
                                 },
-                                (p) -> {
+                                (p, ic) -> {
                                     p.closeInventory();
                                     display();
                                 }, this);

@@ -60,7 +60,7 @@ public class ShopGUI extends AbstractGUI {
             setIcon(i, new Icon(new ItemStack(buyable.mat))
                     .setName(pl.getLangManager().getRawString("Shop.item.header").replace("%number%", buyable.amount + ""))
                     .setLore(list)
-                    .addClickAction((p) -> {
+                    .addClickAction((p, ic) -> {
                                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ll giveclaims " + p.getName() + " " + buyable.price + " " + buyable.amount);
                             }
                     ));
@@ -68,7 +68,7 @@ public class ShopGUI extends AbstractGUI {
         }
 
         setIcon((int) Math.ceil((double) rawList.size() / 9.0) * 9 + 8, new Icon(new ItemStack(Material.BARRIER)).
-                setName(ChatColor.RED + "Close").addClickAction(HumanEntity::closeInventory));
+                setName(ChatColor.RED + "Close").addClickAction((p, ic) -> p.closeInventory()));
     }
 
     class Buyable {

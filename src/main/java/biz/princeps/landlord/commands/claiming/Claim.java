@@ -89,7 +89,7 @@ public class Claim extends LandlordCommand {
                 // Player 2 player sale
                 if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {
 
-                    ConfirmationGUI confirm = new ConfirmationGUI(player, pr.getName(), player1 -> {
+                    ConfirmationGUI confirm = new ConfirmationGUI(player, pr.getName(), (player1, icon) -> {
                         plugin.getVaultHandler().take(player.getUniqueId(), offer.getPrice());
                         plugin.getVaultHandler().give(offer.getSeller(), offer.getPrice());
 
@@ -106,7 +106,7 @@ public class Claim extends LandlordCommand {
                         plugin.getMapManager().updateAll();
 
                         player.closeInventory();
-                    }, player12 -> {
+                    }, (player12, ic2) -> {
                         player.sendMessage(lm.getString("Commands.Claim.aborted"));
                         player.closeInventory();
                         return;

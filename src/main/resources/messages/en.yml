@@ -46,7 +46,7 @@ Commands:
     noFriend: '&c%player% &7is not a friend on any of your lands'
   ListLands:
     noLands: '&7You do not own any land'
-    header: '&7Your lands &7(&c%site%&8/%maxsite%&7)&8:'
+    header: '&7Your lands:'
     landSegment: '&7Land&8: &cX: %realX%, Z: %realZ%'
     manageAll: '&7Manage all lands'
     chat:
@@ -222,4 +222,4 @@ Shop:
       - 'claims. You will be able to purchase'
       - '%number% more claims than before'
       - 'Cost: %cost%'
-version: 8
+version: 9
