@@ -130,6 +130,57 @@ Manage:
   mob-spawning:
     enable: true
     item: MONSTER_EGG
-    toggleableMobs: ...
+# If you dont want your users to manage a specific mobspawn, just comment out the line with #
+    toggleableMobs:
+      - ELDER_GUARDIAN
+      - WITHER_SKELETON
+      - STRAY
+      - HUSK
+      - ZOMBIE_VILLAGER
+      - SKELETON_HORSE
+      - ZOMBIE_HORSE
+      - ARMOR_STAND
+      - DONKEY
+      - MULE
+      - EVOKER
+      - VEX
+      - VINDICATOR
+      - ILLUSIONER
+      - CREEPER
+      - SKELETON
+      - SPIDER
+      - GIANT
+      - ZOMBIE
+      - SLIME
+      - GHAST
+      - PIG_ZOMBIE
+      - ENDERMAN
+      - CAVE_SPIDER
+      - SILVERFISH
+      - BLAZE
+      - MAGMA_CUBE
+      - ENDER_DRAGON
+      - WITHER
+      - BAT
+      - WITCH
+      - ENDERMITE
+      - GUARDIAN
+      - SHULKER
+      - PIG
+      - SHEEP
+      - COW
+      - CHICKEN
+      - SQUID
+      - WOLF
+      - MUSHROOM_COW
+      - SNOWMAN
+      - OCELOT
+      - IRON_GOLEM
+      - HORSE
+      - RABBIT
+      - POLAR_BEAR
+      - LLAMA
+      - PARROT
+      - VILLAGER
 
-version: 8
+version: 9

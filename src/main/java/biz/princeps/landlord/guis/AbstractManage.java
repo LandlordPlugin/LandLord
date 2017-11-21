@@ -48,6 +48,7 @@ public abstract class AbstractManage extends AbstractGUI {
     //TODO fix this shit
 
     private static int SIZE;
+    private static Set<String> toggleMobs = new HashSet<>();
 
     static {
         ConfigurationSection section = Landlord.getInstance().getConfig().getConfigurationSection("Manage");
@@ -61,6 +62,8 @@ public abstract class AbstractManage extends AbstractGUI {
         }
 
         SIZE = (trues / 9 + (trues % 9 == 0 ? 0 : 1)) * 9;
+
+        toggleMobs.addAll(Landlord.getInstance().getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
     }
 
     private List<OwnedLand> regions;
@@ -202,6 +205,9 @@ public abstract class AbstractManage extends AbstractGUI {
 
                         for (EntityType t : types) {
                             if (t.isAlive() && t.isSpawnable()) {
+
+                                if (!toggleMobs.contains(t.name())) continue;
+
                                 ItemStack spawnEgg = new ItemStack(Material.MONSTER_EGG);
                                 SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
                                 meta.setSpawnedType(t);
