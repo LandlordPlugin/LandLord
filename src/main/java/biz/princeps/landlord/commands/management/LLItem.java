@@ -1,7 +1,9 @@
 package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.items.Maitem;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,24 +14,26 @@ import org.bukkit.inventory.ItemStack;
  * <p>
  * Date: 11/7/17 10:45 AM
  */
-public class LLItem extends LandlordCommand{
+public class LLItem extends LandlordCommand {
 
-    public void onItem(Player player, String target){
-        Player targetingPlayer;
+    public void onItem(CommandSender player, String target) {
+        Player targetingPlayer = null;
 
-        if(target.equals("null"))
-            targetingPlayer = player;
-        else
+        if (target == null) {
+            if (player instanceof Player) {
+                targetingPlayer = (Player) player;
+            }
+        } else
             targetingPlayer = Bukkit.getPlayer(target);
 
-        if(targetingPlayer == null){
+        if (targetingPlayer == null) {
             player.sendMessage(lm.getString("Commands.Item.noPlayer").replace("%player%", target));
             return;
         }
 
         // now we got our player for sure, lets give him the item
-
-
+        Maitem item = new Maitem();
+        item.give(targetingPlayer);
     }
 
 }

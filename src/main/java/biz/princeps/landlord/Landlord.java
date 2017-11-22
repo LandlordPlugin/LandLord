@@ -2,8 +2,10 @@ package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.LandLordAPI;
 import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.landlord.commands.management.LLItem;
 import biz.princeps.landlord.handler.VaultHandler;
 import biz.princeps.landlord.handler.WorldGuardHandler;
+import biz.princeps.landlord.items.Maitem;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
 import biz.princeps.landlord.manager.LPlayerManager;
@@ -97,6 +99,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         manageCommands();
         manageListeners();
         managePlaceholders();
+        manageItems();
 
         lPlayerManager = new LPlayerManager(databaseAPI);
         lPlayerManager.onStartup();
@@ -116,6 +119,10 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
                 lp = new LPlayer(p.getUniqueId());
             this.getPlayerManager().add(p.getUniqueId(), lp);
         });
+    }
+
+    private void manageItems() {
+        PrincepsLib.getItemManager().registerItem(Maitem.NAME, Maitem.class);
     }
 
     private void managePlaceholders() {

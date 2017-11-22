@@ -96,6 +96,10 @@ Flags:
   - 'pvp deny all:allow all'
   - 'build deny nonmembers:allow all'
 
+MaItem:
+  enabled: true
+  item: STICK
+
 # These options will be manageable in ll manage
 Manage:
   friends:

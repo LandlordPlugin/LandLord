@@ -24,9 +24,11 @@ import biz.princeps.lib.storage.SQLite;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -281,11 +283,12 @@ public class Landlordbase extends BaseCommand {
         ((AdminTeleport) subcommands.get("admintp")).onAdminTeleport(player, target);
     }
 
+
     @Subcommand("item")
     @CommandPermission("landlord.player.item")
     @Syntax("<Name> - name of the receiving player")
-    public void onItem(Player player, @Default("null") String target){
-
+    public void onItem(CommandSender sender, @Optional String target) {
+        ((LLItem) subcommands.get("item")).onItem(sender, target);
     }
 
     @Subcommand("migrate")
