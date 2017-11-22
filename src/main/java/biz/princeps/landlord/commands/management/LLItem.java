@@ -4,9 +4,7 @@ import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.items.Maitem;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * Project: LandLord
