@@ -99,6 +99,21 @@ Flags:
 MaItem:
   enabled: true
   item: STICK
+# define your modes of operation here.
+# Syntax: clickaction:condition:whatshouldhappen
+# Available actions:
+# - leftclickblock, leftclickair, shiftleftclickblock, shiftleftclickair (same for right obv)
+# Available conditions:
+# - ownland, otherland, anyland
+# Available whatshouldhappen:
+# - info, buy, manage, manageall, togglemap, toggleborders
+  modes:
+    - 'rightclickblock:anyland:info'
+    - 'leftclickblock:anyland:buy'
+    - 'rightclickblock:ownland:info'
+    - 'shiftleftclickblock:ownland:manageall'
+    - 'rightclickair:anyland:togglemap'
+    - 'leftclickair:anyland:toggleborders'
 
 # These options will be manageable in ll manage
 Manage:

@@ -222,4 +222,21 @@ Shop:
       - 'claims. You will be able to purchase'
       - '%number% more claims than before'
       - 'Cost: %cost%'
+MaItem:
+  itemname: 'LL Maimaitem of doomness'
+  lore:
+    - 'Modes:'
+    - ''
+    - 'on buyable lands'
+    - 'rightclick: show info'
+    - 'leftclick: buy'
+    - ''
+    - 'on own lands'
+    - 'rightclick: show info'
+    - 'leftclick: manage'
+    - 'shift+leftclick: manageall'
+    - ''
+    - 'in the air:'
+    - 'rightclick: toggle map'
+    - 'leftclick: toggle borders'
 version: 9
