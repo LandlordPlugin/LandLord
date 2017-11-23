@@ -75,6 +75,11 @@ Borders:
   refreshRate: 10
 
 CommandSettings:
+  Claim:
+    enableDelimit: true
+# Newly claimed lands are delimited by this material.
+    delimitMaterial: TORCH
+
   ListLands:
     enable: true
 # gui or chat

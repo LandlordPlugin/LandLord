@@ -9,8 +9,7 @@ import biz.princeps.lib.gui.ConfirmationGUI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -167,7 +166,28 @@ public class Claim extends LandlordCommand {
                     Bukkit.dispatchCommand(player, "ll sethome");
             }
 
+            if (plugin.getConfig().getBoolean("CommandSettings.Claim.enableDelimit"))
+                delimit(chunk);
+
             plugin.getMapManager().updateAll();
+        }
+    }
+
+    private void delimit(Chunk chunk) {
+        String s = plugin.getConfig().getString("CommandSettings.Claim.delimitMaterial");
+        Material mat = Material.getMaterial(s);
+
+        World w = chunk.getWorld();
+        if (mat != null) {
+            for (int i = 0; i < 16; i++) {
+                w.getHighestBlockAt(chunk.getBlock(i, 0, 0).getLocation().add(0, 1, 0)).setType(mat);
+                w.getHighestBlockAt(chunk.getBlock(0, 0, i).getLocation().add(0, 1, 0f)).setType(mat);
+                w.getHighestBlockAt(chunk.getBlock(15 - i, 0, 15).getLocation().add(0, 1, 0)).setType(mat);
+                w.getHighestBlockAt(chunk.getBlock(15, 0, 15 - i).getLocation().add(0, 1, 0)).setType(mat);
+            }
+
+        } else {
+            plugin.getLogger().warning("Invalid delimiting Material detected!! Value: " + s);
         }
     }
 

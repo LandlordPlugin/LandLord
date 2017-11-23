@@ -26,6 +26,7 @@ import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.annotation.Optional;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -227,6 +228,9 @@ public class Landlordbase extends BaseCommand {
     public void onReload() {
         String msg = Landlord.getInstance().getLangManager().getString("Commands.Reload.success");
         CommandIssuer issuer = getCurrentCommandIssuer();
+
+        issuer.sendMessage(ChatColor.RED + "Reloading is not recommended! Before reporting any bugs, please restart your server.");
+
         Landlord.getInstance().getPluginLoader().disablePlugin(Landlord.getInstance());
         Landlord.getInstance().getPluginLoader().enablePlugin(Landlord.getInstance());
         issuer.sendMessage(msg);
