@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public class Maitem extends AbstractItem {
     // So called My-Item or Management-Item. Whatever sounds better to you <3
-    //TODO On overlapping clickedAtConditions (which are delimited by clickconditions there are inconsistencies. Probably remove the condition system?!
+
     private static final ItemStack STACK = new ItemStack(Material.valueOf(Landlord.getInstance().getConfig().getString("MaItem.item")));
     public static final String NAME = "maitem";
     private ArrayList<ItemClickAction> clickActions = new ArrayList<>();
@@ -31,6 +32,17 @@ public class Maitem extends AbstractItem {
     public Maitem() {
         super(NAME, STACK, true, false);
         initClickActions();
+        setItemAppearance();
+    }
+
+    private void setItemAppearance(){
+        List<String> lore = plugin.getLangManager().getStringList("MaItem.lore");
+        String name = plugin.getLangManager().getRawString("MaItem.itemname");
+
+        ItemMeta meta = STACK.getItemMeta();
+        meta.setDisplayName(name);
+        meta.setLore(lore);
+        STACK.setItemMeta(meta);
     }
 
     private void initClickActions() {

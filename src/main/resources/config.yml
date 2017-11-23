@@ -110,7 +110,7 @@ MaItem:
   modes:
     - 'rightclickblock:anyland:info'
     - 'leftclickblock:anyland:buy'
-    - 'rightclickblock:ownland:info'
+    - 'shiftrightclickblock:ownland:manage'
     - 'shiftleftclickblock:ownland:manageall'
     - 'rightclickair:anyland:togglemap'
     - 'leftclickair:anyland:toggleborders'
