@@ -1,7 +1,7 @@
 package biz.princeps.landlord.handler;
 
-import biz.princeps.landlord.Landlord;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 
 import java.util.UUID;
@@ -30,7 +30,8 @@ public class VaultHandler {
     }
 
     public void give(UUID id, double amount) {
-        economy.depositPlayer(Bukkit.getOfflinePlayer(id), amount);
+        EconomyResponse economyResponse = economy.depositPlayer(Bukkit.getOfflinePlayer(id), amount);
+        System.out.println(economyResponse.errorMessage);
     }
 
     public String format(double calculatedCost) {
