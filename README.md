@@ -1,12 +1,11 @@
-I fucked up using github correctly, thats why this is not a fork, but a new project.
-Jcdesimp seem to have abounded this project unfortunately, thats why I'm maintaining this project now.
+This is a recode of the original landlord!
 
-Featurewise it's way more advanced, also performance should be a lot better now (MySQL with hikari)...
+Jcdesimp seems to have abonded this project unfortunately, thats why I'm maintaining this project now.
 
-Discussions: https://www.spigotmc.org/threads/landlord.41459/
+Featurewise it's way more advanced, also performance should be a lot better now (using worldguard as backend)
 
+Discussions: https://www.spigotmc.org/threads/beta-landlord-2.259023/
 
-BukkitDev Page: http://dev.bukkit.org/bukkit-plugins/landlord/
 
 Landlord
 ========
