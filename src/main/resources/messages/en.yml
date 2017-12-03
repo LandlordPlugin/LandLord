@@ -46,7 +46,7 @@ Commands:
     noFriend: '&c%player% &7is not a friend on any of your lands'
   ListLands:
     noLands: '&7You do not own any land'
-    header: '&7%player%s lands:'
+    header: '&7%player%s lands (%site%/%maxsite%):'
     landSegment: '&7Land&8: &cX: %realX%, Z: %realZ%'
     manageAll: '&7Manage all lands'
     chat:
