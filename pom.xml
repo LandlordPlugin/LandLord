@@ -134,7 +134,7 @@
         <dependency>
             <groupId>biz.princeps</groupId>
             <artifactId>PrincepsLib</artifactId>
-            <version>1.4.42</version>
+            <version>1.4.43</version>
             <scope>compile</scope>
         </dependency>
 

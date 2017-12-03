@@ -176,8 +176,7 @@ public class OwnedLand {
         for (Location edgeBlock : edgeBlocks) {
             edgeBlock.setZ(edgeBlock.getBlockZ() + .5);
             edgeBlock.setX(edgeBlock.getBlockX() + .5);
-            // p.getWorld().spawnParticle(e, edgeBlock, amt, 0.2, 0.2, 0.2, 20.0);
-            PrincepsLib.crossVersion().spawnParticle(edgeBlock, e, amt);
+            PrincepsLib.crossVersion().spawnParticle(p, edgeBlock, e, amt);
         }
     }
 
