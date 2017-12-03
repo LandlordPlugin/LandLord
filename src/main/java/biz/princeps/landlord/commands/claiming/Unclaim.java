@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands.claiming;
 
 import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.util.OwnedLand;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -61,33 +62,41 @@ public class Unclaim extends LandlordCommand {
 
         if (!event.isCancelled()) {
             double payback = -1;
-            if (!isAdmin) {
-                int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
+            if (!isAdmin || pr.isOwner(player.getUniqueId())) {
+                int regionCount = plugin.getWgHandler().getRegionCountOfPlayer(player.getUniqueId());
                 int freeLands = plugin.getConfig().getInt("Freelands");
+
+                // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);
 
                 if (plugin.isVaultEnabled()) {
                     if (regionCount <= freeLands)
                         payback = 0;
-                    else
+                    else {
                         payback = OwnedLand.calculateCost(player) * plugin.getConfig().getDouble("Payback");
-
-                    plugin.getVaultHandler().give(player.getUniqueId(), payback);
+                        // System.out.println(payback);
+                        if (payback > 0)
+                            plugin.getVaultHandler().give(player.getUniqueId(), payback);
+                    }
                 }
             }
             plugin.getWgHandler().unclaim(player.getWorld(), pr.getName());
 
             // remove possible homes
-            Location home = plugin.getPlayerManager().get(pr.getOwner()).getHome();
-            if (home != null)
-                if (pr.getWGLand().contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
-                    player.sendMessage(lm.getString("Commands.SetHome.removed"));
-                    plugin.getPlayerManager().get(pr.getOwner()).setHome(null);
+            LPlayer lPlayer = plugin.getPlayerManager().get(pr.getOwner());
+            if (lPlayer != null) {
+                Location home = lPlayer.getHome();
+                if (home != null) {
+                    if (pr.getWGLand().contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
+                        player.sendMessage(lm.getString("Commands.SetHome.removed"));
+                        plugin.getPlayerManager().get(pr.getOwner()).setHome(null);
+                    }
                 }
+            }
 
             player.sendMessage(lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", OwnedLand.getName(chunk))
                     .replace("%world%", chunk.getWorld().getName())
-                    .replace("%money%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(payback) : "-1")));
+                    .replace("%money%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(payback) : "-eco disabled-")));
 
 
             plugin.getMapManager().updateAll();
