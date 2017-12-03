@@ -2,13 +2,13 @@ package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.util.ConfigUtil;
-import com.google.common.base.Charsets;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +48,12 @@ public class LangManager {
 
     public String getString(String path) {
         String message = msg.getString(path);
-        return ChatColor.translateAlternateColorCodes('&', getTag() + " " + message);
+        if (message == null) {
+            pl.getLogger().warning("Your language file " + filename + " seems to miss string '" + path + "'");
+            return "MISSING STRING";
+        } else {
+            return ChatColor.translateAlternateColorCodes('&', getTag() + " " + message);
+        }
     }
 
 
@@ -67,6 +72,11 @@ public class LangManager {
 
     public String getRawString(String path) {
         String message = msg.getString(path);
-        return ChatColor.translateAlternateColorCodes('&', message);
+        if (message == null) {
+            pl.getLogger().warning("Your language file " + filename + " seems to miss string '" + path + "'");
+            return "MISSING STRING";
+        } else {
+            return ChatColor.translateAlternateColorCodes('&', message);
+        }
     }
 }
