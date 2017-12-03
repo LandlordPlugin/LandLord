@@ -11,6 +11,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -146,30 +147,37 @@ public class Claim extends LandlordCommand {
         if (flag) {
             plugin.getWgHandler().claim(chunk, player.getUniqueId());
 
-            OwnedLand landy = plugin.getWgHandler().getRegion(chunk);
-            LandClaimEvent event = new LandClaimEvent(player, landy);
-            Bukkit.getPluginManager().callEvent(event);
+            // Run task later, to give wg time to register the land properly ?? No clue why this doesnt work
+            new BukkitRunnable(){
 
-            if (event.isCancelled()) {
-                plugin.getWgHandler().unclaim(landy.getWorld(), landy.getName());
-                return;
-            }
+                @Override
+                public void run() {
+                    OwnedLand landy = plugin.getWgHandler().getRegion(chunk);
+                    LandClaimEvent event = new LandClaimEvent(player, landy);
+                    Bukkit.getPluginManager().callEvent(event);
 
-            player.sendMessage(lm.getString("Commands.Claim.success")
-                    .replace("%chunk%", OwnedLand.getName(chunk))
-                    .replace("%world%", chunk.getWorld().getName()));
+                    if (event.isCancelled()) {
+                        plugin.getWgHandler().unclaim(landy.getWorld(), landy.getName());
+                        return;
+                    }
 
-            OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
+                    player.sendMessage(lm.getString("Commands.Claim.success")
+                            .replace("%chunk%", OwnedLand.getName(chunk))
+                            .replace("%world%", chunk.getWorld().getName()));
 
-            if (plugin.getConfig().getBoolean("Homes.enable")) {
-                if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null)
-                    Bukkit.dispatchCommand(player, "ll sethome");
-            }
+                    OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
 
-            if (plugin.getConfig().getBoolean("CommandSettings.Claim.enableDelimit"))
-                delimit(chunk);
+                    if (plugin.getConfig().getBoolean("Homes.enable")) {
+                        if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null)
+                            Bukkit.dispatchCommand(player, "ll sethome");
+                    }
 
-            plugin.getMapManager().updateAll();
+                    if (plugin.getConfig().getBoolean("CommandSettings.Claim.enableDelimit"))
+                        delimit(chunk);
+
+                    plugin.getMapManager().updateAll();
+                }
+            }.runTaskLater(plugin, 5L);
         }
     }
 
