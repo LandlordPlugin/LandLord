@@ -195,4 +195,30 @@ public class WorldGuardHandler {
         return count;
     }
 
+    public Set<ProtectedRegion> getRegions(UUID id) {
+        Set<ProtectedRegion> set = new HashSet<>();
+        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+        if (op != null)
+            for (World world : Bukkit.getWorlds()) {
+                // Only count enabled worlds
+                if (!Landlord.getInstance().getConfig().getStringList("disabled-worlds").contains(world.getName()))
+                    set.addAll(getRegions(id, world));
+            }
+        return set;
+    }
+
+    public List<OwnedLand> getRegionsAsOL(UUID id) {
+        List<OwnedLand> list = new ArrayList<>();
+        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+        if (op != null)
+            for (World world : Bukkit.getWorlds()) {
+                // Only count enabled worlds
+                if (!Landlord.getInstance().getConfig().getStringList("disabled-worlds").contains(world.getName()))
+                    for (ProtectedRegion protectedRegion : getRegions(id, world)) {
+                        list.add(getRegion(protectedRegion));
+                    }
+            }
+        return list;
+    }
+
 }

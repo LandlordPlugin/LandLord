@@ -15,6 +15,7 @@ import biz.princeps.landlord.commands.homes.Home;
 import biz.princeps.landlord.commands.homes.SetHome;
 import biz.princeps.landlord.commands.management.*;
 import biz.princeps.landlord.manager.LangManager;
+import biz.princeps.landlord.util.UUIDFetcher;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.chat.ChatAPI;
 import biz.princeps.lib.chat.MultiPagedMessage;
@@ -25,15 +26,15 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.annotation.Optional;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.World;
+import com.google.common.util.concurrent.FutureCallback;
+import com.sk89q.worldguard.domains.DefaultDomain;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Nullable;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -169,8 +170,33 @@ public class Landlordbase extends BaseCommand {
     @CommandAlias("listlands|landlist")
     @Syntax("land list - lists all your lands")
     @CommandPermission("landlord.player.own")
-    public void onLandList(Player player, @Default("0") String page) {
-        ((ListLands) subcommands.get("listlands")).onListLands(player, Integer.parseInt(page));
+    public void onLandList(Player player, @Optional String target, @Default("0") String page) {
+
+        // Want to know own lands
+        if (target == null) {
+            ((ListLands) subcommands.get("listlands")).onListLands(player, player, Integer.parseInt(page));
+        } else if(player.hasPermission("landlord.admin.list")){
+            // Other lands, need to lookup their names
+            UUIDFetcher.getInstance().namesToUUID(new String[]{target}, new FutureCallback<DefaultDomain>() {
+                @Override
+                public void onSuccess(@Nullable DefaultDomain defaultDomain) {
+
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(defaultDomain.getUniqueIds().iterator().next());
+                    if (op != null)
+                        ((ListLands) subcommands.get("listlands")).onListLands(player, op, Integer.parseInt(page));
+                    else{
+                        player.sendMessage(Landlord.getInstance().getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", target));
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    player.sendMessage(Landlord.getInstance().getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", target));
+                }
+            });
+        }
+
     }
 
     @Subcommand("map")

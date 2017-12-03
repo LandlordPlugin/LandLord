@@ -11,6 +11,7 @@ import biz.princeps.lib.gui.simple.Icon;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,35 +24,23 @@ import java.util.List;
  */
 public class ListLands extends LandlordCommand {
 
-    private String header = plugin.getLangManager().getRawString("Commands.ListLands.header");
-
-    public void onListLands(Player player, int page) {
+    public void onListLands(Player sender, OfflinePlayer target, int page) {
 
         List<ProtectedRegion> lands = new ArrayList<>();
 
-        for (ProtectedRegion protectedRegion : plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegions().values()) {
-            if (protectedRegion.isOwner(plugin.getWgHandler().getWG().wrapPlayer(player))) {
-                lands.add(protectedRegion);
-            }
-        }
+        lands.addAll(plugin.getWgHandler().getRegions(target.getUniqueId()));
+
         if (lands.size() > 0) {
 
             String mode = plugin.getConfig().getString("CommandSettings.ListLands.mode");
-            List<OwnedLand> landsOfPlayer = new ArrayList<>();
-
-            for (World world : Bukkit.getWorlds()) {
-                for (ProtectedRegion pr : plugin.getWgHandler().getRegions(player.getUniqueId(), world)) {
-                    landsOfPlayer.add(plugin.getLand(pr));
-                }
-            }
 
             if (mode.equals("gui")) {
-                MultiPagedGUI landGui = new MultiPagedGUI(player, 5, header);
+                MultiPagedGUI landGui = new MultiPagedGUI(sender, 5, plugin.getLangManager().getRawString("Commands.ListLands.header").replace("%player%", target.getName()));
 
                 lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
                         .setName(land.getId())
                         .addClickAction((p, ic) -> {
-                                    ManageGUI manageGui = new ManageGUI(player, landGui, plugin.getWgHandler().getRegion(land));
+                                    ManageGUI manageGui = new ManageGUI(sender, landGui, plugin.getWgHandler().getRegion(land));
                                     manageGui.setTitle(manageGui.getRawTitle().replace("%realZ", plugin.getLand(land).getChunk().getZ() * 16 + "").replace("%realX", plugin.getLand(land).getChunk().getX() * 16 + ""));
                                     manageGui.display();
                                 }
@@ -61,9 +50,7 @@ public class ListLands extends LandlordCommand {
                 landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
                         .setName(lm.getRawString("Commands.ListLands.manageAll"))
                         .addClickAction((p, ic2) -> {
-
-
-                            ManageGUIAll manageGUIAll = new ManageGUIAll(player, landGui, landsOfPlayer);
+                            ManageGUIAll manageGUIAll = new ManageGUIAll(sender, landGui, plugin.getWgHandler().getRegionsAsOL(target.getUniqueId()));
                             manageGUIAll.display();
                         }));
 
@@ -85,13 +72,15 @@ public class ListLands extends LandlordCommand {
                 String next = lm.getRawString("Commands.ListLands.chat.next");
 
 
-                MultiPagedMessage message = new MultiPagedMessage("/land list", header, plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
+                MultiPagedMessage message = new MultiPagedMessage("/land list",
+                        plugin.getLangManager().getRawString("Commands.ListLands.header").replace("%player%",
+                                target.getName()), plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
                         formatted, prev, next, page);
 
-                player.spigot().sendMessage(message.create());
+                sender.spigot().sendMessage(message.create());
             }
         } else {
-            player.sendMessage(plugin.getLangManager().getString("Commands.ListLands.noLands"));
+            sender.sendMessage(plugin.getLangManager().getString("Commands.ListLands.noLands"));
         }
     }
 
