@@ -53,6 +53,15 @@ limits:
   - 30
   - 40
 
+# Secures the world in which landlord is active. This means, players wont be able to destroy anything in free lands
+SecureWorld:
+  enable: true
+# If player reach this treshold (amount of ownedlands) they will be able to build in the normal world)
+# This way you can allow your veteran players to be able to build pathes and commonly used stuff in the world, but prevent newbies from griefing
+  treshold: 10
+# Where to display the warning that you are not to allowed in free lands until x lands has been reached: ActionBar, Chat, Disabled
+  displayWarning: ActionBar
+
 Homes:
   enable: true
   spawnParticles: true
@@ -207,4 +216,4 @@ Manage:
       - PARROT
       - VILLAGER
 
-version: 9
+version: 10

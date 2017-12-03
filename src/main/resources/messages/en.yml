@@ -207,6 +207,7 @@ Commands:
 Alerts:
   defaultGreeting: '&7Now entering claimed land of %owner%'
   defaultFarewell: '&7Leaving claimed land of %owner%'
+  tresholdNotReached: '&cYou are not allowed to build here. You must own %x% lands!'
 Confirmation:
   accept: '&bAccept!'
   decline: '&eDecline!'

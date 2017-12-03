@@ -31,7 +31,6 @@ public class VaultHandler {
 
     public void give(UUID id, double amount) {
         EconomyResponse economyResponse = economy.depositPlayer(Bukkit.getOfflinePlayer(id), amount);
-        System.out.println(economyResponse.errorMessage);
     }
 
     public String format(double calculatedCost) {

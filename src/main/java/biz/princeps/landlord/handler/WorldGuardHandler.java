@@ -3,6 +3,7 @@ package biz.princeps.landlord.handler;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
@@ -12,10 +13,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -183,6 +181,18 @@ public class WorldGuardHandler {
             }
         }
         return true;
+    }
+
+    public int getRegionCountOfPlayer(UUID id) {
+        int count = 0;
+        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+        if (op != null)
+            for (World world : Bukkit.getWorlds()) {
+                // Only count enabled worlds
+                if (!Landlord.getInstance().getConfig().getStringList("disabled-worlds").contains(world.getName()))
+                    count += getWG().getRegionManager(world).getRegionCountOfPlayer(getWG().wrapOfflinePlayer(op));
+            }
+        return count;
     }
 
 }
