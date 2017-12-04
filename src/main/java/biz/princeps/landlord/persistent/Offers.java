@@ -1,13 +1,9 @@
 package biz.princeps.landlord.persistent;
 
 import biz.princeps.lib.storage.annotation.Column;
-import biz.princeps.lib.storage.annotation.Constructor;
 import biz.princeps.lib.storage.annotation.Table;
 import biz.princeps.lib.storage.annotation.Unique;
-import biz.princeps.lib.util.TimeUtil;
-import org.bukkit.Location;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**

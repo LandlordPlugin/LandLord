@@ -33,5 +33,4 @@ public class LLItem extends LandlordCommand {
         Maitem item = new Maitem();
         item.give(targetingPlayer);
     }
-
 }

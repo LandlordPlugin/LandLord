@@ -9,7 +9,10 @@ import biz.princeps.lib.gui.ConfirmationGUI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -85,7 +88,7 @@ public class Claim extends LandlordCommand {
         // Money stuff
         if (plugin.isVaultEnabled()) {
             Offers offer = plugin.getPlayerManager().getOffer(landname);
-            if (offer != null && plugin.isVaultEnabled()) {
+            if (offer != null && pr != null) {
                 // Player 2 player sale
                 if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {
 
@@ -109,7 +112,6 @@ public class Claim extends LandlordCommand {
                     }, (player12, ic2) -> {
                         player.sendMessage(lm.getString("Commands.Claim.aborted"));
                         player.closeInventory();
-                        return;
                     }, null);
                     confirm.display();
 
@@ -148,7 +150,7 @@ public class Claim extends LandlordCommand {
             plugin.getWgHandler().claim(chunk, player.getUniqueId());
 
             // Run task later, to give wg time to register the land properly ?? No clue why this doesnt work
-            new BukkitRunnable(){
+            new BukkitRunnable() {
 
                 @Override
                 public void run() {

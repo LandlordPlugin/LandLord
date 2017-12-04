@@ -33,8 +33,6 @@ import java.util.concurrent.ExecutionException;
  */
 public abstract class AbstractManage extends AbstractGUI {
 
-    //TODO fix this shit
-
     private static int SIZE;
     private static Set<String> toggleMobs = new HashSet<>();
 
@@ -365,9 +363,8 @@ public abstract class AbstractManage extends AbstractGUI {
 
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-        } finally {
-            return newlist;
         }
+        return newlist;
     }
 
     private void updateLore(int index, List<String> lore) {

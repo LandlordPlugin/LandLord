@@ -2,7 +2,6 @@ package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.storage.requests.Conditions;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;

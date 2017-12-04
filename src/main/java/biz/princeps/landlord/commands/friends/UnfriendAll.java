@@ -6,7 +6,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -32,13 +31,12 @@ public class UnfriendAll extends LandlordCommand {
                             protectedRegion.getMembers().removePlayer(uuid);
                             i++;
                         }
-
                     }
                 }
                 if (i > 0) {
                     player.sendMessage(lm.getString("Commands.UnfriendAll.success")
                             .replace("%count%", String.valueOf(i))
-                            .replace("%players%", Arrays.asList(name).toString()));
+                            .replace("%players%", name));
                     new BukkitRunnable() {
 
                         @Override
@@ -48,7 +46,7 @@ public class UnfriendAll extends LandlordCommand {
                     }.runTask(plugin);
                 } else {
                     player.sendMessage(lm.getString("Commands.UnfriendAll.noFriend")
-                            .replace("%player%", Arrays.asList(name).toString()));
+                            .replace("%player%", name));
                 }
             }
         });

@@ -306,14 +306,14 @@ public class LandMap {
                 }
                 EntryBuilder eb = new EntryBuilder();
                 String[] mapData = buildMap(p);
-                for (int i = 0; i < mapData.length; i++) {
+                for (String aMapData : mapData) {
                     // Not sure what this part does. It works without lol
                     /*if (mapData[i].length() < 21) {
                         for (int f = 0; f < (21 - mapData[i].length()); f++) {
                             mapData[i] += ChatColor.RESET;
                         }
                     }*/
-                    eb.next(mapData[i]);
+                    eb.next(aMapData);
                 }
                 return eb.build();
             }

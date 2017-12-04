@@ -220,7 +220,7 @@ public class LandAlerter extends BasicListener {
         ActionBar,
         Chat,
         Title,
-        Disabled;
+        Disabled
     }
 
 }

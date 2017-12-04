@@ -55,10 +55,7 @@ public class Home extends LandlordCommand {
             player.teleport(toGo);
             player.sendMessage(lm.getString("Commands.Home.welcomeHome"));
         } else {
-
-
-            // teleporting to other homes
-
+            // TODO teleporting to other homes
         }
 
     }

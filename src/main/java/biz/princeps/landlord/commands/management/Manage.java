@@ -79,33 +79,33 @@ public class Manage extends LandlordCommand {
 
                 ProtectedRegion target = plugin.getWgHandler().getWG().getRegionManager(world).getRegion(args[0]);
 
-                switch (args[1]) {
-                    case "setgreet":
-                        StringBuilder sb = new StringBuilder();
-                        for (int i = 2; i < args.length; i++) {
-                            sb.append(args[i]).append(" ");
-                        }
-                        String newmsg = sb.toString();
+                if(target != null) {
+                    switch (args[1]) {
+                        case "setgreet":
+                            StringBuilder sb = new StringBuilder();
+                            for (int i = 2; i < args.length; i++) {
+                                sb.append(args[i]).append(" ");
+                            }
+                            String newmsg = sb.toString();
 
-                        target.setFlag(DefaultFlag.GREET_MESSAGE, newmsg);
-                        player.sendMessage(lm.getString("Commands.Manage.SetGreet.successful")
-                                .replace("%msg%", newmsg));
-                        break;
+                            target.setFlag(DefaultFlag.GREET_MESSAGE, newmsg);
+                            player.sendMessage(lm.getString("Commands.Manage.SetGreet.successful")
+                                    .replace("%msg%", newmsg));
+                            break;
 
-                    case "setfarewell":
-                        sb = new StringBuilder();
-                        for (int i = 2; i < args.length; i++) {
-                            sb.append(args[i]).append(" ");
-                        }
-                        newmsg = sb.toString();
+                        case "setfarewell":
+                            sb = new StringBuilder();
+                            for (int i = 2; i < args.length; i++) {
+                                sb.append(args[i]).append(" ");
+                            }
+                            newmsg = sb.toString();
 
-                        target.setFlag(DefaultFlag.FAREWELL_MESSAGE, newmsg);
-                        player.sendMessage(lm.getString("Commands.Manage.SetFarewell.successful")
-                                .replace("%msg%", newmsg));
-                        break;
+                            target.setFlag(DefaultFlag.FAREWELL_MESSAGE, newmsg);
+                            player.sendMessage(lm.getString("Commands.Manage.SetFarewell.successful")
+                                    .replace("%msg%", newmsg));
+                            break;
+                    }
                 }
             }
-
-
     }
 }

@@ -3,15 +3,11 @@ package biz.princeps.landlord.commands.friends;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.landlord.util.UUIDFetcher;
-import com.google.common.util.concurrent.FutureCallback;
-import com.sk89q.worldguard.domains.DefaultDomain;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.UUID;
 
 /**
  * Created by spatium on 17.07.17.

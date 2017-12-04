@@ -2,16 +2,15 @@ package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.UUIDFetcher;
-import com.google.common.util.concurrent.FutureCallback;
-import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by spatium on 19.07.17.
@@ -51,7 +50,7 @@ public class Clear extends LandlordCommand {
                         if (uuid == null) {
                             // Failure
                             player.sendMessage(lm.getString("Commands.ClearWorld.noPlayer")
-                                    .replace("%players%", Arrays.asList(target).toString()));
+                                    .replace("%players%", target));
                         } else {
                             // Success
                             Set<String> todelete = new HashSet<>();

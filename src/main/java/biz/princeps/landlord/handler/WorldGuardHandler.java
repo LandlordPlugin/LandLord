@@ -3,7 +3,6 @@ package biz.princeps.landlord.handler;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
@@ -53,12 +52,14 @@ public class WorldGuardHandler {
 
         RegionManager manager = wg.getRegionContainer().get(world);
 
-        manager.addRegion(pr);
+        if (manager != null) {
+            manager.addRegion(pr);
+        }
     }
 
     public OwnedLand getRegion(Chunk chunk) {
         RegionManager manager = wg.getRegionContainer().get(chunk.getWorld());
-        ProtectedRegion pr = manager.getRegion(OwnedLand.getName(chunk));
+        ProtectedRegion pr = manager != null ? manager.getRegion(OwnedLand.getName(chunk)) : null;
         return (pr != null ? new OwnedLand(pr, chunk) : null);
     }
 
