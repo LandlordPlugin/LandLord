@@ -9,15 +9,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import javax.annotation.Nullable;
-
 /**
  * Created by spatium on 19.07.17 / 11:55.
  */
 public class Manage extends LandlordCommand {
 
 
-    public void onManage(Player player, @Nullable String[] args) {
+    public void onManage(Player player, String[] args) {
 
         OwnedLand land = plugin.getWgHandler().getRegion(player.getLocation().getChunk());
 
@@ -47,7 +45,7 @@ public class Manage extends LandlordCommand {
                     player.sendMessage(lm.getString("Commands.manage.invalidArguments"));
                     return;
                 }
-                if (!Bukkit.getWorlds().contains(world)) {
+                if (Bukkit.getWorlds().contains(world)) {
                     if (args[0].equals("setgreetall")) {
                         StringBuilder sb1 = new StringBuilder();
                         for (int i = 1; i < args.length; i++) {

@@ -138,7 +138,7 @@ public abstract class AbstractManage extends AbstractGUI {
                                         else flag = true;
                                         if (flag) {
                                             if (land.isOwner(player.getUniqueId())) {
-                                                player.getWorld().regenerateChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
+                                                player.getWorld().regenerateChunk(land.getChunk().getX(), land.getChunk().getZ());
                                                 player.sendMessage(lm.getString("Commands.Manage.Regenerate.success")
                                                         .replace("%land%", land.getName()));
                                                 display();
@@ -161,6 +161,7 @@ public abstract class AbstractManage extends AbstractGUI {
         }
 
 
+        //TODO add proper land manage commands, so that you can manage lands from within landlist
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet.enable")) {
             String currentGreet = land.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE);
