@@ -30,16 +30,20 @@ public class Addfriend extends LandlordCommand {
                 return;
             }
 
+            for (String target : names) {
+                UUIDFetcher.getUUID(target, uuid -> {
 
-            UUIDFetcher.getInstance().namesToUUID(names, new FutureCallback<DefaultDomain>() {
-                @Override
-                public void onSuccess(@Nullable DefaultDomain defaultDomain) {
-                    for (UUID uuid : defaultDomain.getUniqueIds()) {
+                    if (uuid == null) {
+                        // Failure
+                        player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
+                                .replace("%players%", Arrays.asList(names).toString()));
+                    } else {
+                        // Success
                         if (!land.getWGLand().getOwners().getUniqueIds().contains(uuid)) {
                             land.getWGLand().getMembers().addPlayer(uuid);
                             player.sendMessage(lm.getString("Commands.Addfriend.success")
                                     .replace("%players%", Arrays.asList(names).toString()));
-                            new BukkitRunnable(){
+                            new BukkitRunnable() {
 
                                 @Override
                                 public void run() {
@@ -52,17 +56,9 @@ public class Addfriend extends LandlordCommand {
                         }
                     }
 
-                }
-
-                @Override
-                public void onFailure(Throwable throwable) {
-                    player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
-                            .replace("%players%", Arrays.asList(names).toString()));
-                }
-            });
+                });
+            }
         }
-
     }
-
 }
 

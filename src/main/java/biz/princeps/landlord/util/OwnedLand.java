@@ -121,6 +121,10 @@ public class OwnedLand {
         region.getMembers().removeAll(defaultDomain);
     }
 
+    public void removeFriend(UUID id) {
+        region.getMembers().removePlayer(id);
+    }
+
     public String printOwners() {
         StringBuilder sb = new StringBuilder();
         Iterator<UUID> it = region.getOwners().getUniqueIds().iterator();

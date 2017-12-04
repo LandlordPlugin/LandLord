@@ -3,13 +3,10 @@ package biz.princeps.landlord.commands.friends;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.landlord.util.UUIDFetcher;
-import com.google.common.util.concurrent.FutureCallback;
-import com.sk89q.worldguard.domains.DefaultDomain;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
@@ -26,36 +23,39 @@ public class Unfriend extends LandlordCommand {
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
-        if(land!= null) {
+        if (land != null) {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
                 player.sendMessage(lm.getString("Commands.Unfriend.notOwn")
                         .replace("%owner%", land.printOwners()));
                 return;
             }
 
-            UUIDFetcher.getInstance().namesToUUID(names, new FutureCallback<DefaultDomain>() {
-                @Override
-                public void onSuccess(@Nullable DefaultDomain defaultDomain) {
-                    land.removeFriends(defaultDomain);
-                    player.sendMessage(lm.getString("Commands.Unfriend.success")
-                            .replace("%players%", Arrays.asList(names).toString()));
-                    new BukkitRunnable(){
+            for (String target : names) {
+                UUIDFetcher.getUUID(target, uuid -> {
 
-                        @Override
-                        public void run() {
-                            plugin.getMapManager().updateAll();
-                        }
-                    }.runTask(plugin);
-                }
+                    if (uuid == null) {
+                        // Failure
+                        player.sendMessage(lm.getString("Commands.Unfriend.noPlayer")
+                                .replace("%players%", Arrays.asList(names).toString()));
+                    } else {
+                        // Success
+                        land.removeFriend(uuid);
+                    }
+
+                });
+            }
+
+            player.sendMessage(lm.getString("Commands.Unfriend.success")
+                    .replace("%players%", Arrays.asList(names).toString()));
+
+            new BukkitRunnable() {
 
                 @Override
-                public void onFailure(Throwable throwable) {
-                    player.sendMessage(lm.getString("Commands.Unfriend.noPlayer")
-                            .replace("%players%", Arrays.asList(names).toString()));
+                public void run() {
+                    plugin.getMapManager().updateAll();
                 }
-            });
+            }.runTaskLater(plugin, 60L);
         }
-
     }
 }
 

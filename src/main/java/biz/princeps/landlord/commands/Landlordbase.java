@@ -26,15 +26,12 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.annotation.Optional;
-import com.google.common.util.concurrent.FutureCallback;
-import com.sk89q.worldguard.domains.DefaultDomain;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.annotation.Nullable;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -160,9 +157,9 @@ public class Landlordbase extends BaseCommand {
     }
 
     @Subcommand("unfriendall|removeallfriends")
-    @Syntax("land unfriendall - anfriend someone on all your lands")
+    @Syntax("land unfriendall - unfriend someone on all your lands")
     @CommandPermission("landlord.player.own")
-    public void onUnfriendAll(Player player, String[] names) {
+    public void onUnfriendAll(Player player, String names) {
         ((UnfriendAll) subcommands.get("unfriendall")).onUnfriendall(player, names);
     }
 
@@ -175,28 +172,25 @@ public class Landlordbase extends BaseCommand {
         // Want to know own lands
         if (target == null) {
             ((ListLands) subcommands.get("listlands")).onListLands(player, player, Integer.parseInt(page));
-        } else if(player.hasPermission("landlord.admin.list")){
+        } else if (player.hasPermission("landlord.admin.list")) {
             // Other lands, need to lookup their names
-            UUIDFetcher.getInstance().namesToUUID(new String[]{target}, new FutureCallback<DefaultDomain>() {
-                @Override
-                public void onSuccess(@Nullable DefaultDomain defaultDomain) {
+            UUIDFetcher.getUUID(target, uuid -> {
 
-                    OfflinePlayer op = Bukkit.getOfflinePlayer(defaultDomain.getUniqueIds().iterator().next());
+                if (uuid == null) {
+                    // Failure
+                    player.sendMessage(Landlord.getInstance().getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", target));
+                } else {
+                    // Success
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
                     if (op != null)
                         ((ListLands) subcommands.get("listlands")).onListLands(player, op, Integer.parseInt(page));
-                    else{
+                    else {
                         player.sendMessage(Landlord.getInstance().getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", target));
                     }
-
                 }
 
-                @Override
-                public void onFailure(Throwable throwable) {
-                    player.sendMessage(Landlord.getInstance().getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", target));
-                }
             });
         }
-
     }
 
     @Subcommand("map")

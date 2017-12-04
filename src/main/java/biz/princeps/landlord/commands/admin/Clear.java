@@ -30,9 +30,11 @@ public class Clear extends LandlordCommand {
             public void run() {
                 World world = player.getWorld();
                 RegionManager regionManager = plugin.getWgHandler().getWG().getRegionManager(world);
+
                 Map<String, ProtectedRegion> regions = regionManager.getRegions();
                 int count;
 
+                // Clearing all regions in one world
                 if (target == null) {
                     count = regions.size();
                     regions.keySet().forEach(regionManager::removeRegion);
@@ -40,34 +42,34 @@ public class Clear extends LandlordCommand {
                     player.sendMessage(lm.getString("Commands.ClearWorld.success")
                             .replace("%count%", String.valueOf(count))
                             .replace("%world%", world.getName()));
+
+                    plugin.getMapManager().updateAll();
                 } else {
+                    // Clear only a specific player
+                    UUIDFetcher.getUUID(target, uuid -> {
 
-                    UUIDFetcher.getInstance().namesToUUID(new String[]{target}, new FutureCallback<DefaultDomain>() {
-                        @Override
-                        public void onSuccess(@Nullable DefaultDomain domain) {
+                        if (uuid == null) {
+                            // Failure
+                            player.sendMessage(lm.getString("Commands.ClearWorld.noPlayer")
+                                    .replace("%players%", Arrays.asList(target).toString()));
+                        } else {
+                            // Success
                             Set<String> todelete = new HashSet<>();
-                            UUID id = domain.getUniqueIds().iterator().next();
-                            System.out.println(id);
-                            regions.values().stream().filter(pr -> pr.getOwners().getUniqueIds().contains(id)).forEach(pr -> todelete.add(pr.getId()));
+                            regions.values().stream().filter(pr -> pr.getOwners().getUniqueIds().contains(uuid)).forEach(pr -> todelete.add(pr.getId()));
 
-                            int count = todelete.size();
+
+                            int amt = todelete.size();
 
                             todelete.forEach(regionManager::removeRegion);
                             player.sendMessage(lm.getString("Commands.ClearWorld.successPlayer")
-                                    .replace("%count%", String.valueOf(count))
+                                    .replace("%count%", String.valueOf(amt))
                                     .replace("%player%", target));
+
+                            plugin.getMapManager().updateAll();
                         }
 
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            player.sendMessage(lm.getString("Commands.ClearWorld.noPlayer")
-                                    .replace("%players%", Arrays.asList(target).toString()));
-                        }
                     });
-
-
                 }
-                plugin.getMapManager().updateAll();
             }
         }.runTaskAsynchronously(plugin);
     }

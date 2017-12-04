@@ -9,7 +9,10 @@ import biz.princeps.lib.gui.simple.Icon;
 import com.google.common.util.concurrent.FutureCallback;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,23 +20,27 @@ import org.bukkit.scheduler.BukkitRunnable;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class AdminTeleport extends LandlordCommand {
 
     public void onAdminTeleport(Player sender, String target) {
 
-        UUIDFetcher.getInstance().namesToUUID(new String[]{target}, new FutureCallback<DefaultDomain>() {
-            @Override
-            public void onSuccess(@Nullable DefaultDomain defaultDomain) {
-                UUID next = defaultDomain.getUniqueIds().iterator().next();
+        UUIDFetcher.getUUID(target, uuid -> {
+
+            if (uuid == null) {
+                // Failure
+                sender.sendMessage(lm.getString("Commands.AdminTp.noPlayer").replace("%player%", target));
+            } else {
+                // Success
 
                 List<ProtectedRegion> lands = new ArrayList<>();
 
                 for (World w : Bukkit.getWorlds())
                     for (ProtectedRegion protectedRegion : plugin.getWgHandler().getWG().getRegionManager(w).getRegions().values()) {
-                        if (protectedRegion.isOwner(plugin.getWgHandler().getWG().wrapOfflinePlayer(Bukkit.getOfflinePlayer(next)))) {
-                            lands.add(protectedRegion);
+                        if (Bukkit.getOfflinePlayer(uuid) != null) {
+                            if (protectedRegion.isOwner(plugin.getWgHandler().getWG().wrapOfflinePlayer(Bukkit.getOfflinePlayer(uuid)))) {
+                                lands.add(protectedRegion);
+                            }
                         }
                     }
                 if (lands.size() > 0) {
@@ -64,14 +71,7 @@ public class AdminTeleport extends LandlordCommand {
                 }
             }
 
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                sender.sendMessage(lm.getString("Commands.AdminTp.noPlayer").replace("%player%", target));
-            }
         });
-
-
     }
 
 }
