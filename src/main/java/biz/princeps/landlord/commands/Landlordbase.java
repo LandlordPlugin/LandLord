@@ -92,8 +92,8 @@ public class Landlordbase extends BaseCommand {
 
         List<String> toDisplay = new ArrayList<>();
         if (sender.hasPermission("landlord.admin.help"))
-            adminList.forEach(toDisplay::add);
-        playersList.forEach(toDisplay::add);
+            toDisplay.addAll(adminList);
+        toDisplay.addAll(playersList);
 
         // System.out.println(toDisplay.size());
 
