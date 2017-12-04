@@ -64,11 +64,13 @@ public class TresholdListener extends BasicListener {
                 int landcount = plugin.getWgHandler().getRegionCountOfPlayer(p.getUniqueId());
 
                 if (landcount < treshold) {
-
+                    String rawString = plugin.getLangManager().getRawString("Alerts.tresholdNotReached").replace("%x%", treshold + "");
                     if (display == LandAlerter.LandMessageDisplay.ActionBar) {
-                        PrincepsLib.crossVersion().sendActionBar(p, plugin.getLangManager().getRawString("Alerts.tresholdNotReached").replace("%x%", treshold + ""));
+                        PrincepsLib.crossVersion().sendActionBar(p, rawString);
                     } else if (display == LandAlerter.LandMessageDisplay.Chat) {
                         p.sendMessage(plugin.getLangManager().getString("Alerts.tresholdNotReached").replace("%x%", treshold + ""));
+                    } else if (display == LandAlerter.LandMessageDisplay.Title) {
+                        p.sendTitle(rawString, null, 10, 70, 10);
                     }
 
                     e.setCancelled(true);

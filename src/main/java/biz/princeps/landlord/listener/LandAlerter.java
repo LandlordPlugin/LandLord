@@ -49,7 +49,7 @@ public class LandAlerter extends BasicListener {
             public void onPacketSending(PacketEvent event) {
                 PacketContainer packet = event.getPacket();
 
-             //   packet.getChatTypes().getValues().forEach(System.out::println);
+                //   packet.getChatTypes().getValues().forEach(System.out::println);
                 if (Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3].split("_")[1]) < 12) {
                     if (packet.getBytes().getValues().get(0) != 1)
                         return;
@@ -108,14 +108,14 @@ public class LandAlerter extends BasicListener {
                         //        System.out.println(goingOn);
 
 
-                        //on leave: da wo man her kam
+                        // on leave: da wo man her kam
                         // on enter null
                         //  if (regionInsideNow == null)
                         //       System.out.println("1. null");
                         //   else
                         //      System.out.println(regionInsideNow.getName());
 
-                        //on leave null
+                        // on leave null
                         // on enter da wo man nun ist
                         if (goingOn) {
 
@@ -140,12 +140,18 @@ public class LandAlerter extends BasicListener {
                                 if (type == LandMessageDisplay.ActionBar) {
                                     PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
                                     event.setCancelled(true);
+                                } else if (type == LandMessageDisplay.Title) {
+                                    p.sendTitle(craftColoredMessage(array), null, 10, 70, 10);
+                                    event.setCancelled(true);
                                 }
                             } else {
                                 //          System.out.println(before.getName());
                                 if (regionInsideNow == null) {
                                     if (type == LandMessageDisplay.ActionBar) {
                                         PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
+                                        event.setCancelled(true);
+                                    } else if (type == LandMessageDisplay.Title) {
+                                        p.sendTitle(craftColoredMessage(array), null, 10, 70, 10);
                                         event.setCancelled(true);
                                     }
                                 } else {
@@ -159,6 +165,9 @@ public class LandAlerter extends BasicListener {
                                             PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
 
                                         }
+                                        event.setCancelled(true);
+                                    } else if (type == LandMessageDisplay.Title) {
+                                        p.sendTitle(craftColoredMessage(array), null, 10, 70, 10);
                                         event.setCancelled(true);
                                     }
                                 }
@@ -200,19 +209,17 @@ public class LandAlerter extends BasicListener {
         if (landTowards == null) {
             // System.out.println(playerInLand.get(p.getUniqueId()) + " removed");
             playerInLand.remove(p.getUniqueId());
+        } else if (!landTowards.equals(landFrom)) {
+            playerInLand.put(p.getUniqueId(), landTowards);
+            //     System.out.println(landTowards.getName() + " added");
         }
-
-        if (landTowards != null)
-            if (!landTowards.equals(landFrom)) {
-                playerInLand.put(p.getUniqueId(), landTowards);
-                //     System.out.println(landTowards.getName() + " added");
-            }
-
     }
+
 
     enum LandMessageDisplay {
         ActionBar,
         Chat,
+        Title,
         Disabled;
     }
 

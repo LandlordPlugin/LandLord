@@ -59,7 +59,7 @@ SecureWorld:
 # If player reach this treshold (amount of ownedlands) they will be able to build in the normal world)
 # This way you can allow your veteran players to be able to build pathes and commonly used stuff in the world, but prevent newbies from griefing
   treshold: 10
-# Where to display the warning that you are not to allowed in free lands until x lands has been reached: ActionBar, Chat, Disabled
+# Where to display the warning that you are not to allowed in free lands until x lands has been reached: ActionBar, Chat, Title, Disabled
   displayWarning: ActionBar
 
 Homes:
@@ -68,7 +68,7 @@ Homes:
   teleportCost: 100.0
   delay: 3
 
-# Where should the "Entering XXX's land" be displayed? Available are ActionBar, Chat, Disabled
+# Where should the "Entering XXX's land" be displayed? Available are ActionBar, Chat, Title, Disabled
 LandMessage: ActionBar
 
 # -----------        Map Stuff        ------------
