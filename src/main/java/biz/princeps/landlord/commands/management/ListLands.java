@@ -39,12 +39,15 @@ public class ListLands extends LandlordCommand {
 
                 lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
                         .setName(land.getId())
+                       /*
+                        * ATTENTION; THIS IS A HUGE EXPLOIT!!!!! PLAYERS ARE ABLE TO MANAGE ANY LAND BY OPENING THE LAND LIST GUI
                         .addClickAction((p, ic) -> {
                                     ManageGUI manageGui = new ManageGUI(sender, landGui, plugin.getWgHandler().getRegion(land));
                                     manageGui.setTitle(manageGui.getRawTitle().replace("%realZ", plugin.getLand(land).getChunk().getZ() * 16 + "").replace("%realX", plugin.getLand(land).getChunk().getX() * 16 + ""));
                                     manageGui.display();
                                 }
                         )
+                        */
                 ));
 
                 landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))

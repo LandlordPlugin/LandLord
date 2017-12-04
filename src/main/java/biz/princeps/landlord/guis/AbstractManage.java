@@ -10,13 +10,7 @@ import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import biz.princeps.lib.storage.requests.Conditions;
-import com.comphenix.packetwrapper.WrapperPlayServerSetSlot;
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
@@ -24,18 +18,12 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
-import org.bukkit.material.SpawnEgg;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -134,35 +122,39 @@ public abstract class AbstractManage extends AbstractGUI {
             this.setIcon(position, new Icon(createItem(Material.BARRIER, 1,
                     lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1"))))
                     .addClickAction((p, ic) -> {
-                        ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
-                                .replace("%cost%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1")),
-                                (p1, ic1) -> {
-                                    boolean flag = false;
-                                    if (plugin.isVaultEnabled())
-                                        if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
-                                            plugin.getVaultHandler().take(player.getUniqueId(), cost);
-                                            flag = true;
-                                        } else
-                                            player.sendMessage(lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
-                                                    .replace("%cost%", plugin.getVaultHandler().format(cost))
-                                                    .replace("%name%", land.getName()));
-                                    else flag = true;
-                                    if (flag) {
-                                        player.getWorld().regenerateChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
-                                        player.sendMessage(lm.getString("Commands.Manage.Regenerate.success")
-                                                .replace("%land%", land.getName()));
-                                        display();
-                                    }
+                        if (land.isOwner(player.getUniqueId())) {
+                            ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
+                                    .replace("%cost%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1")),
+                                    (p1, ic1) -> {
+                                        boolean flag = false;
+                                        if (plugin.isVaultEnabled())
+                                            if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
+                                                plugin.getVaultHandler().take(player.getUniqueId(), cost);
+                                                flag = true;
+                                            } else
+                                                player.sendMessage(lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
+                                                        .replace("%cost%", plugin.getVaultHandler().format(cost))
+                                                        .replace("%name%", land.getName()));
+                                        else flag = true;
+                                        if (flag) {
+                                            if (land.isOwner(player.getUniqueId())) {
+                                                player.getWorld().regenerateChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
+                                                player.sendMessage(lm.getString("Commands.Manage.Regenerate.success")
+                                                        .replace("%land%", land.getName()));
+                                                display();
+                                            }
+                                        }
 
-                                }, (p2, ic2) -> {
-                            player.sendMessage(lm.getString("Commands.Manage.Regenerate.abort")
-                                    .replace("%land%", land.getName()));
-                            display();
-                        }, this);
-                        confi.setConfirm(lm.getRawString("Confirmation.accept"));
-                        confi.setDecline(lm.getRawString("Confirmation.decline"));
+                                    }, (p2, ic2) -> {
+                                player.sendMessage(lm.getString("Commands.Manage.Regenerate.abort")
+                                        .replace("%land%", land.getName()));
+                                display();
+                            }, this);
+                            confi.setConfirm(lm.getRawString("Confirmation.accept"));
+                            confi.setDecline(lm.getRawString("Confirmation.decline"));
 
-                        confi.display();
+                            confi.display();
+                        }
                     })
             );
             position++;
@@ -332,7 +324,7 @@ public abstract class AbstractManage extends AbstractGUI {
                                     if (regions.size() > 1)
                                         Bukkit.dispatchCommand(p, "ll unclaimall");
                                     else
-                                        Bukkit.dispatchCommand(p, "ll unclaim");
+                                        Bukkit.dispatchCommand(p, "ll unclaim " + land.getName());
 
                                     p.closeInventory();
                                 },
