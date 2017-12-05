@@ -1,5 +1,5 @@
 name: Landlord
-version: 1.132
+version: 1.133
 main: biz.princeps.landlord.Landlord
 author: SpatiumPrinceps
 website: http://dev.bukkit.org/bukkit-plugins/landlord/
@@ -36,7 +36,6 @@ permissions:
       landlord.admin.bypass: true
       landlord.admin.reload: true
       landlord.admin.modifyfriends: true
-      landlord.admin.friends: true
       landlord.admin.giveclaims: true
       landlord.admin.update: true
       landlord.admin.admintp: true
@@ -115,10 +114,6 @@ permissions:
 
   landlord.admin.reload:
     description: reload plugin configuration
-    default: op
-
-  landlord.admin.friends:
-    description: view friends of any land
     default: op
 
   landlord.admin.modifyfriends:

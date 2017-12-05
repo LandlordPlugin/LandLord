@@ -302,7 +302,7 @@ public class Landlordbase extends BaseCommand {
 
     @Subcommand("admintp|adminteleport")
     @CommandPermission("landlord.admin.admintp")
-    @Syntax("<Name> - displays all lands of the player")
+    @Syntax("<Name> - teleports to a land of the player")
     public void onAdminTp(Player player, String target) {
         ((AdminTeleport) subcommands.get("admintp")).onAdminTeleport(player, target);
     }

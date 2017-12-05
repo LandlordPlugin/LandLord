@@ -1,20 +1,20 @@
 package biz.princeps.landlord.api.events;
 
-import biz.princeps.landlord.util.OwnedLand;
+import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class LandClaimEvent extends Event implements Cancellable {
+public class LandPreClaimEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
 
     private Player player;
-    private OwnedLand land;
+    private Chunk land;
 
-    public LandClaimEvent(Player player, OwnedLand land) {
+    public LandPreClaimEvent(Player player, Chunk land) {
         this.player = player;
         this.land = land;
     }
@@ -27,7 +27,7 @@ public class LandClaimEvent extends Event implements Cancellable {
         return player;
     }
 
-    public OwnedLand getLand() {
+    public Chunk getChunk() {
         return land;
     }
 
