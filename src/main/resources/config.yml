@@ -88,7 +88,8 @@ CommandSettings:
     enableDelimit: true
 # Newly claimed lands are delimited by this material.
     delimitMaterial: TORCH
-
+# When a player does not own any lands, he may claim any free chunk. later only adjacent chunks
+    claimOnlyAdjacent: true
   ListLands:
     enable: true
 # gui or chat
@@ -216,4 +217,4 @@ Manage:
       - PARROT
       - VILLAGER
 
-version: 10
+version: 11

@@ -88,8 +88,38 @@ public class Claim extends LandlordCommand {
         Bukkit.getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
+            if (plugin.getConfig().getBoolean("CommandSettings.Claim.claimOnlyAdjacent")) {
+                // Only allow claiming of adjacent chunks
+                int amountOfOwnedLands = plugin.getWgHandler().getRegionCountOfPlayer(player.getUniqueId());
 
-            boolean flag = false;
+                if (amountOfOwnedLands > 0) {
+                    // Get adjacent lands of the land, which a player wants to claim.
+                    // Only when one of the 4 adjacent is already owned, allow to claim
+                    World world = player.getWorld();
+                    OwnedLand[] adjLands = new OwnedLand[4];
+                    adjLands[0] = plugin.getLand(world.getChunkAt(chunk.getX() + 1, chunk.getZ()));
+                    adjLands[1] = plugin.getLand(world.getChunkAt(chunk.getX() - 1, chunk.getZ()));
+                    adjLands[2] = plugin.getLand(world.getChunkAt(chunk.getX(), chunk.getZ() + 1));
+                    adjLands[3] = plugin.getLand(world.getChunkAt(chunk.getX(), chunk.getZ() - 1));
+
+                    boolean hasNearbyLand = false;
+                    for (OwnedLand adjLand : adjLands) {
+                        if (adjLand.isOwner(player.getUniqueId())) {
+                            hasNearbyLand = true;
+                            break;
+                        }
+                    }
+
+                    if (!hasNearbyLand) {
+                        // no nearby land is already claimed => Display error msg
+                        player.sendMessage(lm.getString("Commands.Claim.onlyClaimAdjacentChunks").replace("%land%", OwnedLand.getName(chunk)));
+                        return;
+                    }
+                }
+            }
+
+
+            boolean moneyFlag = false;
             // Money stuff
             if (plugin.isVaultEnabled()) {
                 Offers offer = plugin.getPlayerManager().getOffer(landname);
@@ -129,7 +159,7 @@ public class Claim extends LandlordCommand {
                     }
                 } else {
                     // Normal sale
-                    flag = true;
+                    moneyFlag = true;
                     double calculatedCost = OwnedLand.calculateCost(player);
                     if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
                         plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
@@ -148,10 +178,10 @@ public class Claim extends LandlordCommand {
                 }
             } else {
                 // flag is always true, if eco is disabled
-                flag = true;
+                moneyFlag = true;
             }
 
-            if (flag) {
+            if (moneyFlag) {
                 plugin.getWgHandler().claim(chunk, player.getUniqueId());
 
                 player.sendMessage(lm.getString("Commands.Claim.success")

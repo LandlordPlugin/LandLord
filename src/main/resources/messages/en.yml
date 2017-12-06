@@ -11,6 +11,7 @@ Commands:
     hardcap: '&eYou cant claim more lands than %regions%!!'
     notAllowed: '&eYou are not allowed to claim this land!'
     aborted: '&eAborted claim!'
+    onlyClaimAdjacentChunks: '&cYou are not allowed to claim the chunk %land%, because you do not own an adjacent one!'
   Info:
     online: '&bONLINE'
     owned:
@@ -242,4 +243,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 9
+version: 11
