@@ -3,6 +3,8 @@ package biz.princeps.landlord.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.util.UUIDTypeAdapter;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,34 +16,6 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
-
-/**
- * Created by spatium on 17.07.17.
- */
-/*
-public class UUIDFetcher {
-
-    private static UUIDFetcher instance;
-
-    private ListeningExecutorService executor =
-            MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
-
-    public void namesToUUID(String[] names, FutureCallback<DefaultDomain> callback) {
-        ProfileService profiles = Landlord.getInstance().getWgHandler().getWG().getProfileService();
-        DomainInputResolver resolver = new DomainInputResolver(profiles, names);
-        resolver.setLocatorPolicy(DomainInputResolver.UserLocatorPolicy.UUID_AND_NAME);
-        ListenableFuture<DefaultDomain> future = executor.submit(resolver);
-
-        Futures.addCallback(future, callback);
-    }
-
-    public static UUIDFetcher getInstance() {
-        if (instance == null)
-            instance = new UUIDFetcher();
-        return instance;
-    }
-}
-*/
 
 public class UUIDFetcher {
 
@@ -112,9 +86,19 @@ public class UUIDFetcher {
             connection.setReadTimeout(5000);
             UUIDFetcher data = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher.class);
 
-            uuidCache.put(name, data.id);
-            nameCache.put(data.id, data.name);
-            return data.id;
+            if (data != null) {
+                uuidCache.put(name, data.id);
+                nameCache.put(data.id, data.name);
+                return data.id;
+            } else {
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+                if (offlinePlayer != null) {
+                    uuidCache.put(offlinePlayer.getName(), offlinePlayer.getUniqueId());
+                    nameCache.put(offlinePlayer.getUniqueId(), offlinePlayer.getName());
+                    return offlinePlayer.getUniqueId();
+                }
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -146,10 +130,19 @@ public class UUIDFetcher {
             HttpURLConnection connection = (HttpURLConnection) new URL(String.format(NAME_URL, UUIDTypeAdapter.fromUUID(uuid))).openConnection();
             connection.setReadTimeout(5000);
             UUIDFetcher[] nameHistory = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher[].class);
-            UUIDFetcher currentNameData = nameHistory[nameHistory.length - 1];
-            uuidCache.put(currentNameData.name.toLowerCase(), uuid);
-            nameCache.put(uuid, currentNameData.name);
-            return currentNameData.name;
+            if (nameHistory != null) {
+                UUIDFetcher currentNameData = nameHistory[nameHistory.length - 1];
+                uuidCache.put(currentNameData.name.toLowerCase(), uuid);
+                nameCache.put(uuid, currentNameData.name);
+                return currentNameData.name;
+            } else {
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+                if (offlinePlayer != null) {
+                    uuidCache.put(offlinePlayer.getName(), offlinePlayer.getUniqueId());
+                    nameCache.put(offlinePlayer.getUniqueId(), offlinePlayer.getName());
+                    return offlinePlayer.getName();
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
