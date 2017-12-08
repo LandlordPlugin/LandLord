@@ -104,9 +104,11 @@ public class Claim extends LandlordCommand {
 
                     boolean hasNearbyLand = false;
                     for (OwnedLand adjLand : adjLands) {
-                        if (adjLand.isOwner(player.getUniqueId())) {
-                            hasNearbyLand = true;
-                            break;
+                        if (adjLand != null) {
+                            if (adjLand.isOwner(player.getUniqueId())) {
+                                hasNearbyLand = true;
+                                break;
+                            }
                         }
                     }
 
