@@ -354,7 +354,10 @@ public abstract class AbstractManage extends AbstractGUI {
             if (op.isOnline()) {
                 lastseen = lm.getRawString("Commands.Info.online");
             } else {
-                lastseen = ((LPlayer) future.get().get(0)).getLastSeenAsString();
+                if (future.get().size() > 0)
+                    lastseen = ((LPlayer) future.get().get(0)).getLastSeenAsString();
+                else
+                    lastseen = "NaN";
             }
             stringList.forEach(s -> {
                 String ss = s.replace("%seen%", lastseen);
