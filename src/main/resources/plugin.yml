@@ -1,5 +1,5 @@
 name: Landlord
-version: 1.137
+version: 1.138
 main: biz.princeps.landlord.Landlord
 author: SpatiumPrinceps
 website: http://dev.bukkit.org/bukkit-plugins/landlord/
@@ -17,6 +17,7 @@ permissions:
     description: Gives access to default player commands.
     children:
       landlord.player.own: true
+      landlord.player.unclaim: true
       landlord.player.map: true
       landlord.player.borders: true
       landlord.player.info: true
@@ -37,7 +38,7 @@ permissions:
       landlord.admin.reload: true
       landlord.admin.modifyfriends: true
       landlord.admin.giveclaims: true
-      landlord.admin.update: true
+      landlord.admin.update: true 
       landlord.admin.admintp: true
 
   landlord.use:
@@ -45,7 +46,11 @@ permissions:
     default: true
 
   landlord.player.own:
-    description: permission for plot ownership (claim, unclaim, manage, friends, etc.)
+    description: permission for plot ownership (claim, manage, friends, etc.)
+    default: true
+
+  landlord.player.unclaim:
+    description: permission to unclaim lands
     default: true
 
   landlord.player.map:

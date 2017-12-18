@@ -122,14 +122,14 @@ public class Landlordbase extends BaseCommand {
 
     @Subcommand("unclaim|sell")
     @Syntax("land sell - Unclaim the chunk you are standing on")
-    @CommandPermission("landlord.player.own")
+    @CommandPermission("landlord.player.unclaim")
     public void onUnClaim(Player player, @Default("null") String landname) {
         ((Unclaim) subcommands.get("unclaim")).onUnclaim(player, landname);
     }
 
     @Subcommand("unclaimall|sellall")
     @Syntax("land unclaimall - Unclaim all lands you are owning")
-    @CommandPermission("landlord.player.own")
+    @CommandPermission("landlord.player.unclaim")
     public void onUnClaimAll(Player player) {
         ((UnclaimAll) subcommands.get("unclaimall")).onUnclaim(player);
     }
