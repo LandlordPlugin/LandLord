@@ -86,7 +86,7 @@ Borders:
 CommandSettings:
   Claim:
     enableDelimit: true
-# Newly claimed lands are delimited by this material.
+# Newly claimed lands are delimited by this material. You can add data e.g. for colored wool WOOL:3 for cyan wool
     delimitMaterial: TORCH
 # When a player does not own any lands, he may claim any free chunk. later only adjacent chunks
     claimOnlyAdjacent: true

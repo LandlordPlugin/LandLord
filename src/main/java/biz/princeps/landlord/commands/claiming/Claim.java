@@ -7,12 +7,12 @@ import biz.princeps.landlord.persistent.Offers;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.crossversion.CParticle;
 import biz.princeps.lib.gui.ConfirmationGUI;
+import biz.princeps.lib.item.DataStack;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -197,8 +197,9 @@ public class Claim extends LandlordCommand {
                         Bukkit.dispatchCommand(player, "ll sethome");
                 }
 
-                if (plugin.getConfig().getBoolean("CommandSettings.Claim.enableDelimit"))
+                if (plugin.getConfig().getBoolean("CommandSettings.Claim.enableDelimit")) {
                     delimit(chunk);
+                }
 
                 plugin.getMapManager().updateAll();
 
@@ -209,23 +210,18 @@ public class Claim extends LandlordCommand {
     }
 
     private void delimit(Chunk chunk) {
-        String s = plugin.getConfig().getString("CommandSettings.Claim.delimitMaterial");
-        Material mat = Material.getMaterial(s);
-
+        DataStack s = new DataStack(plugin.getConfig().getString("CommandSettings.Claim.delimitMaterial"));
         World w = chunk.getWorld();
-        if (mat != null) {
-            for (int i = 0; i < 16; i++) {
-                w.getHighestBlockAt(chunk.getBlock(i, 0, 0).getLocation().add(0, 1, 0)).setType(mat);
-                w.getHighestBlockAt(chunk.getBlock(0, 0, i).getLocation().add(0, 1, 0f)).setType(mat);
-                w.getHighestBlockAt(chunk.getBlock(15 - i, 0, 15).getLocation().add(0, 1, 0)).setType(mat);
-                w.getHighestBlockAt(chunk.getBlock(15, 0, 15 - i).getLocation().add(0, 1, 0)).setType(mat);
-            }
 
-        } else {
-            plugin.getLogger().warning("Invalid delimiting Material detected!! Value: " + s);
+        if (s.getMaterial() != null) {
+            for (int i = 0; i < 16; i++) {
+                s.place(w, w.getHighestBlockAt(chunk.getBlock(i, 0, 0).getLocation().add(0, 1, 0)).getLocation());
+                s.place(w, w.getHighestBlockAt(chunk.getBlock(0, 0, i).getLocation().add(0, 1, 0)).getLocation());
+                s.place(w, w.getHighestBlockAt(chunk.getBlock(15 - i, 0, 15).getLocation().add(0, 1, 0)).getLocation());
+                s.place(w, w.getHighestBlockAt(chunk.getBlock(15, 0, 15 - i).getLocation().add(0, 1, 0)).getLocation());
+            }
         }
     }
-
 
 }
 
