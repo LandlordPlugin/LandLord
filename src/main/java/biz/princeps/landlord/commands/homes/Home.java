@@ -20,6 +20,10 @@ public class Home extends LandlordCommand {
                 lm.getRawString("Commands.Home.countdown"),
                 plugin.getConfig().getBoolean("Homes.spawnParticles"));
         this.delayManager.delayCommand("/ll home", plugin.getConfig().getInt("Homes.delay"));
+        this.delayManager.delayCommand("/landlord home", plugin.getConfig().getInt("Homes.delay"));
+        this.delayManager.delayCommand("/gs home", plugin.getConfig().getInt("Homes.delay"));
+        this.delayManager.delayCommand("/land home", plugin.getConfig().getInt("Homes.delay"));
+
     }
 
     // requires permission landlord.player.home, if target equals own, else requires .homeother
