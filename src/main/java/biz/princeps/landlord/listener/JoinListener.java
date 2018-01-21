@@ -1,8 +1,11 @@
 package biz.princeps.landlord.listener;
 
+import biz.princeps.landlord.api.events.FinishedLoadingPlayerEvent;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.storage.requests.Conditions;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -32,6 +35,9 @@ public class JoinListener extends BasicListener {
                     lp = new LPlayer(p.getUniqueId());
 
                 plugin.getPlayerManager().add(p.getUniqueId(), lp);
+
+                Event event = new FinishedLoadingPlayerEvent(p, lp);
+                Bukkit.getPluginManager().callEvent(event);
             }
         }.runTaskAsynchronously(plugin);
     }
