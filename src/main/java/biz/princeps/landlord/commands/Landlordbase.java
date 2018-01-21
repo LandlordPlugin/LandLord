@@ -17,7 +17,6 @@ import biz.princeps.landlord.commands.management.*;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.util.UUIDFetcher;
 import biz.princeps.lib.PrincepsLib;
-import biz.princeps.lib.chat.ChatAPI;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.storage.AbstractDatabase;
 import biz.princeps.lib.storage.MySQL;
@@ -94,7 +93,7 @@ public class Landlordbase extends BaseCommand {
 
         // System.out.println(toDisplay.size());
 
-        MultiPagedMessage msg = ChatAPI.createMultiPagedMessge()
+        MultiPagedMessage msg = new MultiPagedMessage.Builder()
                 .setElements(toDisplay)
                 .setPerSite(perSite)
                 .setHeaderString(lm.getRawString("Commands.Help.header"))
