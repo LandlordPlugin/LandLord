@@ -126,9 +126,9 @@ public class OwnedLand {
 
     public String printOwners() {
         StringBuilder sb = new StringBuilder();
-        Iterator<UUID> it = region.getOwners().getUniqueIds().iterator();
+        Iterator<String> it = region.getOwners().getPlayers().iterator();
         while (it.hasNext()) {
-            sb.append(Bukkit.getOfflinePlayer(it.next()).getName());
+            sb.append(it.next());
             if (it.hasNext())
                 sb.append(", ");
         }
@@ -137,10 +137,9 @@ public class OwnedLand {
 
     public String printMembers() {
         StringBuilder sb = new StringBuilder();
-        Iterator<UUID> it = region.getMembers().getUniqueIds().iterator();
+        Iterator<String> it = region.getMembers().getPlayers().iterator();
         while (it.hasNext()) {
-            OfflinePlayer op = Bukkit.getOfflinePlayer(it.next());
-            sb.append(op.getName());
+            sb.append(it.next());
             if (it.hasNext())
                 sb.append(", ");
         }

@@ -1,5 +1,6 @@
 package biz.princeps.landlord.util;
 
+import biz.princeps.landlord.Landlord;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.util.UUIDTypeAdapter;
@@ -7,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -97,10 +99,9 @@ public class UUIDFetcher {
                     nameCache.put(offlinePlayer.getUniqueId(), offlinePlayer.getName());
                     return offlinePlayer.getUniqueId();
                 }
-
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            Landlord.getInstance().getLogger().warning("Could not fetch UUID of player " + name);
         }
 
         return null;
@@ -143,8 +144,8 @@ public class UUIDFetcher {
                     return offlinePlayer.getName();
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            Landlord.getInstance().getLogger().warning("Could not fetch name of player " + uuid);
         }
         return null;
     }
