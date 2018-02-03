@@ -1,9 +1,11 @@
 package biz.princeps.landlord.util;
 
 import biz.princeps.landlord.Landlord;
+import com.google.common.base.Function;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.util.UUIDTypeAdapter;
+import com.sk89q.worldguard.domains.DefaultDomain;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -98,6 +100,13 @@ public class UUIDFetcher {
                     uuidCache.put(offlinePlayer.getName(), offlinePlayer.getUniqueId());
                     nameCache.put(offlinePlayer.getUniqueId(), offlinePlayer.getName());
                     return offlinePlayer.getUniqueId();
+                } else {
+                    // TODO still doesnt work. But I honestly hate to support those cracked. Go to hell and buy the freaking game, its 20 bucks for a game worth thousands of hours.
+                    /*
+                     YES I LOVE TO SWEAR!! THIS IS SO RIDICULOUS. Why do I even have to waste time looking into this? ITS FREAKING WASTED TIME!!!!
+                     Why should I support piracy?
+                        Will implement a bad solution, which doesnt fix the actual problem. But w/e, I fucking hate it!!!!!!!!
+                     */
                 }
             }
         } catch (IOException e) {
@@ -106,6 +115,14 @@ public class UUIDFetcher {
 
         return null;
     }
+
+    private static Function<DefaultDomain, DefaultDomain> func(DefaultDomain target) {
+        return domain -> {
+            target.addAll(domain);
+            return domain;
+        };
+    }
+
 
     /**
      * Fetches the name asynchronously and passes it to the consumer

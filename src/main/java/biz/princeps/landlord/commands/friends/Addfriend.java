@@ -3,6 +3,7 @@ package biz.princeps.landlord.commands.friends;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.landlord.util.UUIDFetcher;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,9 +31,12 @@ public class Addfriend extends LandlordCommand {
                 UUIDFetcher.getUUID(target, uuid -> {
 
                     if (uuid == null) {
+                        // TODO FIX THIS SHIT
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "region addmember " + land.getName() + " " + names[0]);
+
                         // Failure
-                        player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
-                                .replace("%players%", Arrays.asList(names).toString()));
+                        // player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
+                        //  .replace("%players%", Arrays.asList(names).toString()));
                     } else {
                         // Success
                         if (!land.getWGLand().getOwners().getUniqueIds().contains(uuid)) {
@@ -57,4 +61,3 @@ public class Addfriend extends LandlordCommand {
         }
     }
 }
-
