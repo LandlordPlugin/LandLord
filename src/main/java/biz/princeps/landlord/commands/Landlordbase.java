@@ -18,13 +18,14 @@ import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.util.UUIDFetcher;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.chat.MultiPagedMessage;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.MainCommand;
+import biz.princeps.lib.command.Properties;
+import biz.princeps.lib.command.SubCommand;
 import biz.princeps.lib.storage.AbstractDatabase;
 import biz.princeps.lib.storage.MySQL;
 import biz.princeps.lib.storage.SQLite;
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.CommandIssuer;
-import co.aikar.commands.annotation.*;
-import co.aikar.commands.annotation.Optional;
+import com.google.common.collect.Sets;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -38,12 +39,19 @@ import java.util.logging.Logger;
 /**
  * Created by spatium on 16.07.17.
  */
-@CommandAlias("ll|land|landlord|gs")
-public class Landlordbase extends BaseCommand {
+public class Landlordbase extends MainCommand {
 
     private Map<String, LandlordCommand> subcommands;
+    private static Landlord pl = Landlord.getInstance();
 
     public Landlordbase() {
+        super(pl.getConfig().getString("CommandSettings.Main.name"),
+                pl.getConfig().getString("CommandSettings.Main.description"),
+                pl.getConfig().getString("CommandSettings.Main.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Main.permissions")),
+                pl.getConfig().getStringList("CommandSettings.Main.aliases").toArray(new String[]{}));
+
+
         subcommands = new HashMap<>();
         subcommands.put("claim", new Claim());
         subcommands.put("info", new Info());
@@ -70,11 +78,11 @@ public class Landlordbase extends BaseCommand {
         subcommands.put("item", new LLItem());
     }
 
-    @Default
-    @UnknownHandler
-    @Subcommand("help")
-    @CommandPermission("landlord.use")
-    public void onDefault(Player sender, String[] args) {
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+
+        if (properties.isConsole()) return;
+
         LangManager lm = Landlord.getInstance().getLangManager();
         List<String> playersList = lm.getStringList("Commands.Help.players");
         List<String> adminList = lm.getStringList("Commands.Help.admins");
@@ -82,12 +90,12 @@ public class Landlordbase extends BaseCommand {
         int perSite = Landlord.getInstance().getConfig().getInt("HelpCommandPerSite");
 
         String[] argsN = new String[1];
-        if (args.length == 1) {
-            argsN[0] = (args[0] == null ? "0" : args[0]);
+        if (arguments.get().length == 1) {
+            argsN[0] = (arguments.get()[0] == null ? "0" : arguments.get()[0]);
         }
 
         List<String> toDisplay = new ArrayList<>();
-        if (sender.hasPermission("landlord.admin.help"))
+        if (properties.getPlayer().hasPermission("landlord.admin.help"))
             toDisplay.addAll(adminList);
         toDisplay.addAll(playersList);
 
@@ -100,23 +108,43 @@ public class Landlordbase extends BaseCommand {
                 .setNextString(lm.getRawString("Commands.Help.next"))
                 .setPreviousString(lm.getRawString("Commands.Help.previous"))
                 .setCommand("ll help", argsN).build();
-        sender.spigot().sendMessage(msg.create());
+        properties.getPlayer().spigot().sendMessage(msg.create());
     }
 
-    @Subcommand("claim|buy|cl")
-    @CommandAlias("claim")
-    @Syntax("land claim - Claims the land you are currently standing on")
-    @CommandPermission("landlord.player.own")
-    public void onClaim(Player player) {
-        ((Claim) subcommands.get("claim")).onClaim(player);
+    class ClaimCMD extends SubCommand {
+
+        public ClaimCMD() {
+            super(pl.getConfig().getString("CommandSettings.Claim.name"),
+                    pl.getConfig().getString("CommandSettings.Claim.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claim.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Claim.aliases").toArray(new String[]{}));
+
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((Claim) subcommands.get("claim")).onClaim(properties.getPlayer());
+            }
+        }
     }
 
-    @Subcommand("info|i")
-    @CommandAlias("landi|landinfo")
-    @CommandPermission("landlord.player.info")
-    @Syntax("land info - Shows information about the land you are standing on")
-    public void onInfo(Player player) {
-        ((Info) subcommands.get("info")).onInfo(player);
+    class InfoCMD extends SubCommand {
+
+        public InfoCMD() {
+            super(pl.getConfig().getString("CommandSettings.Info.name"),
+                    pl.getConfig().getString("CommandSettings.Info.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Info.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Info.aliases").toArray(new String[]{}));
+
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((Info) subcommands.get("info")).onInfo(properties.getPlayer());
+            }
+        }
     }
 
     @Subcommand("unclaim|sell")

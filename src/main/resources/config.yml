@@ -84,17 +84,46 @@ Borders:
   refreshRate: 10
 
 CommandSettings:
+  Main:
+    name: help
+    description: The basic command, /help
+    usage: Usage: /help
+    permissions:
+      - landlord.use
+    aliases:
+      - ll
+      - land
+      - landlord
+      - gs
+
   Claim:
     enableDelimit: true
-# Newly claimed lands are delimited by this material. You can add data e.g. for colored wool WOOL:3 for cyan wool
+    # Newly claimed lands are delimited by this material. You can add data e.g. for colored wool WOOL:3 for cyan wool
     delimitMaterial: TORCH
-# When a player does not own any lands, he may claim any free chunk. later only adjacent chunks
+    # When a player does not own any lands, he may claim any free chunk. later only adjacent chunks
     claimOnlyAdjacent: true
+
+    name: claim
+    usage: Usage: /land claim
+    permissions:
+      - landlord.player.own
+    aliases:
+      - buy
+      - cl
+
+  Info:
+    name: info
+    usage: /land info - Shows information about the land you are standing on
+    permissions:
+      - landlord.player.info
+    aliases:
+      - i
+
   ListLands:
     enable: true
-# gui or chat
+    # gui or chat
     mode: gui
-# How many lands should be displayed per page?
+    # How many lands should be displayed per page?
     landsPerPage: 15
 
 

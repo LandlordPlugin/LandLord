@@ -22,7 +22,6 @@ import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
 import biz.princeps.lib.storage.annotation.Column;
 import biz.princeps.lib.storage.requests.Conditions;
-import co.aikar.commands.BukkitCommandManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
@@ -186,8 +185,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
     }
 
     private void manageCommands() {
-        BukkitCommandManager cmdmanager = new BukkitCommandManager(this);
-        cmdmanager.registerCommand(new Landlordbase());
+        PrincepsLib.getCommandManager().registerCommand(new Landlordbase());
     }
 
     private void manageListeners() {
