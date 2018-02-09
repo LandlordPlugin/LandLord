@@ -1,0 +1,246 @@
+Tag: '&8[&c&l!&8]'
+Disabled-World: '&7A földtámogatás le van tiltva ebben a világban'
+noPermissions: '&7Nincs jogod'
+Commands:
+  Claim:
+    success: '&bSikeresen állítottál %chunk% darabot %world% világban'
+    notEnoughMoney: '&eNincs elég pénzed (%money%), hogy állíts egy darabot (%chunk%)'
+    moneyTook: '&4Fizettél %money% pénzt %chunk% földre'
+    alreadyClaimed: '&eEzt a darabot már %owner% állította'
+    limit: '&eElőbb meg kell vásárolnod több követelést (%regions%/%claims%)! Kattints a vásárláshoz!'
+    hardcap: '&eNem követelhetsz több földet, mint %regions% régiót!!'
+    notAllowed: '&eNincs jogod ezt a földet igényelned!'
+    aborted: '&eMegszakított követelés!'
+    onlyClaimAdjacentChunks: '&cNem engedélyezheti a darab %land%-ot, mert nem egy szomszédos!'
+  Info:
+    online: '&bONLINE'
+    owned:
+      - '&f&lLand&c&lLord'
+      - '&7Földnév&8: &c%landid%'
+      - '&7Tulaj&8: &c%owner%   &7Utoljára látva: &c%lastseen%'
+      - '&7Tag&8: &c%member%'
+    free:
+      - '&f&lLand&c&lLord'
+      - '&7Földnév&8: &c%landid%'
+      - '&7&oMegvásárolhatod ezt a földet &c&o%price% pénzért'
+    advertise: '&eEzt a földet %price% igényelheted, mert a tulajdonos hirdette!'
+  Unclaim:
+    notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
+    notOwnFreeLand: '&7Nem a sajátod ennek a darabnak'
+    success: '&7Sikeresen mentesítetted &c%chunk%&7 darabot &c%world%&7 világban &c%money% &7és kaptál vissza'
+  Addfriend:
+    notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
+    noPlayer: '&7Nem találhatók a következő játékosok&8: &c%players%'
+    success: '&7Sikeresen hozzáadva &c%players% &7ehhez a földhöz'
+    alreadyOwn: '&7A tulajdonos tagként nem adható hozzá'
+  Unfriend:
+    notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
+    noPlayer: '&7Nem találhatók a következő játékosok&8: &c%players%'
+    success: '&7Sikeresen eltávolítottad &c%players% &7erről a földről'
+  AddfriendAll:
+    noPlayer: '&7Nem találhatók a következő játékosok&8: &c%players%'
+    success: '&7Sikeresen hozzáadva &c%players% &7minden &c%count% &7saját tulajdonú földhöz'
+    alreadyOwn: '&7A tulajdonos tagként nem adható hozzá'
+  UnfriendAll:
+    noPlayer: '&7Nem találhatók a következő játékosok&8: &c%players%'
+    success: '&7Sikeresen eltávolítva &c%players% &7minden &c%count% &7saját tulajdonú földhöz'
+    noFriend: '&c%player% &7nem barátja bármelyik földeden'
+  ListLands:
+    noLands: '&7Nem rendelkezel egy földdel sem'
+    header: '&7%player%s föld (%site%/%maxsite%):'
+    landSegment: '&7Föld&8: &cX: %realX%, Z: %realZ%'
+    manageAll: '&7Összes föld kezelése'
+    chat:
+      previous: '&8[&7Előző&8]'
+      next: '&8[&7Következő&8]'
+      segment: '&eNév: &c%landname% &eTagok: &c%members%'
+    noPlayer: '&7Nem található a következő játékos&8: &c%player%'
+  LandMap:
+    disabled: '&7A földtérkép &cletiltva'
+    header: '&e&m==&r&6&c&lFöld&r&e&m=='
+    yours: 'Tiéd'
+    friends: 'Barátok'
+    others: 'Mások'
+  ClearWorld:
+    success: '&7Sikeresen törölted &c%count% &7földet a(z) &c%world%&7 világban'
+    successPlayer: '&7Sikeresen törölted &c%count% &7földet &c%player%&7 játékosnál'
+    noPlayer: '&7Nem találhatók a következő játékosok&8: &c%players%'
+  Item:
+    noPlayer: '&7Nem találhatók a következő játékosok&8: &c%players%'
+  Manage:
+    all:
+      header: '&cMinden föld&8 &7kezelése'
+    notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
+    notOwnFreeLand: '&7Nem a sajátod ennek a darabnak'
+    header: '&7Kezelés&8: &c%info%'
+    invalidArguments: '&7Érvénytelen argumentum'
+    AllowBuild:
+      title: '&cÉpítkezés engedélyezése'
+      description:
+        - ' &7Megváltoztatja a játékosok képességét, hogy'
+        - ' &7építsen ebben a darabban'
+        - ' &7Állapot&8: &c%var%'
+    AllowInteract:
+      title: '&cAllow interaction'
+      description:
+        - ' &7Megváltoztatja a játékosok képességét'
+        - ' &7kölcsönhatásba léphet objektumokkal (pl. redstone contraptions)'
+        - ' &7Állapot&8: &c%var%'
+    AllowChest-access:
+      title: '&cLáda engedélyezés'
+      description:
+        - ' &7Megváltoztatja a játékosok képességét'
+        - ' &7access all kinds of containers'
+        - ' &7Állapot&8: &c%var%'
+    AllowCreeper-explosion:
+      title: '&cCreeper robbanás engedélyezés'
+      description:
+        - ' &7Megváltoztatja a creeperek képességét'
+        - ' &7törjön blokkokat'
+        - ' &7Állapot&8: &c%var%'
+    AllowPvp:
+      title: '&cPvp engedélyezés'
+      description:
+        - ' &7Megváltoztatja a játékosok képességét'
+        - ' &7üssön más játékost'
+        - ' &7Állapot&8: &c%var%'
+    AllowMob-spawning:
+      title: '&cSzörny idézés kezelés'
+      description:
+        - ' &7Megváltoztatja a szörnyek képességét'
+        - ' &7a földön belül jöjjenek létre'
+      toggleItem:
+        title: 'Idézés %mob%'
+        description:
+          - 'Idézés %mob%: %value%'
+    Regenerate:
+      title: '&cregenerálás'
+      description:
+        - ' &7Regenerálja a földet'
+        - ' &7Ára&8: &c%var%'
+      confirmation: '&7Regenerálás költség &c%cost%'
+      success: '&7A föld regenerálása &c%land% &7sikeres'
+      abort: '&7Megszakítva a regeneráció &c%land%&7 földön'
+      notEnoughMoney: '&7Nincs elég pénzed a föld regenerálásához &c%name% &7&o(Ára&8&o: &c&o%cost%&7&o)'
+    SetGreet:
+      title: '&cÜdvözlő üzenet'
+      description:
+        - ' &7Beállít egy üdvözlő üzenetet erre a darabra'
+        - ' &7Üzenet&8: &c%var%'
+      clickMsg: '&7Kattintással új üdvözlő üzenetet állíthatsz be'
+      successful: '&7Üdvözlő üzenet beállítva %msg%'
+    SetFarewell:
+      title: '&cBúcsú üzenet'
+      description:
+        - ' &7Beállít egy búcsú üzenetet erre a darabra'
+        - ' &7Üzenet&8: &c%var%'
+      clickMsg: '&7Kattints az új búcsú üzenet beállításához'
+      successful: '&7A búcsú üzenet beállítva %msg%'
+    ManageFriends:
+      title: '&cBarátok kezelése'
+      description:
+        - ' &7A barátaidat kezelheted ebben a darabban'
+      friendSegment:
+        - ' &7Utoljára látva&8: &c%seen%'
+        - ' &7&oKattints a törléshez'
+      unfriend: '&7A játékos &c%player%&7 mostantól nem a barátod'
+    Unclaim:
+      title: '&cVisszaigénylés'
+      description:
+        - '&7Kattints a visszaigényléshez ebben a darabban!'
+      confirmationTitle: '&aA föld %land% visszaigénylése'
+  Help:
+    header: '&f&lLand&c&lLord'
+    admins:
+      - '&cEz egy olyan karakterlánc, amely csak az engedélyezett felhasználó számára jelenik meg landlord.admin.help'
+      - '&cEz egy második sor'
+    players:
+      - '&c/land &8- &7Parancsok megtekintése'
+      - '&c/land claim &8- &7Beállítsa azt a darabot, amelyben állsz'
+      - '&c/land unclaim &8- &7Visszaigényli a darabot, amelyben állsz'
+      - '&c/land addfriend <player> &8- &7Egy játékos hozzáadása barátként a földhöz'
+      - '&c/land unfriend <player> &8- &7Eltávolít egy játékos barátot a földről'
+      - '&c/land friendall <player> &8- &7Hozzáadd egy barátot a jelenlegi tulajdonban lévő földet'
+      - '&c/land unfriendall <player> &8- &7Eltávolít egy játékost, mint barátot az összes jelenlegi tulajdonú földedre'
+      - '&c/land friends &8- &7Megtekinti a jelenleg tartózkodó föld barátait'
+      - '&c/land manage &8- &7Kezeli a darabot, amelyben állsz'
+      - '&c/land list &8- &7Felsorolja a tulajdonosi földjét'
+      - '&c/land info &8- &7Megtekinti az általános tájékozódási adatokat a földről, ahol állsz'
+      - '&c/land map &8- &7Kapcsolja a földi térképet'
+    previous: '&8[&7Előző&8]'
+    next: '&8[&7Következő&8]'
+  Reload:
+    success: '&aSikeresen újratöltve a landlord'
+  Claims:
+    message: '&aIgények: %regions%/%claims%'
+    noClaims: '&eElőször is meg kell vásárolnod az igényeket. Kattints ide a bolt megnyitásához'
+    disabled: '&eEz a funkció jelenleg le van tiltva'
+  SetHome:
+    notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
+    success: '&aSikeresen beállítva az otthonod az aktuális helyedre'
+    disabled: '&eEz a funkció jelenleg le van tiltva'
+    removed: '&eAz otthonod eltávolításra került, mert nem kérted ki a megfelelő darabot'
+    nullLand: '&eEzt a földet először meg kell követelned'
+  Home:
+    noHome: '&4Még nincs otthonod. Kattints ide, ha otthonot szeretnél beállítani az aktuális tartózkodási helyedre'
+    dontMove: '&cEz a parancs végrehajtódik %time% másodperen belül. Ne mozogj!'
+    youMoved: '&cElmozdultál! A teleportálás megszakadt'
+    countdown: '&bNe mozogj! &6-- &4&l%countdown% &6-- &bNe mozogj!'
+    notEnoughMoney: '&7Nincs elég pénzed a teleportáláshoz! (Ára&8&o: &c&o%cost%&7&o)'
+    costing: '&aSzámlázni kellett a %cost% az otthoni teleportáláshoz'
+    welcomeHome: '&aÜdvözöljük otthonában!'
+    disabled: '&eEz a funkció jelenleg le van tiltva'
+  GiveClaims:
+    noPlayer: '&eNincs ilyen nevű játékos'
+  Advertise:
+    notOwnFreeLand: '&7Nem a sajátod ennek a darabnak'
+    notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
+    success: '&eMost kínál %landname% %price% pénzért'
+  RemoveAdvertise:
+    success: '&aSikeresen eltávolították a hirdetést a(z) %landname% földről'
+    noAdvertise: '%eNincs reklám a földön %landname%'
+  Borders:
+    activated: '&aSikeresen aktiváltad a határvonalat! Kattints a letiltáshoz'
+    deactivated: '&eLetiltott határkijelző'
+  AdminTp:
+    noPlayer: '&eNem található %player% játékos'
+    noLands: '&ea játékos %player% nem rendelkezik semmilyen földdel!'
+    guiHeader: 'Földek %player% játékosnál'
+Alerts:
+  defaultGreeting: '&7Beléptél %owner% földjére'
+  defaultFarewell: '&7Elhagytad %owner% földjét'
+  tresholdNotReached: '&cNem engedélyezett itt építeni. %x% saját földöd van!'
+Confirmation:
+  accept: '&bElfogad!'
+  decline: '&eElutasít!'
+Shop:
+  title: 'Igény bolt. Igényléseid (%regions%/%claims%)'
+  notEnoughMoney: '&7Nincs elég pénzed, hogy vásárolj %number% egényt &7&o(Ára&8&o: &c&o%cost%&7&o)'
+  success: '&aSikeresen megvásároltad %number% egényt %cost% pénzért'
+  notAllowed: '&eNem vehetsz több igényt'
+  item:
+    header: '%number% extra igény'
+    lore:
+      - 'Kattints ide a vásárláshoz %number%'
+      - 'igények. Megvásárolhatod'
+      - '%number% több igényt, mint korábban'
+      - 'Ára: %cost%'
+MaItem:
+  itemname: 'LL Maimaitem a végzet'
+  lore:
+    - ''
+    - '&l&fMódok:'
+    - ''
+    - '&l&bvásárolható földek'
+    - '&cjobb klikk: &7info megjelenítés'
+    - '&cbal klikk: &7vásárlás'
+    - ''
+    - '&l&bsaját földön'
+    - '&cjobb klikk: &7info megjelenítés'
+    - '&cshift + jobb klikk: &7kezelés'
+    - '&cshift + bal klikk: &7összes kezelése'
+    - ''
+    - '&l&ba levegőben:'
+    - '&cjobb klikk: &7térkép kapcsolása'
+    - '&cbal klikk: &7határok kapcsolása'
+version: 11
