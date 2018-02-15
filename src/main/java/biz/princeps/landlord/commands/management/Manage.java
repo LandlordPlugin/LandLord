@@ -55,61 +55,67 @@ public class Manage extends LandlordCommand {
             }
         } else {
             // land manage <allCommands>
-            if (args[0].equals("setgreetall")) {
-                StringBuilder sb1 = new StringBuilder();
-                for (int i = 1; i < args.length; i++) {
-                    sb1.append(args[i]).append(" ");
-                }
-                String newmsg1 = sb1.toString();
+            switch (args[0]) {
+                case "setgreetall":
+                    StringBuilder sb1 = new StringBuilder();
+                    for (int i = 1; i < args.length; i++) {
+                        sb1.append(args[i]).append(" ");
+                    }
+                    String newmsg1 = sb1.toString();
 
-                for (ProtectedRegion protectedRegion : plugin.getWgHandler().getRegions(player.getUniqueId())) {
-                    protectedRegion.setFlag(DefaultFlag.GREET_MESSAGE, newmsg1);
-                }
+                    for (ProtectedRegion protectedRegion : plugin.getWgHandler().getRegions(player.getUniqueId())) {
+                        protectedRegion.setFlag(DefaultFlag.GREET_MESSAGE, newmsg1);
+                    }
 
-                player.sendMessage(lm.getString("Commands.Manage.SetGreet.successful")
-                        .replace("%msg%", newmsg1));
+                    player.sendMessage(lm.getString("Commands.Manage.SetGreet.successful")
+                            .replace("%msg%", newmsg1));
 
-            } else if (args[0].equals("setfarewellall")) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 1; i < args.length; i++) {
-                    sb.append(args[i]).append(" ");
-                }
-                String newmsg = sb.toString();
+                    break;
+                case "setfarewellall":
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 1; i < args.length; i++) {
+                        sb.append(args[i]).append(" ");
+                    }
+                    String newmsg = sb.toString();
 
-                for (ProtectedRegion protectedRegion : plugin.getWgHandler().getRegions(player.getUniqueId())) {
-                    protectedRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, newmsg);
-                }
+                    for (ProtectedRegion protectedRegion : plugin.getWgHandler().getRegions(player.getUniqueId())) {
+                        protectedRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, newmsg);
+                    }
 
-                player.sendMessage(lm.getString("Commands.Manage.SetFarewell.successful")
-                        .replace("%msg%", newmsg));
+                    player.sendMessage(lm.getString("Commands.Manage.SetFarewell.successful")
+                            .replace("%msg%", newmsg));
 
-            } else if (args[0].equals("setgreet")) {
-                setGreet(player, args, plugin.getLand(player.getLocation()).getWGLand(), 1);
+                    break;
+                case "setgreet":
+                    setGreet(player, args, plugin.getLand(player.getLocation()).getWGLand(), 1);
 
-            } else if (args[0].equals("setfarewell")) {
-                setFarewell(player, args, plugin.getLand(player.getLocation()).getWGLand(), 1);
-            } else {
-                try {
-                    World world = Bukkit.getWorld(args[0].split("_")[0]);
-                    if (Bukkit.getWorlds().contains(world)) {
-                        RegionManager rm = plugin.getWgHandler().getWG().getRegionManager(world);
-                        if (rm != null) {
-                            ProtectedRegion target = rm.getRegion(args[0]);
+                    break;
+                case "setfarewell":
+                    setFarewell(player, args, plugin.getLand(player.getLocation()).getWGLand(), 1);
+                    break;
+                default:
+                    try {
+                        World world = Bukkit.getWorld(args[0].split("_")[0]);
+                        if (Bukkit.getWorlds().contains(world)) {
+                            RegionManager rm = plugin.getWgHandler().getWG().getRegionManager(world);
+                            if (rm != null) {
+                                ProtectedRegion target = rm.getRegion(args[0]);
 
-                            switch (args[1]) {
-                                case "setgreet":
-                                    setGreet(player, args, target, 2);
-                                    break;
+                                switch (args[1]) {
+                                    case "setgreet":
+                                        setGreet(player, args, target, 2);
+                                        break;
 
-                                case "setfarewell":
-                                    setFarewell(player, args, target, 2);
-                                    break;
+                                    case "setfarewell":
+                                        setFarewell(player, args, target, 2);
+                                        break;
+                                }
                             }
                         }
+                    } catch (IndexOutOfBoundsException e) {
+                        player.sendMessage(lm.getString("Commands.manage.invalidArguments"));
                     }
-                } catch (IndexOutOfBoundsException e) {
-                    player.sendMessage(lm.getString("Commands.manage.invalidArguments"));
-                }
+                    break;
             }
         }
     }

@@ -21,6 +21,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
+@SuppressWarnings("StatementWithEmptyBody")
+// YES IM SUPPRESSING THIS WARNING BECAUSE IT CONTAINS A VERY IMPORTANT RAGE!!!
 public class UUIDFetcher {
 
     /**
@@ -115,14 +117,6 @@ public class UUIDFetcher {
 
         return null;
     }
-
-    private static Function<DefaultDomain, DefaultDomain> func(DefaultDomain target) {
-        return domain -> {
-            target.addAll(domain);
-            return domain;
-        };
-    }
-
 
     /**
      * Fetches the name asynchronously and passes it to the consumer

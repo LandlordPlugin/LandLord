@@ -285,10 +285,10 @@ public class LandMap {
     }
 
     /**
-     * core method
+     * core method for actually displaying the Map
      *
-     * @param p
-     * @return
+     * @param p the player, who asked for a map
+     * @return a reference to the scoreboard
      */
     private SimpleScoreboard displayMap(Player p) {
         Scoreboard board = ScoreboardLib.createScoreboard(p).setHandler(new ScoreboardHandler() {

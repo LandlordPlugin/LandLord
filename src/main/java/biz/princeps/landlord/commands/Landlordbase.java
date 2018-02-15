@@ -30,10 +30,8 @@ import com.google.common.collect.Sets;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.annotation.Syntax;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
