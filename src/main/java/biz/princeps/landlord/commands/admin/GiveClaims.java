@@ -1,8 +1,8 @@
 package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.commands.LandlordCommand;
-import co.aikar.commands.CommandIssuer;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public class GiveClaims extends LandlordCommand {
 
     // ll giveclaims name price amount
-    public void onGiveClaims(CommandIssuer issuer, String target, double cost, int amount) {
+    public void onGiveClaims(CommandSender issuer, String target, double cost, int amount) {
         Player player = Bukkit.getPlayer(target);
         if (player == null) {
             issuer.sendMessage(lm.getString("Commands.GiveClaims.noPlayer"));

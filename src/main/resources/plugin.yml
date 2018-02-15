@@ -1,8 +1,8 @@
 name: Landlord
-version: 1.146
+version: 1.149
 main: biz.princeps.landlord.Landlord
 author: SpatiumPrinceps
-website: http://dev.bukkit.org/bukkit-plugins/landlord/
+website: https://www.spigotmc.org/resources/beta-landlord-2.44398/
 depends: [WorldGuard, ProtocolLib]
 softdepend: [Vault, PlaceholderAPI]
 

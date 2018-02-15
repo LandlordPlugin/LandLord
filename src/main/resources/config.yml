@@ -87,7 +87,7 @@ CommandSettings:
   Main:
     name: help
     description: The basic command, /help
-    usage: Usage: /help
+    usage: 'Usage: /help'
     permissions:
       - landlord.use
     aliases:
@@ -104,7 +104,7 @@ CommandSettings:
     claimOnlyAdjacent: true
 
     name: claim
-    usage: Usage: /land claim
+    usage: 'Usage: /land claim'
     permissions:
       - landlord.player.own
     aliases:
@@ -113,18 +113,202 @@ CommandSettings:
 
   Info:
     name: info
-    usage: /land info - Shows information about the land you are standing on
+    usage: '/land info - Shows information about the land you are standing on'
     permissions:
       - landlord.player.info
     aliases:
       - i
 
+  Unclaim:
+    name: unclaim
+    usage: '/land unclaim - Unclaim the chunk you are standing on'
+    permissions:
+      - landlord.player.unclaim
+    aliases:
+      - sell
+
+  UnclaimAll:
+    name: unclaimall
+    usage: '/land unclaimall - Unclaims all your lands'
+    permissions:
+      - landlord.player.unclaim
+    aliases:
+      - sellall
+
+  Addfriend:
+    name: addfriend
+    usage: '/land addfriend - Adds a friend to your land'
+    permissions:
+      - landlord.player.own
+    aliases:
+      - friendadd
+      - addmember
+
+  RemoveFriend:
+    name: removefriend
+    usage: '/land unfriend - removes a friend from your land'
+    permissions:
+      - landlord.player.own
+    aliases:
+      - unfriend
+      - friendremove
+      - frienddelete
+      - deletefriend
+      - removefriend
+
+  AddfriendAll:
+    name: addfriendall
+    usage: '/land addfriendall - Adds a friend to all of your lands'
+    permissions:
+      - landlord.player.own
+    aliases:
+      - friendaddall
+      - addmemberall
+      - friendall
+
+  RemovefriendAll:
+    name: removefriendall
+    usage: '/land removefriendall - unfriend someone on all your lands'
+    permissions:
+      - landlord.player.own
+    aliases:
+      - unfriendall
+      - removeallfriends
+
   ListLands:
+    name: list
+    usage: '/land list - lists all your lands'
+    permissions:
+      - landlord.player.own
+    aliases:
+      - listlands
+      - landlist
     enable: true
     # gui or chat
     mode: gui
     # How many lands should be displayed per page?
     landsPerPage: 15
+
+  Map:
+    name: map
+    usage: '/land map - toggles the landmap'
+    permissions:
+      - landlord.player.map
+    aliases:
+      - landmap
+
+  Clear:
+    name: clear
+    usage: '/land clear - clear a world'
+    permissions:
+      - landlord.admin.clearworld
+    aliases:
+      - clearworld
+
+  Manage:
+    name: manage
+    usage: '/land manage - manages the land you are standing on'
+    permissions:
+      - landlord.player.manage
+    aliases:
+      - mgn
+
+  ManageAll:
+    name: manageall
+    usage: '/land manageall - manages all your lands at the same time'
+    permissions:
+      - landlord.player.manage
+    aliases:
+      - mall
+
+  Update:
+    name: update
+    usage: '<-r> - updates all lands in one world. Parameter -r forces to reset all lands to their default state'
+    permissions:
+      - landlord.admin.update
+    aliases:
+      - upd
+
+  Shop:
+    name: shop
+    usage: '/land shop - displays the land shop'
+    permissions:
+      - landlord.player.shop
+    aliases:
+      - claimshop
+
+  Reload:
+    name: reload
+    usage: '/land reload - THIS IS NOT RECOMMENDED!!!'
+    permissions:
+      - landlord.admin.reload
+    aliases:
+      - rl
+
+  Claims:
+    name: claims
+    usage: '/land claims - shows the amount of your claims'
+    permissions:
+      - landlord.player.shop
+    aliases:
+      - clms
+
+  Sethome:
+    name: sethome
+    usage: '/land sethome - sets your current land home'
+    permissions:
+      - landlord.player.home
+    aliases:
+      - homeset
+
+  Home:
+    name: home
+    usage: '/land home teleports you to your home'
+    permissions:
+      - landlord.player.home
+    aliases:
+      - h
+
+  GiveClaims:
+    name: giveclaims
+    usage: '/land giveclaims - gives someone claims'
+    permissions:
+      - landlord.claims.give
+    aliases:
+      - gcl
+
+  Advertise:
+    name: advertise
+    usage: '/land advertise'
+    permissions:
+      - landlord.player.advertise
+    aliases:
+      - adv
+
+  Borders:
+    name: borders
+    usage: '/land borders'
+    permissions:
+      - landlord.player.borders
+    aliases:
+      - toggleborders
+
+  AdminTP:
+    name: admintp
+    usage: '/land admintp <name> - teleports to the land of a player'
+    permissions:
+      - landlord.admin.admintp
+    aliases:
+      - adminteleport
+
+  MAItem:
+    name: item
+    usage: '/land item <name> - gives the player the managementitem'
+    permissions:
+      - landlord.player.item
+    aliases:
+      - maitem
+
 
 
 # define your default flags here. Every flag will be manageable in ll manage

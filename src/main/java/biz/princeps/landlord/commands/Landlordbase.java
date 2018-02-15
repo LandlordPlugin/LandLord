@@ -22,6 +22,7 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.MainCommand;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.command.SubCommand;
+import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.storage.AbstractDatabase;
 import biz.princeps.lib.storage.MySQL;
 import biz.princeps.lib.storage.SQLite;
@@ -32,6 +33,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Syntax;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -118,7 +120,6 @@ public class Landlordbase extends MainCommand {
                     pl.getConfig().getString("CommandSettings.Claim.usage"),
                     Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claim.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Claim.aliases").toArray(new String[]{}));
-
         }
 
         @Override
@@ -136,7 +137,6 @@ public class Landlordbase extends MainCommand {
                     pl.getConfig().getString("CommandSettings.Info.usage"),
                     Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Info.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Info.aliases").toArray(new String[]{}));
-
         }
 
         @Override
@@ -147,240 +147,525 @@ public class Landlordbase extends MainCommand {
         }
     }
 
-    @Subcommand("unclaim|sell")
-    @Syntax("land sell - Unclaim the chunk you are standing on")
-    @CommandPermission("landlord.player.unclaim")
-    public void onUnClaim(Player player, @Default("null") String landname) {
-        ((Unclaim) subcommands.get("unclaim")).onUnclaim(player, landname);
+    class UnclaimCMD extends SubCommand {
+
+        public UnclaimCMD() {
+            super(pl.getConfig().getString("CommandSettings.Unclaim.name"),
+                    pl.getConfig().getString("CommandSettings.Unclaim.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Unclaim.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Unclaim.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                String landname;
+                try {
+                    landname = arguments.get(0);
+                } catch (ArgumentsOutOfBoundsException e) {
+                    landname = "null";
+                }
+                ((Unclaim) subcommands.get("unclaim")).onUnclaim(properties.getPlayer(), landname);
+            }
+        }
     }
 
-    @Subcommand("unclaimall|sellall")
-    @Syntax("land unclaimall - Unclaim all lands you are owning")
-    @CommandPermission("landlord.player.unclaim")
-    public void onUnClaimAll(Player player) {
-        ((UnclaimAll) subcommands.get("unclaimall")).onUnclaim(player);
+    class UnclaimAllCMD extends SubCommand {
+
+        public UnclaimAllCMD() {
+            super(pl.getConfig().getString("CommandSettings.UnclaimAll.name"),
+                    pl.getConfig().getString("CommandSettings.UnclaimAll.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.UnclaimAll.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.UnclaimAll.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((UnclaimAll) subcommands.get("unclaimall")).onUnclaim(properties.getPlayer());
+            }
+        }
     }
 
+    class AddfriendCMD extends SubCommand {
 
-    @Subcommand("addfriend|friendadd")
-    @Syntax("land addfriend - Adds friends to your land")
-    @CommandPermission("landlord.player.own")
-    public void onAddFriend(Player player, String[] names) {
-        ((Addfriend) subcommands.get("addfriend")).onAddfriend(player, names);
+        public AddfriendCMD() {
+            super(pl.getConfig().getString("CommandSettings.Addfriend.name"),
+                    pl.getConfig().getString("CommandSettings.Addfriend.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Addfriend.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Addfriend.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((Addfriend) subcommands.get("addfriend")).onAddfriend(properties.getPlayer(), arguments.get());
+            }
+        }
     }
 
-    @Subcommand("unfriend|friendremove|frienddelete")
-    @Syntax("land unfriend - removes a friend from your land")
-    @CommandPermission("landlord.player.own")
-    public void onUnFriend(Player player, String[] names) {
-        ((Unfriend) subcommands.get("unfriend")).onUnfriend(player, names);
+    class RemoveFriendCMD extends SubCommand {
+
+        public RemoveFriendCMD() {
+            super(pl.getConfig().getString("CommandSettings.RemoveFriend.name"),
+                    pl.getConfig().getString("CommandSettings.RemoveFriend.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveFriend.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.RemoveFriend.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((Unfriend) subcommands.get("unfriend")).onUnfriend(properties.getPlayer(), arguments.get());
+            }
+        }
     }
 
-    @Subcommand("addfriendall|friendall")
-    @Syntax("land addfriend - Adds friends to all your land")
-    @CommandPermission("landlord.player.own")
-    public void onAddfriendAll(Player player, String[] names) {
-        ((AddfriendAll) subcommands.get("addfriendall")).onAddfriend(player, names);
+    class AddFriendAllCMD extends SubCommand {
+
+        public AddFriendAllCMD() {
+            super(pl.getConfig().getString("CommandSettings.AddfriendAll.name"),
+                    pl.getConfig().getString("CommandSettings.AddfriendAll.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AddfriendAll.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.AddfriendAll.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((AddfriendAll) subcommands.get("addfriendall")).onAddfriend(properties.getPlayer(), arguments.get());
+            }
+        }
     }
 
-    @Subcommand("unfriendall|removeallfriends")
-    @Syntax("land unfriendall - unfriend someone on all your lands")
-    @CommandPermission("landlord.player.own")
-    public void onUnfriendAll(Player player, String names) {
-        ((UnfriendAll) subcommands.get("unfriendall")).onUnfriendall(player, names);
+    class RemoveFriendAllCMD extends SubCommand {
+
+        public RemoveFriendAllCMD() {
+            super(pl.getConfig().getString("CommandSettings.RemovefriendAll.name"),
+                    pl.getConfig().getString("CommandSettings.RemovefriendAll.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemovefriendAll.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.RemovefriendAll.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                try {
+                    ((UnfriendAll) subcommands.get("unfriendall")).onUnfriendall(properties.getPlayer(), arguments.get(0));
+                } catch (ArgumentsOutOfBoundsException e) {
+                    properties.sendUsage();
+                }
+            }
+        }
     }
 
-    @Subcommand("list")
-    @CommandAlias("listlands|landlist")
-    @Syntax("land list - lists all your lands")
-    @CommandPermission("landlord.player.own")
-    public void onLandList(Player player, @Optional String target, @Default("0") String page) {
+    class ListLandsCMD extends SubCommand {
 
-        // Want to know own lands
-        if (target == null) {
-            ((ListLands) subcommands.get("listlands")).onListLands(player, player, Integer.parseInt(page));
-        } else if (player.hasPermission("landlord.admin.list")) {
-            // Other lands, need to lookup their names
-            UUIDFetcher.getUUID(target, uuid -> {
+        public ListLandsCMD() {
+            super(pl.getConfig().getString("CommandSettings.ListLands.name"),
+                    pl.getConfig().getString("CommandSettings.ListLands.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ListLands.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.ListLands.aliases").toArray(new String[]{}));
+        }
 
-                if (uuid == null) {
-                    // Failure
-                    player.sendMessage(Landlord.getInstance().getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", target));
-                } else {
-                    // Success
-                    OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-                    if (op != null)
-                        ((ListLands) subcommands.get("listlands")).onListLands(player, op, Integer.parseInt(page));
-                    else {
-                        player.sendMessage(Landlord.getInstance().getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", target));
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                String target = null;
+                int page = 0;
+                try {
+                    switch (arguments.size()) {
+                        case 2:
+                            target = arguments.get(0);
+                            page = arguments.getInt(1);
+                            break;
+                        case 1:
+                            target = arguments.get(0);
+                            break;
+                        case 0:
+                            break;
+                    }
+
+                } catch (ArgumentsOutOfBoundsException ignored) {
+                    properties.sendUsage();
+                }
+
+                // Want to know own lands
+                if (target == null) {
+                    ((ListLands) subcommands.get("listlands")).onListLands(properties.getPlayer(), properties.getPlayer(), page);
+                } else if (properties.getPlayer().hasPermission("landlord.admin.list")) {
+                    // Admin, Other lands, need to lookup their names
+                    int finalPage = page;
+                    String finalTarget = target;
+                    UUIDFetcher.getUUID(target, uuid -> {
+
+                        if (uuid == null) {
+                            // Failure
+                            properties.getPlayer().sendMessage(Landlord.getInstance().getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", finalTarget));
+                        } else {
+                            // Success
+                            OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+                            if (op != null)
+                                ((ListLands) subcommands.get("listlands")).onListLands(properties.getPlayer(), op, finalPage);
+                            else {
+                                properties.getPlayer().sendMessage(Landlord.getInstance().getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", finalTarget));
+                            }
+                        }
+
+                    });
+                }
+            }
+        }
+    }
+
+    class MapCMD extends SubCommand {
+
+        public MapCMD() {
+            super(pl.getConfig().getString("CommandSettings.Map.name"),
+                    pl.getConfig().getString("CommandSettings.Map.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Map.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Map.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((LandMap) subcommands.get("landmap")).onToggleLandMap(properties.getPlayer());
+            }
+        }
+    }
+
+    class ClearWorldCMD extends SubCommand {
+
+        public ClearWorldCMD() {
+            super(pl.getConfig().getString("CommandSettings.Clear.name"),
+                    pl.getConfig().getString("CommandSettings.Clear.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Clear.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Clear.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                try {
+                    ((Clear) subcommands.get("clearworld")).onClearWorld(properties.getPlayer(), arguments.get(0));
+                } catch (ArgumentsOutOfBoundsException e) {
+                    ((Clear) subcommands.get("clearworld")).onClearWorld(properties.getPlayer(), null);
+                }
+            }
+        }
+    }
+
+    class ManageCMD extends SubCommand {
+
+        public ManageCMD() {
+            super(pl.getConfig().getString("CommandSettings.Manage.name"),
+                    pl.getConfig().getString("CommandSettings.Manage.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Manage.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Manage.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((Manage) subcommands.get("manage")).onManage(properties.getPlayer(), arguments.get());
+            }
+        }
+    }
+
+    class ManageAllCMD extends SubCommand {
+
+        public ManageAllCMD() {
+            super(pl.getConfig().getString("CommandSettings.ManageAll.name"),
+                    pl.getConfig().getString("CommandSettings.ManageAll.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ManageAll.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.ManageAll.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((ManageAll) subcommands.get("manageall")).onManageAll(properties.getPlayer());
+            }
+        }
+    }
+
+    class UpdateCMD extends SubCommand {
+
+        public UpdateCMD() {
+            super(pl.getConfig().getString("CommandSettings.Update.name"),
+                    pl.getConfig().getString("CommandSettings.Update.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Update.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Update.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            try {
+                if (arguments.get(0).equals("-r")) {
+                    ((Update) subcommands.get("update")).onResetLands(properties.getCommandSender());
+                }
+            } catch (ArgumentsOutOfBoundsException e) {
+                ((Update) subcommands.get("update")).onUpdateLands(properties.getCommandSender());
+            }
+        }
+    }
+
+    class ShopCMD extends SubCommand {
+
+        public ShopCMD() {
+            super(pl.getConfig().getString("CommandSettings.Shop.name"),
+                    pl.getConfig().getString("CommandSettings.Shop.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Shop.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Shop.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((Shop) subcommands.get("shop")).onShop(properties.getPlayer());
+            }
+        }
+    }
+
+    class ReloadCMD extends SubCommand {
+
+        public ReloadCMD() {
+            super(pl.getConfig().getString("CommandSettings.Reload.name"),
+                    pl.getConfig().getString("CommandSettings.Reload.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Reload.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Reload.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            String msg = Landlord.getInstance().getLangManager().getString("Commands.Reload.success");
+            CommandSender issuer = properties.getCommandSender();
+
+            issuer.sendMessage(ChatColor.RED + "Reloading is not recommended! Before reporting any bugs, please restart your server.");
+
+            Landlord.getInstance().getPluginLoader().disablePlugin(Landlord.getInstance());
+            Landlord.getInstance().getPluginLoader().enablePlugin(Landlord.getInstance());
+            issuer.sendMessage(msg);
+        }
+    }
+
+    class ClaimsCMD extends SubCommand {
+
+        public ClaimsCMD() {
+            super(pl.getConfig().getString("CommandSettings.Claims.name"),
+                    pl.getConfig().getString("CommandSettings.Claims.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claims.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Claims.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((Claims) subcommands.get("claims")).onClaims(properties.getPlayer());
+            }
+        }
+    }
+
+    class SetHomeCMD extends SubCommand {
+
+        public SetHomeCMD() {
+            super(pl.getConfig().getString("CommandSettings.Sethome.name"),
+                    pl.getConfig().getString("CommandSettings.Sethome.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Sethome.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Sethome.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((SetHome) subcommands.get("sethome")).onSetHome(properties.getPlayer());
+            }
+        }
+    }
+
+    class HomeCMD extends SubCommand {
+
+        public HomeCMD() {
+            super(pl.getConfig().getString("CommandSettings.Home.name"),
+                    pl.getConfig().getString("CommandSettings.Home.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Home.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Home.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                String target = "own";
+                //TODO implement other homes
+                ((Home) subcommands.get("home")).onHome(properties.getPlayer(), target);
+            }
+        }
+    }
+
+    class GiveClaimsCMD extends SubCommand {
+
+        public GiveClaimsCMD() {
+            super(pl.getConfig().getString("CommandSettings.GiveClaims.name"),
+                    pl.getConfig().getString("CommandSettings.GiveClaims.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.GiveClaims.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.GiveClaims.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            try {
+                String target = arguments.get(0);
+                double price = arguments.getDouble(1);
+                int amount = arguments.getInt(2);
+                ((GiveClaims) subcommands.get("giveclaims")).onGiveClaims(properties.getCommandSender(), target, price, amount);
+            } catch (ArgumentsOutOfBoundsException | NumberFormatException e) {
+                properties.sendUsage();
+            }
+        }
+    }
+
+    class AdvertiseCMD extends SubCommand {
+
+        public AdvertiseCMD() {
+            super(pl.getConfig().getString("CommandSettings.Advertise.name"),
+                    pl.getConfig().getString("CommandSettings.Advertise.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Advertise.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Advertise.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                if (Landlord.getInstance().isVaultEnabled()) {
+                    try {
+                        String landname = "this";
+                        double price;
+                        if (arguments.size() > 1) {
+                            landname = arguments.get(0);
+                            price = arguments.getDouble(1);
+                        } else {
+                            price = arguments.getDouble(0);
+                        }
+
+                        ((Advertise) subcommands.get("advertise")).onAdvertise(properties.getPlayer(), landname, price);
+                    } catch (ArgumentsOutOfBoundsException e) {
+                        properties.sendUsage();
                     }
                 }
-
-            });
+            }
         }
     }
 
-    @Subcommand("map")
-    @CommandAlias("landmap")
-    @Syntax("land map - toggles the landmap")
-    @CommandPermission("landlord.player.map")
-    public void onToggleLandMap(Player player) {
-        ((LandMap) subcommands.get("landmap")).onToggleLandMap(player);
-    }
+    class BordersCMD extends SubCommand {
 
+        public BordersCMD() {
+            super(pl.getConfig().getString("CommandSettings.Borders.name"),
+                    pl.getConfig().getString("CommandSettings.Borders.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Borders.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Borders.aliases").toArray(new String[]{}));
+        }
 
-    @Subcommand("clear|clearworld")
-    @CommandAlias("clearworld")
-    @Syntax("land clear - clearing")
-    @CommandPermission("landlord.admin.clearworld")
-    public void onClearWorld(Player player, @Default("null") String target) {
-        ((Clear) subcommands.get("clearworld")).onClearWorld(player, target);
-    }
-
-
-    @Subcommand("manage|mgn")
-    @Syntax("land manage - manages the land you are standing on")
-    @CommandPermission("landlord.player.manage")
-    public void onLandManage(Player player, @Default("null") String[] args) {
-        ((Manage) subcommands.get("manage")).onManage(player, args);
-    }
-
-    @Subcommand("manageall|mall")
-    @Syntax("land manage all - manages all your lands at the same time")
-    @CommandPermission("landlord.player.manage")
-    public void onLandManageAll(Player player) {
-        ((ManageAll) subcommands.get("manageall")).onManageAll(player);
-    }
-
-    @Subcommand("update")
-    @Syntax("<-r> - updates all lands in one world. Parameter -r forces to reset all lands to their default state")
-    @CommandPermission("landlord.admin.update")
-    public void onLandUpdate(@Default("null") String param) {
-
-        if (param.equals("-r")) {
-            ((Update) subcommands.get("update")).onResetLands(getCurrentCommandIssuer());
-        } else {
-            ((Update) subcommands.get("update")).onUpdateLands(getCurrentCommandIssuer());
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                ((Borders) subcommands.get("borders")).onToggleBorder(properties.getPlayer());
+            }
         }
     }
 
-    @Subcommand("shop")
-    @CommandPermission("landlord.player.shop")
-    public void onShop(Player player) {
-        ((Shop) subcommands.get("shop")).onShop(player);
-    }
+    class AdminTPCMD extends SubCommand {
 
-    @Subcommand("reload|rl")
-    @CommandPermission("landlord.admin.reload")
-    public void onReload() {
-        String msg = Landlord.getInstance().getLangManager().getString("Commands.Reload.success");
-        CommandIssuer issuer = getCurrentCommandIssuer();
+        public AdminTPCMD() {
+            super(pl.getConfig().getString("CommandSettings.AdminTP.name"),
+                    pl.getConfig().getString("CommandSettings.AdminTP.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AdminTP.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.AdminTP.aliases").toArray(new String[]{}));
+        }
 
-        issuer.sendMessage(ChatColor.RED + "Reloading is not recommended! Before reporting any bugs, please restart your server.");
-
-        Landlord.getInstance().getPluginLoader().disablePlugin(Landlord.getInstance());
-        Landlord.getInstance().getPluginLoader().enablePlugin(Landlord.getInstance());
-        issuer.sendMessage(msg);
-    }
-
-    @Subcommand("claims")
-    @CommandPermission("landlord.player.shop")
-    public void onClaims(Player player) {
-        ((Claims) subcommands.get("claims")).onClaims(player);
-    }
-
-    @Subcommand("sethome")
-    @CommandPermission("landlord.player.home")
-    public void onSetHome(Player player) {
-        ((SetHome) subcommands.get("sethome")).onSetHome(player);
-    }
-
-    @Subcommand("home|h")
-    @CommandPermission("landlord.player.home")
-    public void onHome(Player player, @Default("own") String target) {
-        ((Home) subcommands.get("home")).onHome(player, target);
-    }
-
-    @Subcommand("giveclaims|gcl")
-    @CommandPermission("landlord.claims.give")
-    public void onGiveClaims(String target, Double price, Integer amount) {
-        ((GiveClaims) subcommands.get("giveclaims")).onGiveClaims(getCurrentCommandIssuer(), target, price, amount);
-    }
-
-    @Subcommand("advertise|adv")
-    @CommandPermission("landlord.player.advertise")
-    public void onAdvertise(Player player, String landlandname, Double price) {
-        if (Landlord.getInstance().isVaultEnabled())
-            ((Advertise) subcommands.get("advertise")).onAdvertise(player, landlandname, price);
-    }
-
-    @Subcommand("advertise|adv")
-    @CommandPermission("landlord.player.advertise")
-    public void onAdvertise1(Player player, Double price) {
-        if (Landlord.getInstance().isVaultEnabled())
-            ((Advertise) subcommands.get("advertise")).onAdvertise(player, "this", price);
-    }
-
-    @Subcommand("borders")
-    @CommandPermission("landlord.player.borders")
-    public void onToggleBorder(Player player) {
-        ((Borders) subcommands.get("borders")).onToggleBorder(player);
-    }
-
-    @Subcommand("admintp|adminteleport")
-    @CommandPermission("landlord.admin.admintp")
-    @Syntax("<Name> - teleports to a land of the player")
-    public void onAdminTp(Player player, String target) {
-        ((AdminTeleport) subcommands.get("admintp")).onAdminTeleport(player, target);
-    }
-
-
-    @Subcommand("item")
-    @CommandPermission("landlord.player.item")
-    @Syntax("<Name> - name of the receiving player")
-    public void onItem(CommandSender sender, @Optional String target) {
-        ((LLItem) subcommands.get("item")).onItem(sender, target);
-    }
-
-    @Subcommand("migrate")
-    public void onMigrate(String[] args) {
-        if (getCurrentCommandIssuer().hasPermission("landlord.admin.manage")) {
-            Logger logger = Landlord.getInstance().getLogger();
-
-            if (args.length > 0) {
-
-                if (args[0].equals("v1")) {
-                    // SQLite based migration
-
-                    SQLite sqLite = new SQLite(logger, Landlord.getInstance().getDataFolder() + "/Landlord.db") {
-                    };
-
-                    logger.info("Starting to migrate from v1 Ebean Database...");
-                    migrate(sqLite, "ll_land", "owner_name", "world_name", "x", "z");
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                String target;
+                try {
+                    target = arguments.get(0);
+                } catch (ArgumentsOutOfBoundsException e) {
+                    properties.sendUsage();
+                    return;
                 }
-                if (args[0].equals("v2")) {
-                    if (args.length == 2) {
-                        if (args[1].equals("sqlite")) {
-                            // SQLite based migration
-                            SQLite sqLite = new SQLite(logger, Landlord.getInstance().getDataFolder() + "/database.db") {
-                            };
+                ((AdminTeleport) subcommands.get("admintp")).onAdminTeleport(properties.getPlayer(), target);
+            }
+        }
+    }
 
-                            logger.info("Starting to migrate from v2-SQLite Database...");
-                            migrate(sqLite, "ll_land", "owneruuid", "world", "x", "z");
+    class MAItemCMD extends SubCommand {
 
-                        } else if (args[1].equals("mysql")) {
-                            // mysql based migration
+        public MAItemCMD() {
+            super(pl.getConfig().getString("CommandSettings.AdminTP.name"),
+                    pl.getConfig().getString("CommandSettings.AdminTP.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AdminTP.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.AdminTP.aliases").toArray(new String[]{}));
+        }
 
-                            logger.info("In your plugin folder a file called MySQL.yml has been generated. You need to enter the credentials of your former landlord database.");
-                            FileConfiguration mysqlConfig = PrincepsLib.prepareDatabaseFile();
-                            MySQL mySQL = new MySQL(Landlord.getInstance().getLogger(), mysqlConfig.getString("MySQL.Hostname"),
-                                    mysqlConfig.getInt("MySQL.Port"),
-                                    mysqlConfig.getString("MySQL.Database"),
-                                    mysqlConfig.getString("MySQL.User"),
-                                    mysqlConfig.getString("MySQL.Password")) {
-                            };
-                            logger.info("Starting to migrate from v2-MySQL Database...");
-                            migrate(mySQL, "ll_land", "owneruuid", "world", "x", "z");
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            String target = null;
+
+            if (arguments.size() > 0) {
+                target = arguments.get()[0];
+            }
+
+            ((LLItem) subcommands.get("item")).onItem(properties.getCommandSender(), target);
+        }
+    }
+
+    class MigrateCMD extends SubCommand {
+
+        public MigrateCMD() {
+            super("migrate", "/ll migrate <v1|v2> (v1 the original landlord, v2 Princeps upgraded version)",
+                    Sets.newHashSet("landlord.admin.migrate"));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments args) {
+            if (properties.getCommandSender().hasPermission("landlord.admin.manage")) {
+                Logger logger = Landlord.getInstance().getLogger();
+
+                if (args.size() > 0) {
+
+                    if (args.get()[0].equals("v1")) {
+                        // SQLite based migration
+
+                        SQLite sqLite = new SQLite(logger, Landlord.getInstance().getDataFolder() + "/Landlord.db") {
+                        };
+
+                        logger.info("Starting to migrate from v1 Ebean Database...");
+                        migrate(sqLite, "ll_land", "owner_name", "world_name", "x", "z");
+                    }
+                    if (args.get()[0].equals("v2")) {
+                        if (args.size() == 2) {
+                            if (args.get()[1].equals("sqlite")) {
+                                // SQLite based migration
+                                SQLite sqLite = new SQLite(logger, Landlord.getInstance().getDataFolder() + "/database.db") {
+                                };
+
+                                logger.info("Starting to migrate from v2-SQLite Database...");
+                                migrate(sqLite, "ll_land", "owneruuid", "world", "x", "z");
+
+                            } else if (args.get()[1].equals("mysql")) {
+                                // mysql based migration
+
+                                logger.info("In your plugin folder a file called MySQL.yml has been generated. You need to enter the credentials of your former landlord database.");
+                                FileConfiguration mysqlConfig = PrincepsLib.prepareDatabaseFile();
+                                MySQL mySQL = new MySQL(Landlord.getInstance().getLogger(), mysqlConfig.getString("MySQL.Hostname"),
+                                        mysqlConfig.getInt("MySQL.Port"),
+                                        mysqlConfig.getString("MySQL.Database"),
+                                        mysqlConfig.getString("MySQL.User"),
+                                        mysqlConfig.getString("MySQL.Password")) {
+                                };
+                                logger.info("Starting to migrate from v2-MySQL Database...");
+                                migrate(mySQL, "ll_land", "owneruuid", "world", "x", "z");
+                            }
                         }
                     }
                 }

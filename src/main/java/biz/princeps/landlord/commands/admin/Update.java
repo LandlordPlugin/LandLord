@@ -2,7 +2,6 @@ package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.commands.LandlordCommand;
-import co.aikar.commands.CommandIssuer;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
@@ -10,6 +9,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +20,7 @@ public class Update extends LandlordCommand {
     /**
      * Supposed to add missing flags to existing lands, remove non existing flags
      */
-    public void onUpdateLands(CommandIssuer issuer) {
+    public void onUpdateLands(CommandSender issuer) {
         issuer.sendMessage("Starting to update lands...");
 
         for (World w : Bukkit.getWorlds()) {
@@ -92,7 +92,7 @@ public class Update extends LandlordCommand {
      * Resets all lands to the default flag state
      */
 
-    public void onResetLands(CommandIssuer sender) {
+    public void onResetLands(CommandSender sender) {
         sender.sendMessage("Starting to reset lands...");
 
         for (World w : Bukkit.getWorlds()) {
