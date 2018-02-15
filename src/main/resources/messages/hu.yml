@@ -14,6 +14,7 @@ Commands:
     onlyClaimAdjacentChunks: '&cNem engedélyezheti a darab %land%-ot, mert nem egy szomszédos!'
   Info:
     online: '&bONLINE'
+    noLastSeen: '&c-'
     owned:
       - '&f&lLand&c&lLord'
       - '&7Földnév&8: &c%landid%'

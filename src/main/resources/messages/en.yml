@@ -14,6 +14,7 @@ Commands:
     onlyClaimAdjacentChunks: '&cYou are not allowed to claim the chunk %land%, because you do not own an adjacent one!'
   Info:
     online: '&bONLINE'
+    noLastSeen: '&c-'
     owned:
       - '&f&lLand&c&lLord'
       - '&7Landname&8: &c%landid%'

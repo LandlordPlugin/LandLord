@@ -67,7 +67,10 @@ public class CommandUtil {
                         lastseen = lm.getRawString("Commands.Info.online");
                     } else {
                         List<Object> list = plugin.getDatabaseAPI().retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", op.getUniqueId().toString()).create());
-                        lastseen = ((LPlayer) list.get(0)).getLastSeenAsString();
+                        if (list.size() > 0)
+                            lastseen = ((LPlayer) list.get(0)).getLastSeenAsString();
+                        else
+                            lastseen = lm.getRawString("Commands.Info.NoLastSeen");
                     }
                     player.sendMessage(owned
                             .replace("%landid%", land.getName())
@@ -85,7 +88,7 @@ public class CommandUtil {
                     // unclaimed
                     player.sendMessage(free
                             .replace("%landid%", OwnedLand.getName(chunk))
-                            .replace("%price%", (plugin.isVaultEnabled()? plugin.getVaultHandler().format(OwnedLand.calculateCost(player)) : "-1")));
+                            .replace("%price%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(OwnedLand.calculateCost(player)) : "-1")));
                     OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
                 }
             }
