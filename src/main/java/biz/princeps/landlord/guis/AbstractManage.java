@@ -220,16 +220,20 @@ public abstract class AbstractManage extends AbstractGUI {
                                 spawnEgg.setItemMeta(meta);
 
                                 Icon ic = new Icon(spawnEgg).addClickAction((clickingPlayer, ic3) -> {
-                                    // Toggle spawning of specific mob
-                                    if (flag != null) {
-                                        if (flag.contains(t))
-                                            flag.remove(t);
-                                        else
-                                            flag.add(t);
-                                    } else {
-                                        Set<EntityType> set = new HashSet<>();
-                                        set.add(t);
-                                        land.getWGLand().setFlag(DefaultFlag.DENY_SPAWN, set);
+
+                                    for (OwnedLand region : regions) {
+                                        Set<EntityType> localFlag = region.getWGLand().getFlag(DefaultFlag.DENY_SPAWN);
+                                        // Toggle spawning of specific mob
+                                        if (localFlag != null) {
+                                            if (localFlag.contains(t))
+                                                localFlag.remove(t);
+                                            else
+                                                localFlag.add(t);
+                                        } else {
+                                            Set<EntityType> set = new HashSet<>();
+                                            set.add(t);
+                                            region.getWGLand().setFlag(DefaultFlag.DENY_SPAWN, set);
+                                        }
                                     }
 
                                     // update icon text
