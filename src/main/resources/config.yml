@@ -105,7 +105,7 @@ CommandSettings:
     delimitMaterial: TORCH
     # When a player does not own any lands, he may claim any free chunk. later only adjacent chunks
     claimOnlyAdjacent: true
-    # If this is enabled, there must be one free chunk between two different owners
+    # If this is enabled, there must be one free chunk between two different owners. See https://tinyurl.com/y8xzelga
     needsGapBetweenOwners: false
 
     name: claim
