@@ -13,6 +13,7 @@ Commands:
     notAllowed: '&eYou are not allowed to claim this land!'
     aborted: '&eAborted claim!'
     onlyClaimAdjacentChunks: '&cYou are not allowed to claim the chunk %land%, because you do not own an adjacent one!'
+    needsGap: '&cYou are not allowed to claim the chunk %land%, because there must be a gap between your land and the land of other people!'
   Info:
     online: '&bONLINE'
     noLastSeen: '&c-'

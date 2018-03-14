@@ -120,6 +120,34 @@ public class Claim extends LandlordCommand {
                 }
             }
 
+            if (plugin.getConfig().getBoolean("CommandSettings.Claim.needsGapBetweenOwners")) {
+
+                // Get adjacent lands of the land, which a player wants to claim.
+                // Only when all of the 4 adj lands are either owned by the player or are free => allow the claim
+                World world = player.getWorld();
+                OwnedLand[] adjLands = new OwnedLand[4];
+                adjLands[0] = plugin.getLand(world.getChunkAt(chunk.getX() + 1, chunk.getZ()));
+                adjLands[1] = plugin.getLand(world.getChunkAt(chunk.getX() - 1, chunk.getZ()));
+                adjLands[2] = plugin.getLand(world.getChunkAt(chunk.getX(), chunk.getZ() + 1));
+                adjLands[3] = plugin.getLand(world.getChunkAt(chunk.getX(), chunk.getZ() - 1));
+
+                boolean differentOwner = false;
+                for (OwnedLand adjLand : adjLands) {
+                    if (adjLand != null) {
+                        if (!adjLand.isOwner(player.getUniqueId())) {
+                            differentOwner = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (differentOwner) {
+                    // one of the nearby lands is not owned by the player nor its free
+                    player.sendMessage(lm.getString("Commands.Claim.needsGap"). replace("%land%", OwnedLand.getName(chunk)));
+                    return;
+                }
+            }
+
 
             boolean moneyFlag = false;
             // Money stuff
