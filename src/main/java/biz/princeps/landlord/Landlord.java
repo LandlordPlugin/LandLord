@@ -42,7 +42,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by spatium on 16.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 16/7/17
  */
 public class Landlord extends JavaPlugin implements LandLordAPI {
 
@@ -85,6 +87,8 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         instance = this;
         PrincepsLib.setPluginInstance(this);
 
+        checkWorldNames();
+
         saveDefaultConfig();
         ConfigUtil.handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
         saveDefaultConfig();
@@ -118,6 +122,13 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
                 lp = new LPlayer(p.getUniqueId());
             this.getPlayerManager().add(p.getUniqueId(), lp);
         });
+    }
+
+    private void checkWorldNames() {
+        if (getConfig().getBoolean("DisableStartupWorldWarning")) {
+            Bukkit.getWorlds().stream().filter(w -> w.getName().contains(" ")).forEach(w -> getLogger().warning("Found an invalid world name (" + w.getName() + ")! LandLord will not work in this world!"));
+            getLogger().warning("Your world name may not contain special signs and must consist out of one word");
+        }
     }
 
     private void manageItems() {

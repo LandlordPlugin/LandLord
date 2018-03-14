@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class Advertise extends LandlordCommand {
 
-    //TODO implement actual claiming process of an advertised landf
+    //TODO implement actual claiming process of an advertised land
     public void onAdvertise(Player player, String landname, double price) {
 
         if (this.worldDisabled(player)) {

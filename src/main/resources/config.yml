@@ -16,6 +16,9 @@ language: en
 
 HelpCommandPerSite: 10
 
+# Disables the warning for invalid world names on startup. Be careful!
+DisableStartupWorldWarning: false
+
 # -----------        Cost Stuff        ------------
 # this formula uses limited growth. Cost will raise and raise until it reaches a certain point
 # Formula: maxCost - ( maxCost - minCost ) * multiplier ^ amountOfOwnedLands
@@ -279,7 +282,7 @@ CommandSettings:
 
   Advertise:
     name: advertise
-    usage: '/land advertise'
+    usage: '/land advertise <price> || /land advertise <landName> <price>'
     permissions:
       - landlord.player.advertise
     aliases:
