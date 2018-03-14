@@ -433,4 +433,6 @@ Manage:
       - PARROT
       - VILLAGER
 
+
+EnableMetrics: true
 version: 11
