@@ -4,6 +4,7 @@ noPermissions: '&7Nincs jogod'
 Commands:
   Claim:
     success: '&bSikeresen állítottál %chunk% darabot %world% világban'
+    p2pSuccess: '&bThe player %player% bought your chunk %chunk% in world %world% for %price%!'
     notEnoughMoney: '&eNincs elég pénzed (%money%), hogy állíts egy darabot (%chunk%)'
     moneyTook: '&4Fizettél %money% pénzt %chunk% földre'
     alreadyClaimed: '&eEzt a darabot már %owner% állította'
@@ -244,4 +245,4 @@ MaItem:
     - '&l&ba levegőben:'
     - '&cjobb klikk: &7térkép kapcsolása'
     - '&cbal klikk: &7határok kapcsolása'
-version: 11
+version: 12

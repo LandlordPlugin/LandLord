@@ -129,7 +129,9 @@ public class Claim extends LandlordCommand {
                     // Player 2 player sale
                     if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {
 
-                        ConfirmationGUI confirm = new ConfirmationGUI(player, pr.getName(), (player1, icon) -> {
+                        String sellDesc = pr.getName() + " | " + plugin.getVaultHandler().format(offer.getPrice());
+
+                        ConfirmationGUI confirm = new ConfirmationGUI(player, sellDesc, (player1, icon) -> {
                             plugin.getVaultHandler().take(player.getUniqueId(), offer.getPrice());
                             plugin.getVaultHandler().give(offer.getSeller(), offer.getPrice());
 
@@ -141,6 +143,15 @@ public class Claim extends LandlordCommand {
                             player.sendMessage(lm.getString("Commands.Claim.success")
                                     .replace("%chunk%", OwnedLand.getName(chunk))
                                     .replace("%world%", chunk.getWorld().getName()));
+
+                            if (Bukkit.getPlayer(offer.getSeller()).isOnline()) {
+                                Bukkit.getPlayer(offer.getSeller()).sendMessage(lm.getString("Commands.Claim.p2pSuccess")
+                                        .replace("%player%", player1.getName())
+                                        .replace("%chunk%", OwnedLand.getName(chunk))
+                                        .replace("%world%", chunk.getWorld().getName())
+                                        .replace("%price%", plugin.getVaultHandler().format(offer.getPrice())));
+                            }
+
 
                             OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
                             plugin.getMapManager().updateAll();

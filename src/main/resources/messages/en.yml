@@ -4,6 +4,7 @@ noPermissions: '&7No permission'
 Commands:
   Claim:
     success: '&bYou successfully claimed chunk %chunk% in world %world%'
+    p2pSuccess: '&bThe player %player% bought your chunk %chunk% in world %world% for %price%!'
     notEnoughMoney: '&eYou dont have enough money (%money%) to claim this chunk (%chunk%)'
     moneyTook: '&4You have been charged %money% for the land %chunk%'
     alreadyClaimed: '&eThis chunk is already claimed by %owner%'
@@ -244,4 +245,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 11
+version: 12
