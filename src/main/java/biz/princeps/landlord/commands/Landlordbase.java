@@ -599,10 +599,10 @@ public class Landlordbase extends MainCommand {
     class MAItemCMD extends SubCommand {
 
         public MAItemCMD() {
-            super(pl.getConfig().getString("CommandSettings.AdminTP.name"),
-                    pl.getConfig().getString("CommandSettings.AdminTP.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AdminTP.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.AdminTP.aliases").toArray(new String[]{}));
+            super(pl.getConfig().getString("CommandSettings.MAItem.name"),
+                    pl.getConfig().getString("CommandSettings.MAItem.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MAItem.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.MAItem.aliases").toArray(new String[]{}));
         }
 
         @Override
