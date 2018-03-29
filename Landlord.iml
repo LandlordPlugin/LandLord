@@ -52,7 +52,7 @@
     <orderEntry type="library" name="Maven: com.neovisionaries:nv-websocket-client:1.31" level="project" />
     <orderEntry type="library" name="Maven: fr.delthas:javaskype:1.0.20" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.9.2" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-nop:1.8.0-beta1" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-nop:1.8.0-beta2" level="project" />
     <orderEntry type="library" name="Maven: org.reflections:reflections:0.9.11" level="project" />
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.21.0-GA" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:21.0" level="project" />

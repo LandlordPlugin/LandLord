@@ -101,7 +101,6 @@ public class WorldGuardHandler {
         region.setFlag(DefaultFlag.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting")
                 .replace("%owner%", land.printOwners()));
 
-
         List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
         Set<String> flags = new HashSet<>();
 
@@ -137,8 +136,6 @@ public class WorldGuardHandler {
                 }
             }
         }
-
-
         return region;
     }
 
@@ -157,7 +154,6 @@ public class WorldGuardHandler {
                 lands.put(chunk, getRegion(chunk));
             }
         }
-
         return lands;
     }
 
