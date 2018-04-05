@@ -1,7 +1,6 @@
 package biz.princeps.landlord.items;
 
 import biz.princeps.landlord.Landlord;
-import biz.princeps.landlord.util.CommandUtil;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.item.AbstractItem;
 import org.bukkit.Bukkit;
@@ -143,7 +142,7 @@ public class Maitem extends AbstractItem {
         switch (clickAction.getResult()) {
 
             case INFO:
-                CommandUtil.onInfo(loc, p, plugin.getLangManager());
+                Bukkit.dispatchCommand(p, "ll info");
                 break;
             case BUY:
                 Bukkit.dispatchCommand(p, "ll claim");

@@ -16,16 +16,22 @@ Commands:
     needsGap: '&cNem lehet a darab %chunk%-ot, mert különbséget kell tenni a föld és a többiek földje között!'
   Info:
     online: '&bONLINE'
+    noLastSeen: '&c-'
     owned:
       - '&f&lLand&c&lLord'
       - '&7Földnév&8: &c%landid%'
       - '&7Tulaj&8: &c%owner%   &7Utoljára látva: &c%lastseen%'
       - '&7Tag&8: &c%member%'
+    owned:
+      - '&f&lLand&c&lLord'
+      - '&7Földnév&8: &c%landid%'
+      - '&7Tulaj&8: &c%owner%   &7Utoljára látva: &c%lastseen%'
+      - '&7Tag&8: &c%member%'
+      - '&7Price&8: &c&o%price%'
     free:
       - '&f&lLand&c&lLord'
       - '&7Földnév&8: &c%landid%'
-      - '&7&oMegvásárolhatod ezt a földet &c&o%price% pénzért'
-    advertise: '&eEzt a földet %price% igényelheted, mert a tulajdonos hirdette!'
+      - '&7&oPrice: &c&o%price%'
   Unclaim:
     notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
     notOwnFreeLand: '&7Nem a sajátod ennek a darabnak'
@@ -245,4 +251,4 @@ MaItem:
     - '&l&ba levegőben:'
     - '&cjobb klikk: &7térkép kapcsolása'
     - '&cbal klikk: &7határok kapcsolása'
-version: 12
+version: 13

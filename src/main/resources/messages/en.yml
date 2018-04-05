@@ -18,15 +18,20 @@ Commands:
     online: '&bONLINE'
     noLastSeen: '&c-'
     owned:
-      - '&f&lLand&c&lLord'
+      - '&f&lLand&c&lLord &a- Owned Land'
       - '&7Landname&8: &c%landid%'
       - '&7Owner&8: &c%owner%   &7Last seen: &c%lastseen%'
       - '&7Member&8: &c%member%'
-    free:
-      - '&f&lLand&c&lLord'
+    advertised:
+      - '&f&lLand&c&lLord &a- Advertised Land'
       - '&7Landname&8: &c%landid%'
-      - '&7&oYou can buy this land for &c&o%price%'
-    advertise: '&eYou can claim this land for %price% because the owner advertised it!'
+      - '&7Owner&8: &c%owner%   &7Last seen: &c%lastseen%'
+      - '&7Member&8: &c%member%'
+      - '&7Price&8: &c&o%price%'
+    free:
+      - '&f&lLand&c&lLord &a- Free Land'
+      - '&7Landname&8: &c%landid%'
+      - '&7&oPrice: &c&o%price%'
   Unclaim:
     notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
     notOwnFreeLand: '&7You do not own this chunk'
@@ -246,4 +251,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 12
+version: 13
