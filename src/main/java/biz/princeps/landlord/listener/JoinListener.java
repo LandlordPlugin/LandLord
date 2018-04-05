@@ -15,7 +15,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/07/17
  */
 public class JoinListener extends BasicListener {
 
@@ -35,6 +37,11 @@ public class JoinListener extends BasicListener {
                     lp = new LPlayer(p.getUniqueId());
 
                 plugin.getPlayerManager().add(p.getUniqueId(), lp);
+
+                // The next to lines are needed to protect claiming of "inactive" lands although the owner is online right now
+                // might just be a rare never happening edge case, but lets be safe
+                plugin.getPlayerManager().get(p.getUniqueId()).setLastSeen(LocalDateTime.now());
+                plugin.getPlayerManager().save(p.getUniqueId());
 
                 Event event = new FinishedLoadingPlayerEvent(p, lp);
                 Bukkit.getPluginManager().callEvent(event);

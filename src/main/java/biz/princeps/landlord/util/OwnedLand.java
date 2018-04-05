@@ -16,7 +16,9 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/07/17
  */
 public class OwnedLand {
 
@@ -204,13 +206,13 @@ public class OwnedLand {
 
     }
 
-    public static double calculateCost(Player player) {
+    public static double calculateCost(UUID uuid) {
         Landlord plugin = Landlord.getInstance();
 
         double minCost = plugin.getConfig().getDouble("Formula.minCost");
         double maxCost = plugin.getConfig().getDouble("Formula.maxCost");
         double multiplier = plugin.getConfig().getDouble("Formula.multiplier");
-        int x = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
+        int x = plugin.getWgHandler().getRegionCountOfPlayer(uuid);
         int freeLands = plugin.getConfig().getInt("Freelands");
 
         double var = Math.pow(multiplier, x - freeLands);

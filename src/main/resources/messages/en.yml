@@ -14,6 +14,8 @@ Commands:
     aborted: '&eAborted claim!'
     onlyClaimAdjacentChunks: '&cYou are not allowed to claim the chunk %land%, because you do not own an adjacent one!'
     needsGap: '&cYou are not allowed to claim the chunk %land%, because there must be a gap between your land and the land of other people!'
+    boughtUp: '&bYou successfully bought up the chunk %chunk% from %player% for %price%'
+    notYetInactive: '&c%owner% is not yet inactive :) You will need to wait at least %days% more days'
   Info:
     online: '&bONLINE'
     noLastSeen: '&c-'
@@ -24,6 +26,12 @@ Commands:
       - '&7Member&8: &c%member%'
     advertised:
       - '&f&lLand&c&lLord &a- Advertised Land'
+      - '&7Landname&8: &c%landid%'
+      - '&7Owner&8: &c%owner%   &7Last seen: &c%lastseen%'
+      - '&7Member&8: &c%member%'
+      - '&7Price&8: &c&o%price%'
+    inactive:
+      - '&f&lLand&c&lLord &a- Inactive Land'
       - '&7Landname&8: &c%landid%'
       - '&7Owner&8: &c%owner%   &7Last seen: &c%lastseen%'
       - '&7Member&8: &c%member%'

@@ -14,16 +14,23 @@ Commands:
     aborted: '&eMegszakított követelés!'
     onlyClaimAdjacentChunks: '&cNem engedélyezheted a darab %land%-ot, mert nem egy szomszédos!'
     needsGap: '&cNem lehet a darab %chunk%-ot, mert különbséget kell tenni a föld és a többiek földje között!'
+    boughtUp: '&bYou successfully bought up the chunk %chunk% from %player% for %price%'
   Info:
     online: '&bONLINE'
     noLastSeen: '&c-'
     owned:
-      - '&f&lLand&c&lLord'
+      - '&f&lLand&c&lLord - Owned Land'
       - '&7Földnév&8: &c%landid%'
       - '&7Tulaj&8: &c%owner%   &7Utoljára látva: &c%lastseen%'
       - '&7Tag&8: &c%member%'
-    owned:
-      - '&f&lLand&c&lLord'
+    advertised:
+      - '&f&lLand&c&lLord - Advertised Land'
+      - '&7Földnév&8: &c%landid%'
+      - '&7Tulaj&8: &c%owner%   &7Utoljára látva: &c%lastseen%'
+      - '&7Tag&8: &c%member%'
+      - '&7Price&8: &c&o%price%'
+    inactive:
+      - '&f&lLand&c&lLord - Inactive Land'
       - '&7Földnév&8: &c%landid%'
       - '&7Tulaj&8: &c%owner%   &7Utoljára látva: &c%lastseen%'
       - '&7Tag&8: &c%member%'

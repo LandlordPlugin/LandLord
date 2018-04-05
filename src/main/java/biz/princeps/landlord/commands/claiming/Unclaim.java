@@ -10,7 +10,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/07/17
  */
 public class Unclaim extends LandlordCommand {
 
@@ -72,7 +74,7 @@ public class Unclaim extends LandlordCommand {
                     if (regionCount <= freeLands)
                         payback = 0;
                     else {
-                        payback = OwnedLand.calculateCost(player) * plugin.getConfig().getDouble("Payback");
+                        payback = OwnedLand.calculateCost(player.getUniqueId()) * plugin.getConfig().getDouble("Payback");
                         // System.out.println(payback);
                         if (payback > 0)
                             plugin.getVaultHandler().give(player.getUniqueId(), payback);

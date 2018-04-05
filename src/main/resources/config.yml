@@ -71,6 +71,12 @@ Homes:
   teleportCost: 100.0
   delay: 3
 
+# This option allows players to buy up the lands of players, who are not playing actively any longer
+BuyUpInactive:
+  enable: false
+# amount of days until a player is marked as "inactive" and his lands may be bought up
+  timegate: 30
+
 # Where should the "Entering XXX's land" be displayed? Available are ActionBar, Chat, Title, Disabled
 LandMessage: ActionBar
 
@@ -435,6 +441,6 @@ Manage:
       - PARROT
       - VILLAGER
 
-
+# Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
 EnableMetrics: true
-version: 12
+version: 13

@@ -13,6 +13,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public class Info extends LandlordCommand {
 
-    private String free, owned, advertised;
+    private String free, owned, advertised, inactive;
 
     public Info() {
         List<String> ownedList = plugin.getLangManager().getStringList("Commands.Info.owned");
@@ -38,23 +39,33 @@ public class Info extends LandlordCommand {
 
         List<String> freeList = plugin.getLangManager().getStringList("Commands.Info.free");
         sb = new StringBuilder();
-        Iterator<String> it2 = freeList.iterator();
-        while (it2.hasNext()) {
-            sb.append(it2.next());
-            if (it2.hasNext())
+        it = freeList.iterator();
+        while (it.hasNext()) {
+            sb.append(it.next());
+            if (it.hasNext())
                 sb.append("\n");
         }
         free = sb.toString();
 
         List<String> advertisedList = plugin.getLangManager().getStringList("Commands.Info.advertised");
         sb = new StringBuilder();
-        Iterator<String> it3 = advertisedList.iterator();
-        while (it3.hasNext()) {
-            sb.append(it3.next());
-            if (it3.hasNext())
+        it = advertisedList.iterator();
+        while (it.hasNext()) {
+            sb.append(it.next());
+            if (it.hasNext())
                 sb.append("\n");
         }
         advertised = sb.toString();
+
+        List<String> inactiveList = plugin.getLangManager().getStringList("Commands.Info.inactive");
+        sb = new StringBuilder();
+        it = inactiveList.iterator();
+        while (it.hasNext()) {
+            sb.append(it.next());
+            if (it.hasNext())
+                sb.append("\n");
+        }
+        inactive = sb.toString();
     }
 
     public void onInfo(Player player) {
@@ -74,28 +85,39 @@ public class Info extends LandlordCommand {
                 // claimed
                 if (land != null) {
                     String lastseen;
+                    LocalDateTime lastSeenDate = null;
                     OfflinePlayer op = Bukkit.getOfflinePlayer(land.getOwner());
                     if (op.isOnline()) {
                         lastseen = lm.getRawString("Commands.Info.online");
                     } else {
                         List<Object> list = plugin.getDatabaseAPI().retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", op.getUniqueId().toString()).create());
-                        if (list.size() > 0)
+                        if (list.size() > 0) {
                             lastseen = ((LPlayer) list.get(0)).getLastSeenAsString();
-                        else
-                            lastseen = lm.getRawString("Commands.Info.NoLastSeen");
+                            lastSeenDate = ((LPlayer) list.get(0)).getLastSeen();
+                        } else {
+                            lastseen = lm.getRawString("Commands.Info.noLastSeen");
+                        }
+                    }
+
+                    if(Util.isInactive(lastSeenDate)){
+                        player.sendMessage(replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen, Util.formatCash(OwnedLand.calculateCost(player.getUniqueId()))));
+                        OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
+                        return;
                     }
 
                     Offers offer = plugin.getPlayerManager().getOffer(land.getName());
                     if (offer != null) {
+                        // advertised land
                         player.sendMessage(replaceInMessage(advertised, land.getName(), land.printOwners(), land.printMembers(), lastseen, Util.formatCash(offer.getPrice())));
                     } else {
+                        // normal owned land
                         player.sendMessage(replaceInMessage(owned, land.getName(), land.printOwners(), land.printMembers(), lastseen, ""));
                     }
                     OwnedLand.highlightLand(player, CParticle.DRIPWATER);
 
                 } else {
                     // unclaimed
-                    player.sendMessage(replaceInMessage(free, OwnedLand.getName(chunk), "", "", "", Util.formatCash(OwnedLand.calculateCost(player))));
+                    player.sendMessage(replaceInMessage(free, OwnedLand.getName(chunk), "", "", "", Util.formatCash(OwnedLand.calculateCost(player.getUniqueId()))));
                     OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
                 }
             }
