@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.claiming;
 
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -81,7 +82,7 @@ public class Claim extends LandlordCommand {
             }
         }
 
-        if (plugin.getConfig().getBoolean("Shop.enable") && plugin.isVaultEnabled()) {
+        if (plugin.getConfig().getBoolean("Shop.enable") && Options.isVaultEnabled()) {
             int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
 
             if (regionCount >= claims) {
@@ -162,7 +163,7 @@ public class Claim extends LandlordCommand {
 
             boolean moneyFlag = false;
             // Money stuff
-            if (plugin.isVaultEnabled()) {
+            if (Options.isVaultEnabled()) {
                 if (pr != null && Util.isInactive(pr.getOwner())) {
                     // Inactive sale
                     double costForBuyer = OwnedLand.calculateCost(player.getUniqueId());

@@ -219,13 +219,13 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     private WorldGuardPlugin getWorldGuard() {
         Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
-        if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
+        if (!(plugin instanceof WorldGuardPlugin)) {
             return null;
         }
         return (WorldGuardPlugin) plugin;
     }
 
-    private Economy getVault() {
+    public Economy getVault() {
         Plugin plugin = getServer().getPluginManager().getPlugin("Vault");
         if (plugin == null) {
             return null;
@@ -256,10 +256,6 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     public MapManager getMapManager() {
         return mapManager;
-    }
-
-    public boolean isVaultEnabled() {
-        return getConfig().getBoolean("Economy.enable") && getVault() != null;
     }
 
     public ExecutorService getExecutorService() {

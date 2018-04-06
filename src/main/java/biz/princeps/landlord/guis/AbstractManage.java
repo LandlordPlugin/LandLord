@@ -1,6 +1,7 @@
 package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.flags.LLFlag;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.persistent.LPlayer;
@@ -118,14 +119,14 @@ public abstract class AbstractManage extends AbstractGUI {
         if (plugin.getConfig().getBoolean("Manage.regenerate.enable") && regions.size() == 1) {
             double cost = plugin.getConfig().getDouble("ResetCost");
             this.setIcon(position, new Icon(createItem(Material.BARRIER, 1,
-                    lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1"))))
+                    lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, (Options.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1"))))
                     .addClickAction((p, ic) -> {
                         if (land.isOwner(player.getUniqueId())) {
                             ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
-                                    .replace("%cost%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1")),
+                                    .replace("%cost%", (Options.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1")),
                                     (p1, ic1) -> {
                                         boolean flag = false;
-                                        if (plugin.isVaultEnabled())
+                                        if (Options.isVaultEnabled())
                                             if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
                                                 plugin.getVaultHandler().take(player.getUniqueId(), cost);
                                                 flag = true;

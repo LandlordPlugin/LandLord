@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.homes;
 
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.util.CommandDelayManager;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -35,7 +36,7 @@ public class Home extends LandlordCommand {
         }
 
         double cost = plugin.getConfig().getDouble("Homes.teleportCost");
-        if (plugin.isVaultEnabled())
+        if (Options.isVaultEnabled())
             if (!plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
                 player.sendMessage(lm.getString("Commands.Home.notEnoughMoney").replace("%cost%", plugin.getVaultHandler().format(cost)));
                 return;
@@ -51,7 +52,7 @@ public class Home extends LandlordCommand {
                 return;
             }
 
-            if (cost > 0 && plugin.isVaultEnabled()) {
+            if (cost > 0 && Options.isVaultEnabled()) {
                 plugin.getVaultHandler().take(player.getUniqueId(), cost);
                 player.sendMessage(lm.getString("Commands.Home.costing")
                         .replace("%cost%", plugin.getVaultHandler().format(cost)));

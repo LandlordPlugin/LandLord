@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.admin.AdminTeleport;
 import biz.princeps.landlord.commands.admin.Clear;
 import biz.princeps.landlord.commands.admin.GiveClaims;
@@ -535,7 +536,7 @@ public class Landlordbase extends MainCommand {
         @Override
         public void onCommand(Properties properties, Arguments arguments) {
             if (properties.isPlayer()) {
-                if (Landlord.getInstance().isVaultEnabled()) {
+                if (Options.isVaultEnabled()) {
                     try {
                         String landname = "this";
                         double price;

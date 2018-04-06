@@ -1,6 +1,7 @@
 package biz.princeps.landlord.util;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.storage.requests.Conditions;
 
@@ -26,7 +27,7 @@ public class Util {
      * @return a formatted string
      */
     public static String formatCash(double money) {
-        return plugin.isVaultEnabled() ? plugin.getVaultHandler().format(money) : "-1";
+        return Options.isVaultEnabled() ? plugin.getVaultHandler().format(money) : "-1";
     }
 
     /**
@@ -37,6 +38,8 @@ public class Util {
      * @return if the player is inactive or not
      */
     public static boolean isInactive(LocalDateTime lastSeenDate) {
+        if (!Options.isInactiveClaimingEnabled()) return false;
+
         if (lastSeenDate == null) {
             return false;
         }

@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.claiming;
 
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
@@ -70,7 +71,7 @@ public class Unclaim extends LandlordCommand {
 
                 // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);
 
-                if (plugin.isVaultEnabled()) {
+                if (Options.isVaultEnabled()) {
                     if (regionCount <= freeLands)
                         payback = 0;
                     else {
@@ -101,7 +102,7 @@ public class Unclaim extends LandlordCommand {
             player.sendMessage(lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", OwnedLand.getName(chunk))
                     .replace("%world%", chunk.getWorld().getName())
-                    .replace("%money%", (plugin.isVaultEnabled() ? plugin.getVaultHandler().format(payback) : "-eco disabled-")));
+                    .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultHandler().format(payback) : "-eco disabled-")));
 
 
             plugin.getMapManager().updateAll();
