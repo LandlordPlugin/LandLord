@@ -204,8 +204,9 @@ Commands:
     countdown: '&bDont move! &6-- &4&l%countdown% &6-- &bDont move!'
     notEnoughMoney: '&7You dont have enough money to teleport! (Cost&8&o: &c&o%cost%&7&o)'
     costing: '&aYou were charged %cost% for teleporting home'
-    welcomeHome: '&aWelcome at your home!'
+    welcomeHome: '&aWelcome at %player%s home!'
     disabled: '&eThis feature is currently disabled'
+    otherNoHome: '&4The player %player% does not have a home yet!'
   GiveClaims:
     noPlayer: '&eThere is no player with this name'
   Advertise:

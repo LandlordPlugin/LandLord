@@ -205,6 +205,7 @@ Commands:
     costing: '&aSzámlázni kellett a %cost% az otthoni teleportáláshoz'
     welcomeHome: '&aÜdvözöljük otthonában!'
     disabled: '&eEz a funkció jelenleg le van tiltva'
+    otherNoHome: '&4The player %player% does not have a home yet!'
   GiveClaims:
     noPlayer: '&eNincs ilyen nevű játékos'
   Advertise:

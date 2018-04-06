@@ -38,7 +38,9 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * Created by spatium on 16.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 16/07/17
  */
 public class Landlordbase extends MainCommand {
 
@@ -495,9 +497,13 @@ public class Landlordbase extends MainCommand {
         @Override
         public void onCommand(Properties properties, Arguments arguments) {
             if (properties.isPlayer()) {
-                String target = "own";
-                //TODO implement other homes
-                ((Home) subcommands.get("home")).onHome(properties.getPlayer(), target);
+                String target;
+                try {
+                    target = arguments.get(0);
+                } catch (ArgumentsOutOfBoundsException e) {
+                    target = "own";
+                }
+                ((Home) subcommands.get("home")).onHome(properties, target);
             }
         }
     }
