@@ -1,19 +1,22 @@
 package biz.princeps.landlord.commands.homes;
 
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 /**
- * Created by spatium on 29.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 29/07/17
  */
 public class SetHome extends LandlordCommand {
 
     // requires permission landlord.player.home
     public void onSetHome(Player player) {
 
-        if (!plugin.getConfig().getBoolean("Homes.enable")) {
+        if (!Options.enabled_homes()) {
             player.sendMessage(lm.getString("Commands.SetHome.disabled"));
             return;
         }

@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import org.bukkit.entity.Player;
 
@@ -16,7 +17,7 @@ public class LandMap extends LandlordCommand {
             return;
         }
 
-        if (plugin.getConfig().getBoolean("Map.enable"))
+        if (Options.enabled_map())
             plugin.getMapManager().toggleMap(player);
         else {
             player.sendMessage(lm.getString("Commands.LandMap.disabled"));

@@ -202,7 +202,8 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
     }
 
     private void manageCommands() {
-        PrincepsLib.getCommandManager().registerCommand(new Landlordbase());
+        Landlordbase landlordbase = new Landlordbase();
+        PrincepsLib.getCommandManager().registerCommand(landlordbase);
     }
 
     private void manageListeners() {

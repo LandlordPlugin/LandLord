@@ -9,14 +9,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Arrays;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/7/17
  */
 public class AddfriendAll extends LandlordCommand {
 
     public void onAddfriend(Player player, String[] names) {
-
-        if (this.worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
+        if(names.length == 0){
+            player.sendMessage(lm.getString("Commands.AddfriendAll.noPlayer")
+                    .replace("%players%", Arrays.asList(names).toString()));
             return;
         }
 

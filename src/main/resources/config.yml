@@ -94,9 +94,9 @@ Borders:
 
 CommandSettings:
   Main:
-    name: help
-    description: The basic command, /help
-    usage: 'Usage: /help'
+    name: llhelp
+    description: The basic command, /llhelp
+    usage: 'Usage: /llhelp'
     permissions:
       - landlord.use
     aliases:

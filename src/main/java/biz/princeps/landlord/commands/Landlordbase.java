@@ -33,6 +33,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -53,7 +54,6 @@ public class Landlordbase extends MainCommand {
                 pl.getConfig().getString("CommandSettings.Main.usage"),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Main.permissions")),
                 pl.getConfig().getStringList("CommandSettings.Main.aliases").toArray(new String[]{}));
-
 
         subcommands = new HashMap<>();
         subcommands.put("claim", new Claim());
@@ -79,6 +79,52 @@ public class Landlordbase extends MainCommand {
         subcommands.put("borders", new Borders());
         subcommands.put("admintp", new AdminTeleport());
         subcommands.put("item", new LLItem());
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
+        List<String> tabReturn = new ArrayList<>();
+
+        // Length == 1 means there is just the first thing like /ll typed
+        if (args.length == 1) {
+            for (SubCommand subCommand : this.subCommandMap.values()) {
+                if (subCommand.hasPermission(sender)) {
+
+                    if (subCommand instanceof BordersCMD) {
+                        if (Options.enabled_borders()) {
+                            tabReturn.add(subCommand.getName());
+                        }
+                    } else if (subCommand instanceof MapCMD) {
+                        if (Options.enabled_map()) {
+                            tabReturn.add(subCommand.getName());
+                        }
+                    } else if (subCommand instanceof ShopCMD || subCommand instanceof ClaimsCMD) {
+                        if (Options.enabled_shop()) {
+                            tabReturn.add(subCommand.getName());
+                        }
+                    } else if (subCommand instanceof HomeCMD || subCommand instanceof SetHomeCMD) {
+                        if (Options.enabled_homes()) {
+                            tabReturn.add(subCommand.getName());
+                        }
+                    } else {
+                        tabReturn.add(subCommand.getName());
+                    }
+                }
+            }
+
+        } else if (args.length == 2) {
+            for (SubCommand subcmd : subCommandMap.values()) {
+                if (subcmd.matches(args[0])) {
+                    if (subcmd instanceof AddfriendCMD || subcmd instanceof AddFriendAllCMD ||
+                            subcmd instanceof RemoveFriendCMD || subcmd instanceof RemoveFriendAllCMD) {
+                        Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
+                        return tabReturn;
+                    }
+                }
+            }
+        }
+
+        return tabReturn;
     }
 
     @Override

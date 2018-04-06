@@ -11,7 +11,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Arrays;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/7/17
  */
 public class Addfriend extends LandlordCommand {
 
@@ -24,6 +26,12 @@ public class Addfriend extends LandlordCommand {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
                 player.sendMessage(lm.getString("Commands.Addfriend.notOwn")
                         .replace("%owner%", land.printOwners()));
+                return;
+            }
+
+            if(names.length == 0){
+                player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
+                          .replace("%players%", Arrays.asList(names).toString()));
                 return;
             }
 

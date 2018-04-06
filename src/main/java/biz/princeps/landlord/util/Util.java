@@ -7,7 +7,6 @@ import biz.princeps.lib.storage.requests.Conditions;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,7 +37,7 @@ public class Util {
      * @return if the player is inactive or not
      */
     public static boolean isInactive(LocalDateTime lastSeenDate) {
-        if (!Options.isInactiveClaimingEnabled()) return false;
+        if (!Options.enabled_inactiveBuyUp()) return false;
 
         if (lastSeenDate == null) {
             return false;

@@ -6,14 +6,23 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/7/17
  */
 public class UnfriendAll extends LandlordCommand {
 
     public void onUnfriendall(Player player, String name) {
+
+        if (name == null || name.isEmpty()) {
+            player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
+                    .replace("%players%", Collections.singletonList("[]").toString()));
+            return;
+        }
 
         UUIDFetcher.getUUID(name, uuid -> {
 

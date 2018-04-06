@@ -11,13 +11,28 @@ public class Options {
 
     private static Landlord plugin = Landlord.getInstance();
 
-    public static boolean isInactiveClaimingEnabled() {
+    public static boolean enabled_inactiveBuyUp() {
         return plugin.getConfig().getBoolean("BuyUpInactive.enable");
     }
 
-    public static boolean isVaultEnabled(){
+    public static boolean isVaultEnabled() {
         return plugin.getConfig().getBoolean("Economy.enable") && plugin.getVault() != null;
     }
 
+    public static boolean enabled_borders() {
+        return plugin.getConfig().getBoolean("Borders.enable");
+    }
+
+    public static boolean enabled_map() {
+        return plugin.getConfig().getBoolean("Map.enable");
+    }
+
+    public static boolean enabled_shop() {
+        return plugin.getConfig().getBoolean("Shop.enable");
+    }
+
+    public static boolean enabled_homes() {
+        return plugin.getConfig().getBoolean("Homes.enable");
+    }
 
 }

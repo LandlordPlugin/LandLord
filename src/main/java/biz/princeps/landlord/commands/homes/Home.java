@@ -37,7 +37,7 @@ public class Home extends LandlordCommand {
     // requires permission landlord.player.home, if target equals own, else requires .homeother
     public void onHome(Properties props, String targetPlayer) {
         Player player = props.getPlayer();
-        if (!plugin.getConfig().getBoolean("Homes.enable")) {
+        if (!Options.enabled_homes()) {
             player.sendMessage(lm.getString("Commands.SetHome.disabled"));
             return;
         }

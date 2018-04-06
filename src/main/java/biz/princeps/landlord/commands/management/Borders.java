@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.crossversion.CParticle;
@@ -11,6 +12,11 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 
+/**
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: Unknown
+ */
 public class Borders extends LandlordCommand {
 
     private HashMap<Player, BukkitTask> tasks;
@@ -21,8 +27,7 @@ public class Borders extends LandlordCommand {
 
     public void onToggleBorder(Player p) {
 
-
-        if (!plugin.getConfig().getBoolean("Borders.enable")) {
+        if (!Options.enabled_borders()) {
             return;
         }
 
@@ -50,8 +55,5 @@ public class Borders extends LandlordCommand {
             tasks.get(p).cancel();
             tasks.remove(p);
         }
-
-
     }
-
 }

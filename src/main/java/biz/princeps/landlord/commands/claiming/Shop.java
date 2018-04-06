@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.claiming;
 
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ShopGUI;
 import org.bukkit.entity.Player;
@@ -12,7 +13,7 @@ public class Shop extends LandlordCommand {
 
     public void onShop(Player player) {
 
-        if (plugin.getConfig().getBoolean("Shop.enable")) {
+        if (Options.enabled_shop()) {
             int regionCount = plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(plugin.getWgHandler().getWG().wrapPlayer(player));
             int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
 
