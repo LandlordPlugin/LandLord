@@ -166,8 +166,8 @@ public class Claim extends LandlordCommand {
             if (Options.isVaultEnabled()) {
                 if (pr != null && Util.isInactive(pr.getOwner())) {
                     // Inactive sale
-                    double costForBuyer = OwnedLand.calculateCost(player.getUniqueId());
-                    double payBackForInactive = OwnedLand.calculateCost(pr.getOwner());
+                    double costForBuyer = plugin.getCostManager().calculateCost(player.getUniqueId());
+                    double payBackForInactive = plugin.getCostManager().calculateCost(pr.getOwner());
                     String originalOwner = Bukkit.getOfflinePlayer(pr.getOwner()).getName();
 
                     if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), costForBuyer)) {
@@ -245,7 +245,7 @@ public class Claim extends LandlordCommand {
                 } else {
                     // Normal sale
                     moneyFlag = true;
-                    double calculatedCost = OwnedLand.calculateCost(player.getUniqueId());
+                    double calculatedCost = plugin.getCostManager().calculateCost(player.getUniqueId());
                     if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
                         plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
                         if (calculatedCost > 0)
@@ -305,6 +305,5 @@ public class Claim extends LandlordCommand {
             }
         }
     }
-
 }
 

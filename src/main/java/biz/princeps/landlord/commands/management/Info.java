@@ -100,7 +100,8 @@ public class Info extends LandlordCommand {
                     }
 
                     if(Util.isInactive(lastSeenDate)){
-                        player.sendMessage(replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen, Util.formatCash(OwnedLand.calculateCost(player.getUniqueId()))));
+                        player.sendMessage(replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen,
+                                Util.formatCash(plugin.getCostManager().calculateCost(player.getUniqueId()))));
                         OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
                         return;
                     }
@@ -108,7 +109,8 @@ public class Info extends LandlordCommand {
                     Offers offer = plugin.getPlayerManager().getOffer(land.getName());
                     if (offer != null) {
                         // advertised land
-                        player.sendMessage(replaceInMessage(advertised, land.getName(), land.printOwners(), land.printMembers(), lastseen, Util.formatCash(offer.getPrice())));
+                        player.sendMessage(replaceInMessage(advertised, land.getName(), land.printOwners(), land.printMembers(), lastseen,
+                                Util.formatCash(offer.getPrice())));
                     } else {
                         // normal owned land
                         player.sendMessage(replaceInMessage(owned, land.getName(), land.printOwners(), land.printMembers(), lastseen, ""));
@@ -117,7 +119,8 @@ public class Info extends LandlordCommand {
 
                 } else {
                     // unclaimed
-                    player.sendMessage(replaceInMessage(free, OwnedLand.getName(chunk), "", "", "", Util.formatCash(OwnedLand.calculateCost(player.getUniqueId()))));
+                    player.sendMessage(replaceInMessage(free, OwnedLand.getName(chunk), "", "", "",
+                            Util.formatCash(plugin.getCostManager().calculateCost(player.getUniqueId()))));
                     OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
                 }
             }

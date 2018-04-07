@@ -8,6 +8,7 @@ import biz.princeps.landlord.items.Maitem;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
 import biz.princeps.landlord.listener.TresholdListener;
+import biz.princeps.landlord.manager.CostManager;
 import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.manager.map.MapManager;
@@ -59,6 +60,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
     private LangManager langManager;
     private LPlayerManager lPlayerManager;
     private MapManager mapManager;
+    private CostManager costManager;
 
     public static Landlord getInstance() {
         return instance;
@@ -110,6 +112,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
         mapManager = new MapManager();
         ScoreboardLib.setPluginInstance(this);
+        costManager = new CostManager();
 
         executorService = Executors.newCachedThreadPool();
 
@@ -263,6 +266,9 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         return executorService;
     }
 
+    public CostManager getCostManager() {
+        return costManager;
+    }
 
     /**
      * API Methods

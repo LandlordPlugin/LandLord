@@ -206,23 +206,6 @@ public class OwnedLand {
 
     }
 
-    public static double calculateCost(UUID uuid) {
-        Landlord plugin = Landlord.getInstance();
-
-        double minCost = plugin.getConfig().getDouble("Formula.minCost");
-        double maxCost = plugin.getConfig().getDouble("Formula.maxCost");
-        double multiplier = plugin.getConfig().getDouble("Formula.multiplier");
-        int x = plugin.getWgHandler().getRegionCountOfPlayer(uuid);
-        int freeLands = plugin.getConfig().getInt("Freelands");
-
-        double var = Math.pow(multiplier, x - freeLands);
-
-        if (x < freeLands)
-            return 0;
-        else
-            return maxCost - (maxCost - minCost) * var;
-    }
-
     public LLFlag getFlag(DefaultFlag flag) {
         for (LLFlag llFlag : flags) {
             if (llFlag.getWGFlag().equals(flag))

@@ -21,15 +21,40 @@ DisableStartupWorldWarning: false
 
 # -----------        Cost Stuff        ------------
 # this formula uses limited growth. Cost will raise and raise until it reaches a certain point
-# Formula: maxCost - ( maxCost - minCost ) * multiplier ^ amountOfOwnedLands
 # you can play around with the formula here: https://www.geogebra.org/m/S6uSGV7c
 Economy:
   enable: true
 
-Formula:
-  maxCost: 3000.0
-  minCost: 500.0
-  multiplier: 0.95
+# Available are: LINEAR, EXPONENTIAL, LOGARITHMIC, SINUS, LIMITED
+Growth:
+  function: LIMITED
+# x is the amount of owned lands!
+# Formula: minCost + multiplier * x
+  LINEAR:
+    minCost: 500.0
+    multiplier: 1.0
+# Formula: minCost + multiplier * x ^ exponent
+  EXPONENTIAL:
+    minCost: 500.0
+    multiplier: 1.0
+    exponent: 2.0
+# Formula: minCost + multiplier * lg (b * x + c)
+  LOGARITHMIC:
+    minCost: 500.0
+    multiplier: 1.0
+    b: 1.0
+    c: 1
+# Formula: minCost + multiplier * sin (b * x + c)
+  SINUS:
+    minCost: 500.0
+    multiplier: 3.0
+    b: 1.0
+    c: 1.0
+# Formula: maxCost - ( maxCost - minCost ) * multiplier ^ x
+  LIMITED:
+    maxCost: 3000.0
+    minCost: 500.0
+    multiplier: 0.95
 
 # on unclaim, this percentage of the original price is paid back.
 Payback: 0.8
@@ -443,4 +468,4 @@ Manage:
 
 # Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
 EnableMetrics: true
-version: 13
+version: 14
