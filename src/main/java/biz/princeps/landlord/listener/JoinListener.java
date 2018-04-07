@@ -36,6 +36,10 @@ public class JoinListener extends BasicListener {
                 else
                     lp = new LPlayer(p.getUniqueId());
 
+                if (lp.getName() == null || lp.getName().isEmpty() || !p.getName().equals(lp.getName())) {
+                    lp.setName(p.getName());
+                }
+
                 plugin.getPlayerManager().add(p.getUniqueId(), lp);
 
                 // The next to lines are needed to protect claiming of "inactive" lands although the owner is online right now

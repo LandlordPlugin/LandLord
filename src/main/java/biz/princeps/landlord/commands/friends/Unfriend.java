@@ -31,22 +31,19 @@ public class Unfriend extends LandlordCommand {
             }
 
             for (String target : names) {
-                UUIDFetcher.getUUID(target, uuid -> {
-
-                    if (uuid == null) {
+                plugin.getPlayerManager().getOfflinePlayer(target, lPlayer -> {
+                    if (lPlayer == null) {
                         // Failure
                         player.sendMessage(lm.getString("Commands.Unfriend.noPlayer")
                                 .replace("%players%", Arrays.asList(names).toString()));
                     } else {
                         // Success
-                        land.removeFriend(uuid);
+                        land.removeFriend(lPlayer.getUuid());
+                        player.sendMessage(lm.getString("Commands.Unfriend.success")
+                                .replace("%players%", Arrays.asList(names).toString()));
                     }
-
                 });
             }
-
-            player.sendMessage(lm.getString("Commands.Unfriend.success")
-                    .replace("%players%", Arrays.asList(names).toString()));
 
             new BukkitRunnable() {
 

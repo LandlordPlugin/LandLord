@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Created by spatium on 17.07.17.
@@ -37,14 +38,32 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
         });
     }
 
-    public LPlayer getOfflineLPlayer(UUID id) {
-        // TODO add proper asyn operation, this might cause lag
-        List<Object> list = Landlord.getInstance().getDatabaseAPI().retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", id.toString()).create());
+    public void getOfflinePlayer(UUID uuid, Consumer<LPlayer> consumer) {
+        ((Landlord) plugin).getExecutorService().execute(() -> consumer.accept(getLPlayer(uuid)));
+    }
+
+    private LPlayer getLPlayer(UUID uuid) {
+        List<Object> list = Landlord.getInstance().getDatabaseAPI()
+                .retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", uuid.toString()).create());
         if (list.size() > 0) {
             return (LPlayer) list.get(0);
         }
         return null;
     }
+
+    public void getOfflinePlayer(String name, Consumer<LPlayer> consumer) {
+        ((Landlord) plugin).getExecutorService().execute(() -> consumer.accept(getLPlayer(name)));
+    }
+
+    private LPlayer getLPlayer(String name) {
+        List<Object> list = Landlord.getInstance().getDatabaseAPI()
+                .retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("name", name).create());
+        if (list.size() > 0) {
+            return (LPlayer) list.get(0);
+        }
+        return null;
+    }
+
 
     public Offers getOffer(String landname) {
         return offers.get(landname);
@@ -52,7 +71,6 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
 
     public void addOffer(Offers offer) {
         offers.put(offer.getLandname(), offer);
-
 
         new BukkitRunnable() {
 

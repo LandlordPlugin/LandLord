@@ -33,7 +33,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -280,7 +279,12 @@ public class Landlordbase extends MainCommand {
         @Override
         public void onCommand(Properties properties, Arguments arguments) {
             if (properties.isPlayer()) {
-                ((AddfriendAll) subcommands.get("addfriendall")).onAddfriend(properties.getPlayer(), arguments.get());
+                try {
+                    ((AddfriendAll) subcommands.get("addfriendall")).onAddfriend(properties.getPlayer(), arguments.get(0));
+                } catch (ArgumentsOutOfBoundsException e) {
+                    properties.sendMessage(pl.getLangManager().getString("Commands.AddfriendAll.noPlayer")
+                            .replace("%player%", "[]"));
+                }
             }
         }
     }
@@ -339,26 +343,20 @@ public class Landlordbase extends MainCommand {
 
                 // Want to know own lands
                 if (target == null) {
-                    ((ListLands) subcommands.get("listlands")).onListLands(properties.getPlayer(), properties.getPlayer(), page);
+                    ((ListLands) subcommands.get("listlands")).onListLands(properties.getPlayer(), pl.getPlayerManager().get(properties.getPlayer().getUniqueId()), page);
                 } else if (properties.getPlayer().hasPermission("landlord.admin.list")) {
                     // Admin, Other lands, need to lookup their names
                     int finalPage = page;
                     String finalTarget = target;
-                    UUIDFetcher.getUUID(target, uuid -> {
-
-                        if (uuid == null) {
+                    pl.getPlayerManager().getOfflinePlayer(target, lPlayer -> {
+                        if (lPlayer == null) {
                             // Failure
-                            properties.getPlayer().sendMessage(Landlord.getInstance().getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", finalTarget));
+                            properties.getPlayer().sendMessage(Landlord.getInstance().getLangManager()
+                                    .getString("Commands.ListLands.noPlayer").replace("%player%", finalTarget));
                         } else {
                             // Success
-                            OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-                            if (op != null)
-                                ((ListLands) subcommands.get("listlands")).onListLands(properties.getPlayer(), op, finalPage);
-                            else {
-                                properties.getPlayer().sendMessage(Landlord.getInstance().getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", finalTarget));
-                            }
+                            ((ListLands) subcommands.get("listlands")).onListLands(properties.getPlayer(), lPlayer, finalPage);
                         }
-
                     });
                 }
             }

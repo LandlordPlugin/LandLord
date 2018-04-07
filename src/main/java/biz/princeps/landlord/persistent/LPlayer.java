@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/7/17
  */
 @Table(name = "ll_players")
 public class LPlayer {
@@ -19,6 +21,9 @@ public class LPlayer {
     @Unique
     @Column(name = "uuid", length = 36)
     private UUID uuid;
+
+    @Column(name = "name", length = 16)
+    private String name;
 
     @Column(name = "claims")
     private int claims;
@@ -32,14 +37,24 @@ public class LPlayer {
 
     @Constructor
     public LPlayer(@Column(name = "uuid") String uuid,
+                   @Column(name = "name") String name,
                    @Column(name = "claims") int claims,
                    @Column(name = "home") Location home,
                    @Column(name = "lastseen") String lastseen) {
         this.uuid = UUID.fromString(uuid);
+        this.name = name;
         this.claims = claims;
         this.home = home;
         this.lastseen = lastseen;
         this.localDateTime = TimeUtil.stringToTime(lastseen);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LPlayer(UUID uuid) {

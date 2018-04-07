@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGUIAll;
+import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.gui.MultiPagedGUI;
@@ -16,15 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by spatium on 18.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 18/7/17
  */
 public class ListLands extends LandlordCommand {
 
-    public void onListLands(Player sender, OfflinePlayer target, int page) {
+    public void onListLands(Player sender, LPlayer target, int page) {
 
-        List<ProtectedRegion> lands = new ArrayList<>();
-
-        lands.addAll(plugin.getWgHandler().getRegions(target.getUniqueId()));
+        List<ProtectedRegion> lands = new ArrayList<>(plugin.getWgHandler().getRegions(target.getUuid()));
 
         if (lands.size() > 0) {
 
@@ -34,7 +35,7 @@ public class ListLands extends LandlordCommand {
                 MultiPagedGUI landGui = new MultiPagedGUI(sender, 5, plugin.getLangManager().getRawString("Commands.ListLands.header").replace("%player%", target.getName()));
 
                 lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
-                        .setName(land.getId())
+                                .setName(land.getId())
                        /*
                         * ATTENTION; THIS IS A HUGE EXPLOIT!!!!! PLAYERS ARE ABLE TO MANAGE ANY LAND BY OPENING THE LAND LIST GUI
                         .addClickAction((p, ic) -> {
@@ -49,7 +50,7 @@ public class ListLands extends LandlordCommand {
                 landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
                         .setName(lm.getRawString("Commands.ListLands.manageAll"))
                         .addClickAction((p, ic2) -> {
-                            ManageGUIAll manageGUIAll = new ManageGUIAll(sender, landGui, plugin.getWgHandler().getRegionsAsOL(target.getUniqueId()));
+                            ManageGUIAll manageGUIAll = new ManageGUIAll(sender, landGui, plugin.getWgHandler().getRegionsAsOL(target.getUuid()));
                             manageGUIAll.display();
                         }));
 

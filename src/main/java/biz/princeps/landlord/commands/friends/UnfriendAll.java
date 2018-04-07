@@ -24,27 +24,25 @@ public class UnfriendAll extends LandlordCommand {
             return;
         }
 
-        UUIDFetcher.getUUID(name, uuid -> {
+        plugin.getPlayerManager().getOfflinePlayer(name, lPlayer -> {
 
             // Failure
-            if (uuid == null) {
+            if (lPlayer == null) {
                 player.sendMessage(lm.getString("Commands.UnfriendAll.noPlayer")
                         .replace("%players%", Collections.singletonList(name).toString()));
             } else {
                 // Success
-                int i = 0;
-                for (ProtectedRegion protectedRegion : plugin.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegions().values()) {
-                    if (protectedRegion.isOwner(plugin.getWgHandler().getWG().wrapPlayer(player))) {
-
-                        if (!protectedRegion.getOwners().getUniqueIds().contains(uuid)) {
-                            protectedRegion.getMembers().removePlayer(uuid);
-                            i++;
-                        }
+                int count = 0;
+                for (ProtectedRegion protectedRegion : plugin.getWgHandler().getRegions(player.getUniqueId())) {
+                    if (protectedRegion.getMembers().contains(lPlayer.getUuid())) {
+                        protectedRegion.getMembers().removePlayer(lPlayer.getUuid());
+                        count++;
                     }
                 }
-                if (i > 0) {
+
+                if (count > 0) {
                     player.sendMessage(lm.getString("Commands.UnfriendAll.success")
-                            .replace("%count%", String.valueOf(i))
+                            .replace("%count%", String.valueOf(count))
                             .replace("%players%", name));
                     new BukkitRunnable() {
 

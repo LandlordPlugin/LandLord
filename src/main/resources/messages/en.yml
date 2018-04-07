@@ -54,8 +54,8 @@ Commands:
     noPlayer: '&7Could not find following players&8: &c%players%'
     success: '&7Successfully removed &c%players% &7from this land'
   AddfriendAll:
-    noPlayer: '&7Could not find following players&8: &c%players%'
-    success: '&7Successfully added &c%players% &7to all &c%count% &7lands you own'
+    noPlayer: '&7Could not find the player &8: &c%player%'
+    success: '&7Successfully added &c%player% &7to all &c%count% &7lands you own'
     alreadyOwn: '&7You cannot add the owner as a member'
   UnfriendAll:
     noPlayer: '&7Could not find following players&8: &c%players%'
@@ -63,7 +63,7 @@ Commands:
     noFriend: '&c%player% &7is not a friend on any of your lands'
   ListLands:
     noLands: '&7You do not own any land'
-    header: '&7%player%s lands (%site%/%maxsite%):'
+    header: '&7%player%s lands:'
     landSegment: '&7Land&8: &cX: %realX%, Z: %realZ%'
     manageAll: '&7Manage all lands'
     chat:

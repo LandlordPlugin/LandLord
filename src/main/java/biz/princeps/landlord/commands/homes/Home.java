@@ -2,14 +2,12 @@ package biz.princeps.landlord.commands.homes;
 
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.util.CommandDelayManager;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 
@@ -50,26 +48,21 @@ public class Home extends LandlordCommand {
                 props.sendMessage(lm.getString("noPermissions"));
                 return;
             }
-            // TODO fix this ( which is again related to freaking cracked players, idc about this shit
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(targetPlayer);
-            if(offlinePlayer == null){
-                player.sendMessage(lm.getString("Commands.Home.otherNoHome"));
-                return;
-            }
 
-            LPlayer offlineLPlayer = plugin.getPlayerManager().getOfflineLPlayer(offlinePlayer.getUniqueId());
-            if(offlineLPlayer == null){
-                player.sendMessage(lm.getString("Commands.Home.otherNoHome"));
-                return;
-            }
+            plugin.getPlayerManager().getOfflinePlayer(targetPlayer, lPlayer -> {
+                if (lPlayer == null) {
+                    player.sendMessage(lm.getString("Commands.Home.otherNoHome"));
+                } else {
+                    Location home = lPlayer.getHome();
+                    if (home == null) {
+                        player.sendMessage(lm.getString("Commands.Home.otherNoHome"));
+                        return;
+                    }
 
-            Location home = offlineLPlayer.getHome();
-            if(home == null){
-                player.sendMessage(lm.getString("Commands.Home.otherNoHome"));
-                return;
-            }
-
-            teleport(home, player, targetPlayer);
+                    // do the actual teleport sync again
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> teleport(home, player, targetPlayer));
+                }
+            });
         }
     }
 

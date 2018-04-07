@@ -21,6 +21,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
+/*
+ * Will be removed soon, hopefully. Maybe it will stay, for the rage's sake
+ *
+ *  :D
+ */
+@Deprecated
 @SuppressWarnings("StatementWithEmptyBody")
 // YES IM SUPPRESSING THIS WARNING BECAUSE IT CONTAINS A VERY IMPORTANT RAGE!!!
 public class UUIDFetcher {
@@ -50,7 +56,7 @@ public class UUIDFetcher {
      * @param name   The name
      * @param action Do what you want to do with the uuid her
      */
-    public static void getUUID(String name, Consumer<UUID> action) {
+    private static void getUUID(String name, Consumer<UUID> action) {
         pool.execute(() -> action.accept(getUUID(name)));
     }
 
@@ -60,7 +66,7 @@ public class UUIDFetcher {
      * @param name The name
      * @return The uuid
      */
-    public static UUID getUUID(String name) {
+    private static UUID getUUID(String name) {
         return getUUIDAt(name, System.currentTimeMillis());
     }
 
@@ -71,7 +77,7 @@ public class UUIDFetcher {
      * @param timestamp Time when the player had this name in milliseconds
      * @param action    Do what you want to do with the uuid her
      */
-    public static void getUUIDAt(String name, long timestamp, Consumer<UUID> action) {
+    private static void getUUIDAt(String name, long timestamp, Consumer<UUID> action) {
         pool.execute(() -> action.accept(getUUIDAt(name, timestamp)));
     }
 
@@ -82,7 +88,7 @@ public class UUIDFetcher {
      * @param timestamp Time when the player had this name in milliseconds
      * @see UUIDFetcher#FEBRUARY_2015
      */
-    public static UUID getUUIDAt(String name, long timestamp) {
+    private static UUID getUUIDAt(String name, long timestamp) {
         name = name.toLowerCase();
         if (uuidCache.containsKey(name)) {
             return uuidCache.get(name);
@@ -124,7 +130,7 @@ public class UUIDFetcher {
      * @param uuid   The uuid
      * @param action Do what you want to do with the name her
      */
-    public static void getName(UUID uuid, Consumer<String> action) {
+    private static void getName(UUID uuid, Consumer<String> action) {
         pool.execute(() -> action.accept(getName(uuid)));
     }
 
@@ -134,7 +140,7 @@ public class UUIDFetcher {
      * @param uuid The uuid
      * @return The name
      */
-    public static String getName(UUID uuid) {
+    private static String getName(UUID uuid) {
         if (nameCache.containsKey(uuid)) {
             return nameCache.get(uuid);
         }
