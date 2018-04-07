@@ -31,6 +31,7 @@ import com.google.common.collect.Sets;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.SQLException;
@@ -111,12 +112,21 @@ public class Landlordbase extends MainCommand {
                 }
             }
 
+            if (!args[0].isEmpty())
+                tabReturn.removeIf(next -> !next.startsWith(args[0]));
+
         } else if (args.length == 2) {
             for (SubCommand subcmd : subCommandMap.values()) {
                 if (subcmd.matches(args[0])) {
                     if (subcmd instanceof AddfriendCMD || subcmd instanceof AddFriendAllCMD ||
                             subcmd instanceof RemoveFriendCMD || subcmd instanceof RemoveFriendAllCMD) {
-                        Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
+
+                        if (args[1].isEmpty()) {
+                            Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
+                        } else {
+                            Bukkit.getOnlinePlayers().stream()
+                                    .filter(p -> p.getName().startsWith(args[1])).forEach(p -> tabReturn.add(p.getName()));
+                        }
                         return tabReturn;
                     }
                 }
