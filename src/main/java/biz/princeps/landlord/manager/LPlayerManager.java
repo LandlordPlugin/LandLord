@@ -1,6 +1,7 @@
 package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Offers;
 import biz.princeps.lib.manager.MappedManager;
@@ -8,6 +9,8 @@ import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.requests.Conditions;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +18,9 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/7/17
  */
 public class LPlayerManager extends MappedManager<UUID, LPlayer> {
 
@@ -90,6 +95,52 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
                 offers.remove(landname);
             }
         }.runTaskAsynchronously(plugin);
+    }
 
+
+    /**
+     * Measures if a player is inactive based on the date he was seen the last time.
+     * If this date + the timegate is before right now, he is inactive
+     *
+     * @param lastSeenDate the date the player was last seen
+     * @return if the player is inactive or not
+     */
+    public boolean isInactive(LocalDateTime lastSeenDate) {
+        if (!Options.enabled_inactiveBuyUp()) return false;
+
+        if (lastSeenDate == null) {
+            return false;
+        }
+
+        int days = plugin.getConfig().getInt("BuyUpInactive.timegate");
+
+        // yes, this guy is inactive
+        return lastSeenDate.plusDays(days).isBefore(LocalDateTime.now());
+    }
+
+    public void isInactive(UUID id, Consumer<Boolean> consumer) {
+        ((Landlord) plugin).getExecutorService().execute(() -> consumer.accept(isInactive(id)));
+    }
+
+    private Boolean isInactive(UUID id) {
+        LPlayer lPlayer = getLPlayer(id);
+        if (lPlayer != null) {
+            return isInactive(lPlayer.getLastSeen());
+        }
+        return false;
+    }
+
+    public void getInactiveRemainingDays(UUID owner, Consumer<Long> consumer) {
+        ((Landlord) plugin).getExecutorService().execute(() -> consumer.accept(getInactiveRemainingDays(owner)));
+    }
+
+    private Long getInactiveRemainingDays(UUID owner) {
+
+        long days = plugin.getConfig().getInt("BuyUpInactive.timegate");
+        LPlayer lPlayer = getLPlayer(owner);
+        if (lPlayer != null) {
+            return days - (Duration.between(LocalDateTime.now(), lPlayer.getLastSeen()).toDays());
+        }
+        return -1L;
     }
 }

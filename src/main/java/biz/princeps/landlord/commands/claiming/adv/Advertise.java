@@ -7,9 +7,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
+/**
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: Unknown
+ */
 public class Advertise extends LandlordCommand {
 
-    //TODO implement actual claiming process of an advertised land
     public void onAdvertise(Player player, String landname, double price) {
 
         if (this.worldDisabled(player)) {
