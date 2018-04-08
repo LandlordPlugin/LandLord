@@ -99,7 +99,7 @@ public class Info extends LandlordCommand {
                         }
                     }
 
-                    if(Util.isInactive(lastSeenDate)){
+                    if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
                         player.sendMessage(replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen,
                                 Util.formatCash(plugin.getCostManager().calculateCost(player.getUniqueId()))));
                         OwnedLand.highlightLand(player, CParticle.DRIPLAVA);

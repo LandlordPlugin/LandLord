@@ -58,5 +58,7 @@
     <orderEntry type="library" name="Maven: com.google.guava:guava:21.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.6.2" level="project" />
     <orderEntry type="library" name="Maven: me.tigerhix.lib:scoreboard:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: co.aikar:taskchain-bukkit:3.6.0" level="project" />
+    <orderEntry type="library" name="Maven: co.aikar:taskchain-core:3.6.0" level="project" />
   </component>
 </module>

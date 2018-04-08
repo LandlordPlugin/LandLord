@@ -374,7 +374,7 @@ public class Landlordbase extends MainCommand {
     }
 
     class MapCMD extends SubCommand {
-
+//TODO fix on reconnect
         public MapCMD() {
             super(pl.getConfig().getString("CommandSettings.Map.name"),
                     pl.getConfig().getString("CommandSettings.Map.usage"),

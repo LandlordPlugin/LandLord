@@ -122,7 +122,13 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
         ((Landlord) plugin).getExecutorService().execute(() -> consumer.accept(isInactive(id)));
     }
 
-    private Boolean isInactive(UUID id) {
+    /**
+     * Warning, this method might cause lag if done on the main thread!
+     *
+     * @param id the uuid which should be checked
+     * @return if the given id is marked as inactive
+     */
+    public Boolean isInactive(UUID id) {
         LPlayer lPlayer = getLPlayer(id);
         if (lPlayer != null) {
             return isInactive(lPlayer.getLastSeen());
@@ -134,7 +140,13 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
         ((Landlord) plugin).getExecutorService().execute(() -> consumer.accept(getInactiveRemainingDays(owner)));
     }
 
-    private Long getInactiveRemainingDays(UUID owner) {
+    /**
+     * Warning, this method might cause lag if done on the main thread!
+     *
+     * @param owner the uuid which should be checked
+     * @return the amount of days, which are missing until the player become inactive
+     */
+    public Long getInactiveRemainingDays(UUID owner) {
 
         long days = plugin.getConfig().getInt("BuyUpInactive.timegate");
         LPlayer lPlayer = getLPlayer(owner);

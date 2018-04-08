@@ -54,6 +54,7 @@
                                     <include>org.slf4j:slf4j-api</include>
                                     <include>org.slf4j:slf4j-simple</include>
                                     <include>net.jodah:expiringmap</include>
+                                    <include>*:taskchain*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
@@ -142,6 +143,12 @@
             <groupId>me.tigerhix.lib</groupId>
             <artifactId>scoreboard</artifactId>
             <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>co.aikar</groupId>
+            <artifactId>taskchain-bukkit</artifactId>
+            <version>3.6.0</version>
         </dependency>
 
     </dependencies>

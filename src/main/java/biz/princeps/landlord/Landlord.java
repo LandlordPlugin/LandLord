@@ -24,6 +24,9 @@ import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
 import biz.princeps.lib.storage.annotation.Column;
 import biz.princeps.lib.storage.requests.Conditions;
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainFactory;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
@@ -53,6 +56,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
     private static Landlord instance;
     private static DatabaseAPI databaseAPI;
     private ExecutorService executorService;
+    private static TaskChainFactory taskChainFactory;
 
     private WorldGuardHandler wgHandler;
     private VaultHandler vaultHandler;
@@ -89,6 +93,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
         instance = this;
         PrincepsLib.setPluginInstance(this);
+        taskChainFactory = BukkitTaskChainFactory.create(this);
 
         checkWorldNames();
 
@@ -291,6 +296,17 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
     @Override
     public OwnedLand getLand(ProtectedRegion protectedRegion) {
         return wgHandler.getRegion(protectedRegion);
+    }
+
+    /**
+     * Task Chain Stuff
+     **/
+    public static <T> TaskChain<T> newChain() {
+        return taskChainFactory.newChain();
+    }
+
+    public static <T> TaskChain<T> newSharedChain(String name) {
+        return taskChainFactory.newSharedChain(name);
     }
 
 }
