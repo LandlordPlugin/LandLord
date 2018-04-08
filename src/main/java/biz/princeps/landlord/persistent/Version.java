@@ -4,6 +4,11 @@ import biz.princeps.lib.storage.annotation.Column;
 import biz.princeps.lib.storage.annotation.Table;
 import biz.princeps.lib.storage.annotation.Unique;
 
+/**
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/7/17
+ */
 @Table(name = "ll_version")
 public class Version {
 

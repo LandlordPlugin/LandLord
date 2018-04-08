@@ -6,6 +6,11 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: Unknown
+ */
 public class LandUnclaimEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();

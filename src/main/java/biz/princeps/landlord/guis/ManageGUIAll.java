@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 /**
- * Created by spatium on 24.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 24/7/17
  */
 public class ManageGUIAll extends AbstractManage {
 

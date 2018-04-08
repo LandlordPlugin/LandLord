@@ -7,6 +7,11 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
+/**
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: Unknown
+ */
 public class GiveClaims extends LandlordCommand {
 
     // ll giveclaims name price amount

@@ -2,7 +2,6 @@ package biz.princeps.landlord.commands.friends;
 
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
-import biz.princeps.landlord.util.UUIDFetcher;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -10,7 +9,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Arrays;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/7/17
  */
 public class Unfriend extends LandlordCommand {
 

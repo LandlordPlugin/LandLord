@@ -4,7 +4,6 @@ import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Offers;
 import biz.princeps.landlord.util.OwnedLand;
-import biz.princeps.landlord.util.Util;
 import biz.princeps.lib.crossversion.CParticle;
 import biz.princeps.lib.storage.requests.Conditions;
 import org.bukkit.Bukkit;
@@ -16,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
+
 
 /**
  * Project: LandLord
@@ -101,7 +101,7 @@ public class Info extends LandlordCommand {
 
                     if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
                         player.sendMessage(replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen,
-                                Util.formatCash(plugin.getCostManager().calculateCost(player.getUniqueId()))));
+                                plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
                         OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
                         return;
                     }
@@ -110,7 +110,7 @@ public class Info extends LandlordCommand {
                     if (offer != null) {
                         // advertised land
                         player.sendMessage(replaceInMessage(advertised, land.getName(), land.printOwners(), land.printMembers(), lastseen,
-                                Util.formatCash(offer.getPrice())));
+                                plugin.getVaultHandler().format(offer.getPrice())));
                     } else {
                         // normal owned land
                         player.sendMessage(replaceInMessage(owned, land.getName(), land.printOwners(), land.printMembers(), lastseen, ""));
@@ -120,7 +120,7 @@ public class Info extends LandlordCommand {
                 } else {
                     // unclaimed
                     player.sendMessage(replaceInMessage(free, OwnedLand.getName(chunk), "", "", "",
-                            Util.formatCash(plugin.getCostManager().calculateCost(player.getUniqueId()))));
+                            plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
                     OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
                 }
             }

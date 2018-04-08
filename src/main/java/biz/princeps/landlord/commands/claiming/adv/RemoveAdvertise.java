@@ -7,6 +7,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
+/**
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: Unknown
+ */
 public class RemoveAdvertise extends LandlordCommand {
 
     public void onAdvertise(Player player, String landname) {

@@ -6,6 +6,11 @@ import biz.princeps.landlord.util.OwnedLand;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 import org.bukkit.entity.Player;
 
+/**
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: Unknown
+ */
 public class LandLordPlacehodlers extends EZPlaceholderHook {
 
     private Landlord pl;

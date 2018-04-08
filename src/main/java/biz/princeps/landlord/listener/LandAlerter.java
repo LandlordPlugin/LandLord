@@ -27,7 +27,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Created by spatium on 24.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 24/7/17
  */
 public class LandAlerter extends BasicListener {
 

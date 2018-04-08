@@ -1,5 +1,6 @@
 package biz.princeps.landlord.handler;
 
+import biz.princeps.landlord.api.Options;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -7,7 +8,9 @@ import org.bukkit.Bukkit;
 import java.util.UUID;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/7/17
  */
 public class VaultHandler {
 
@@ -33,7 +36,13 @@ public class VaultHandler {
         EconomyResponse economyResponse = economy.depositPlayer(Bukkit.getOfflinePlayer(id), amount);
     }
 
-    public String format(double calculatedCost) {
-        return economy.format(calculatedCost);
+    /**
+     * Formats a given money double to the vault style with the currency e.g. 100 Dollars
+     *
+     * @param money the amount which should be formatted
+     * @return a formatted string
+     */
+    public String format(double money) {
+        return Options.isVaultEnabled() ? economy.format(money) : "-1";
     }
 }

@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 
 
 /**
- * Created by spatium on 28.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 28/07/2017
  */
 public class Claims extends LandlordCommand {
 

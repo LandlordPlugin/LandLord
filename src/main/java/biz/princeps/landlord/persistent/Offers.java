@@ -7,7 +7,9 @@ import biz.princeps.lib.storage.annotation.Unique;
 import java.util.UUID;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/7/17
  */
 @Table(name = "ll_advertise")
 public class Offers {

@@ -7,11 +7,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
 
+/**
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: Unknown
+ */
 public class ConfigUtil {
 
     public static void handleConfigUpdate(String pathToExisting, String pathInJar) {
 
-        if(pathInJar == null || pathToExisting == null)
+        if (pathInJar == null || pathToExisting == null)
             return;
 
         FileConfiguration config = new YamlConfiguration();

@@ -11,8 +11,12 @@ import org.bukkit.World;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: Unknown
+ */
 public interface LandLordAPI {
-
 
     LPlayerManager getPlayerManager() ;
 
@@ -25,8 +29,6 @@ public interface LandLordAPI {
     List<ProtectedRegion> getRegions(UUID id, World world);
 
     WorldGuardHandler getWgHandler();
-
-
 }
 
 

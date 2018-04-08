@@ -7,7 +7,6 @@ import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.Offers;
 import biz.princeps.landlord.util.OwnedLand;
-import biz.princeps.landlord.util.Util;
 import biz.princeps.lib.crossversion.CParticle;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.item.DataStack;
@@ -124,7 +123,7 @@ public class Claim extends LandlordCommand {
 
                             player.sendMessage(lm.getString("Commands.Claim.boughtUp")
                                     .replace("%player%", originalOwner)
-                                    .replace("%price%", Util.formatCash(costForBuyer))
+                                    .replace("%price%", plugin.getVaultHandler().format(costForBuyer))
                                     .replace("%chunk%", pr.getName()));
 
                             OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
@@ -134,7 +133,7 @@ public class Claim extends LandlordCommand {
                         } else {
                             // Not enough money
                             player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
-                                    .replace("%money%", Util.formatCash(costForBuyer))
+                                    .replace("%money%", plugin.getVaultHandler().format(costForBuyer))
                                     .replace("%chunk%", OwnedLand.getName(chunk)));
                             return;
                         }

@@ -11,7 +11,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 /**
- * Created by spatium on 19.07.17 / 11:55.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 19/7/17
  */
 public class Manage extends LandlordCommand {
 
