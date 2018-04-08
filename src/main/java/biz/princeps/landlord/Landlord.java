@@ -20,6 +20,7 @@ import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
+import biz.princeps.lib.manager.ConfirmationManager;
 import biz.princeps.lib.storage.DatabaseAPI;
 import biz.princeps.lib.storage.DatabaseType;
 import biz.princeps.lib.storage.annotation.Column;
@@ -93,6 +94,8 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
         instance = this;
         PrincepsLib.setPluginInstance(this);
+        PrincepsLib.getConfirmationManager().setState(ConfirmationManager.STATE.valueOf(getConfig().getString("ConfirmationDialog.mode")));
+        PrincepsLib.getConfirmationManager().setTimout(getConfig().getInt("ConfirmationDialog.timeout"));
         taskChainFactory = BukkitTaskChainFactory.create(this);
 
         checkWorldNames();

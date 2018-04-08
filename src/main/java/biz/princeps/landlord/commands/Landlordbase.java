@@ -16,7 +16,6 @@ import biz.princeps.landlord.commands.homes.Home;
 import biz.princeps.landlord.commands.homes.SetHome;
 import biz.princeps.landlord.commands.management.*;
 import biz.princeps.landlord.manager.LangManager;
-import biz.princeps.landlord.util.UUIDFetcher;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
@@ -28,10 +27,12 @@ import biz.princeps.lib.storage.AbstractDatabase;
 import biz.princeps.lib.storage.MySQL;
 import biz.princeps.lib.storage.SQLite;
 import com.google.common.collect.Sets;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.SQLException;
@@ -374,7 +375,7 @@ public class Landlordbase extends MainCommand {
     }
 
     class MapCMD extends SubCommand {
-//TODO fix on reconnect
+        //TODO fix on reconnect
         public MapCMD() {
             super(pl.getConfig().getString("CommandSettings.Map.name"),
                     pl.getConfig().getString("CommandSettings.Map.usage"),
@@ -675,6 +676,18 @@ public class Landlordbase extends MainCommand {
             }
 
             ((LLItem) subcommands.get("item")).onItem(properties.getCommandSender(), target);
+        }
+    }
+
+    class ConfirmCMD extends SubCommand {
+
+        public ConfirmCMD() {
+            super("confirm", "/lldm help", new HashSet<>(Collections.singleton("landlord.use")));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            // just a placeholder for the confirmationmanager
         }
     }
 

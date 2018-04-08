@@ -105,6 +105,14 @@ BuyUpInactive:
 # Where should the "Entering XXX's land" be displayed? Available are ActionBar, Chat, Title, Disabled
 LandMessage: ActionBar
 
+ConfirmationDialog:
+# Modes: CHAT GUI
+  mode: CHAT
+# Timeout for chat based confirmation. The user has x seconds time to click the chat
+  timeout: 10
+  onNormalClaim: true
+  onBuyUp: true
+
 # -----------        Map Stuff        ------------
 Map:
   enable: true
@@ -468,4 +476,4 @@ Manage:
 
 # Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
 EnableMetrics: true
-version: 14
+version: 15

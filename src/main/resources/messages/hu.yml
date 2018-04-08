@@ -15,6 +15,7 @@ Commands:
     onlyClaimAdjacentChunks: '&cNem engedélyezheted a darab %land%-ot, mert nem egy szomszédos!'
     needsGap: '&cNem lehet a darab %chunk%-ot, mert különbséget kell tenni a föld és a többiek földje között!'
     boughtUp: '&bYou successfully bought up the chunk %chunk% from %player% for %price%'
+    confirmation: '&aAre you sure you want to claim the chunk %chunk% for %price%? Click here to confirm'
   Info:
     online: '&bONLINE'
     noLastSeen: '&c-'
@@ -259,4 +260,4 @@ MaItem:
     - '&l&ba levegőben:'
     - '&cjobb klikk: &7térkép kapcsolása'
     - '&cbal klikk: &7határok kapcsolása'
-version: 13
+version: 14

@@ -49,7 +49,7 @@ public class ListLands extends LandlordCommand {
 
                 landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
                         .setName(lm.getRawString("Commands.ListLands.manageAll"))
-                        .addClickAction((p, ic2) -> {
+                        .addClickAction((p) -> {
                             ManageGUIAll manageGUIAll = new ManageGUIAll(sender, landGui, plugin.getWgHandler().getRegionsAsOL(target.getUuid()));
                             manageGUIAll.display();
                         }));

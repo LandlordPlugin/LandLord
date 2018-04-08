@@ -16,6 +16,7 @@ Commands:
     needsGap: '&cYou are not allowed to claim the chunk %land%, because there must be a gap between your land and the land of other people!'
     boughtUp: '&bYou successfully bought up the chunk %chunk% from %player% for %price%'
     notYetInactive: '&c%owner% is not yet inactive :) You will need to wait at least %days% more days'
+    confirmation: '&aAre you sure you want to claim the chunk %chunk% for %price%? Click here to confirm'
   Info:
     online: '&bONLINE'
     noLastSeen: '&c-'
@@ -260,4 +261,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 13
+version: 14

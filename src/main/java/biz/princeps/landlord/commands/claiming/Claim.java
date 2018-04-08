@@ -7,8 +7,8 @@ import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.Offers;
 import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.crossversion.CParticle;
-import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.item.DataStack;
 import co.aikar.taskchain.TaskChain;
 import net.md_5.bungee.api.ChatColor;
@@ -37,6 +37,7 @@ public class Claim extends LandlordCommand {
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
         OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
         String landname = chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
+        String confirmcmd = "/" + plugin.getConfig().getString("CommandSettings.Main.name") + " confirm";
 
         TaskChain<?> chain = Landlord.newChain();
 
@@ -103,8 +104,6 @@ public class Claim extends LandlordCommand {
             LandPreClaimEvent event = new LandPreClaimEvent(player, chunk);
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
-
-                boolean moneyFlag = false;
                 // Money stuff
                 if (Options.isVaultEnabled()) {
                     if (pr != null && inactive) {
@@ -115,20 +114,47 @@ public class Claim extends LandlordCommand {
 
                         if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), costForBuyer)) {
 
-                            plugin.getVaultHandler().take(player.getUniqueId(), costForBuyer);
-                            plugin.getVaultHandler().give(pr.getOwner(), payBackForInactive);
+                            if (plugin.getConfig().getBoolean("ConfirmationDialog.onBuyUp")) {
+                                String sellDesc = pr.getName() + " | " + plugin.getVaultHandler().format(costForBuyer);
+                                String chatDesc = lm.getString("Commands.Claim.confirmation");
 
-                            pr.getWGLand().getOwners().clear();
-                            pr.getWGLand().getOwners().addPlayer(player.getUniqueId());
+                                PrincepsLib.getConfirmationManager().draw(player, sellDesc, chatDesc,
+                                        (p) -> {
+                                            plugin.getVaultHandler().take(player.getUniqueId(), costForBuyer);
+                                            plugin.getVaultHandler().give(pr.getOwner(), payBackForInactive);
 
-                            player.sendMessage(lm.getString("Commands.Claim.boughtUp")
-                                    .replace("%player%", originalOwner)
-                                    .replace("%price%", plugin.getVaultHandler().format(costForBuyer))
-                                    .replace("%chunk%", pr.getName()));
+                                            pr.getWGLand().getOwners().clear();
+                                            pr.getWGLand().getOwners().addPlayer(player.getUniqueId());
 
-                            OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
-                            plugin.getMapManager().updateAll();
+                                            player.sendMessage(lm.getString("Commands.Claim.boughtUp")
+                                                    .replace("%player%", originalOwner)
+                                                    .replace("%price%", plugin.getVaultHandler().format(costForBuyer))
+                                                    .replace("%chunk%", pr.getName()));
 
+                                            OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
+                                            plugin.getMapManager().updateAll();
+
+                                            player.closeInventory();
+                                        }, (p) -> {
+                                            player.sendMessage(lm.getString("Commands.Claim.aborted"));
+                                            player.closeInventory();
+                                        }, confirmcmd);
+
+                            } else {
+                                plugin.getVaultHandler().take(player.getUniqueId(), costForBuyer);
+                                plugin.getVaultHandler().give(pr.getOwner(), payBackForInactive);
+
+                                pr.getWGLand().getOwners().clear();
+                                pr.getWGLand().getOwners().addPlayer(player.getUniqueId());
+
+                                player.sendMessage(lm.getString("Commands.Claim.boughtUp")
+                                        .replace("%player%", originalOwner)
+                                        .replace("%price%", plugin.getVaultHandler().format(costForBuyer))
+                                        .replace("%chunk%", pr.getName()));
+
+                                OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
+                                plugin.getMapManager().updateAll();
+                            }
                             return;
                         } else {
                             // Not enough money
@@ -145,8 +171,9 @@ public class Claim extends LandlordCommand {
                         if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {
 
                             String sellDesc = pr.getName() + " | " + plugin.getVaultHandler().format(offer.getPrice());
+                            String chatDesc = lm.getString("Commands.Claim.confirmation");
 
-                            ConfirmationGUI confirm = new ConfirmationGUI(player, sellDesc, (player1, icon) -> {
+                            PrincepsLib.getConfirmationManager().draw(player, sellDesc, chatDesc, (p) -> {
                                 plugin.getVaultHandler().take(player.getUniqueId(), offer.getPrice());
                                 plugin.getVaultHandler().give(offer.getSeller(), offer.getPrice());
 
@@ -161,22 +188,20 @@ public class Claim extends LandlordCommand {
 
                                 if (Bukkit.getPlayer(offer.getSeller()).isOnline()) {
                                     Bukkit.getPlayer(offer.getSeller()).sendMessage(lm.getString("Commands.Claim.p2pSuccess")
-                                            .replace("%player%", player1.getName())
+                                            .replace("%player%", p.getName())
                                             .replace("%chunk%", OwnedLand.getName(chunk))
                                             .replace("%world%", chunk.getWorld().getName())
                                             .replace("%price%", plugin.getVaultHandler().format(offer.getPrice())));
                                 }
 
-
                                 OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
                                 plugin.getMapManager().updateAll();
 
                                 player.closeInventory();
-                            }, (player12, ic2) -> {
+                            }, (p) -> {
                                 player.sendMessage(lm.getString("Commands.Claim.aborted"));
                                 player.closeInventory();
-                            }, null);
-                            confirm.display();
+                            }, confirmcmd);
 
                         } else {
                             // Not enough money
@@ -187,15 +212,38 @@ public class Claim extends LandlordCommand {
                         }
                     } else {
                         // Normal sale
-                        moneyFlag = true;
                         double calculatedCost = plugin.getCostManager().calculateCost(player.getUniqueId());
                         if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
-                            plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
-                            if (calculatedCost > 0)
-                                player.sendMessage(lm.getString("Commands.Claim.moneyTook")
-                                        .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
-                                        .replace("%chunk%", OwnedLand.getName(chunk)));
+                            String guiDesc = landname + " | " + plugin.getVaultHandler().format(calculatedCost);
+                            String chatDesc = lm.getString("Commands.Claim.confirmation")
+                                    .replace("%chunk%", landname)
+                                    .replace("%price%", plugin.getVaultHandler().format(calculatedCost));
 
+                            if (plugin.getConfig().getBoolean("ConfirmationDialog.onNormalClaim")) {
+                                PrincepsLib.getConfirmationManager().draw(player, guiDesc, chatDesc,
+                                        (p) -> {
+                                            plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
+                                            if (calculatedCost > 0)
+                                                player.sendMessage(lm.getString("Commands.Claim.moneyTook")
+                                                        .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                                                        .replace("%chunk%", OwnedLand.getName(chunk)));
+                                            performClaim(player, chunk);
+                                            p.closeInventory();
+                                        },
+                                        (p) -> {
+                                            player.sendMessage(lm.getString("Commands.Claim.aborted"));
+                                            p.closeInventory();
+                                        }, confirmcmd);
+                            } else {
+                                plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
+                                if (calculatedCost > 0)
+                                    player.sendMessage(lm.getString("Commands.Claim.moneyTook")
+                                            .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                                            .replace("%chunk%", OwnedLand.getName(chunk)));
+                                performClaim(player, chunk);
+                            }
+
+                            return;
                         } else {
                             // NOT ENOUGH MONEY
                             player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
@@ -204,36 +252,34 @@ public class Claim extends LandlordCommand {
                             return;
                         }
                     }
-                } else {
-                    // flag is always true, if eco is disabled
-                    moneyFlag = true;
                 }
-
-                if (moneyFlag) {
-                    plugin.getWgHandler().claim(chunk, player.getUniqueId());
-
-                    player.sendMessage(lm.getString("Commands.Claim.success")
-                            .replace("%chunk%", OwnedLand.getName(chunk))
-                            .replace("%world%", chunk.getWorld().getName()));
-
-                    OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
-
-                    if (plugin.getConfig().getBoolean("Homes.enable")) {
-                        if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null)
-                            Bukkit.dispatchCommand(player, "ll sethome");
-                    }
-
-                    if (plugin.getConfig().getBoolean("CommandSettings.Claim.enableDelimit")) {
-                        delimit(chunk);
-                    }
-
-                    plugin.getMapManager().updateAll();
-
-                    LandPostClaimEvent postEvent = new LandPostClaimEvent(player, plugin.getLand(chunk));
-                    Bukkit.getPluginManager().callEvent(postEvent);
-                }
+                performClaim(player, chunk);
             }
         }).execute();
+    }
+
+    private void performClaim(Player player, Chunk chunk) {
+        plugin.getWgHandler().claim(chunk, player.getUniqueId());
+
+        player.sendMessage(lm.getString("Commands.Claim.success")
+                .replace("%chunk%", OwnedLand.getName(chunk))
+                .replace("%world%", chunk.getWorld().getName()));
+
+        OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
+
+        if (plugin.getConfig().getBoolean("Homes.enable")) {
+            if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null)
+                Bukkit.dispatchCommand(player, "ll sethome");
+        }
+
+        if (plugin.getConfig().getBoolean("CommandSettings.Claim.enableDelimit")) {
+            delimit(chunk);
+        }
+
+        plugin.getMapManager().updateAll();
+
+        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, plugin.getLand(chunk));
+        Bukkit.getPluginManager().callEvent(postEvent);
     }
 
     private boolean hasLimitPermissions(Player player, int regionCount) {

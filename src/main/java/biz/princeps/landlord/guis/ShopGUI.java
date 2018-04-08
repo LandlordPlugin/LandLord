@@ -6,6 +6,7 @@ import biz.princeps.lib.gui.simple.Icon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -61,13 +62,13 @@ public class ShopGUI extends AbstractGUI {
             setIcon(i, new Icon(new ItemStack(buyable.mat))
                     .setName(pl.getLangManager().getRawString("Shop.item.header").replace("%number%", buyable.amount + ""))
                     .setLore(list)
-                    .addClickAction((p, ic) -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ll giveclaims " + p.getName() + " " + buyable.price + " " + buyable.amount)
+                    .addClickAction((p) -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ll giveclaims " + p.getName() + " " + buyable.price + " " + buyable.amount)
                     ));
             i++;
         }
 
         setIcon((int) Math.ceil((double) rawList.size() / 9.0) * 9 + 8, new Icon(new ItemStack(Material.BARRIER)).
-                setName(ChatColor.RED + "Close").addClickAction((p, ic) -> p.closeInventory()));
+                setName(ChatColor.RED + "Close").addClickAction(HumanEntity::closeInventory));
     }
 
     class Buyable {

@@ -43,7 +43,7 @@ public class AdminTeleport extends LandlordCommand {
 
                             lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
                                     .setName(land.getId())
-                                    .addClickAction((p, icon) -> {
+                                    .addClickAction((p) -> {
                                                 Location toTp = OwnedLand.getLocationFromName(land.getId());
                                                 sender.teleport(toTp);
                                                 OwnedLand.highlightLand(sender, CParticle.VILLAGERHAPPY);

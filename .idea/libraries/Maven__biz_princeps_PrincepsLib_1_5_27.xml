@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: biz.princeps:PrincepsLib:1.5.27">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/biz/princeps/PrincepsLib/1.5.27/PrincepsLib-1.5.27.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/biz/princeps/PrincepsLib/1.5.27/PrincepsLib-1.5.27-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/biz/princeps/PrincepsLib/1.5.27/PrincepsLib-1.5.27-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
