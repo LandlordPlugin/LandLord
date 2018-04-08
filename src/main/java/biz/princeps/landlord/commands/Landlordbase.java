@@ -166,7 +166,7 @@ public class Landlordbase extends MainCommand {
                 .setHeaderString(lm.getRawString("Commands.Help.header"))
                 .setNextString(lm.getRawString("Commands.Help.next"))
                 .setPreviousString(lm.getRawString("Commands.Help.previous"))
-                .setCommand("ll help", argsN).build();
+                .setCommand(pl.getConfig().getString("CommandSettings.Main.name"), argsN).build();
         properties.getPlayer().spigot().sendMessage(msg.create());
     }
 
