@@ -216,6 +216,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     private void manageListeners() {
         new JoinListener();
+        new MapManager();
 
         if (getConfig().getBoolean("SecureWorld.enable"))
             new TresholdListener();

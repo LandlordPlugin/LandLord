@@ -4,7 +4,9 @@ import biz.princeps.landlord.Landlord;
 import org.bukkit.event.Listener;
 
 /**
- * Created by spatium on 17.07.17.
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: 17/07/17
  */
 public abstract class BasicListener implements Listener {
 

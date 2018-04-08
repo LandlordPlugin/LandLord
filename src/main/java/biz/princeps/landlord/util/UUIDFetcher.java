@@ -109,7 +109,7 @@ public class UUIDFetcher {
                     nameCache.put(offlinePlayer.getUniqueId(), offlinePlayer.getName());
                     return offlinePlayer.getUniqueId();
                 } else {
-                    // TODO still doesnt work. But I honestly hate to support those cracked. Go to hell and buy the freaking game, its 20 bucks for a game worth thousands of hours.
+                    // still doesnt work. But I honestly hate to support those cracked. Go to hell and buy the freaking game, its 20 bucks for a game worth thousands of hours.
                     /*
                      YES I LOVE TO SWEAR!! THIS IS SO RIDICULOUS. Why do I even have to waste time looking into this? ITS FREAKING WASTED TIME!!!!
                      Why should I support piracy?

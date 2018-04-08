@@ -1,6 +1,7 @@
 package biz.princeps.landlord.manager.map;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.listener.BasicListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,17 +16,14 @@ import java.util.HashMap;
 /**
  * File created by jcdesimp on 3/10/14. updated by SpatiumPrinceps on 19/07/17
  */
-public class MapManager implements Listener {
+public class MapManager extends BasicListener {
 
     private HashMap<String, LandMap> mapList;
 
-    private Landlord plugin;
-
     public MapManager() {
+        super();
         this.mapList = new HashMap<>();
-        this.plugin = Landlord.getInstance();
     }
-
 
     private void addMap(LandMap m) {
         mapList.put(m.getMapViewer().getName(), m);
