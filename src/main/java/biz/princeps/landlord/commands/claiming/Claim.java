@@ -53,7 +53,7 @@ public class Claim extends LandlordCommand {
         }).sync(() -> {
 
             boolean inactive = chain.getTaskData("inactive");
-            int inactiveDays = chain.getTaskData("inactiveDays");
+            long inactiveDays = chain.getTaskData("inactiveDays");
 
             // Check if there is an overlapping wg-region
             if (!plugin.getWgHandler().canClaim(player, chunk)) {
