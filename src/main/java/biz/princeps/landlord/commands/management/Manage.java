@@ -10,6 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
+
 /**
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
@@ -36,7 +38,11 @@ public class Manage extends LandlordCommand {
         if (args.length == 0) {
             ManageGUI gui = new ManageGUI(player, land);
             gui.display();
-        } else if (args.length == 1) {
+        } else if (args.length == 1 && !args[0].equals("setgreet")
+                && !args[0].equals("setgreetall")
+                && !args[0].equals("setfarewell")
+                && !args[0].equals("setfarewellall")) {
+
             // land manage <landid>
             World world;
             try {
@@ -64,6 +70,9 @@ public class Manage extends LandlordCommand {
                         sb1.append(args[i]).append(" ");
                     }
                     String newmsg1 = sb1.toString();
+                    if (newmsg1.isEmpty()) {
+                        newmsg1 = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", player.getName());
+                    }
 
                     for (ProtectedRegion protectedRegion : plugin.getWgHandler().getRegions(player.getUniqueId())) {
                         protectedRegion.setFlag(DefaultFlag.GREET_MESSAGE, newmsg1);
@@ -79,7 +88,9 @@ public class Manage extends LandlordCommand {
                         sb.append(args[i]).append(" ");
                     }
                     String newmsg = sb.toString();
-
+                    if (newmsg.isEmpty()) {
+                        newmsg = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", player.getName());
+                    }
                     for (ProtectedRegion protectedRegion : plugin.getWgHandler().getRegions(player.getUniqueId())) {
                         protectedRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, newmsg);
                     }
@@ -89,6 +100,7 @@ public class Manage extends LandlordCommand {
 
                     break;
                 case "setgreet":
+                    System.out.println("greet " + Arrays.toString(args));
                     setGreet(player, args, plugin.getLand(player.getLocation()).getWGLand(), 1);
 
                     break;
@@ -130,6 +142,10 @@ public class Manage extends LandlordCommand {
         }
         String newmsg = sb.toString();
 
+        if (newmsg.isEmpty()) {
+            newmsg = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", player.getName());
+        }
+
         target.setFlag(DefaultFlag.GREET_MESSAGE, newmsg);
         player.sendMessage(lm.getString("Commands.Manage.SetGreet.successful")
                 .replace("%msg%", newmsg));
@@ -141,7 +157,9 @@ public class Manage extends LandlordCommand {
             sb.append(args[i]).append(" ");
         }
         String newmsg = sb.toString();
-
+        if (newmsg.isEmpty()) {
+            newmsg = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", player.getName());
+        }
         target.setFlag(DefaultFlag.FAREWELL_MESSAGE, newmsg);
         player.sendMessage(lm.getString("Commands.Manage.SetFarewell.successful")
                 .replace("%msg%", newmsg));
