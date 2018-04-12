@@ -476,4 +476,5 @@ Manage:
 
 # Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
 EnableMetrics: true
+checkUpdatesPeriodically: true
 version: 15

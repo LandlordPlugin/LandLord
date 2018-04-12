@@ -55,6 +55,7 @@
                                     <include>org.slf4j:slf4j-simple</include>
                                     <include>net.jodah:expiringmap</include>
                                     <include>*:taskchain*</include>
+                                    <include>org.inventivetalent.spiget-update:bukkit</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
@@ -92,6 +93,10 @@
         <repository>
             <id>placeholderapi</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <repository>
+            <id>inventive-repo</id>
+            <url>https://repo.inventivetalent.org/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -151,6 +156,11 @@
             <version>3.6.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.inventivetalent.spiget-update</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.4.0</version>
+        </dependency>
     </dependencies>
 
 </project>

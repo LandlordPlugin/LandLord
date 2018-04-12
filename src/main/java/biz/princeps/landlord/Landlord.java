@@ -19,6 +19,7 @@ import biz.princeps.landlord.placeholderapi.LandLordPlacehodlers;
 import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
 import biz.princeps.lib.storage.DatabaseAPI;
@@ -139,6 +140,8 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
             Metrics metrics = new Metrics(this);
             //TODO maybe add some interesting statistics
         }
+
+        new Updater();
     }
 
     private void checkWorldNames() {
