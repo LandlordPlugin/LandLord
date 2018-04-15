@@ -3,7 +3,7 @@ Disabled-World: '&7A földtámogatás le van tiltva ebben a világban'
 noPermissions: '&7Nincs jogod'
 Commands:
   Claim:
-    success: '&bSikeresen állítottál %chunk% darabot %world% világban'
+    success: '&bSikeresen igényelted %chunk% darabot a(z) %world% világban'
     p2pSuccess: '&bA(z) %player% játékos megvásárolta a darab %chunk% %world% világban %price% árban!'
     notEnoughMoney: '&eNincs elég pénzed (%money%), hogy állíts egy darabot (%chunk%)'
     moneyTook: '&4Fizettél %money% pénzt %chunk% földre'
@@ -14,40 +14,40 @@ Commands:
     aborted: '&eMegszakított követelés!'
     onlyClaimAdjacentChunks: '&cNem engedélyezheted a darab %land%-ot, mert nem egy szomszédos!'
     needsGap: '&cNem lehet a darab %chunk%-ot, mert különbséget kell tenni a föld és a többiek földje között!'
-    boughtUp: '&bYou successfully bought up the chunk %chunk% from %player% for %price%'
-    confirmation: '&aAre you sure you want to claim the chunk %chunk% for %price%? Click here to confirm'
+    boughtUp: '&bSikeresen megvásároltad %chunk% darabot %player%-tól %price% árért'
+    confirmation: '&aBiztos vagy benne, hogy a %chunk% darabot %price% árért szeretnéd igényelni? Kattints ide a megerősítéshez'
   Info:
     online: '&bONLINE'
     noLastSeen: '&c-'
     owned:
-      - '&f&lLand&c&lLord - Owned Land'
+      - '&f&lLand&c&lLord &a- Tulajdonú föld'
       - '&7Földnév&8: &c%landid%'
       - '&7Tulaj&8: &c%owner%   &7Utoljára látva: &c%lastseen%'
       - '&7Tag&8: &c%member%'
     advertised:
-      - '&f&lLand&c&lLord - Advertised Land'
+      - '&f&lLand&c&lLord - Hirdetett föld'
       - '&7Földnév&8: &c%landid%'
       - '&7Tulaj&8: &c%owner%   &7Utoljára látva: &c%lastseen%'
       - '&7Tag&8: &c%member%'
-      - '&7Price&8: &c&o%price%'
+      - '&7Ára&8: &c&o%price%'
     inactive:
-      - '&f&lLand&c&lLord - Inactive Land'
+      - '&f&lLand&c&lLord - Inaktív föld'
       - '&7Földnév&8: &c%landid%'
       - '&7Tulaj&8: &c%owner%   &7Utoljára látva: &c%lastseen%'
       - '&7Tag&8: &c%member%'
-      - '&7Price&8: &c&o%price%'
+      - '&7Ára&8: &c&o%price%'
     free:
-      - '&f&lLand&c&lLord'
+      - '&f&lLand&c&lLord &a- Szabad föld'
       - '&7Földnév&8: &c%landid%'
-      - '&7&oPrice: &c&o%price%'
+      - '&7&oÁra: &c&o%price%'
   Unclaim:
     notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
     notOwnFreeLand: '&7Nem a sajátod ennek a darabnak'
     success: '&7Sikeresen mentesítetted &c%chunk%&7 darabot &c%world%&7 világban &c%money% &7és kaptál vissza'
   Addfriend:
     notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
-    noPlayer: '&7Nem találhatók a következő játékosok&8: &c%players%'
-    success: '&7Sikeresen hozzáadva &c%players% &7ehhez a földhöz'
+    noPlayer: '&7Nem található a következő játékos&8: &c%player%'
+    success: '&7Sikeresen hozzáadva &c%player% &7ehhez a földhöz'
     alreadyOwn: '&7A tulajdonos tagként nem adható hozzá'
   Unfriend:
     notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
@@ -63,7 +63,7 @@ Commands:
     noFriend: '&c%player% &7nem barátod bármelyik földeden'
   ListLands:
     noLands: '&7Nem rendelkezel egy földdel sem'
-    header: '&7%player%s föld (%site%/%maxsite%):'
+    header: '&7%player%s föld:'
     landSegment: '&7Föld&8: &cX: %realX%, Z: %realZ%'
     manageAll: '&7Összes föld kezelése'
     chat:
@@ -198,15 +198,15 @@ Commands:
     removed: '&eAz otthonod eltávolításra került, mert nem kérted ki a megfelelő darabot'
     nullLand: '&eEzt a földet először meg kell követelned'
   Home:
-    noHome: '&4Még nincs otthonod. Kattints ide, ha otthonot szeretnél beállítani az aktuális tartózkodási helyedre'
+    noHome: '&4Még nincs otthonod. Kattints ide, ha otthont szeretnél beállítani az aktuális tartózkodási helyedre'
     dontMove: '&cEz a parancs végrehajtódik %time% másodperen belül. Ne mozogj!'
     youMoved: '&cElmozdultál! A teleportálás megszakadt'
     countdown: '&bNe mozogj! &6-- &4&l%countdown% &6-- &bNe mozogj!'
     notEnoughMoney: '&7Nincs elég pénzed a teleportáláshoz! (Ára&8&o: &c&o%cost%&7&o)'
     costing: '&aSzámlázni kellett a %cost% az otthoni teleportáláshoz'
-    welcomeHome: '&aÜdvözöljük otthonában!'
+    welcomeHome: '&aÜdvözöllek %player% otthonában!'
     disabled: '&eEz a funkció jelenleg le van tiltva'
-    otherNoHome: '&4The player %player% does not have a home yet!'
+    otherNoHome: '&4Ennek a játékosnak %player% nincs otthona!'
   GiveClaims:
     noPlayer: '&eNincs ilyen nevű játékos'
   Advertise:
