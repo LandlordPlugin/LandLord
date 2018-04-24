@@ -61,6 +61,8 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
     }
 
     private LPlayer getLPlayer(String name) {
+        if (this.contains(name)) return get(name);
+
         List<Object> list = Landlord.getInstance().getDatabaseAPI()
                 .retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("name", name).create());
         if (list.size() > 0) {
@@ -68,7 +70,6 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
         }
         return null;
     }
-
 
     public Offers getOffer(String landname) {
         return offers.get(landname);
@@ -97,6 +98,23 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
         }.runTaskAsynchronously(plugin);
     }
 
+    public boolean contains(String name) {
+        for (LPlayer lPlayer : this.elements.values()) {
+            if (lPlayer.getName() != null && lPlayer.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public LPlayer get(String name) {
+        for (LPlayer lPlayer : this.elements.values()) {
+            if (lPlayer.getName() != null && lPlayer.getName().equals(name)) {
+                return lPlayer;
+            }
+        }
+        return null;
+    }
 
     /**
      * Measures if a player is inactive based on the date he was seen the last time.

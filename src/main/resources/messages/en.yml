@@ -210,6 +210,7 @@ Commands:
     otherNoHome: '&4The player %player% does not have a home yet!'
   GiveClaims:
     noPlayer: '&eThere is no player with this name'
+    success: '&aYou received %amount% claims!'
   Advertise:
     notOwnFreeLand: '&7You do not own this chunk'
     notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
@@ -261,4 +262,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 14
+version: 15

@@ -209,6 +209,7 @@ Commands:
     otherNoHome: '&4Ennek a játékosnak %player% nincs otthona!'
   GiveClaims:
     noPlayer: '&eNincs ilyen nevű játékos'
+    success: '&aYou received %amount% claims!'
   Advertise:
     notOwnFreeLand: '&7Nem a sajátod ennek a darabnak'
     notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
@@ -260,4 +261,4 @@ MaItem:
     - '&l&ba levegőben:'
     - '&cjobb klikk: &7térkép kapcsolása'
     - '&cbal klikk: &7határok kapcsolása'
-version: 14
+version: 15
