@@ -574,14 +574,7 @@ public class Landlordbase extends MainCommand {
 
         @Override
         public void onCommand(Properties properties, Arguments arguments) {
-            try {
-                String target = arguments.get(0);
-                double price = arguments.getDouble(1);
-                int amount = arguments.getInt(2);
-                ((GiveClaims) subcommands.get("giveclaims")).onGiveClaims(properties.getCommandSender(), target, price, amount);
-            } catch (ArgumentsOutOfBoundsException | NumberFormatException e) {
-                properties.sendUsage();
-            }
+            ((GiveClaims) subcommands.get("giveclaims")).onGiveClaims(properties, arguments);
         }
     }
 
