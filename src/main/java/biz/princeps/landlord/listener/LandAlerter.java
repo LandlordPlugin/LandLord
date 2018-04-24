@@ -67,7 +67,8 @@ public class LandAlerter extends BasicListener {
                 JSONObject json = null;
                 try {
                     if (componets.read(0) != null)
-                        if (parser.parse(componets.read(0).getJson()) instanceof JSONObject)
+                        if (componets.read(0).getJson() != null &&
+                                parser.parse(componets.read(0).getJson()) instanceof JSONObject)
                             json = (JSONObject) parser.parse(componets.read(0).getJson());
                 } catch (ParseException e) {
                     e.printStackTrace();
