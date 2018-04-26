@@ -76,6 +76,7 @@ public class LandAlerter extends BasicListener {
                 if (json != null && json.get("extra") instanceof JSONArray) {
                     JSONArray array = ((JSONArray) json.get("extra"));
                     if (array != null) {
+                        // System.out.println(array);
                         StringBuilder sb = new StringBuilder();
                         for (Object anArray : array) {
                             if (anArray instanceof JSONObject) {
@@ -86,13 +87,14 @@ public class LandAlerter extends BasicListener {
                         }
 
                         String msg = sb.toString().trim();
+                        // System.out.println("Trimmed message: " + msg);
 
                         boolean goingOn = false;
 
                         if (regionInsideNow != null) {
-                            String greet = ChatColor.stripColor(regionInsideNow.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
-                            String farewell = ChatColor.stripColor(regionInsideNow.getWGLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
-                            //     System.out.println(msg + ":" + greet + ":" + farewell);
+                            String greet = stripColors(regionInsideNow.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE));
+                            String farewell = stripColors(regionInsideNow.getWGLand().getFlag(DefaultFlag.FAREWELL_MESSAGE));
+                            // System.out.println(msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
                                 goingOn = true;
@@ -100,9 +102,9 @@ public class LandAlerter extends BasicListener {
                         }
 
                         if (before != null) {
-                            String greet = ChatColor.stripColor(before.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
-                            String farewell = ChatColor.stripColor(before.getWGLand().getFlag(DefaultFlag.FAREWELL_MESSAGE)).replaceAll("&([a-f]|[0-7])", "").trim();
-                            //          System.out.println(msg + ":" + greet + ":" + farewell);
+                            String greet = stripColors(before.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE));
+                            String farewell = stripColors(before.getWGLand().getFlag(DefaultFlag.FAREWELL_MESSAGE));
+                            // System.out.println(msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
                                 goingOn = true;
@@ -158,19 +160,20 @@ public class LandAlerter extends BasicListener {
                                         event.setCancelled(true);
                                     }
                                 } else {
+                                    boolean flag = true;
+                                    for (UUID uuid : regionInsideNow.getWGLand().getOwners().getUniqueIds()) {
+                                        if (!before.isOwner(uuid))
+                                            flag = false;
+                                    }
                                     if (type == LandMessageDisplay.ActionBar) {
-                                        boolean flag = true;
-                                        for (UUID uuid : regionInsideNow.getWGLand().getOwners().getUniqueIds()) {
-                                            if (!before.isOwner(uuid))
-                                                flag = false;
-                                        }
                                         if (!flag) {
                                             PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
-
                                         }
                                         event.setCancelled(true);
                                     } else if (type == LandMessageDisplay.Title) {
-                                        p.sendTitle(craftColoredMessage(array), null, 10, 70, 10);
+                                        if (!flag) {
+                                            p.sendTitle(craftColoredMessage(array), null, 10, 70, 10);
+                                        }
                                         event.setCancelled(true);
                                     }
                                 }
@@ -183,13 +186,18 @@ public class LandAlerter extends BasicListener {
         });
     }
 
+    private String stripColors(String input) {
+        return ChatColor.stripColor(input).replaceAll("&([a-f]|[0-7]|[k-o]|[r])", "").trim();
+    }
+
     private String craftColoredMessage(JSONArray array) {
         StringBuilder sb = new StringBuilder();
         for (Object anArray : array) {
             if (anArray instanceof JSONObject) {
                 JSONObject obj = (JSONObject) anArray;
-                if (obj.get("color") != null)
+                if (obj.get("color") != null) {
                     sb.append(ChatColor.valueOf(String.valueOf(obj.get("color")).toUpperCase()));
+                }
                 sb.append(obj.get("text"));
             } else if (anArray instanceof String) {
                 sb.append(anArray);
