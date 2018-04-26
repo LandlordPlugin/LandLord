@@ -240,10 +240,11 @@ public abstract class AbstractManage extends AbstractGUI {
                                         }
                                     }
 
+                                    Set<EntityType> newFlag = regions.get(0).getWGLand().getFlag(DefaultFlag.DENY_SPAWN);
                                     // update icon text
                                     String iconState;
-                                    if (flag != null)
-                                        iconState = (flag.contains(t) ? "DENY" : "ALLOW");
+                                    if (newFlag != null)
+                                        iconState = (newFlag.contains(t) ? "DENY" : "ALLOW");
                                     else
                                         iconState = "ALLOW";
 
@@ -252,7 +253,7 @@ public abstract class AbstractManage extends AbstractGUI {
                                         newLore.add(s.replace("%mob%", t.name()).replace("%value%", iconState));
                                     }
 
-                                    //   System.out.println(newLore + " :" + finalIconPos);
+                                    // System.out.println(newLore + " :");
                                     ic.setLore(newLore);
                                     gui.refresh();
                                 });
