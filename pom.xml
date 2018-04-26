@@ -36,7 +36,11 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.google.common</pattern>
-                                    <shadedPattern>shaded.com.google.common</shadedPattern>
+                                    <shadedPattern>biz.princeps.lib.com.google.common</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.reflections</pattern>
+                                    <shadedPattern>biz.princeps.lib.org.reflections</shadedPattern>
                                 </relocation>
                             </relocations>
                             <artifactSet>
