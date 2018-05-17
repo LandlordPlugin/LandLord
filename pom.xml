@@ -72,7 +72,7 @@
     <repositories>
         <repository>
             <id>princepsrepo</id>
-            <url>http://ci.princeps.biz:7776/nexus/content/repositories/princepsrepo/</url>
+            <url>http://princeps.biz:8081/nexus/content/repositories/princepsrepo/</url>
         </repository>
         <repository>
             <id>vault-repo</id>
@@ -108,7 +108,7 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-1.12.2</artifactId>
+            <artifactId>spigot_1_12_2</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
@@ -151,7 +151,7 @@
         <dependency>
             <groupId>me.tigerhix.lib</groupId>
             <artifactId>scoreboard</artifactId>
-            <version>1.0.1</version>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
