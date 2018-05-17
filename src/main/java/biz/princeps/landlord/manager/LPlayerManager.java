@@ -5,8 +5,8 @@ import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Offers;
 import biz.princeps.lib.manager.MappedManager;
-import biz.princeps.lib.storage.DatabaseAPI;
-import biz.princeps.lib.storage.requests.Conditions;
+import biz.princeps.lib.storage_old.DatabaseAPI;
+import biz.princeps.lib.storage_old.requests.Conditions;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.Duration;

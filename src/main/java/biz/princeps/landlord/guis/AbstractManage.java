@@ -10,7 +10,7 @@ import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
-import biz.princeps.lib.storage.requests.Conditions;
+import biz.princeps.lib.storage_old.requests.Conditions;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;

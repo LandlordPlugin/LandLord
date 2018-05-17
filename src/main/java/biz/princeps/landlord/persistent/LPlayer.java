@@ -1,9 +1,9 @@
 package biz.princeps.landlord.persistent;
 
-import biz.princeps.lib.storage.annotation.Column;
-import biz.princeps.lib.storage.annotation.Constructor;
-import biz.princeps.lib.storage.annotation.Table;
-import biz.princeps.lib.storage.annotation.Unique;
+import biz.princeps.lib.storage_old.annotation.Column;
+import biz.princeps.lib.storage_old.annotation.Constructor;
+import biz.princeps.lib.storage_old.annotation.Table;
+import biz.princeps.lib.storage_old.annotation.Unique;
 import biz.princeps.lib.util.TimeUtil;
 import org.bukkit.Location;
 

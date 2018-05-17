@@ -2,7 +2,7 @@ package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.api.events.FinishedLoadingPlayerEvent;
 import biz.princeps.landlord.persistent.LPlayer;
-import biz.princeps.lib.storage.requests.Conditions;
+import biz.princeps.lib.storage_old.requests.Conditions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

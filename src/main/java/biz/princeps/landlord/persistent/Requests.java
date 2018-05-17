@@ -1,6 +1,7 @@
 package biz.princeps.landlord.persistent;
 
-import biz.princeps.lib.storage.requests.AbstractRequest;
+
+import biz.princeps.lib.storage_old.requests.AbstractRequest;
 
 /**
  * Project: LandLord

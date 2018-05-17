@@ -5,7 +5,7 @@ import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Offers;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.crossversion.CParticle;
-import biz.princeps.lib.storage.requests.Conditions;
+import biz.princeps.lib.storage_old.requests.Conditions;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
