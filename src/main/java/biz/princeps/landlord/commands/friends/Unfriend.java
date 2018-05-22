@@ -32,7 +32,7 @@ public class Unfriend extends LandlordCommand {
             }
 
             for (String target : names) {
-                plugin.getPlayerManager().getOfflinePlayer(target, lPlayer -> {
+                plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
                     if (lPlayer == null) {
                         // Failure
                         player.sendMessage(lm.getString("Commands.Unfriend.noPlayer")

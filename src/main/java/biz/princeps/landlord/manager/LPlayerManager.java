@@ -44,12 +44,24 @@ public class LPlayerManager {
         db.save(lp);
     }
 
-    public void getOfflinePlayer(UUID uuid, Consumer<LPlayer> consumer) {
+    public void remove(UUID id) {
+        players.remove(id);
+    }
+
+    public void getOfflinePlayerAsync(UUID uuid, Consumer<LPlayer> consumer) {
         plugin.getExecutorService().execute(() -> consumer.accept(db.getPlayer(uuid, Database.Mode.UUID)));
     }
 
-    public void getOfflinePlayer(String name, Consumer<LPlayer> consumer) {
+    public void getOfflinePlayerAsync(String name, Consumer<LPlayer> consumer) {
         plugin.getExecutorService().execute(() -> consumer.accept(db.getPlayer(name, Database.Mode.NAME)));
+    }
+
+    public LPlayer getOfflinePlayerSync(UUID uuid) {
+        return db.getPlayer(uuid, Database.Mode.UUID);
+    }
+
+    public LPlayer getOfflinePlayerSync(String name) {
+        return db.getPlayer(name, Database.Mode.NAME);
     }
 
     public boolean contains(String name) {

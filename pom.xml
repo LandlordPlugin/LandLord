@@ -22,7 +22,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>3.1.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -45,6 +45,8 @@
                             </relocations>
                             <artifactSet>
                                 <includes>
+                                    <include>com.h2database:*</include>
+
                                     <include>org.reflections:reflections</include>
                                     <include>com.google.guava:guava</include>
                                     <include>org.javassist:javassist</include>
@@ -165,7 +167,12 @@
             <artifactId>bukkit</artifactId>
             <version>1.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.197</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>
-    

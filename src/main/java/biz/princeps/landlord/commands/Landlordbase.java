@@ -359,7 +359,7 @@ public class Landlordbase extends MainCommand {
                     // Admin, Other lands, need to lookup their names
                     int finalPage = page;
                     String finalTarget = target;
-                    pl.getPlayerManager().getOfflinePlayer(target, lPlayer -> {
+                    pl.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
                         if (lPlayer == null) {
                             // Failure
                             properties.getPlayer().sendMessage(Landlord.getInstance().getLangManager()

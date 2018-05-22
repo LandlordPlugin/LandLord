@@ -46,12 +46,12 @@ public class RemoveAdvertise extends LandlordCommand {
             return;
         }
 
-        Offer offer = plugin.getPlayerManager().getOffer(pr.getName());
+        Offer offer = plugin.getOfferManager().getOffer(pr.getName());
         if (offer == null) {
             player.sendMessage(lm.getString("Commands.RemoveAdvertise.noAdvertise")
                     .replace("%landname%", pr.getName()));
         } else {
-            plugin.getPlayerManager().removeOffer(offer.getLandname());
+            plugin.getOfferManager().removeOffer(offer.getLandname());
             player.sendMessage(lm.getString("Commands.RemoveAdvertise.success")
                     .replace("%landname%", landname));
         }

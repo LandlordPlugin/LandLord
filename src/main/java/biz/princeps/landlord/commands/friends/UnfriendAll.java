@@ -24,7 +24,7 @@ public class UnfriendAll extends LandlordCommand {
             return;
         }
 
-        plugin.getPlayerManager().getOfflinePlayer(name, lPlayer -> {
+        plugin.getPlayerManager().getOfflinePlayerAsync(name, lPlayer -> {
 
             // Failure
             if (lPlayer == null) {

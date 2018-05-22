@@ -38,7 +38,7 @@ public class Addfriend extends LandlordCommand {
 
             for (String target : names) {
 
-                plugin.getPlayerManager().getOfflinePlayer(target, lPlayer -> {
+                plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
                     if (lPlayer == null) {
                         player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
                                 .replace("%players%", Arrays.asList(names).toString()));

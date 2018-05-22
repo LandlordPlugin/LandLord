@@ -10,7 +10,7 @@ import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
-import biz.princeps.lib.storage_old.requests.Conditions;
+import co.aikar.taskchain.TaskChain;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -26,8 +26,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Project: LandLord
@@ -350,33 +348,29 @@ public abstract class AbstractManage extends AbstractGUI {
 
     private List<String> formatFriendsSegment(UUID id) {
         OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+        Vector<String> vec = new Vector<>();
 
-        CompletableFuture<List<Object>> future = new CompletableFuture<>();
-        plugin.getExecutorService().submit(() -> {
-            List<Object> listi = plugin.getDatabaseAPI().retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", op.getUniqueId().toString()).create());
-            future.complete(listi);
-        });
-        List<String> stringList = lm.getStringList("Commands.Manage.ManageFriends.friendSegment");
-        List<String> newlist = new ArrayList<>();
-        try {
-            final String lastseen;
-            if (op.isOnline()) {
-                lastseen = lm.getRawString("Commands.Info.online");
-            } else {
-                if (future.get().size() > 0)
-                    lastseen = ((LPlayer) future.get().get(0)).getLastSeenAsString();
-                else
-                    lastseen = "NaN";
-            }
-            stringList.forEach(s -> {
-                String ss = s.replace("%seen%", lastseen);
-                newlist.add(ss);
-            });
+        TaskChain<?> chain = Landlord.newChain();
+        chain.asyncFirst(() -> chain.setTaskData("lp", plugin.getPlayerManager().getOfflinePlayerSync(id)))
+                .sync(() -> {
+                    List<String> stringList = lm.getStringList("Commands.Manage.ManageFriends.friendSegment");
+                    String lastseen;
+                    if (op.isOnline()) {
+                        lastseen = lm.getRawString("Commands.Info.online");
+                    } else {
+                        LPlayer lp = chain.getTaskData("lp");
+                        if (lp != null)
+                            lastseen = lp.getLastSeenAsString();
+                        else
+                            lastseen = "NaN";
+                    }
+                    stringList.forEach(s -> {
+                        String ss = s.replace("%seen%", lastseen);
+                        vec.add(ss);
+                    });
+                });
 
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return newlist;
+        return new ArrayList<>(vec);
     }
 
     private void updateLore(int index, List<String> lore) {
@@ -384,7 +378,7 @@ public abstract class AbstractManage extends AbstractGUI {
         this.refresh();
     }
 
-    private List<String> formatList(List<String> allowDesc, String flag) {
+    private List<String> formatList(Collection<String> allowDesc, String flag) {
         List<String> newList = new ArrayList<>();
         allowDesc.forEach(s -> newList.add(s.replace("%var%", flag)));
         return newList;

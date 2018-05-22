@@ -47,7 +47,7 @@ public class Advertise extends LandlordCommand {
         }
 
         Offer offer = new Offer(pr.getName(), price, player.getUniqueId());
-        plugin.getPlayerManager().addOffer(offer);
+        plugin.getOfferManager().addOffer(offer);
 
         player.sendMessage(lm.getString("Commands.Advertise.success")
                 .replace("%landname%", pr.getName())

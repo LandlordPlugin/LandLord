@@ -49,7 +49,7 @@ public class Home extends LandlordCommand {
                 return;
             }
 
-            plugin.getPlayerManager().getOfflinePlayer(targetPlayer, lPlayer -> {
+            plugin.getPlayerManager().getOfflinePlayerAsync(targetPlayer, lPlayer -> {
                 if (lPlayer == null) {
                     player.sendMessage(lm.getString("Commands.Home.otherNoHome"));
                 } else {

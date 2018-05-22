@@ -44,23 +44,27 @@ public class Database extends Datastorage {
 
     @Override
     protected void setupDatabase() {
-        execute("CREATE TABLE ll_players IF NOT EXISTS (" +
-                "uuid VARCHAR(36)       NOT NULL PRIMARY KEY," +
+        execute("CREATE TABLE IF NOT EXISTS ll_players (" +
+                "uuid VARCHAR(36)       NOT NULL," +
                 "name VARCHAR(16)," +
-                "claims INT," +
+                "claims INTEGER," +
                 "home TEXT," +
-                "lastseen VARCHAR(50)" +
+                "lastseen VARCHAR(50)," +
+                "PRIMARY KEY(uuid)" +
                 ");");
 
-        execute("CREATE TABLE ll_advertise IF NOT EXISTS (" +
-                "landname VARCHAR(36)   NOT NULL PRIMARY KEY," +
+        execute("CREATE TABLE IF NOT EXISTS ll_advertise(" +
+                "landname VARCHAR(36)   NOT NULL," +
                 "price DOUBLE           NOT NULL," +
-                "seller VARCHAR(36)     NOT NULL" +
+                "seller VARCHAR(36)     NOT NULL," +
+                "PRIMARY KEY(landname)" +
                 ");");
 
-        execute("CREATE TABLE ll_version IF NOT EXISTS (" +
-                "version TINYINT PRIMARY KEY" +
+        execute("CREATE TABLE IF NOT EXISTS ll_version(" +
+                "version TINYINT," +
+                "PRIMARY KEY(version)" +
                 ");");
+        execute("INSERT INTO ll_version (version) SELECT " + CURRENT_VERSION + " WHERE NOT EXISTS (SELECT * FROM ll_version)");
     }
 
     public LPlayer getPlayer(Object obj, Mode mode) {

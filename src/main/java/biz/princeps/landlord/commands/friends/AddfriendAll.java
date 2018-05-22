@@ -22,7 +22,7 @@ public class AddfriendAll extends LandlordCommand {
             return;
         }
 
-        plugin.getPlayerManager().getOfflinePlayer(name, lPlayer -> {
+        plugin.getPlayerManager().getOfflinePlayerAsync(name, lPlayer -> {
             if (lPlayer == null) {
                 // Failure
                 player.sendMessage(lm.getString("Commands.AddfriendAll.noPlayer")

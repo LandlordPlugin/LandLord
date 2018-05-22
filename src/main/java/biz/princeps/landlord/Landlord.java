@@ -105,12 +105,20 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
         langManager = new LangManager(this, getConfig().getString("Language", "en"));
 
+        String dbpath = getConfig().getString("MySQL.Database");
+        DatabaseType dbtype = DatabaseType.valueOf(getConfig().getString("DatabaseType"));
+        if(dbtype == DatabaseType.SQLite){
+            getLogger().warning("SQLite is not longer supported! Use H2 instead!");
+            getPluginLoader().disablePlugin(this);
+        }else if(dbtype == DatabaseType.H2){
+           dbpath = getDataFolder() + "/" + getConfig().getString("MySQL.Database");
+        }
         db = new Database(getLogger(), DatabaseType.valueOf(getConfig().getString("DatabaseType")),
                 getConfig().getString("MySQL.Hostname"),
                 getConfig().getString("MySQL.Port"),
                 getConfig().getString("MySQL.User"),
                 getConfig().getString("MySQL.Password"),
-                getConfig().getString("MySQL.Database"));
+                dbpath);
 
         manageCommands();
         manageListeners();

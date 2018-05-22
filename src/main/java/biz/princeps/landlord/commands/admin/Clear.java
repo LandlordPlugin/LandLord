@@ -48,7 +48,7 @@ public class Clear extends LandlordCommand {
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.getMapManager().updateAll());
                 } else {
                     // Clear only a specific player
-                    plugin.getPlayerManager().getOfflinePlayer(target, lPlayer -> {
+                    plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
 
                         if (lPlayer == null) {
                             // Failure
