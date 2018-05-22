@@ -5,7 +5,7 @@ import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.persistent.Offers;
+import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.crossversion.CParticle;
@@ -71,7 +71,7 @@ public class Claim extends LandlordCommand {
                     return;
                 }
 
-                Offers offer = plugin.getPlayerManager().getOffer(pr.getName());
+                Offer offer = plugin.getPlayerManager().getOffer(pr.getName());
                 if (!plugin.getPlayerManager().isInactive(pr.getOwner()) && offer == null) {
                     player.sendMessage(lm.getString("Commands.Claim.notYetInactive")
                             .replace("%owner%", pr.printOwners())
@@ -165,7 +165,7 @@ public class Claim extends LandlordCommand {
                         }
                     }
 
-                    Offers offer = plugin.getPlayerManager().getOffer(landname);
+                    Offer offer = plugin.getPlayerManager().getOffer(landname);
                     if (offer != null && pr != null) {
                         // Player 2 player sale
                         if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {

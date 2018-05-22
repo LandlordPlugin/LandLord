@@ -2,7 +2,7 @@ package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
-import biz.princeps.landlord.persistent.Offers;
+import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.crossversion.CParticle;
 import biz.princeps.lib.storage_old.requests.Conditions;
@@ -106,7 +106,7 @@ public class Info extends LandlordCommand {
                         return;
                     }
 
-                    Offers offer = plugin.getPlayerManager().getOffer(land.getName());
+                    Offer offer = plugin.getPlayerManager().getOffer(land.getName());
                     if (offer != null) {
                         // advertised land
                         player.sendMessage(replaceInMessage(advertised, land.getName(), land.printOwners(), land.printMembers(), lastseen,
