@@ -22,14 +22,20 @@ public class Database extends Datastorage {
 
     private void handleUpgrade(ResultSet res) {
         try {
+            res.next();
             int localVersion = res.getInt("version");
+
+            boolean hasUpgraded = false;
             while (localVersion < CURRENT_VERSION) {
                 executeUpgrade(localVersion);
                 localVersion++;
+                hasUpgraded = true;
             }
 
-            executeAsync("UPDATE version FROM ll_version SET version = ?", CURRENT_VERSION);
+            if (hasUpgraded)
+                executeAsync("UPDATE version FROM ll_version SET version = ?", CURRENT_VERSION);
         } catch (SQLException e) {
+            e.printStackTrace();
             logger.warning("Error while handling upgrade!\nError:" + e.getMessage());
         }
     }
@@ -64,6 +70,7 @@ public class Database extends Datastorage {
                 "version TINYINT," +
                 "PRIMARY KEY(version)" +
                 ");");
+
         execute("INSERT INTO ll_version (version) SELECT " + CURRENT_VERSION + " WHERE NOT EXISTS (SELECT * FROM ll_version)");
     }
 
@@ -94,12 +101,10 @@ public class Database extends Datastorage {
     }
 
     public void save(LPlayer lp) {
-        execute("UPDATE name, claims, home, lastseen FROM ll_players WHERE uuid = ?" +
-                        "SET name = ?, claims = ?, home = ?, lastseen = ?", lp.getUuid(),
-                lp.getName(),
-                lp.getClaims(),
-                SpigotUtil.exactlocationToString(lp.getHome()),
-                lp.getLastSeenAsString());
+        System.out.println(lp);
+        execute("REPLACE INTO ll_players (uuid, name, claims, home, lastseen) VALUES ('" + lp.getUuid() + "', '" +
+                lp.getName() + "', " + lp.getClaims() + ", '" +
+                SpigotUtil.exactlocationToString(lp.getHome()) + "', '" + lp.getLastSeenAsString() + "')");
     }
 
     public Map<String, Offer> fetchOffers() {

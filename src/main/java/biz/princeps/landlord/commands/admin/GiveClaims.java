@@ -98,9 +98,9 @@ public class GiveClaims extends LandlordCommand {
         plugin.getPlayerManager().getOfflinePlayerAsync(target, p -> {
             if (p != null) {
                 p.addClaims(amount);
-                plugin.getPlayerManager().saveSync(p.getUuid());
+                plugin.getPlayerManager().saveSync(p);
                 if (Bukkit.getOfflinePlayer(p.getUuid()).isOnline()) {
-                    Bukkit.getPlayer(p.getUuid()).sendMessage(lm.getString("Commands.GiveClaims.success"));
+                    Bukkit.getPlayer(p.getUuid()).sendMessage(lm.getString("Commands.GiveClaims.success").replace("%amount%", String.valueOf(amount)));
                 }
             } else {
                 issuer.sendMessage(lm.getString("Commands.GiveClaims.noPlayer"));

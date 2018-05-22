@@ -174,7 +174,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         if (mapManager != null)
             mapManager.removeAllMaps();
 
-        Bukkit.getOnlinePlayers().forEach(p -> getPlayerManager().saveSync(p.getUniqueId()));
+        Bukkit.getOnlinePlayers().forEach(p -> getPlayerManager().saveSync(getPlayerManager().get(p.getUniqueId())));
     }
 
     private void manageCommands() {

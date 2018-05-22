@@ -78,4 +78,15 @@ public class LPlayer {
     public String getLastSeenAsString() {
         return lastseen;
     }
+
+    @Override
+    public String toString() {
+        return "LPlayer{" +
+                "uuid=" + uuid +
+                ", name='" + name + '\'' +
+                ", claims=" + claims +
+                ", home=" + home +
+                ", lastseen='" + lastseen + '\'' +
+                '}';
+    }
 }

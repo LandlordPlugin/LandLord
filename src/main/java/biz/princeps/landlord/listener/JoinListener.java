@@ -26,12 +26,12 @@ public class JoinListener extends BasicListener {
 
         TaskChain<Object> chain = Landlord.newChain();
         chain.asyncFirst(() -> plugin.getPlayerManager().getOfflinePlayerSync(p.getUniqueId()))
-                .abortIfNull()
                 .storeAsData("lp")
                 .sync(() -> {
                     LPlayer lPlayer = chain.getTaskData("lp");
                     if (lPlayer == null) {
                         lPlayer = new LPlayer(p.getUniqueId());
+                        chain.setTaskData("lp", lPlayer);
                     }
                     plugin.getPlayerManager().add(lPlayer);
 
@@ -41,7 +41,7 @@ public class JoinListener extends BasicListener {
                     lPlayer.setLastSeen(LocalDateTime.now());
                 })
                 .async(() -> {
-                    plugin.getPlayerManager().saveSync(p.getUniqueId());
+                    plugin.getPlayerManager().saveSync(chain.getTaskData("lp"));
 
                     Event e = new FinishedLoadingPlayerEvent(p, chain.getTaskData("lp"));
                     Bukkit.getPluginManager().callEvent(e);
@@ -52,8 +52,9 @@ public class JoinListener extends BasicListener {
     @EventHandler
     public void onDisconnect(PlayerQuitEvent event) {
         Player p = event.getPlayer();
-        plugin.getPlayerManager().get(p.getUniqueId()).setLastSeen(LocalDateTime.now());
-        plugin.getPlayerManager().saveAsync(p.getUniqueId());
+        LPlayer lp = plugin.getPlayerManager().get(p.getUniqueId());
+        lp.setLastSeen(LocalDateTime.now());
+        plugin.getPlayerManager().saveAsync(lp);
         plugin.getPlayerManager().remove(p.getUniqueId());
     }
 }

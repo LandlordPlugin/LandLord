@@ -35,12 +35,11 @@ public class LPlayerManager {
         this.players.put(lPlayer.getUuid(), lPlayer);
     }
 
-    public void saveAsync(UUID id) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, () -> saveSync(id));
+    public void saveAsync(LPlayer lp) {
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, () -> saveSync(lp));
     }
 
-    public void saveSync(UUID id) {
-        LPlayer lp = get(id);
+    public void saveSync(LPlayer lp) {
         db.save(lp);
     }
 
