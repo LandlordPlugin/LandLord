@@ -11,10 +11,10 @@ import biz.princeps.landlord.listener.TresholdListener;
 import biz.princeps.landlord.manager.CostManager;
 import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.manager.LangManager;
+import biz.princeps.landlord.manager.OfferManager;
 import biz.princeps.landlord.manager.map.MapManager;
+import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.LPlayer;
-import biz.princeps.landlord.persistent.Requests;
-import biz.princeps.landlord.persistent.Version;
 import biz.princeps.landlord.placeholderapi.LandLordPlacehodlers;
 import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.landlord.util.Metrics;
@@ -22,10 +22,7 @@ import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
-import biz.princeps.lib.storage_old.DatabaseAPI;
 import biz.princeps.lib.storage_old.DatabaseType;
-import biz.princeps.lib.storage_old.annotation.Column;
-import biz.princeps.lib.storage_old.requests.Conditions;
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
@@ -41,8 +38,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -56,7 +51,8 @@ import java.util.concurrent.Executors;
 public class Landlord extends JavaPlugin implements LandLordAPI {
 
     private static Landlord instance;
-    private static DatabaseAPI databaseAPI;
+
+    private Database db;
     private ExecutorService executorService;
     private static TaskChainFactory taskChainFactory;
 
@@ -67,6 +63,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
     private LPlayerManager lPlayerManager;
     private MapManager mapManager;
     private CostManager costManager;
+    private OfferManager offerManager;
 
     public static Landlord getInstance() {
         return instance;
@@ -108,16 +105,28 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
         langManager = new LangManager(this, getConfig().getString("language", "en"));
 
-        databaseAPI = new DatabaseAPI(DatabaseType.valueOf(getConfig().getString("DatabaseType")), getConfig(), new Requests(), "biz.princeps.landlord.persistent");
-        handleDatabase();
+        String dbpath = getConfig().getString("MySQL.Database");
+        DatabaseType dbtype = DatabaseType.valueOf(getConfig().getString("DatabaseType"));
+        if(dbtype == DatabaseType.SQLite){
+            getLogger().warning("SQLite is not longer supported! Use H2 instead!");
+            getPluginLoader().disablePlugin(this);
+        }else if(dbtype == DatabaseType.H2){
+           dbpath = getDataFolder() + "/" + getConfig().getString("MySQL.Database");
+        }
+        db = new Database(getLogger(), DatabaseType.valueOf(getConfig().getString("DatabaseType")),
+                getConfig().getString("MySQL.Hostname"),
+                getConfig().getString("MySQL.Port"),
+                getConfig().getString("MySQL.User"),
+                getConfig().getString("MySQL.Password"),
+                dbpath);
 
         manageCommands();
         manageListeners();
         managePlaceholders();
         manageItems();
 
-        lPlayerManager = new LPlayerManager(databaseAPI);
-        lPlayerManager.onStartup();
+        lPlayerManager = new LPlayerManager(db);
+        offerManager = new OfferManager(db);
 
         mapManager = new MapManager();
         ScoreboardLib.setPluginInstance(this);
@@ -127,13 +136,12 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
         //Retrieve the LPlayer objects for all online players (in case of reload)
         Bukkit.getOnlinePlayers().forEach(p -> {
-            List<Object> lPlayer = this.getDatabaseAPI().retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", p.getUniqueId().toString()).create());
-            LPlayer lp;
-            if (lPlayer.size() > 0)
-                lp = (LPlayer) lPlayer.get(0);
-            else
-                lp = new LPlayer(p.getUniqueId());
-            this.getPlayerManager().add(p.getUniqueId(), lp);
+            LPlayer lPlayer = lPlayerManager.get(p.getUniqueId());
+            if (lPlayer == null) {
+                lPlayer = new LPlayer(p.getUniqueId());
+            }
+            this.getPlayerManager().add(lPlayer);
+
         });
 
         if (getConfig().getBoolean("EnableMetrics")) {
@@ -161,58 +169,12 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         }
     }
 
-    private void handleDatabase() {
-
-        ArrayList<String> toExecute = new ArrayList<>();
-        databaseAPI.getDatabase().executeQuery("SELECT * FROM ll_version ORDER BY version DESC", (res) -> {
-            if (res.next()) {
-                int dbversion = res.getInt("version");
-                if (dbversion < Version.latestVersion) {
-                    getLogger().info("Database needs an upgrade! There are going to be some errors, which you can ignore.");
-                    // Now upgrade the table!!
-                    Field[] declaredFields = LPlayer.class.getDeclaredFields();
-                    for (Field declaredField : declaredFields) {
-                        if (declaredField.getAnnotation(Column.class) != null) {
-                            Column anno = declaredField.getAnnotation(Column.class);
-
-                            String type = databaseAPI.convertToSQLType(declaredField.getType().getSimpleName());
-                            StringBuilder sb = new StringBuilder(type);
-                            if (anno.length() > 0) {
-                                sb.append("(");
-                                sb.append(anno.length());
-                                sb.append(")");
-                            }
-
-                            // location specific
-                            if (declaredField.getType().getSimpleName().equals("Location")) {
-                                sb.append("(");
-                                sb.append(100);
-                                sb.append(")");
-                            }
-
-                            String query;
-                            if (DatabaseType.valueOf(getConfig().getString("DatabaseType")) == DatabaseType.SQLite)
-                                query = "ALTER TABLE ll_players " +
-                                        "ADD COLUMN '" + anno.name() + "' " + sb.toString();
-                            else
-                                query = "ALTER TABLE ll_players " +
-                                        "ADD COLUMN " + anno.name() + " " + sb.toString();
-                            toExecute.add(query);
-                        }
-                    }
-                }
-            }
-        });
-        toExecute.forEach(databaseAPI.getDatabase()::execute);
-        databaseAPI.saveObject(new Version(Version.latestVersion));
-    }
-
     @Override
     public void onDisable() {
         if (mapManager != null)
             mapManager.removeAllMaps();
 
-        Bukkit.getOnlinePlayers().forEach(p -> getPlayerManager().save(p.getUniqueId()));
+        Bukkit.getOnlinePlayers().forEach(p -> getPlayerManager().saveSync(getPlayerManager().get(p.getUniqueId())));
     }
 
     private void manageCommands() {
@@ -250,8 +212,8 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         return (rsp == null ? null : rsp.getProvider());
     }
 
-    public DatabaseAPI getDatabaseAPI() {
-        return databaseAPI;
+    public Database getDB() {
+        return db;
     }
 
     public WorldGuardHandler getWgHandler() {
@@ -280,6 +242,10 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     public CostManager getCostManager() {
         return costManager;
+    }
+
+    public OfferManager getOfferManager() {
+        return offerManager;
     }
 
     /**

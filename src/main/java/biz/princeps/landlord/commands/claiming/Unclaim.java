@@ -97,7 +97,7 @@ public class Unclaim extends LandlordCommand {
             }
 
             // Remove possible advertisements
-            plugin.getPlayerManager().removeOffer(pr.getName());
+            plugin.getOfferManager().removeOffer(pr.getName());
 
             player.sendMessage(lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", OwnedLand.getName(chunk))

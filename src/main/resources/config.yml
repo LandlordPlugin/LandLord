@@ -1,6 +1,6 @@
 # -----------        General Stuff        -----------
-# Available: SQLite / MySQL
-DatabaseType: SQLite
+# Available: H2 / MySQL
+DatabaseType: H2
 MySQL:
   Hostname: localhost
   Port: 3306

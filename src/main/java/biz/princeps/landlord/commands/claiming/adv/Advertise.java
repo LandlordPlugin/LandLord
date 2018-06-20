@@ -1,7 +1,7 @@
 package biz.princeps.landlord.commands.claiming.adv;
 
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.persistent.Offers;
+import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.landlord.util.OwnedLand;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -46,8 +46,8 @@ public class Advertise extends LandlordCommand {
             return;
         }
 
-        Offers offer = new Offers(pr.getName(), price, player.getUniqueId());
-        plugin.getPlayerManager().addOffer(offer);
+        Offer offer = new Offer(pr.getName(), price, player.getUniqueId());
+        plugin.getOfferManager().addOffer(offer);
 
         player.sendMessage(lm.getString("Commands.Advertise.success")
                 .replace("%landname%", pr.getName())

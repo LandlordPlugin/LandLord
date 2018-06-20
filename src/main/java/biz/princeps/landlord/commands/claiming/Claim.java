@@ -5,7 +5,7 @@ import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.persistent.Offers;
+import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.crossversion.CParticle;
@@ -57,7 +57,7 @@ public class Claim extends LandlordCommand {
 
             // Check if there is an overlapping wg-region
             if (!plugin.getWgHandler().canClaim(player, chunk)) {
-                if (pr == null || (plugin.getPlayerManager().getOffer(landname) == null && !inactive)) {
+                if (pr == null || (plugin.getOfferManager().getOffer(landname) == null && !inactive)) {
                     player.sendMessage(lm.getString("Commands.Claim.notAllowed"));
                     return;
                 }
@@ -71,7 +71,7 @@ public class Claim extends LandlordCommand {
                     return;
                 }
 
-                Offers offer = plugin.getPlayerManager().getOffer(pr.getName());
+                Offer offer = plugin.getOfferManager().getOffer(pr.getName());
                 if (!plugin.getPlayerManager().isInactive(pr.getOwner()) && offer == null) {
                     player.sendMessage(lm.getString("Commands.Claim.notYetInactive")
                             .replace("%owner%", pr.printOwners())
@@ -165,7 +165,7 @@ public class Claim extends LandlordCommand {
                         }
                     }
 
-                    Offers offer = plugin.getPlayerManager().getOffer(landname);
+                    Offer offer = plugin.getOfferManager().getOffer(landname);
                     if (offer != null && pr != null) {
                         // Player 2 player sale
                         if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {
@@ -177,7 +177,7 @@ public class Claim extends LandlordCommand {
                                 plugin.getVaultHandler().take(player.getUniqueId(), offer.getPrice());
                                 plugin.getVaultHandler().give(offer.getSeller(), offer.getPrice());
 
-                                plugin.getPlayerManager().removeOffer(offer.getLandname());
+                                plugin.getOfferManager().removeOffer(offer.getLandname());
 
                                 pr.getWGLand().getOwners().clear();
                                 pr.getWGLand().getOwners().addPlayer(player.getUniqueId());

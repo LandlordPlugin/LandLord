@@ -1,16 +1,16 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
-import biz.princeps.landlord.persistent.Offers;
+import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.crossversion.CParticle;
-import biz.princeps.lib.storage_old.requests.Conditions;
+import co.aikar.taskchain.TaskChain;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.LocalDateTime;
 import java.util.Iterator;
@@ -78,53 +78,54 @@ public class Info extends LandlordCommand {
         Chunk chunk = player.getLocation().getChunk();
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
 
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                // claimed
-                if (land != null) {
-                    String lastseen;
-                    LocalDateTime lastSeenDate = null;
-                    OfflinePlayer op = Bukkit.getOfflinePlayer(land.getOwner());
-                    if (op.isOnline()) {
-                        lastseen = lm.getRawString("Commands.Info.online");
-                    } else {
-                        List<Object> list = plugin.getDatabaseAPI().retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", op.getUniqueId().toString()).create());
-                        if (list.size() > 0) {
-                            lastseen = ((LPlayer) list.get(0)).getLastSeenAsString();
-                            lastSeenDate = ((LPlayer) list.get(0)).getLastSeen();
+        TaskChain<?> chain = Landlord.newChain();
+        chain.asyncFirst(() -> chain.setTaskData("lp", plugin.getPlayerManager().getOfflinePlayerSync(player.getUniqueId())))
+                .sync(() -> {
+                    // claimed
+                    if (land != null) {
+                        String lastseen;
+                        LocalDateTime lastSeenDate = null;
+                        OfflinePlayer op = Bukkit.getOfflinePlayer(land.getOwner());
+                        if (op.isOnline()) {
+                            lastseen = lm.getRawString("Commands.Info.online");
                         } else {
-                            lastseen = lm.getRawString("Commands.Info.noLastSeen");
+                            LPlayer lp = chain.getTaskData("lp");
+                            if (lp != null) {
+                                lastseen = lp.getLastSeenAsString();
+                                lastSeenDate = lp.getLastSeen();
+                            } else {
+                                lastseen = lm.getRawString("Commands.Info.noLastSeen");
+                            }
                         }
-                    }
 
-                    if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
-                        player.sendMessage(replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen,
+                        if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
+                            player.sendMessage(replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen,
+                                    plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
+                            OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
+                            return;
+                        }
+
+                        Offer offer = plugin.getOfferManager().getOffer(land.getName());
+                        if (offer != null) {
+                            // advertised land
+                            player.sendMessage(replaceInMessage(advertised, land.getName(), land.printOwners(), land.printMembers(), lastseen,
+                                    plugin.getVaultHandler().format(offer.getPrice())));
+                        } else {
+                            // normal owned land
+                            player.sendMessage(replaceInMessage(owned, land.getName(), land.printOwners(), land.printMembers(), lastseen, ""));
+                        }
+                        OwnedLand.highlightLand(player, CParticle.DRIPWATER);
+
+                    } else {
+                        // unclaimed
+                        player.sendMessage(replaceInMessage(free, OwnedLand.getName(chunk), "", "", "",
                                 plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
                         OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
-                        return;
                     }
 
-                    Offers offer = plugin.getPlayerManager().getOffer(land.getName());
-                    if (offer != null) {
-                        // advertised land
-                        player.sendMessage(replaceInMessage(advertised, land.getName(), land.printOwners(), land.printMembers(), lastseen,
-                                plugin.getVaultHandler().format(offer.getPrice())));
-                    } else {
-                        // normal owned land
-                        player.sendMessage(replaceInMessage(owned, land.getName(), land.printOwners(), land.printMembers(), lastseen, ""));
-                    }
-                    OwnedLand.highlightLand(player, CParticle.DRIPWATER);
 
-                } else {
-                    // unclaimed
-                    player.sendMessage(replaceInMessage(free, OwnedLand.getName(chunk), "", "", "",
-                            plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
-                    OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
-                }
-            }
-        }.runTaskAsynchronously(plugin);
+                });
+        chain.execute();
     }
 
     private String replaceInMessage(String original, String landID, String owner, String member, String lastseen, String price) {

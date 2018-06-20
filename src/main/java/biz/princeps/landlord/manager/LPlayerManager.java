@@ -2,17 +2,13 @@ package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.api.Options;
+import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.LPlayer;
-import biz.princeps.landlord.persistent.Offers;
-import biz.princeps.lib.manager.MappedManager;
-import biz.princeps.lib.storage_old.DatabaseAPI;
-import biz.princeps.lib.storage_old.requests.Conditions;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Bukkit;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -22,84 +18,53 @@ import java.util.function.Consumer;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 17/7/17
  */
-public class LPlayerManager extends MappedManager<UUID, LPlayer> {
+public class LPlayerManager {
 
-    private Map<String, Offers> offers = new HashMap<>();
+    private Map<UUID, LPlayer> players;
 
-    public LPlayerManager(DatabaseAPI api) {
-        super(api);
+    private Database db;
+    private Landlord plugin;
+
+    public LPlayerManager(Database db) {
+        this.players = new HashMap<>();
+        this.plugin = Landlord.getInstance();
+        this.db = db;
     }
 
-    public void save(UUID id) {
-        LPlayer lp = get(id);
-        Landlord.getInstance().getDatabaseAPI().saveObject(lp);
+    public void add(LPlayer lPlayer) {
+        this.players.put(lPlayer.getUuid(), lPlayer);
     }
 
-    public void onStartup() {
-        Landlord.getInstance().getDatabaseAPI().getDatabase().executeQuery("SELECT * FROM ll_advertise", res -> {
-            while (res.next()) {
-                offers.put(res.getString("landname"), new Offers(res.getString("landname"), res.getDouble("price"), UUID.fromString(res.getString("seller"))));
-            }
-        });
+    public void saveAsync(LPlayer lp) {
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, () -> saveSync(lp));
     }
 
-    public void getOfflinePlayer(UUID uuid, Consumer<LPlayer> consumer) {
-        ((Landlord) plugin).getExecutorService().execute(() -> consumer.accept(getLPlayer(uuid)));
+    public void saveSync(LPlayer lp) {
+        db.save(lp);
     }
 
-    private LPlayer getLPlayer(UUID uuid) {
-        List<Object> list = Landlord.getInstance().getDatabaseAPI()
-                .retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("uuid", uuid.toString()).create());
-        if (list.size() > 0) {
-            return (LPlayer) list.get(0);
-        }
-        return null;
+    public void remove(UUID id) {
+        players.remove(id);
     }
 
-    public void getOfflinePlayer(String name, Consumer<LPlayer> consumer) {
-        ((Landlord) plugin).getExecutorService().execute(() -> consumer.accept(getLPlayer(name)));
+    public void getOfflinePlayerAsync(UUID uuid, Consumer<LPlayer> consumer) {
+        plugin.getExecutorService().execute(() -> consumer.accept(db.getPlayer(uuid, Database.Mode.UUID)));
     }
 
-    private LPlayer getLPlayer(String name) {
-        if (this.contains(name)) return get(name);
-
-        List<Object> list = Landlord.getInstance().getDatabaseAPI()
-                .retrieveObjects(LPlayer.class, new Conditions.Builder().addCondition("name", name).create());
-        if (list.size() > 0) {
-            return (LPlayer) list.get(0);
-        }
-        return null;
+    public void getOfflinePlayerAsync(String name, Consumer<LPlayer> consumer) {
+        plugin.getExecutorService().execute(() -> consumer.accept(db.getPlayer(name, Database.Mode.NAME)));
     }
 
-    public Offers getOffer(String landname) {
-        return offers.get(landname);
+    public LPlayer getOfflinePlayerSync(UUID uuid) {
+        return db.getPlayer(uuid, Database.Mode.UUID);
     }
 
-    public void addOffer(Offers offer) {
-        offers.put(offer.getLandname(), offer);
-
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                Landlord.getInstance().getDatabaseAPI().saveObject(offer);
-            }
-        }.runTaskAsynchronously(plugin);
-    }
-
-    public void removeOffer(String landname) {
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                Landlord.getInstance().getDatabaseAPI().getDatabase().execute("DELETE FROM ll_advertise WHERE landname = '" + landname + "'");
-                offers.remove(landname);
-            }
-        }.runTaskAsynchronously(plugin);
+    public LPlayer getOfflinePlayerSync(String name) {
+        return db.getPlayer(name, Database.Mode.NAME);
     }
 
     public boolean contains(String name) {
-        for (LPlayer lPlayer : this.elements.values()) {
+        for (LPlayer lPlayer : this.players.values()) {
             if (lPlayer.getName() != null && lPlayer.getName().equals(name)) {
                 return true;
             }
@@ -108,12 +73,16 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
     }
 
     public LPlayer get(String name) {
-        for (LPlayer lPlayer : this.elements.values()) {
+        for (LPlayer lPlayer : this.players.values()) {
             if (lPlayer.getName() != null && lPlayer.getName().equals(name)) {
                 return lPlayer;
             }
         }
         return null;
+    }
+
+    public LPlayer get(UUID id) {
+        return this.players.get(id);
     }
 
     /**
@@ -137,7 +106,7 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
     }
 
     public void isInactive(UUID id, Consumer<Boolean> consumer) {
-        ((Landlord) plugin).getExecutorService().execute(() -> consumer.accept(isInactive(id)));
+        plugin.getExecutorService().execute(() -> consumer.accept(isInactive(id)));
     }
 
     /**
@@ -147,7 +116,7 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
      * @return if the given id is marked as inactive
      */
     public Boolean isInactive(UUID id) {
-        LPlayer lPlayer = getLPlayer(id);
+        LPlayer lPlayer = db.getPlayer(id, Database.Mode.UUID);
         if (lPlayer != null) {
             return isInactive(lPlayer.getLastSeen());
         }
@@ -155,7 +124,7 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
     }
 
     public void getInactiveRemainingDays(UUID owner, Consumer<Integer> consumer) {
-        ((Landlord) plugin).getExecutorService().execute(() -> consumer.accept(getInactiveRemainingDays(owner)));
+        plugin.getExecutorService().execute(() -> consumer.accept(getInactiveRemainingDays(owner)));
     }
 
     /**
@@ -167,7 +136,7 @@ public class LPlayerManager extends MappedManager<UUID, LPlayer> {
     public int getInactiveRemainingDays(UUID owner) {
 
         long days = plugin.getConfig().getInt("BuyUpInactive.timegate");
-        LPlayer lPlayer = getLPlayer(owner);
+        LPlayer lPlayer = db.getPlayer(owner, Database.Mode.UUID);
         if (lPlayer != null) {
             return (int) (days - (Duration.between(LocalDateTime.now(), lPlayer.getLastSeen()).toDays()));
         }

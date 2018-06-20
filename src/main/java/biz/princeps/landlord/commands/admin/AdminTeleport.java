@@ -23,7 +23,7 @@ public class AdminTeleport extends LandlordCommand {
 
     public void onAdminTeleport(Player sender, String target) {
 
-        plugin.getPlayerManager().getOfflinePlayer(target, lplayer -> {
+        plugin.getPlayerManager().getOfflinePlayerAsync(target, lplayer -> {
 
             if (lplayer == null) {
                 // Failure
