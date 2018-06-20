@@ -106,7 +106,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         saveDefaultConfig();
 
 
-        langManager = new LangManager(this, getConfig().getString("Language", "en"));
+        langManager = new LangManager(this, getConfig().getString("language", "en"));
 
         databaseAPI = new DatabaseAPI(DatabaseType.valueOf(getConfig().getString("DatabaseType")), getConfig(), new Requests(), "biz.princeps.landlord.persistent");
         handleDatabase();
