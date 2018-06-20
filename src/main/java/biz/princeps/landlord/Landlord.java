@@ -103,7 +103,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         saveDefaultConfig();
 
 
-        langManager = new LangManager(this, getConfig().getString("Language", "en"));
+        langManager = new LangManager(this, getConfig().getString("language", "en"));
 
         String dbpath = getConfig().getString("MySQL.Database");
         DatabaseType dbtype = DatabaseType.valueOf(getConfig().getString("DatabaseType"));

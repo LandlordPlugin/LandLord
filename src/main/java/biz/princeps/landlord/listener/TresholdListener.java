@@ -2,6 +2,9 @@ package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
+import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -60,6 +63,22 @@ public class TresholdListener extends BasicListener {
             return;
 
         if (!plugin.getConfig().getStringList("disabled-worlds").contains(loc.getWorld().getName())) {
+
+            LocalPlayer localPlayer = plugin.getWgHandler().getWG().wrapPlayer(p);
+            ApplicableRegionSet applicableRegions = plugin.getWgHandler().getWG().getRegionManager(loc.getWorld()).getApplicableRegions(loc);
+            if (applicableRegions.getRegions().size() < 1) {
+                boolean isAllowed = false;
+                for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) {
+                    if (protectedRegion.isMember(localPlayer) || protectedRegion.isOwner(localPlayer)) {
+                        isAllowed = true;
+                        break;
+                    }
+                }
+                if (isAllowed) {
+                    return;
+                }
+            }
+
             if (land == null) {
                 int landcount = plugin.getWgHandler().getRegionCountOfPlayer(p.getUniqueId());
 

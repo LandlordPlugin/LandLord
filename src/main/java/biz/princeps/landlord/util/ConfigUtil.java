@@ -34,7 +34,9 @@ public class ConfigUtil {
         if (resourceAsStream != null)
             reader = new BufferedReader(new InputStreamReader(resourceAsStream));
         else {
-            Landlord.getInstance().getLogger().warning("Could not find resource: " + pathInJar);
+            Landlord.getInstance().getLogger().warning("You are using an unknown translation.\n" +
+                    "Please be aware, that LandLord will not add any new strings to your translation.\n" +
+                    "If you would like to see your translation inside the plugin, please contact the author!");
             return;
         }
         reader.lines().forEach(s -> {
