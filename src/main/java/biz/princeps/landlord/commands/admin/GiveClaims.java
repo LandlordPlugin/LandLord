@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
@@ -40,13 +41,13 @@ public class GiveClaims extends LandlordCommand {
                         plugin.getVaultHandler().take(player.getUniqueId(), cost);
                         plugin.getPlayerManager().get(player.getUniqueId()).addClaims(amount);
                         player.sendMessage(plugin.getLangManager().getString("Shop.success")
-                                .replace("%number%", amount + "")
+                                .replace("%amount%", amount + "")
                                 .replace("%cost%", plugin.getVaultHandler().format(cost)));
                         player.closeInventory();
                         addClaims(issuer, target, amount);
                     } else {
                         player.sendMessage(plugin.getLangManager().getString("Shop.notEnoughMoney")
-                                .replace("%number%", amount + "")
+                                .replace("%amount%", amount + "")
                                 .replace("%cost%", plugin.getVaultHandler().format(cost)));
                         player.closeInventory();
                         return;
@@ -94,6 +95,12 @@ public class GiveClaims extends LandlordCommand {
     }
 
     private void addClaims(Properties issuer, String target, int amount) {
+        if(plugin.getPlayerManager().get(target) != null){
+            LPlayer lPlayer = plugin.getPlayerManager().get(target);
+            lPlayer.addClaims(amount);
+            Bukkit.getPlayer(target).sendMessage(lm.getString("Commands.GiveClaims.success").replace("%amount%", String.valueOf(amount)));
+            return;
+        }
 
         plugin.getPlayerManager().getOfflinePlayerAsync(target, p -> {
             if (p != null) {

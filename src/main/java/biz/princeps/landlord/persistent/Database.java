@@ -75,7 +75,7 @@ public class Database extends Datastorage {
     }
 
     public LPlayer getPlayer(Object obj, Mode mode) {
-        ResultSet res = executeQuery("SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = ?", obj);
+        ResultSet res = executeQuery("SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" + obj + "'");
 
         try {
             if (!res.next()) {
@@ -101,10 +101,18 @@ public class Database extends Datastorage {
     }
 
     public void save(LPlayer lp) {
-        System.out.println(lp);
+        // System.out.println("Saving... " + lp);
         execute("REPLACE INTO ll_players (uuid, name, claims, home, lastseen) VALUES ('" + lp.getUuid() + "', '" +
                 lp.getName() + "', " + lp.getClaims() + ", '" +
                 SpigotUtil.exactlocationToString(lp.getHome()) + "', '" + lp.getLastSeenAsString() + "')");
+        ResultSet resultSet = this.executeQuery("SELECT * FROM ll_players");
+        try {
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString("name") + ":" + resultSet.getInt("claims"));
+            }
+        } catch (SQLException ex) {
+
+        }
     }
 
     public Map<String, Offer> fetchOffers() {
