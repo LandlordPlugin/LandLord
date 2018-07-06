@@ -43,16 +43,15 @@ public class GiveClaims extends LandlordCommand {
                                 .replace("%number%", amount + "")
                                 .replace("%cost%", plugin.getVaultHandler().format(cost)));
                         player.closeInventory();
+                        addClaims(issuer, target, amount);
                     } else {
                         player.sendMessage(plugin.getLangManager().getString("Shop.notEnoughMoney")
                                 .replace("%number%", amount + "")
                                 .replace("%cost%", plugin.getVaultHandler().format(cost)));
                         player.closeInventory();
+                        return;
                     }
                 }
-
-
-                addClaims(issuer, target, amount);
                 break;
 
             case 2:
@@ -81,8 +80,9 @@ public class GiveClaims extends LandlordCommand {
                 }
 
                 if (issuer.isPlayer()) {
-                    checkPermission(issuer.getPlayer(), amount);
-                    addClaims(issuer, issuer.getPlayer().getName(), amount);
+                    if(checkPermission(issuer.getPlayer(), amount)) {
+                        addClaims(issuer, issuer.getPlayer().getName(), amount);
+                    }
                 } else {
                     issuer.sendUsage();
                 }

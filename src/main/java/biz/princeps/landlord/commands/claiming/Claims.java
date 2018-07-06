@@ -6,7 +6,6 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
-
 /**
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
@@ -29,8 +28,10 @@ public class Claims extends LandlordCommand {
                 player.sendMessage(message.replace("%regions%", regionCount + "")
                         .replace("%claims%", claimcount + ""));
             } else {
-                BaseComponent text = new TextComponent(noClaims);
-                text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
+                BaseComponent[] text = TextComponent.fromLegacyText(noClaims);
+                for (BaseComponent baseComponent : text) {
+                    baseComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
+                }
                 player.spigot().sendMessage(text);
             }
         } else {
