@@ -64,10 +64,10 @@ public class GiveClaims extends LandlordCommand {
                     e.printStackTrace();
                     return;
                 }
-                if (issuer.isPlayer()) {
-                    checkPermission(issuer.getPlayer(), amount);
-
-                    addClaims(issuer, target, amount);
+                if (Bukkit.getPlayer(target) != null) {
+                    if(checkPermission(Bukkit.getPlayer(target), amount)) {
+                        addClaims(issuer, target, amount);
+                    }
                 }
                 break;
 
