@@ -1,0 +1,529 @@
+Tag: '&8[&c&l!&8]'
+Disabled-World: '&7Земельные участки запрещены в этом мире'
+noPermissions: '&7Нет разрешения'
+Commands:
+  Claim:
+    success: '&bВы успешно создали участок %chunk% в мире %world%'
+    p2pSuccess: '&bИгрок %player% купил ваш участок %chunk% в мире %world% за %price%!'
+    notEnoughMoney: '&eУ вас не достаточно денег (%money%) для покупки данного участка (%chunk%)'
+    moneyTook: '&4У вас были списаны деньги %money% для земельного учатска %chunk%'
+    alreadyClaimed: '&eЭтот участок уже занят %owner%'
+    limit: '&eВаш нужно купить больше участков (%regions%/%claims%)! Нажмите чтобы купить больше!'
+    hardcap: '&ы не можете создавать больше участков, чем %regions%!!'
+    notAllowed: '&eВы не можете притендовать на эту землю!'
+    aborted: '&eПрерванный иск!'
+    onlyClaimAdjacentChunks: '&cВам не разрешенно притендовать на данный участок %land%, потому что у вас нету участка по соседству!'
+    needsGap: '&cВам не разрешенно притендовать на данный участок %land%, потому что должен быть разрыв между ваше и чужой землей!'
+    boughtUp: '&bВы успешно купили участок %chunk% у %player% по %price%'
+    notYetInactive: '&c%owner% ещё не активен :) Вам нужно подождать как минимум ещё %days% '
+    confirmation: '&aВы уверены что хотите притендовать на участок %chunk% по %price%? Нажмите, чтобы подтвердить'
+  Info:
+    online: '&bONLINE'
+    noLastSeen: '&c-'
+    owned:
+      - '&f&lLand&c&lLord &a- Собственная земля'
+      - '&7Landname&8: &c%landid%'
+      - '&7Owner&8: &c%owner%   &7Последние просмотренные: &c%lastseen%'
+      - '&7Member&8: &c%member%'
+    advertised:
+      - '&f&lLand&c&lLord &a- Рекламируемый участок'
+      - '&7Landname&8: &c%landid%'
+      - '&7Owner&8: &c%owner%   &7Последние просмотренные: A&c%lastseen%'
+      - '&7Member&8: &c%member%'
+      - '&7Price&8: &c&o%price%'
+    inactive:
+      - '&f&lLand&c&lLord &a- Неактивный участок'
+      - '&7Landname&8: &c%landid%'
+      - '&7Owner&8: &c%owner%   &7Последние просмотренные: &c%lastseen%'
+      - '&7Member&8: &c%member%'
+      - '&7Price&8: &c&o%price%'
+    free:
+      - '&f&lLand&c&lLord &a- Свободный участок'
+      - '&7Landname&8: &c%landid%'
+      - '&7&oPrice: &c&o%price%'
+  Unclaim:
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    notOwnFreeLand: '&7Вы не владелец данного учатска'
+    success: '&7Вы успешно разрегестрировали &c%chunk% &7в мире &c%world% &7и получили &c%money% &7назад'
+  Addfriend:
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    noPlayer: '&7Не удалось найти игроков &8: &c%players%'
+    success: '&7Успешно добавлен &c%players% &7на этот участок'
+    alreadyOwn: '&7Вы не можете добавить владельца в качетве участника'
+  Unfriend:
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    noPlayer: '&7Не удалось найти игроков &8: &c%players%'
+    success: '&7Успешно удалён &c%players% &7из данного участка'
+  AddfriendAll:
+    noPlayer: '&7Не удалось найти игроков &8: &c%player%'
+    success: '&7Успешно добавлен &c%player% &7на все &c%count% &7земель принадлежащие вам'
+    alreadyOwn: '&7Вы не можете добавить владельца в качетве участника'
+  UnfriendAll:
+    noPlayer: '&7Не удалось найти игроков &8: &c%players%'
+    success: '&7Успешно удалён &c%players% &7из всех &c%count% &7земель принадлежащих вам'
+    noFriend: '&c%player% &7Не является другом на ваших землях'
+  ListLands:
+    noLands: '&7У вас нет земли'
+    header: '&7%player%s земли:'
+    landSegment: '&7Land&8: &cX: %realX%, Z: %realZ%'
+    manageAll: '&7Управление всеми землями'
+    chat:
+      previous: '&8[&7Previous&8]'
+      next: '&8[&7Next&8]'
+      segment: '&eНазвание: &c%landname% &eЧлены: &c%members%'
+    noPlayer: '&7Не удалось найти игроков&8: &c%player%'
+  LandMap:
+    disabled: '&7Карта земель &cdisabled'
+    header: '&e&m==&r&6&c&lLand&r&e&m=='
+    yours: 'Ваша'
+    friends: 'Друзей'
+    others: 'Другие'
+  ClearWorld:
+    success: '&7Успешно очищены &c%count% &7земли в мире &c%world%'
+    successPlayer: '&7Успешно очищены &c%count% &7земли у игрока&c%player%'
+    noPlayer: '&7Не удалось найти игроков&8: &c%players%'
+  Item:
+    noPlayer: '&7Не удалось найти игроков&8: &c%players%'
+  Manage:
+    all:
+      header: '&7Управление&8 &вызов земель'
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    notOwnFreeLand: '&7Вы не владелец данного участка'
+    header: '&7Управление&8: &c%info%'
+    invalidArguments: '&7Недопустимые аргументы'
+    AllowBuild:
+      title: '&cСтроительство разрешенно'
+      description:
+        - ' &7Переключить воозможность игроков'
+        - ' &7создавать данный участок'
+        - ' &7Статус&8: &c%var%'
+    AllowInteract:
+      title: '&cРазрешить взаимодействие'
+      description:
+        - ' &7Переключить воозможность игроков'
+        - ' &7взаимодействовать (e.g. редстоун постройки)'
+        - ' &7Статус&8: &c%var%'
+    AllowChest-access:
+      title: '&cРазрешить доступ к сундукам'
+      description:
+        - ' &7Переключить воозможность игроков'
+        - ' &7получать доступ ко всем видам сундуков'
+        - ' &7Статус&8: &c%var%'
+    AllowCreeper-explosion:
+      title: '&cРазрешить взрывы криперов'
+      description:
+        - ' &7Переключить воозможность криперов'
+        - ' &7уничтожать блоки'
+        - ' &7Статус&8: &c%var%'
+    AllowPvp:
+      title: '&cРазрешить PVP'
+      description:
+        - ' &7Переключить воозможность для игроков'
+        - ' &7бить других игроков'
+        - ' &7Статус&8: &c%var%'
+    AllowMob-spawning:
+      title: '&cУправление спавном мобов'
+      description:
+        - ' &7Переключить воозможность для мобов'
+        - ' &7появляться внутри вашей земли'
+      toggleItem:
+        title: 'Спавн %mob%'
+        description:
+          - 'Спавнить из %mob%: %value%'
+    Regenerate:
+      title: '&cВосстановление'
+      description:
+        - ' &7Восстановление вашей земли'
+        - ' &7Стоимость&8: &c%var%'
+      confirmation: '&7Стоимость восстановления &c%cost%'
+      success: '&7Восстановление земли &c%land% &7успешно'
+      abort: '&7Прерванная восстановление земли &c%land%'
+      notEnoughMoney: '&7У вас недостаточно денег для восстановления земли &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
+    SetGreet:
+      title: '&cСообщение "Приветствие"'
+      description:
+        - ' &7Установить превественное сообщение для этого участка'
+        - ' &7сообщение&8: &c%var%'
+      clickMsg: '&7Нажмите, для выбора нового сообщения "Приветсвия"'
+      successful: '&7"приветсвенное" сообщение усановленно на %msg%'
+    SetFarewell:
+      title: '&cПрощальное сообщение'
+      description:
+        - ' &7Установить прощальное сообщение для этого участка'
+        - ' &7Сообщение&8: &c%var%'
+      clickMsg: '&7Нажмите, для выбора нового прощального сообщения'
+      successful: '&7Прощальное сообщение установленно на %msg%'
+    ManageFriends:
+      title: '&cУправление "Друзьями"'
+      description:
+        - ' &7Управление вашими друзьями на этом участке'
+      friendSegment:
+        - ' &7Последний просмотр&8: &c%seen%'
+        - ' &7&oНажмите для удаления'
+      unfriend: '&7Недружественный игрок &c%player%'
+    Unclaim:
+      title: '&cРазрегистрация'
+      description:
+        - '&7Нажмите, чтобы разрегистрировать этот участок!'
+      confirmationTitle: '&aРазрегистрация %land%'
+  Help:
+    header: '&f&lLand&c&lLord'
+    admins:
+      - '&cЭто строка, которая будет отображаться только пользователю с разрешением landlord.admin.help'
+      - '&cЭто вторая строка'
+    players:
+      - '&c/land &8- &7Посмотреть команды'
+      - '&c/land claim &8- &7Регистрация участка в вашем местоположение'
+      - '&c/land unclaim &8- &7Разрегистрация участка в вашем местоположение'
+      - '&c/land addfriend <player> &8- &7Добавить игрока в друзья на вашей земле'
+      - '&c/land unfriend <player> &8- &7Удалить игрока из друзей на вашей земле'
+      - '&c/land friendall <player> &8- &7Добавить игрока в друзья на всех землях принадлежащих вам'
+      - '&c/land unfriendall <player> &8- &7Удалить игрока из друзей на всех землях принадлежащих вам'
+      - '&c/land friends &8- &7Посмотреть друзей на участке который вам принадлежит и на которым вы находитесь'
+      - '&c/land manage &8- &7Управление участком на котором вы находитесь'
+      - '&c/land list &8- &7Список принадлежащих вам земель'
+      - '&c/land info &8- &7Посмотреть основную информацию на участке на котором вы находитесь'
+      - '&c/land map &8- &7Переключить карту земли'
+    previous: '&8[&7Previous&8]'
+    next: '&8[&7Next&8]'
+  Reload:
+    success: '&alandlord успешно перезагружен'
+  Claims:
+    message: '&aРегистрации: %regions%/%claims%'
+    noClaims: '&eВам нужно купить регистрацию. Нажмите сюда для окрытия магазина'
+    disabled: '&eЭта функция в настоящее время отключена'
+  SetHome:
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    success: '&aВаш дом успешно установлен в данной локации'
+    disabled: '&eЭта функция в настоящее время не работает'
+    removed: '&eВаш дом был удалён, потому что вы разрегистрировали данный участок'
+    nullLand: '&eСначала вы должны зарегистрировать эту землю'
+  Home:
+    noHome: '&4У вас ещё нет дома. Нажмите, для установки вашего дома в данной локации'
+    dontMove: '&cЭта команда будет выполнена в течение %time% секунд. Не двигайтесь!'
+    youMoved: '&cВы сдвинулись с места! Телепортация отменена'
+    countdown: '&bНе двигайтесь! &6-- &4&l%countdown% &6-- &bНе двигайтесь!'
+    notEnoughMoney: '&7Вы не имеете достаточно денег для телепортации! (Cost&8&o: &c&o%cost%&7&o)'
+    costing: '&aВы были обвиннены %cost% для телепортации домой'
+    welcomeHome: '&aПриветствуем в доме игрока %player%!'
+    disabled: '&eЭта функция в настоящее время отключена'
+    otherNoHome: '&4У игрока %player% ещё нету дома!'
+  GiveClaims:
+    noPlayer: '&eНету игрока с таким именем'
+    success: '&aВы получили %amount% подтверждения!'
+  Advertise:
+    notOwnFreeLand: '&7Вы не владелец данного участка'
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    success: '&eВы предлагаете %landname% по %price%'
+  RemoveAdvertise:
+    success: '&aВы успешно удалили рекламу с участка %landname%'
+    noAdvertise: '%eНа этом участке нет рекламы %landname%'
+  Borders:
+    activated: '&aВид доски успешно активирован! Нажмите, чтобы отключит'
+    deactivated: '&eОтображение доски отключено'
+  AdminTp:
+    noPlayer: '&e %player%'
+    noLands: '&eThe player %player% does not own any lands!'
+    guiHeader: 'Lands of %player%'
+Alerts:
+  defaultGreeting: '&7Now entering claimed land of %owner%'
+  defaultFarewell: '&7Leaving claimed land of %owner%'
+  tresholdNotReached: '&cYou are not allowed to build here. You must own %x% lands!'
+Confirmation:
+  accept: '&bAccept!'
+  decline: '&eDecline!'
+Shop:
+  title: 'Claims Shop. Your claims (%regions%/%claims%)'
+  notEnoughMoney: '&7You dont have enough money buy %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
+  success: '&aYou successfully bought %number% claims for %cost%'
+  notAllowed: '&eYou are not allowed to buy more claims'
+  item:
+    header: '%number% extra claims'
+    lore:
+      - 'Click here to buy %number%'
+      - 'claims. You will be able to purchase'
+      - '%number% more claims than before'
+      - 'Cost: %cost%'
+MaItem:
+  itemname: 'LL Maimaitem of doomness'
+  lore:
+    - ''
+    - '&l&fModes:'
+    - ''
+    - '&l&bon buyable lands'
+    - '&crightclick: &7show info'
+    - '&cleftclick: &7buy'
+    - ''
+    - '&l&bon own lands'
+    - '&crightclick: &7show info'
+    - '&cshift + rightclick: &7manage'
+    - '&cshift + leftclick: &7manageall'
+    - ''
+    - '&l&bin the air:'
+    - '&crightclick: &7toggle map'
+    - '&cleftclick: &7toggle borders'
+version: 15Tag: '&8[&c&l!&8]'
+Disabled-World: '&7Земельные участки запрещены в этом мире'
+noPermissions: '&7Нет разрешения'
+Commands:
+  Claim:
+    success: '&bВы успешно создали участок %chunk% в мире %world%'
+    p2pSuccess: '&bИгрок %player% купил ваш участок %chunk% в мире %world% за %price%!'
+    notEnoughMoney: '&eУ вас не достаточно денег (%money%) для покупки данного участка (%chunk%)'
+    moneyTook: '&4У вас были списаны деньги %money% для земельного учатска %chunk%'
+    alreadyClaimed: '&eЭтот участок уже занят %owner%'
+    limit: '&eВаш нужно купить больше участков (%regions%/%claims%)! Нажмите чтобы купить больше!'
+    hardcap: '&ы не можете создавать больше участков, чем %regions%!!'
+    notAllowed: '&eВы не можете притендовать на эту землю!'
+    aborted: '&eПрерванный иск!'
+    onlyClaimAdjacentChunks: '&cВам не разрешенно притендовать на данный участок %land%, потому что у вас нету участка по соседству!'
+    needsGap: '&cВам не разрешенно притендовать на данный участок %land%, потому что должен быть разрыв между ваше и чужой землей!'
+    boughtUp: '&bВы успешно купили участок %chunk% у %player% по %price%'
+    notYetInactive: '&c%owner% ещё не активен :) Вам нужно подождать как минимум ещё %days% '
+    confirmation: '&aВы уверены что хотите притендовать на участок %chunk% по %price%? Нажмите, чтобы подтвердить'
+  Info:
+    online: '&bONLINE'
+    noLastSeen: '&c-'
+    owned:
+      - '&f&lLand&c&lLord &a- Собственная земля'
+      - '&7Landname&8: &c%landid%'
+      - '&7Owner&8: &c%owner%   &7Последние просмотренные: &c%lastseen%'
+      - '&7Member&8: &c%member%'
+    advertised:
+      - '&f&lLand&c&lLord &a- Рекламируемый участок'
+      - '&7Landname&8: &c%landid%'
+      - '&7Owner&8: &c%owner%   &7Последние просмотренные: A&c%lastseen%'
+      - '&7Member&8: &c%member%'
+      - '&7Price&8: &c&o%price%'
+    inactive:
+      - '&f&lLand&c&lLord &a- Неактивный участок'
+      - '&7Landname&8: &c%landid%'
+      - '&7Owner&8: &c%owner%   &7Последние просмотренные: &c%lastseen%'
+      - '&7Member&8: &c%member%'
+      - '&7Price&8: &c&o%price%'
+    free:
+      - '&f&lLand&c&lLord &a- Свободный участок'
+      - '&7Landname&8: &c%landid%'
+      - '&7&oPrice: &c&o%price%'
+  Unclaim:
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    notOwnFreeLand: '&7Вы не владелец данного учатска'
+    success: '&7Вы успешно разрегестрировали &c%chunk% &7в мире &c%world% &7и получили &c%money% &7назад'
+  Addfriend:
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    noPlayer: '&7Не удалось найти игроков &8: &c%players%'
+    success: '&7Успешно добавлен &c%players% &7на этот участок'
+    alreadyOwn: '&7Вы не можете добавить владельца в качетве участника'
+  Unfriend:
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    noPlayer: '&7Не удалось найти игроков &8: &c%players%'
+    success: '&7Успешно удалён &c%players% &7из данного участка'
+  AddfriendAll:
+    noPlayer: '&7Не удалось найти игроков &8: &c%player%'
+    success: '&7Успешно добавлен &c%player% &7на все &c%count% &7земель принадлежащие вам'
+    alreadyOwn: '&7Вы не можете добавить владельца в качетве участника'
+  UnfriendAll:
+    noPlayer: '&7Не удалось найти игроков &8: &c%players%'
+    success: '&7Успешно удалён &c%players% &7из всех &c%count% &7земель принадлежащих вам'
+    noFriend: '&c%player% &7Не является другом на ваших землях'
+  ListLands:
+    noLands: '&7У вас нет земли'
+    header: '&7%player%s земли:'
+    landSegment: '&7Land&8: &cX: %realX%, Z: %realZ%'
+    manageAll: '&7Управление всеми землями'
+    chat:
+      previous: '&8[&7Previous&8]'
+      next: '&8[&7Next&8]'
+      segment: '&eНазвание: &c%landname% &eЧлены: &c%members%'
+    noPlayer: '&7Не удалось найти игроков&8: &c%player%'
+  LandMap:
+    disabled: '&7Карта земель &cdisabled'
+    header: '&e&m==&r&6&c&lLand&r&e&m=='
+    yours: 'Ваша'
+    friends: 'Друзей'
+    others: 'Другие'
+  ClearWorld:
+    success: '&7Успешно очищены &c%count% &7земли в мире &c%world%'
+    successPlayer: '&7Успешно очищены &c%count% &7земли у игрока&c%player%'
+    noPlayer: '&7Не удалось найти игроков&8: &c%players%'
+  Item:
+    noPlayer: '&7Не удалось найти игроков&8: &c%players%'
+  Manage:
+    all:
+      header: '&7Управление&8 &вызов земель'
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    notOwnFreeLand: '&7Вы не владелец данного участка'
+    header: '&7Управление&8: &c%info%'
+    invalidArguments: '&7Недопустимые аргументы'
+    AllowBuild:
+      title: '&cСтроительство разрешенно'
+      description:
+        - ' &7Переключить воозможность игроков'
+        - ' &7создавать данный участок'
+        - ' &7Статус&8: &c%var%'
+    AllowInteract:
+      title: '&cРазрешить взаимодействие'
+      description:
+        - ' &7Переключить воозможность игроков'
+        - ' &7взаимодействовать (e.g. редстоун постройки)'
+        - ' &7Статус&8: &c%var%'
+    AllowChest-access:
+      title: '&cРазрешить доступ к сундукам'
+      description:
+        - ' &7Переключить воозможность игроков'
+        - ' &7получать доступ ко всем видам сундуков'
+        - ' &7Статус&8: &c%var%'
+    AllowCreeper-explosion:
+      title: '&cРазрешить взрывы криперов'
+      description:
+        - ' &7Переключить воозможность криперов'
+        - ' &7уничтожать блоки'
+        - ' &7Статус&8: &c%var%'
+    AllowPvp:
+      title: '&cРазрешить PVP'
+      description:
+        - ' &7Переключить воозможность для игроков'
+        - ' &7бить других игроков'
+        - ' &7Статус&8: &c%var%'
+    AllowMob-spawning:
+      title: '&cУправление спавном мобов'
+      description:
+        - ' &7Переключить воозможность для мобов'
+        - ' &7появляться внутри вашей земли'
+      toggleItem:
+        title: 'Спавн %mob%'
+        description:
+          - 'Спавнить из %mob%: %value%'
+    Regenerate:
+      title: '&cВосстановление'
+      description:
+        - ' &7Восстановление вашей земли'
+        - ' &7Стоимость&8: &c%var%'
+      confirmation: '&7Стоимость восстановления &c%cost%'
+      success: '&7Восстановление земли &c%land% &7успешно'
+      abort: '&7Прерванная восстановление земли &c%land%'
+      notEnoughMoney: '&7У вас недостаточно денег для восстановления земли &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
+    SetGreet:
+      title: '&cСообщение "Приветствие"'
+      description:
+        - ' &7Установить превественное сообщение для этого участка'
+        - ' &7сообщение&8: &c%var%'
+      clickMsg: '&7Нажмите, для выбора нового сообщения "Приветсвия"'
+      successful: '&7"приветсвенное" сообщение усановленно на %msg%'
+    SetFarewell:
+      title: '&cПрощальное сообщение'
+      description:
+        - ' &7Установить прощальное сообщение для этого участка'
+        - ' &7Сообщение&8: &c%var%'
+      clickMsg: '&7Нажмите, для выбора нового прощального сообщения'
+      successful: '&7Прощальное сообщение установленно на %msg%'
+    ManageFriends:
+      title: '&cУправление "Друзьями"'
+      description:
+        - ' &7Управление вашими друзьями на этом участке'
+      friendSegment:
+        - ' &7Последний просмотр&8: &c%seen%'
+        - ' &7&oНажмите для удаления'
+      unfriend: '&7Недружественный игрок &c%player%'
+    Unclaim:
+      title: '&cРазрегистрация'
+      description:
+        - '&7Нажмите, чтобы разрегистрировать этот участок!'
+      confirmationTitle: '&aРазрегистрация %land%'
+  Help:
+    header: '&f&lLand&c&lLord'
+    admins:
+      - '&cЭто строка, которая будет отображаться только пользователю с разрешением landlord.admin.help'
+      - '&cЭто вторая строка'
+    players:
+      - '&c/land &8- &7Посмотреть команды'
+      - '&c/land claim &8- &7Регистрация участка в вашем местоположение'
+      - '&c/land unclaim &8- &7Разрегистрация участка в вашем местоположение'
+      - '&c/land addfriend <player> &8- &7Добавить игрока в друзья на вашей земле'
+      - '&c/land unfriend <player> &8- &7Удалить игрока из друзей на вашей земле'
+      - '&c/land friendall <player> &8- &7Добавить игрока в друзья на всех землях принадлежащих вам'
+      - '&c/land unfriendall <player> &8- &7Удалить игрока из друзей на всех землях принадлежащих вам'
+      - '&c/land friends &8- &7Посмотреть друзей на участке который вам принадлежит и на которым вы находитесь'
+      - '&c/land manage &8- &7Управление участком на котором вы находитесь'
+      - '&c/land list &8- &7Список принадлежащих вам земель'
+      - '&c/land info &8- &7Посмотреть основную информацию на участке на котором вы находитесь'
+      - '&c/land map &8- &7Переключить карту земли'
+    previous: '&8[&7Previous&8]'
+    next: '&8[&7Next&8]'
+  Reload:
+    success: '&alandlord успешно перезагружен'
+  Claims:
+    message: '&aРегистрации: %regions%/%claims%'
+    noClaims: '&eВам нужно купить регистрацию. Нажмите сюда для окрытия магазина'
+    disabled: '&eЭта функция в настоящее время отключена'
+  SetHome:
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    success: '&aВаш дом успешно установлен в данной локации'
+    disabled: '&eЭта функция в настоящее время не работает'
+    removed: '&eВаш дом был удалён, потому что вы разрегистрировали данный участок'
+    nullLand: '&eСначала вы должны зарегистрировать эту землю'
+  Home:
+    noHome: '&4У вас ещё нет дома. Нажмите, для установки вашего дома в данной локации'
+    dontMove: '&cЭта команда будет выполнена в течение %time% секунд. Не двигайтесь!'
+    youMoved: '&cВы сдвинулись с места! Телепортация отменена'
+    countdown: '&bНе двигайтесь! &6-- &4&l%countdown% &6-- &bНе двигайтесь!'
+    notEnoughMoney: '&7Вы не имеете достаточно денег для телепортации! (Cost&8&o: &c&o%cost%&7&o)'
+    costing: '&aВы были обвиннены %cost% для телепортации домой'
+    welcomeHome: '&aПриветствуем в доме игрока %player%!'
+    disabled: '&eЭта функция в настоящее время отключена'
+    otherNoHome: '&4У игрока %player% ещё нету дома!'
+  GiveClaims:
+    noPlayer: '&eНету игрока с таким именем'
+    success: '&aВы получили %amount% подтверждения!'
+  Advertise:
+    notOwnFreeLand: '&7Вы не владелец данного участка'
+    notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
+    success: '&eВы предлагаете %landname% по %price%'
+  RemoveAdvertise:
+    success: '&aВы успешно удалили рекламу с участка %landname%'
+    noAdvertise: '%eНа этом участке нет рекламы %landname%'
+  Borders:
+    activated: '&aВид доски успешно активирован! Нажмите, чтобы отключит'
+    deactivated: '&eОтображение доски отключено'
+  AdminTp:
+    noPlayer: '&e %player%'
+    noLands: '&eThe player %player% does not own any lands!'
+    guiHeader: 'Lands of %player%'
+Alerts:
+  defaultGreeting: '&7Now entering claimed land of %owner%'
+  defaultFarewell: '&7Leaving claimed land of %owner%'
+  tresholdNotReached: '&cYou are not allowed to build here. You must own %x% lands!'
+Confirmation:
+  accept: '&bAccept!'
+  decline: '&eDecline!'
+Shop:
+  title: 'Claims Shop. Your claims (%regions%/%claims%)'
+  notEnoughMoney: '&7You dont have enough money buy %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
+  success: '&aYou successfully bought %number% claims for %cost%'
+  notAllowed: '&eYou are not allowed to buy more claims'
+  item:
+    header: '%number% extra claims'
+    lore:
+      - 'Click here to buy %number%'
+      - 'claims. You will be able to purchase'
+      - '%number% more claims than before'
+      - 'Cost: %cost%'
+MaItem:
+  itemname: 'LL Maimaitem of doomness'
+  lore:
+    - ''
+    - '&l&fModes:'
+    - ''
+    - '&l&bon buyable lands'
+    - '&crightclick: &7show info'
+    - '&cleftclick: &7buy'
+    - ''
+    - '&l&bon own lands'
+    - '&crightclick: &7show info'
+    - '&cshift + rightclick: &7manage'
+    - '&cshift + leftclick: &7manageall'
+    - ''
+    - '&l&bin the air:'
+    - '&crightclick: &7toggle map'
+    - '&cleftclick: &7toggle borders'
+version: 15
