@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public interface LandLordAPI {
 
-    LPlayerManager getPlayerManager() ;
+    LPlayerManager getPlayerManager();
 
     OwnedLand getLand(Location loc);
 

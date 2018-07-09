@@ -6,6 +6,9 @@ import biz.princeps.landlord.Landlord;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 4/6/18
+ * <p>
+ * Options class, which pulls some stuff out of the config.
+ * Should be removed probably.
  */
 public class Options {
 

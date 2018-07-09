@@ -9,6 +9,8 @@ import org.bukkit.event.HandlerList;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 12/5/17
+ * <p>
+ * This event is called, as soon as the land claim process is finished and the player actually owns the land
  */
 public class LandPostClaimEvent extends Event {
 
@@ -26,10 +28,16 @@ public class LandPostClaimEvent extends Event {
         return handlers;
     }
 
+    /**
+     * Returns the player, who wants to claim a land
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Returns the bought land
+     */
     public OwnedLand getLand() {
         return land;
     }

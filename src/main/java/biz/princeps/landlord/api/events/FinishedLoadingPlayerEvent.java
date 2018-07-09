@@ -11,10 +11,10 @@ import org.bukkit.event.HandlerList;
  * Date: 1/21/18
  * <p>
  * <p>
- * Called when a player joins the server and the async loading is finished.
+ * Called when a player joins the server and the async loading of the LPlayer is finished.
+ * Be careful, its ASYNC!
  */
 public class FinishedLoadingPlayerEvent extends Event {
-
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -25,7 +25,6 @@ public class FinishedLoadingPlayerEvent extends Event {
         this.player = player;
         this.lPlayer = lPlayer;
     }
-
 
     public static HandlerList getHandlerList() {
         return handlers;
@@ -43,5 +42,4 @@ public class FinishedLoadingPlayerEvent extends Event {
     public HandlerList getHandlers() {
         return handlers;
     }
-
 }

@@ -10,6 +10,9 @@ import org.bukkit.event.HandlerList;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: Unknown
+ * <p>
+ * This event is called, before the actual claiming process starts.
+ * You can still cancel the process at this point by cancelling this event.
  */
 public class LandPreClaimEvent extends Event implements Cancellable {
 
@@ -28,10 +31,16 @@ public class LandPreClaimEvent extends Event implements Cancellable {
         return handlers;
     }
 
+    /**
+     * Returns the player, who wants to claim a land
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Returns the chunk, which should be claimed
+     */
     public Chunk getChunk() {
         return land;
     }
