@@ -236,6 +236,14 @@ CommandSettings:
   Map:
     name: map
     usage: '/land map - toggles the landmap'
+    symbols:
+      background1: '▓'
+      background2: '▒'
+      middle: '█'
+      arrow: '∞'
+      yours: '█'
+      friends: '█'
+      others: '█'
     permissions:
       - landlord.player.map
     aliases:
@@ -477,4 +485,4 @@ Manage:
 # Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
 EnableMetrics: true
 checkUpdatesPeriodically: true
-version: 15
+version: 16

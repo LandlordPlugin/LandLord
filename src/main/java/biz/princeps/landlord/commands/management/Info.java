@@ -70,7 +70,7 @@ public class Info extends LandlordCommand {
 
     public void onInfo(Player player) {
 
-        if (plugin.getConfig().getStringList("disabled-worlds").contains(player.getWorld().getName())) {
+        if (worldDisabled(player)) {
             player.sendMessage(lm.getString("Disabled-World"));
             return;
         }

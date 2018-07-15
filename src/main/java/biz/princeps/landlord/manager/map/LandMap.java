@@ -21,6 +21,12 @@ import java.util.Map;
  */
 public class LandMap {
 
+    private static String b1 = Landlord.getInstance().getConfig().getString("CommandSettings.Map.symbols.background1");
+    private static String b2 = Landlord.getInstance().getConfig().getString("CommandSettings.Map.symbols.background2");
+    private static String ar = Landlord.getInstance().getConfig().getString("CommandSettings.Map.symbols.arrow");
+    private static String mi = Landlord.getInstance().getConfig().getString("CommandSettings.Map.symbols.middle");
+
+
     private Player mapViewer;
     private SimpleScoreboard scoreboard;
     private Chunk currChunk;
@@ -84,193 +90,195 @@ public class LandMap {
 
     public static String[][] getMapDir(String dir) {
 
-        String[][] mapDir = new String[][]{
-                {"▓", "▒", "▒", "∞", "▒", "▒", "▓"},
-                {"▒", "▓", "▒", "∞", "▒", "▓", "▒"},
-                {"▒", "▒", "▓", "∞", "▓", "▒", "▒"},
-                {"▓", "▒", "▓", "█", "▒", "▓", "▒"},
-                {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
-        };
 
+        String[][] mapDir = {};
         switch (dir) {
             case "west":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                        {"∞", "∞", "∞", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, b2, b2, b2, b2, b2, b1},
+                        {b2, b1, b2, b1, b2, b1, b2},
+                        {b2, b2, b1, b2, b1, b2, b2},
+                        {ar, ar, ar, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, b2, b1, b1},
+                        {b1, b2, b1, b1, b1, b2, b1},
+                        {b2, b1, b1, b1, b1, b1, b2}
                 };
                 break;
             case "west northwest":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"∞", "▓", "▒", "▓", "▒", "▓", "▒"},
-                        {"▒", "∞", "∞", "▒", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, b2, b2, b2, b2, b2, b1},
+                        {ar, b1, b2, b1, b2, b1, b2},
+                        {b2, ar, ar, b2, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, b2, b1, b1},
+                        {b1, b2, b1, b1, b1, b2, b1},
+                        {b2, b1, b1, b1, b1, b1, b2}
                 };
                 break;
             case "northwest":
                 mapDir = new String[][]{
-                        {"∞", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "∞", "▒", "▓", "▒", "▓", "▒"},
-                        {"▒", "▒", "∞", "▒", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {ar, b2, b2, b2, b2, b2, b1},
+                        {b2, ar, b2, b1, b2, b1, b2},
+                        {b2, b2, ar, b2, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, b2, b1, b1},
+                        {b1, b2, b1, b1, b1, b2, b1},
+                        {b2, b1, b1, b1, b1, b1, b2}
                 };
                 break;
             case "north northwest":
                 mapDir = new String[][]{
-                        {"▓", "∞", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "▓", "∞", "▓", "▒", "▓", "▒"},
-                        {"▒", "▒", "∞", "▒", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, ar, b2, b2, b2, b2, b1},
+                        {b2, b1, ar, b1, b2, b1, b2},
+                        {b2, b2, ar, b2, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, b2, b1, b1},
+                        {b1, b2, b1, b1, b1, b2, b1},
+                        {b2, b1, b1, b1, b1, b1, b2}
                 };
                 break;
             case "north":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "∞", "▒", "▒", "▓"},
-                        {"▒", "▓", "▒", "∞", "▒", "▓", "▒"},
-                        {"▒", "▒", "▓", "∞", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, b2, b2, ar, b2, b2, b1},
+                        {b2, b1, b2, ar, b2, b1, b2},
+                        {b2, b2, b1, ar, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, b2, b1, b1},
+                        {b1, b2, b1, b1, b1, b2, b1},
+                        {b2, b1, b1, b1, b1, b1, b2}
                 };
                 break;
             case "north northeast":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "∞", "▓"},
-                        {"▒", "▓", "▒", "▓", "∞", "▓", "▒"},
-                        {"▒", "▒", "▓", "▒", "∞", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, b2, b2, b2, b2, ar, b1},
+                        {b2, b1, b2, b1, ar, b1, b2},
+                        {b2, b2, b1, b2, ar, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, b2, b1, b1},
+                        {b1, b2, b1, b1, b1, b2, b1},
+                        {b2, b1, b1, b1, b1, b1, b2}
                 };
                 break;
             case "northeast":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "∞"},
-                        {"▒", "▓", "▒", "▓", "▒", "∞", "▒"},
-                        {"▒", "▒", "▓", "▒", "∞", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, b2, b2, b2, b2, b2, ar},
+                        {b2, b1, b2, b1, b2, ar, b2},
+                        {b2, b2, b1, b2, ar, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, b2, b1, b1},
+                        {b1, b2, b1, b1, b1, b2, b1},
+                        {b2, b1, b1, b1, b1, b1, b2}
                 };
                 break;
             case "east northeast":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "▓", "▒", "▓", "▒", "▓", "∞"},
-                        {"▒", "▒", "▓", "▒", "∞", "∞", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, b2, b2, b2, b2, b2, b1},
+                        {b2, b1, b2, b1, b2, b1, ar},
+                        {b2, b2, b1, b2, ar, ar, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, b2, b1, b1},
+                        {b1, b2, b1, b1, b1, b2, b1},
+                        {b2, b1, b1, b1, b1, b1, b2}
                 };
                 break;
             case "east":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "∞", "∞", "∞"},
-                        {"▓", "▓", "▒", "▒", "▒", "▓", "▓"},
-                        {"▓", "▒", "▓", "▓", "▓", "▒", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, b2, b2, b2, b2, b2, b1},
+                        {b2, b1, b2, b1, b2, b1, b2},
+                        {b2, b2, b1, b2, b1, b2, b2},
+                        {b1, b2, b1, mi, ar, ar, ar},
+                        {b1, b1, b2, b2, b2, b1, b1},
+                        {b1, b2, b1, b1, b1, b2, b1},
+                        {b2, b1, b1, b1, b1, b1, b2}
                 };
                 break;
             case "east southeast":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "▒", "∞", "∞", "▓"},
-                        {"▓", "▒", "▓", "▓", "▓", "▒", "∞"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, b2, b2, b2, b2, b2, b1},
+                        {b2, b1, b2, b1, b2, b1, b2},
+                        {b2, b2, b1, b2, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, ar, ar, b1},
+                        {b1, b2, b1, b1, b1, b2, ar},
+                        {b2, b1, b1, b1, b1, b1, b2}
                 };
                 break;
             case "southeast":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "▒", "∞", "▓", "▓"},
-                        {"▓", "▒", "▓", "▓", "▓", "∞", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "∞"}
+                        {b1, b2, b2, b2, b2, b2, b1},
+                        {b2, b1, b2, b1, b2, b1, b2},
+                        {b2, b2, b1, b2, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, ar, b1, b1},
+                        {b1, b2, b1, b1, b1, ar, b1},
+                        {b2, b1, b1, b1, b1, b1, ar}
                 };
                 break;
             case "south southeast":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "▒", "∞", "▓", "▓"},
-                        {"▓", "▒", "▓", "▓", "∞", "▒", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "∞", "▒"}
+                        {b1, b2, b2, b2, b2, b2, b1},
+                        {b2, b1, b2, b1, b2, b1, b2},
+                        {b2, b2, b1, b2, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, ar, b1, b1},
+                        {b1, b2, b1, b1, ar, b2, b1},
+                        {b2, b1, b1, b1, b1, ar, b2}
                 };
                 break;
             case "south":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "▒", "∞", "▒", "▓", "▓"},
-                        {"▓", "▒", "▓", "∞", "▓", "▒", "▓"},
-                        {"▒", "▓", "▓", "∞", "▓", "▓", "▒"}
+                        {b1, b2, b2, b2, b2, b2, b1},
+                        {b2, b1, b2, b1, b2, b1, b2},
+                        {b2, b2, b1, b2, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, ar, b2, b1, b1},
+                        {b1, b2, b1, ar, b1, b2, b1},
+                        {b2, b1, b1, ar, b1, b1, b2}
                 };
                 break;
             case "south southwest":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "∞", "▒", "▒", "▓", "▓"},
-                        {"▓", "▒", "∞", "▓", "▓", "▒", "▓"},
-                        {"▒", "∞", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, b2, b2, b2, b2, b2, b1},
+                        {b2, b1, b2, b1, b2, b1, b2},
+                        {b2, b2, b1, b2, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, ar, b2, b2, b1, b1},
+                        {b1, b2, ar, b1, b1, b2, b1},
+                        {b2, ar, b1, b1, b1, b1, b2}
                 };
                 break;
             case "southwest":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "▓", "∞", "▒", "▒", "▓", "▓"},
-                        {"▓", "∞", "▓", "▓", "▓", "▒", "▓"},
-                        {"∞", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, b2, b2, b2, b2, b2, b1},
+                        {b2, b1, b2, b1, b2, b1, b2},
+                        {b2, b2, b1, b2, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, ar, b2, b2, b1, b1},
+                        {b1, ar, b1, b1, b1, b2, b1},
+                        {ar, b1, b1, b1, b1, b1, b2}
                 };
                 break;
             case "west southwest":
                 mapDir = new String[][]{
-                        {"▓", "▒", "▒", "▒", "▒", "▒", "▓"},
-                        {"▒", "▓", "▒", "▓", "▒", "▓", "▒"},
-                        {"▒", "▒", "▓", "▒", "▓", "▒", "▒"},
-                        {"▓", "▒", "▓", "\u2062", "▒", "▓", "▒"},
-                        {"▓", "∞", "∞", "▒", "▒", "▓", "▓"},
-                        {"∞", "▒", "▓", "▓", "▓", "▒", "▓"},
-                        {"▒", "▓", "▓", "▓", "▓", "▓", "▒"}
+                        {b1, b2, b2, b2, b2, b2, b1},
+                        {b2, b1, b2, b1, b2, b1, b2},
+                        {b2, b2, b1, b2, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, ar, ar, b2, b2, b1, b1},
+                        {ar, b2, b1, b1, b1, b2, b1},
+                        {b2, b1, b1, b1, b1, b1, b2}
                 };
                 break;
+            default:
+                mapDir = new String[][]{
+                        {b1, b2, b2, ar, b2, b2, b1},
+                        {b2, b1, b2, ar, b2, b1, b2},
+                        {b2, b2, b1, ar, b1, b2, b2},
+                        {b1, b2, b1, mi, b2, b1, b2},
+                        {b1, b1, b2, b2, b2, b1, b1},
+                        {b1, b2, b1, b1, b1, b2, b1},
+                        {b2, b1, b1, b1, b1, b1, b2}
+                };
         }
         return mapDir;
     }
@@ -363,7 +371,7 @@ public class LandMap {
                         currSpot = ChatColor.RED + currSpot;
                     }
                 } else {
-                    if (currSpot.equals("∞") || currSpot.equals("\u2062")) {
+                    if (currSpot.equals(ar) || currSpot.equals(mi)) {
                         currSpot = ChatColor.RESET + currSpot;
                     } else {
                         currSpot = ChatColor.GRAY + currSpot;
@@ -382,21 +390,21 @@ public class LandMap {
         final String others = messages.getRawString("Commands.LandMap.others");
 
         if (yours.length() <= 25) {
-            mapRows[mapRows.length - 3] = ChatColor.GREEN + "█- " + yours;
+            mapRows[mapRows.length - 3] = ChatColor.GREEN + "" + plugin.getConfig().get("CommandSettings.Map.symbols.yours") + "- " + yours;
         } else {
-            mapRows[mapRows.length - 3] = ChatColor.GREEN + "█- " + yours.substring(0, 25);
+            mapRows[mapRows.length - 3] = ChatColor.GREEN + "" + plugin.getConfig().get("CommandSettings.Map.symbols.yours") + "- " + yours.substring(0, 25);
         }
 
         if (friends.length() <= 25) {
-            mapRows[mapRows.length - 2] = ChatColor.YELLOW + "█- " + friends;
+            mapRows[mapRows.length - 2] = ChatColor.YELLOW + "" + plugin.getConfig().get("CommandSettings.Map.symbols.friends") + "- " + friends;
         } else {
-            mapRows[mapRows.length - 2] = ChatColor.YELLOW + "█- " + friends.substring(0, 25);
+            mapRows[mapRows.length - 2] = ChatColor.YELLOW + "" + plugin.getConfig().get("CommandSettings.Map.symbols.friends") + "- " + friends.substring(0, 25);
         }
 
         if (others.length() <= 25) {
-            mapRows[mapRows.length - 1] = ChatColor.RED + "█- " + others;
+            mapRows[mapRows.length - 1] = ChatColor.RED + "" + plugin.getConfig().get("CommandSettings.Map.symbols.others") + "- " + others;
         } else {
-            mapRows[mapRows.length - 1] = ChatColor.RED + "█- " + others.substring(0, 25);
+            mapRows[mapRows.length - 1] = ChatColor.RED + "" + plugin.getConfig().get("CommandSettings.Map.symbols.others") + "- " + others.substring(0, 25);
         }
 
         return mapRows;

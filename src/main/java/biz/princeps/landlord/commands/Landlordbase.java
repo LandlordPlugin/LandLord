@@ -376,6 +376,7 @@ public class Landlordbase extends MainCommand {
 
     class MapCMD extends SubCommand {
         //TODO fix on reconnect
+        // 15-07-18 SP: I have no clue what I mean with this to do. MapManager already takes care...
         public MapCMD() {
             super(pl.getConfig().getString("CommandSettings.Map.name"),
                     pl.getConfig().getString("CommandSettings.Map.usage"),

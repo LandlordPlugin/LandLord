@@ -105,14 +105,6 @@ public class Database extends Datastorage {
         execute("REPLACE INTO ll_players (uuid, name, claims, home, lastseen) VALUES ('" + lp.getUuid() + "', '" +
                 lp.getName() + "', " + lp.getClaims() + ", '" +
                 SpigotUtil.exactlocationToString(lp.getHome()) + "', '" + lp.getLastSeenAsString() + "')");
-        ResultSet resultSet = this.executeQuery("SELECT * FROM ll_players");
-        try {
-            while (resultSet.next()) {
-                System.out.println(resultSet.getString("name") + ":" + resultSet.getInt("claims"));
-            }
-        } catch (SQLException ex) {
-
-        }
     }
 
     public Map<String, Offer> fetchOffers() {
