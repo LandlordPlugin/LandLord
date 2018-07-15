@@ -79,7 +79,7 @@ public class Info extends LandlordCommand {
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
 
         TaskChain<?> chain = Landlord.newChain();
-        chain.asyncFirst(() -> chain.setTaskData("lp", plugin.getPlayerManager().getOfflinePlayerSync(player.getUniqueId())))
+        chain.asyncFirst(() -> chain.setTaskData("lp", plugin.getPlayerManager().getOfflinePlayerSync(land.getOwner())))
                 .sync(() -> {
                     // claimed
                     if (land != null) {
