@@ -21,3 +21,9 @@ Functionality
 Players claim land in chunks at a time for a configurable cost. That's all a player needs to do to protect their builds within that chunk. Each area of claimed land will have a very basic permissions system that users can choose to tweak with but also not touch if it isn't desired.
 
 
+TODOs for 1.13:
+-----
+
+[ ] fix command (tab completion?)\
+[ ] update princeps lib
+[ ] 

@@ -110,9 +110,10 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot_1_12_2</artifactId>
+            <artifactId>spigot_1_13_pre7</artifactId>
             <version>1.0</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>/home/alex/Repositories/LandLord/BuildTools/spigot-1.13-pre7.jar</systemPath>
         </dependency>
 
         <dependency>
