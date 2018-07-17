@@ -85,7 +85,7 @@ public class TresholdListener extends BasicListener {
                 if (landcount < treshold) {
                     String rawString = plugin.getLangManager().getRawString("Alerts.tresholdNotReached").replace("%x%", treshold + "");
                     if (display == LandAlerter.LandMessageDisplay.ActionBar) {
-                        PrincepsLib.crossVersion().sendActionBar(p, rawString);
+                        PrincepsLib.getStuffManager().sendActionBar(p, rawString);
                     } else if (display == LandAlerter.LandMessageDisplay.Chat) {
                         p.sendMessage(plugin.getLangManager().getString("Alerts.tresholdNotReached").replace("%x%", treshold + ""));
                     } else if (display == LandAlerter.LandMessageDisplay.Title) {

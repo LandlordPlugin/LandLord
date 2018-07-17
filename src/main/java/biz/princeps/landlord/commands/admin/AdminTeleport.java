@@ -2,12 +2,12 @@ package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
-import biz.princeps.lib.crossversion.CParticle;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -46,7 +46,7 @@ public class AdminTeleport extends LandlordCommand {
                                     .addClickAction((p) -> {
                                                 Location toTp = OwnedLand.getLocationFromName(land.getId());
                                                 sender.teleport(toTp);
-                                                OwnedLand.highlightLand(sender, CParticle.VILLAGERHAPPY);
+                                                OwnedLand.highlightLand(sender, Particle.VILLAGER_HAPPY);
                                             }
                                     )
                             ));

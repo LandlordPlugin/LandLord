@@ -8,7 +8,6 @@ import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
-import biz.princeps.lib.crossversion.CParticle;
 import biz.princeps.lib.item.DataStack;
 import co.aikar.taskchain.TaskChain;
 import net.md_5.bungee.api.ChatColor;
@@ -16,6 +15,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -131,7 +131,7 @@ public class Claim extends LandlordCommand {
                                                     .replace("%price%", plugin.getVaultHandler().format(costForBuyer))
                                                     .replace("%chunk%", pr.getName()));
 
-                                            OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
+                                            OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
                                             plugin.getMapManager().updateAll();
 
                                             player.closeInventory();
@@ -152,7 +152,7 @@ public class Claim extends LandlordCommand {
                                         .replace("%price%", plugin.getVaultHandler().format(costForBuyer))
                                         .replace("%chunk%", pr.getName()));
 
-                                OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
+                                OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
                                 plugin.getMapManager().updateAll();
                             }
                             return;
@@ -194,7 +194,7 @@ public class Claim extends LandlordCommand {
                                             .replace("%price%", plugin.getVaultHandler().format(offer.getPrice())));
                                 }
 
-                                OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
+                                OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
                                 plugin.getMapManager().updateAll();
 
                                 player.closeInventory();
@@ -265,7 +265,7 @@ public class Claim extends LandlordCommand {
                 .replace("%chunk%", OwnedLand.getName(chunk))
                 .replace("%world%", chunk.getWorld().getName()));
 
-        OwnedLand.highlightLand(player, CParticle.VILLAGERHAPPY);
+        OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
 
         if (plugin.getConfig().getBoolean("Homes.enable")) {
             if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null)
