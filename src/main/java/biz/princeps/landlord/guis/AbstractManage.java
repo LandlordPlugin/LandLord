@@ -199,7 +199,7 @@ public abstract class AbstractManage extends AbstractGUI {
                             if (t.isAlive() && t.isSpawnable()) {
 
                                 if (!toggleMobs.contains(t.name())) continue;
-
+                                System.out.println(Material.getMaterial(t.name().toUpperCase()));
                                 ItemStack spawnEgg = new ItemStack(Material.LEGACY_MONSTER_EGG);
                                 SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
                                 meta.setSpawnedType(t);

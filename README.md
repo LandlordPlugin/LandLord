@@ -25,5 +25,5 @@ TODOs for 1.13:
 -----
 
 [ ] fix command (tab completion?)\
-[ ] update princeps lib
-[ ] 
+[x] update princeps lib\
+[ ] fix the scoreboard, probably recode
