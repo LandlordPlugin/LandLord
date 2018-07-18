@@ -30,8 +30,10 @@ public class OfferManager {
     }
 
     public void removeOffer(String landname) {
-        offers.remove(landname);
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, () -> db.remove(landname));
+        if (getOffer(landname) != null) {
+            offers.remove(landname);
+            Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, () -> db.remove(landname));
+        }
     }
 
 }
