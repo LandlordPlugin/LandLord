@@ -45,6 +45,12 @@ Commands:
     notOwn: '&7Ten teren nie nalaży do ciebie. Należy on do &c%owner%'
     notOwnFreeLand: '&7Nie jesteś właścicielem tego terenu'
     success: '&7Wlaśnie sprzedałeś swój chunk &c%chunk% &7w świecie &c%world% &7I dostałeś &c%money% &7z powrotem'
+  Listfriends:
+    invalidWorld: '&cThe entered world does not exist!'
+    invalidGeneral: '&cThe entered coordinates are invalid!'
+    freeLand: '&cAn unclaimed chunk doesnt have friends!'
+    friends: '&aFriends: %friends%'
+    noFriends: '&cThis land doesnt have any friends'
   Addfriend:
     notOwn: '&7Ten teren nie nalaży do ciebie. Należy on do &c%owner%'
     noPlayer: '&7Nie można odnaleść danego gracza&8: &c%players%'
@@ -262,4 +268,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7włącz mapę'
     - '&cleftclick: &7włącz granice'
-version: 15
+version: 16

@@ -309,6 +309,12 @@ Commands:
     notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
     notOwnFreeLand: '&7Вы не владелец данного учатска'
     success: '&7Вы успешно разрегестрировали &c%chunk% &7в мире &c%world% &7и получили &c%money% &7назад'
+  Listfriends:
+    invalidWorld: '&cThe entered world does not exist!'
+    invalidGeneral: '&cThe entered coordinates are invalid!'
+    freeLand: '&cAn unclaimed chunk doesnt have friends!'
+    friends: '&aFriends: %friends%'
+    noFriends: '&cThis land doesnt have any friends'
   Addfriend:
     notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
     noPlayer: '&7Не удалось найти игроков &8: &c%players%'
@@ -526,4 +532,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 15
+version: 16

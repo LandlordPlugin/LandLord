@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Offer;
@@ -79,7 +80,7 @@ public class Info extends LandlordCommand {
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
 
         TaskChain<?> chain = Landlord.newChain();
-        chain.asyncFirst(() -> chain.setTaskData("lp", plugin.getPlayerManager().getOfflinePlayerSync(land.getOwner())))
+        chain.asyncFirst(() -> chain.setTaskData("lp", land != null ? plugin.getPlayerManager().getOfflinePlayerSync(land.getOwner()) : null))
                 .sync(() -> {
                     // claimed
                     if (land != null) {
@@ -119,8 +120,9 @@ public class Info extends LandlordCommand {
                     } else {
                         // unclaimed
                         player.sendMessage(replaceInMessage(free, OwnedLand.getName(chunk), "", "", "",
-                                plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
-                        OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
+                                (Options.isVaultEnabled() ? plugin.getVaultHandler().format(
+                                        plugin.getCostManager().calculateCost(player.getUniqueId())) : "")));
+                        OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
                     }
 
 
