@@ -122,7 +122,7 @@ public class Info extends LandlordCommand {
                         player.sendMessage(replaceInMessage(free, OwnedLand.getName(chunk), "", "", "",
                                 (Options.isVaultEnabled() ? plugin.getVaultHandler().format(
                                         plugin.getCostManager().calculateCost(player.getUniqueId())) : "")));
-                        OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
+                        OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
                     }
 
 
