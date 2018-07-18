@@ -6,11 +6,11 @@ import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.landlord.util.OwnedLand;
-import biz.princeps.lib.crossversion.CParticle;
 import co.aikar.taskchain.TaskChain;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
@@ -102,7 +102,7 @@ public class Info extends LandlordCommand {
                         if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
                             player.sendMessage(replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen,
                                     plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
-                            OwnedLand.highlightLand(player, CParticle.DRIPLAVA);
+                            OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
                             return;
                         }
 
@@ -115,7 +115,7 @@ public class Info extends LandlordCommand {
                             // normal owned land
                             player.sendMessage(replaceInMessage(owned, land.getName(), land.printOwners(), land.printMembers(), lastseen, ""));
                         }
-                        OwnedLand.highlightLand(player, CParticle.DRIPWATER);
+                        OwnedLand.highlightLand(player, Particle.DRIP_WATER);
 
                     } else {
                         // unclaimed

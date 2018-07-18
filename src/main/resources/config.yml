@@ -437,7 +437,7 @@ Manage:
     item: DIAMOND_SWORD
   mob-spawning:
     enable: true
-    item: MONSTER_EGG
+    item: LEGACY_MONSTER_EGG
 # If you dont want your users to manage a specific mobspawn, just comment out the line with #
     toggleableMobs:
       - ELDER_GUARDIAN

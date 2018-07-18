@@ -136,6 +136,4 @@ public class GiveClaims extends LandlordCommand {
         }
         return true;
     }
-
-
 }

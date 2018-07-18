@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.admin;
 
+import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.UUIDFetcher;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,14 +32,14 @@ public class Clear extends LandlordCommand {
 
             @Override
             public void run() {
-                World world = player.getWorld();
-                RegionManager regionManager = plugin.getWgHandler().getWG().getRegionManager(world);
-
-                Map<String, ProtectedRegion> regions = regionManager.getRegions();
-                int count;
-
                 // Clearing all regions in one world
                 if (target == null) {
+                    World world = player.getWorld();
+                    RegionManager regionManager = plugin.getWgHandler().getWG().getRegionManager(world);
+
+                    Map<String, ProtectedRegion> regions = regionManager.getRegions();
+                    int count;
+
                     count = regions.size();
                     regions.keySet().forEach(regionManager::removeRegion);
 
@@ -56,11 +58,24 @@ public class Clear extends LandlordCommand {
                                     .replace("%players%", target));
                         } else {
                             // Success
-                            Set<String> todelete = new HashSet<>();
-                            plugin.getWgHandler().getRegions(lPlayer.getUuid()).forEach(s -> todelete.add(s.getId()));
-                            int amt = todelete.size();
+                            int amt = 0;
+                            for (World world : Bukkit.getWorlds()) {
+                                // Only count enabled worlds
+                                if (!Landlord.getInstance().getConfig().getStringList("disabled-worlds").contains(world.getName())) {
+                                    List<ProtectedRegion> rgs = plugin.getWgHandler().getRegions(lPlayer.getUuid(), world);
+                                    amt += rgs.size();
+                                    Set<String> toDelete = new HashSet<>();
+                                    for (ProtectedRegion protectedRegion : rgs) {
+                                        toDelete.add(protectedRegion.getId());
+                                    }
+                                    RegionManager rgm = plugin.getWgHandler().getWG().getRegionManager(world);
+                                    for (String s : toDelete) {
+                                        plugin.getOfferManager().removeOffer(s);
+                                        rgm.removeRegion(s);
+                                    }
+                                }
+                            }
 
-                            todelete.forEach(regionManager::removeRegion);
                             player.sendMessage(lm.getString("Commands.ClearWorld.successPlayer")
                                     .replace("%count%", String.valueOf(amt))
                                     .replace("%player%", target));

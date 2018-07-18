@@ -199,8 +199,8 @@ public abstract class AbstractManage extends AbstractGUI {
                             if (t.isAlive() && t.isSpawnable()) {
 
                                 if (!toggleMobs.contains(t.name())) continue;
-
-                                ItemStack spawnEgg = new ItemStack(Material.MONSTER_EGG);
+                                System.out.println(Material.getMaterial(t.name().toUpperCase()));
+                                ItemStack spawnEgg = new ItemStack(Material.LEGACY_MONSTER_EGG);
                                 SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
                                 meta.setSpawnedType(t);
                                 meta.setDisplayName(lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title").replace("%mob%", t.name()));
@@ -394,7 +394,7 @@ public abstract class AbstractManage extends AbstractGUI {
     }
 
     private ItemStack createSkull(String owner, String displayname, List<String> lore) {
-        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        ItemStack skull = new ItemStack(Material.LEGACY_SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(owner);
         skullMeta.setDisplayName(displayname);

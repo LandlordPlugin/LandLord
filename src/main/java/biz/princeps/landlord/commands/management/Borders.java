@@ -3,9 +3,9 @@ package biz.princeps.landlord.commands.management;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
-import biz.princeps.lib.crossversion.CParticle;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -44,7 +44,7 @@ public class Borders extends LandlordCommand {
                 @Override
                 public void run() {
                     if (counter <= 360 / plugin.getConfig().getInt("Borders.refreshRate"))
-                        OwnedLand.highlightLand(p, CParticle.DRIPLAVA);
+                        OwnedLand.highlightLand(p, Particle.DRIP_LAVA);
                     else
                         cancel();
                     counter++;

@@ -143,7 +143,7 @@ public class LandAlerter extends BasicListener {
                             if (before == null) {
                                 //          System.out.println("2. null");
                                 if (type == LandMessageDisplay.ActionBar) {
-                                    PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
+                                    PrincepsLib.getStuffManager().sendActionBar(p, craftColoredMessage(array));
                                     event.setCancelled(true);
                                 } else if (type == LandMessageDisplay.Title) {
                                     p.sendTitle(craftColoredMessage(array), null, 10, 70, 10);
@@ -153,7 +153,7 @@ public class LandAlerter extends BasicListener {
                                 //          System.out.println(before.getName());
                                 if (regionInsideNow == null) {
                                     if (type == LandMessageDisplay.ActionBar) {
-                                        PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
+                                        PrincepsLib.getStuffManager().sendActionBar(p, craftColoredMessage(array));
                                         event.setCancelled(true);
                                     } else if (type == LandMessageDisplay.Title) {
                                         p.sendTitle(craftColoredMessage(array), null, 10, 70, 10);
@@ -167,7 +167,7 @@ public class LandAlerter extends BasicListener {
                                     }
                                     if (type == LandMessageDisplay.ActionBar) {
                                         if (!flag) {
-                                            PrincepsLib.crossVersion().sendActionBar(p, craftColoredMessage(array));
+                                            PrincepsLib.getStuffManager().sendActionBar(p, craftColoredMessage(array));
                                         }
                                         event.setCancelled(true);
                                     } else if (type == LandMessageDisplay.Title) {
