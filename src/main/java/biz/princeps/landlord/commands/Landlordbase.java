@@ -8,14 +8,12 @@ import biz.princeps.landlord.commands.admin.GiveClaims;
 import biz.princeps.landlord.commands.admin.Update;
 import biz.princeps.landlord.commands.claiming.*;
 import biz.princeps.landlord.commands.claiming.adv.Advertise;
-import biz.princeps.landlord.commands.friends.Addfriend;
-import biz.princeps.landlord.commands.friends.AddfriendAll;
-import biz.princeps.landlord.commands.friends.Unfriend;
-import biz.princeps.landlord.commands.friends.UnfriendAll;
+import biz.princeps.landlord.commands.friends.*;
 import biz.princeps.landlord.commands.homes.Home;
 import biz.princeps.landlord.commands.homes.SetHome;
 import biz.princeps.landlord.commands.management.*;
 import biz.princeps.landlord.manager.LangManager;
+import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
@@ -80,6 +78,7 @@ public class Landlordbase extends MainCommand {
         subcommands.put("borders", new Borders());
         subcommands.put("admintp", new AdminTeleport());
         subcommands.put("item", new LLItem());
+        subcommands.put("listfriends", new ListFriends());
     }
 
     @Override
@@ -240,6 +239,35 @@ public class Landlordbase extends MainCommand {
         public void onCommand(Properties properties, Arguments arguments) {
             if (properties.isPlayer()) {
                 ((UnclaimAll) subcommands.get("unclaimall")).onUnclaim(properties.getPlayer());
+            }
+        }
+    }
+
+    class ListfriendsCMD extends SubCommand {
+
+        public ListfriendsCMD() {
+            super(pl.getConfig().getString("CommandSettings.Listfriends.name"),
+                    pl.getConfig().getString("CommandSettings.Listfriends.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Listfriends.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.Listfriends.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+
+                String landname;
+                try {
+                    landname = arguments.get(0);
+                } catch (ArgumentsOutOfBoundsException e) {
+                    if (pl.getWgHandler().getRegion(properties.getPlayer().getLocation()) != null) {
+                        landname = OwnedLand.getName(properties.getPlayer().getLocation().getChunk());
+                    } else {
+                        landname = null;
+                    }
+                }
+
+                ((ListFriends) subcommands.get("listfriends")).onListFriends(properties.getPlayer(), landname);
             }
         }
     }

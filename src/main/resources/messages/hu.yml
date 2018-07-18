@@ -44,6 +44,12 @@ Commands:
     notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
     notOwnFreeLand: '&7Nem a sajátod ennek a darabnak'
     success: '&7Sikeresen mentesítetted &c%chunk%&7 darabot &c%world%&7 világban &c%money% &7és kaptál vissza'
+  Listfriends:
+    invalidWorld: '&cThe entered world does not exist!'
+    invalidGeneral: '&cThe entered coordinates are invalid!'
+    freeLand: '&cAn unclaimed chunk doesnt have friends!'
+    friends: '&aFriends: %friends%'
+    noFriends: '&cThis land doesnt have any friends'
   Addfriend:
     notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
     noPlayer: '&7Nem található a következő játékos&8: &c%player%'
@@ -261,4 +267,4 @@ MaItem:
     - '&l&ba levegőben:'
     - '&cjobb klikk: &7térkép kapcsolása'
     - '&cbal klikk: &7határok kapcsolása'
-version: 15
+version: 16
