@@ -55,7 +55,7 @@ public class MapManager extends BasicListener {
 
     public void updateAll() {
         for (String k : mapList.keySet()) {
-            mapList.get(k).updateMap();
+            mapList.get(k).forceUpdate();
         }
     }
 
@@ -88,7 +88,7 @@ public class MapManager extends BasicListener {
         if (mapList.containsKey(event.getPlayer().getName())) {
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Landlord.getInstance(), () -> {
                 if (mapList.containsKey(p.getName())) {
-                    mapList.get(p.getName()).updateMap();
+                    mapList.get(p.getName()).forceUpdate();
                 }
             }, 15L);
         }
@@ -100,7 +100,7 @@ public class MapManager extends BasicListener {
         if (mapList.containsKey(event.getPlayer().getName())) {
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Landlord.getInstance(), () -> {
                 if (mapList.containsKey(p.getName())) {
-                    mapList.get(p.getName()).updateMap();
+                    mapList.get(p.getName()).forceUpdate();
                 }
             }, 15L);
         }

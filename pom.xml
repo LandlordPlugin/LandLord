@@ -122,9 +122,8 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib-API</artifactId>
-            <version>4.3.0</version>
-            <scope>system</scope>
-            <systemPath>/home/alex/Repositories/LandLord/target/Testserver/plugins/ProtocolLib.jar</systemPath>
+            <version>4.3.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -137,21 +136,15 @@
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
-            <version>LATEST</version>
-            <scope>system</scope>
-            <systemPath>
-                /home/alex/Repositories/LandLord/target/Testserver/plugins/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar
-            </systemPath>
+            <version>1.13</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
-            <version>LATEST</version>
-            <scope>system</scope>
-            <systemPath>
-                /home/alex/Repositories/LandLord/target/Testserver/plugins/worldedit-bukkit-7.0.0-SNAPSHOT-dist.jar
-            </systemPath>
+            <version>1.13</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

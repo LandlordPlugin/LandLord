@@ -3,15 +3,12 @@ package biz.princeps.landlord.manager.map;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.util.OwnedLand;
-import me.tigerhix.lib.scoreboard.ScoreboardLib;
+import biz.princeps.landlord.util.SimpleScoreboard;
 import me.tigerhix.lib.scoreboard.common.EntryBuilder;
-import me.tigerhix.lib.scoreboard.type.Entry;
-import me.tigerhix.lib.scoreboard.type.Scoreboard;
-import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
-import me.tigerhix.lib.scoreboard.type.SimpleScoreboard;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Map;
@@ -181,6 +178,7 @@ public class LandMap {
     private String currDir;
     //private String currDir;
     private Landlord plugin;
+    private boolean update;
 
     public LandMap(Player p, Landlord plugin) {
         this.plugin = plugin;
@@ -286,7 +284,6 @@ public class LandMap {
 
     public void removeMap() {
         scoreboard.deactivate();
-
     }
 
     /**
@@ -296,6 +293,35 @@ public class LandMap {
      * @return a reference to the scoreboard
      */
     private SimpleScoreboard displayMap(Player p) {
+        LangManager messages = plugin.getLangManager();
+
+        scoreboard = new SimpleScoreboard(messages.getRawString("Commands.LandMap.header"), p);
+
+        new BukkitRunnable() {
+            List<String> prev;
+
+            @Override
+            public void run() {
+                if (!update) {
+                    if (prev != null && currChunk.equals(mapViewer.getLocation().getChunk()) && currDir.equals(getPlayerDirection(mapViewer))) {
+                        return;
+                    }
+                }
+                update = false;
+                updateMap();
+                scoreboard.reset();
+                String[] mapData = buildMap(p);
+                for (String aMapData : mapData) {
+                    scoreboard.add(aMapData);
+                }
+                scoreboard.send();
+            }
+        }.runTaskTimer(plugin, 0, plugin.getConfig().getLong("Map.refreshRate", 10));
+
+
+        return scoreboard;
+
+        /*
         Scoreboard board = ScoreboardLib.createScoreboard(p).setHandler(new ScoreboardHandler() {
             LangManager messages = plugin.getLangManager();
             List<Entry> prev;
@@ -307,10 +333,12 @@ public class LandMap {
 
             @Override
             public List<Entry> getEntries(Player player) {
-                if (prev != null && currChunk.equals(mapViewer.getLocation().getChunk()) && currDir.equals(getPlayerDirection(mapViewer))) {
-                    return prev;
+                if (!update) {
+                    if (prev != null && currChunk.equals(mapViewer.getLocation().getChunk()) && currDir.equals(getPlayerDirection(mapViewer))) {
+                        return prev;
+                    }
                 }
-
+                update = false;
                 updateMap();
                 String[] mapData = buildMap(p);
                 EntryBuilder eb = new EntryBuilder();
@@ -320,7 +348,7 @@ public class LandMap {
                         for (int f = 0; f < (21 - mapData[i].length()); f++) {
                             mapData[i] += ChatColor.RESET;
                         }
-                    }*/
+                    }
                     eb.next(aMapData);
                 }
                 prev = eb.build();
@@ -332,11 +360,16 @@ public class LandMap {
         simpleScoreboard.activate();
         this.scoreboard = simpleScoreboard;
         return simpleScoreboard;
+        */
     }
 
-    void updateMap() {
+    private void updateMap() {
         this.currChunk = mapViewer.getLocation().getChunk();
         this.currDir = getPlayerDirection(mapViewer);
+    }
+
+    void forceUpdate() {
+        this.update = true;
     }
 
     private String[] buildMap(Player p) {
@@ -359,9 +392,9 @@ public class LandMap {
                 String currSpot = mapBoard[z][x];
 
                 if (land != null) {
-                    if (land.getWGLand().getOwners().getUniqueIds().contains(p.getUniqueId())) {
+                    if (land.getOwner().equals(p.getUniqueId())) {
                         currSpot = ChatColor.GREEN + currSpot;
-                    } else if (land.getWGLand().getMembers().getUniqueIds().contains(p.getUniqueId())) {
+                    } else if (land.getMembers().contains(p.getUniqueId())) {
                         currSpot = ChatColor.YELLOW + currSpot;
                     } else {
                         currSpot = ChatColor.RED + currSpot;

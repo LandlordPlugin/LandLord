@@ -2,6 +2,7 @@ package biz.princeps.landlord.util;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.flags.LLFlag;
+import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.lib.PrincepsLib;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.domains.DefaultDomain;
@@ -221,5 +222,9 @@ public class OwnedLand {
 
     public Set<LLFlag> getFlags() {
         return flags;
+    }
+
+    public Set<UUID> getMembers() {
+        return this.getWGLand().getMembers().getUniqueIds();
     }
 }
