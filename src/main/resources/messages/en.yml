@@ -241,7 +241,7 @@ Confirmation:
 Shop:
   title: 'Claims Shop. Your claims (%regions%/%claims%)'
   notEnoughMoney: '&7You dont have enough money buy %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
-  success: '&aYou successfully bought %number% claims for %cost%'
+  success: '&aYou successfully bought %amount% claims for %cost%'
   notAllowed: '&eYou are not allowed to buy more claims'
   item:
     header: '%number% extra claims'

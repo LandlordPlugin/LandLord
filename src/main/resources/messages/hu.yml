@@ -240,7 +240,7 @@ Confirmation:
 Shop:
   title: 'Igény bolt. Igényléseid (%regions%/%claims%)'
   notEnoughMoney: '&7Nincs elég pénzed, hogy vásárolj %number% egényt &7&o(Ára&8&o: &c&o%cost%&7&o)'
-  success: '&aSikeresen megvásároltad %number% egényt %cost% pénzért'
+  success: '&aSikeresen megvásároltad %amount% egényt %cost% pénzért'
   notAllowed: '&eNem vehetsz több igényt'
   item:
     header: '%number% extra igény'

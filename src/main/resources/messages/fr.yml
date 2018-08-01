@@ -241,7 +241,7 @@ Confirmation:
 Shop:
   title: 'Boutique des claims. Vos claims (%regions%/%claims%)'
   notEnoughMoney: '&7Vous n''avez pas assez d''argent pour acheter %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
-  success: '&aSUccès: Vous avez acheté %number% claims pour %cost%'
+  success: '&aSUccès: Vous avez acheté %amount% claims pour %cost%'
   notAllowed: '&eVous n''avez pas l''autorisation d''acheter plus de claims'
   item:
     header: '%number% extra claims'

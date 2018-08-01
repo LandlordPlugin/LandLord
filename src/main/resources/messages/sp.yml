@@ -38,7 +38,7 @@ Commands:
       - '&7Miembros&8: &a%member%'
       - '&7Precio&8: &a&o%price%'
     free:
-      - '&f&lLand&c&lLord &a- Terreno libre'A
+      - '&f&lLand&c&lLord &a- Terreno libre'
       - '&7ID-Terreno&8: &a%landid%'
       - '&7&oPrecio: &a&o%price%'
   Unclaim:
@@ -242,7 +242,7 @@ Confirmation:
 Shop:
   title: 'Tienda de reclamos. tus reclamos (%regions%/%claims%)'
   notEnoughMoney: '&7No tienes suficiente dinero para comprar %number% Reclamos &7&o(Cost&8&o: &c&o%cost%&7&o)'
-  success: '&aUsted compró con éxito %number% Reclamaciones por %cost%'
+  success: '&aUsted compró con éxito %amount% Reclamaciones por %cost%'
   notAllowed: '&eNo tiene permitido comprar más reclamos'
   item:
     header: '%number% Tickets de Reclamo'

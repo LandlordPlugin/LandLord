@@ -241,7 +241,7 @@ Confirmation:
 Shop:
   title: 'Sklep chunków. Twoje tereny (%regions%/%claims%)'
   notEnoughMoney: '&7Nie masz wystarczająco pieniędzy, aby kupić %number% chunków &7&o(Cost&8&o: &c&o%cost%&7&o)'
-  success: '&aPomyślnie kupiłeś %number% chunków za %cost%'
+  success: '&aPomyślnie kupiłeś %amount% chunków za %cost%'
   notAllowed: '&eNie możesz kupić więcej chunków'
   item:
     header: '&e&l%number% &c&lekstra chunk'
