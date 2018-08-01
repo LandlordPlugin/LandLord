@@ -212,6 +212,13 @@ public class OwnedLand {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "OwnedLand{" +
+                "chunk=" + chunk +
+                '}';
+    }
+
     public Set<LLFlag> getFlags() {
         return flags;
     }

@@ -15,6 +15,7 @@ import com.sk89q.worldguard.protection.flags.Flags;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -23,6 +24,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -32,15 +34,65 @@ import java.util.UUID;
  */
 public class LandAlerter extends BasicListener {
 
+    class ChunkCoords {
+        int x;
+        int z;
+        World world;
+
+        public ChunkCoords(World world, int x, int z) {
+            this.x = x;
+            this.z = z;
+            this.world = world;
+        }
+
+        public ChunkCoords(Location loc) {
+            this.x = loc.getChunk().getX();
+            this.z = loc.getChunk().getZ();
+            this.world = loc.getWorld();
+        }
+
+        public Location getLocation() {
+            return new Location(world, x * 16, 0, z * 16);
+        }
+
+        @Override
+        public String toString() {
+            return "ChunkCoords{" +
+                    "x=" + x +
+                    ", z=" + z +
+                    ", world=" + world.getName() +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ChunkCoords that = (ChunkCoords) o;
+            return x == that.x &&
+                    z == that.z &&
+                    Objects.equals(world, that.world);
+        }
+
+        @Override
+        public int hashCode() {
+
+            return Objects.hash(x, z, world);
+        }
+    }
+
     private Landlord pl = Landlord.getInstance();
-    private HashMap<UUID, OwnedLand> playerInLand;
+    private HashMap<UUID, ChunkCoords> currentLands;
+    private HashMap<UUID, ChunkCoords> previousLands;
     private LandMessageDisplay type;
 
     /**
      * such a mess, but I cant think of a less intrusive way
      */
     public LandAlerter() {
-        playerInLand = new HashMap<>();
+        currentLands = new HashMap<>();
+        previousLands = new HashMap<>();
+
         type = LandMessageDisplay.valueOf(pl.getConfig().getString("LandMessage"));
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(pl, PacketType.Play.Server.CHAT) {
@@ -61,7 +113,7 @@ public class LandAlerter extends BasicListener {
                 Player p = event.getPlayer();
 
                 OwnedLand regionInsideNow = pl.getWgHandler().getRegion(p.getLocation());
-                OwnedLand before = playerInLand.get(p.getUniqueId());
+                OwnedLand before = (previousLands.get(p.getUniqueId()) == null ? null : pl.getLand(previousLands.get(p.getUniqueId()).getLocation()));
 
                 JSONObject json = null;
                 try {
@@ -76,7 +128,6 @@ public class LandAlerter extends BasicListener {
                 if (json != null && json.get("extra") instanceof JSONArray) {
                     JSONArray array = ((JSONArray) json.get("extra"));
                     if (array != null) {
-                        System.out.println(array);
                         StringBuilder sb = new StringBuilder();
                         for (Object anArray : array) {
                             if (anArray instanceof JSONObject) {
@@ -86,7 +137,7 @@ public class LandAlerter extends BasicListener {
                             }
                         }
 
-                        String msg = sb.toString().trim();
+                        String msg = stripColors(sb.toString()).trim();
                         // System.out.println("Trimmed message: " + msg);
 
                         boolean goingOn = false;
@@ -94,7 +145,7 @@ public class LandAlerter extends BasicListener {
                         if (regionInsideNow != null) {
                             String greet = stripColors(regionInsideNow.getWGLand().getFlag(Flags.GREET_MESSAGE));
                             String farewell = stripColors(regionInsideNow.getWGLand().getFlag(Flags.FAREWELL_MESSAGE));
-                            // System.out.println(msg + ":" + greet + ":" + farewell);
+                            // System.out.println("RegionInsideNow: " + msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
                                 goingOn = true;
@@ -104,7 +155,7 @@ public class LandAlerter extends BasicListener {
                         if (before != null) {
                             String greet = stripColors(before.getWGLand().getFlag(Flags.GREET_MESSAGE));
                             String farewell = stripColors(before.getWGLand().getFlag(Flags.FAREWELL_MESSAGE));
-                            // System.out.println(msg + ":" + greet + ":" + farewell);
+                            // System.out.println("before:" + msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
                                 goingOn = true;
@@ -123,46 +174,7 @@ public class LandAlerter extends BasicListener {
                         // on leave null
                         // on enter da wo man nun ist
                         if (goingOn) {
-
-                            if (type == LandMessageDisplay.Disabled) {
-                                event.setCancelled(true);
-                                return;
-                            }
-                            // PacketContainer chat = event.getPacket();
-                            // chat.getChatTypes().write(0, EnumWrappers.ChatType.GAME_INFO);
-                            // chat.getChatComponents().write(0, WrappedChatComponent.fromJson(json.toJSONString()));
-
-                            if (type == LandMessageDisplay.Chat) {
-                                if (before != null && regionInsideNow != null) {
-                                    if (before.isOwner(p.getUniqueId()) && regionInsideNow.isOwner(p.getUniqueId())) {
-                                        event.setCancelled(true);
-                                    }
-                                }
-                            }
-
-                            if (before == null) {
-                                //          System.out.println("2. null");
-                                if (send(craftColoredMessage(array), p)) {
-                                    event.setCancelled(true);
-                                }
-                            } else {
-                                //          System.out.println(before.getName());
-                                if (regionInsideNow == null) {
-                                    if (send(craftColoredMessage(array), p)) {
-                                        event.setCancelled(true);
-                                    }
-                                } else {
-                                    boolean flag = true;
-                                    for (UUID uuid : regionInsideNow.getWGLand().getOwners().getUniqueIds()) {
-                                        if (!before.isOwner(uuid))
-                                            flag = false;
-                                    }
-                                    if (!flag) {
-                                        send(craftColoredMessage(array), p);
-                                        event.setCancelled(true);
-                                    }
-                                }
-                            }
+                            event.setCancelled(true);
                         }
                     }
                 }
@@ -172,14 +184,20 @@ public class LandAlerter extends BasicListener {
     }
 
     private boolean send(String msg, Player p) {
-        if (type == LandMessageDisplay.ActionBar) {
-            PrincepsLib.getStuffManager().sendActionBar(p, msg);
-            return true;
-        } else if (type == LandMessageDisplay.Title) {
-            p.sendTitle(msg, null, 10, 70, 10);
-            return true;
+        switch (type) {
+            case ActionBar:
+                PrincepsLib.getStuffManager().sendActionBar(p, msg);
+                return true;
+            case Chat:
+                p.sendMessage(msg);
+                return true;
+            case Title:
+                p.sendTitle(msg, null, 10, 70, 10);
+                return true;
+            case Disabled:
+            default:
+                return false;
         }
-        return false;
     }
 
     private String stripColors(String input) {
@@ -209,17 +227,48 @@ public class LandAlerter extends BasicListener {
         Location comingFrom = e.getFrom();
         Location headingTowards = e.getTo();
 
-        OwnedLand landFrom = pl.getWgHandler().getRegion(comingFrom);
-        OwnedLand landTowards = pl.getWgHandler().getRegion(headingTowards);
+        ChunkCoords landFrom = new ChunkCoords(comingFrom);
+        ChunkCoords landTowards = new ChunkCoords(headingTowards);
 
 
-        if (landTowards == null) {
-            // System.out.println(playerInLand.get(p.getUniqueId()) + " removed");
-            playerInLand.remove(p.getUniqueId());
-        } else if (!landTowards.equals(landFrom)) {
-            playerInLand.put(p.getUniqueId(), landTowards);
-            //     System.out.println(landTowards.getName() + " added");
+        ChunkCoords currentLand = this.currentLands.get(p.getUniqueId());
+        ChunkCoords prevLand = this.previousLands.get(p.getUniqueId());
+
+        if (currentLand == null) {
+            this.currentLands.put(p.getUniqueId(), landTowards);
+            currentLand = landTowards;
         }
+        if (prevLand == null) {
+            this.previousLands.put(p.getUniqueId(), landFrom);
+            prevLand = landFrom;
+        }
+        if (landFrom.equals(landTowards)) {
+            return;
+        } else {
+            // Unequals, so they changed
+            if (!currentLand.equals(landTowards)) {
+                this.previousLands.replace(p.getUniqueId(), currentLand);
+                this.currentLands.replace(p.getUniqueId(), landTowards);
+                prevLand = currentLand;
+                currentLand = landTowards;
+
+                OwnedLand prev = plugin.getLand(prevLand.getLocation());
+                OwnedLand curr = plugin.getLand(currentLand.getLocation());
+
+                if (prev == null && curr != null) {
+                    send(curr.getWGLand().getFlag(Flags.GREET_MESSAGE), p);
+                }
+                if (prev != null && curr == null) {
+                    send(prev.getWGLand().getFlag(Flags.FAREWELL_MESSAGE), p);
+                }
+                if (prev != null && curr != null) {
+                    if (!prev.getOwner().equals(curr.getOwner())) {
+                        send(curr.getWGLand().getFlag(Flags.GREET_MESSAGE), p);
+                    }
+                }
+            }
+        }
+
     }
 
 
