@@ -11,14 +11,14 @@ import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import co.aikar.taskchain.TaskChain;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldedit.world.entity.EntityType;
+import com.sk89q.worldguard.protection.flags.Flags;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -59,18 +59,16 @@ public abstract class AbstractManage extends AbstractGUI {
 
     public AbstractManage(Player player, String header, List<OwnedLand> land) {
         super(player, SIZE, header);
-        this.regions = new ArrayList<>();
-        regions.addAll(land);
-        plugin = Landlord.getInstance();
-        lm = plugin.getLangManager();
+        this.regions = land;
+        this.plugin = Landlord.getInstance();
+        this.lm = plugin.getLangManager();
     }
 
     public AbstractManage(Player player, MultiPagedGUI landGui, String header, List<OwnedLand> land) {
         super(player, SIZE + 9, header, landGui);
-        this.regions = new ArrayList<>();
-        regions.addAll(land);
-        plugin = Landlord.getInstance();
-        lm = plugin.getLangManager();
+        this.regions = land;
+        this.plugin = Landlord.getInstance();
+        this.lm = plugin.getLangManager();
     }
 
     @Override
@@ -163,7 +161,7 @@ public abstract class AbstractManage extends AbstractGUI {
         //TODO add proper land manage commands, so that you can manage lands from within landlist
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet.enable")) {
-            String currentGreet = land.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE);
+            String currentGreet = land.getWGLand().getFlag(Flags.GREET_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setgreet.item")), 1,
                     lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greetDesc, currentGreet)))
                     .addClickAction(((p) -> {
@@ -189,83 +187,85 @@ public abstract class AbstractManage extends AbstractGUI {
                         // Open a new gui with spawneggs where you can manage the spawns by clicking on them
 
                         List<Icon> icons = new ArrayList<>();
-                        EntityType[] types = EntityType.values();
+                        EntityType[] types = EntityType.REGISTRY.values().toArray(new EntityType[0]);
                         List<String> lore = lm.getStringList("Commands.Manage.AllowMob-spawning.toggleItem.description");
 
                         MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
                         };
 
                         for (EntityType t : types) {
-                            if (t.isAlive() && t.isSpawnable()) {
 
-                                if (!toggleMobs.contains(t.name())) continue;
-                                System.out.println(Material.getMaterial(t.name().toUpperCase()));
-                                ItemStack spawnEgg = new ItemStack(Material.LEGACY_MONSTER_EGG);
-                                SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
-                                meta.setSpawnedType(t);
-                                meta.setDisplayName(lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title").replace("%mob%", t.name()));
+                            if (!org.bukkit.entity.EntityType.valueOf(t.getName()).isAlive() ||
+                                    !org.bukkit.entity.EntityType.valueOf(t.getName()).isSpawnable())
+                                continue;
+                            if (!toggleMobs.contains(t.getName())) continue;
 
-                                Set<EntityType> flag = land.getWGLand().getFlag(DefaultFlag.DENY_SPAWN);
-                                String state;
-                                if (flag != null)
-                                    state = (flag.contains(t) ? "DENY" : "ALLOW");
-                                else
-                                    state = "ALLOW";
+                            System.out.println(Material.getMaterial(t.getName().toUpperCase()));
+                            ItemStack spawnEgg = new ItemStack(Material.LEGACY_MONSTER_EGG);
+                            SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
+                            meta.setSpawnedType(org.bukkit.entity.EntityType.valueOf(t.getName()));
+                            meta.setDisplayName(lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title").replace("%mob%", t.getName()));
 
-                                List<String> formattedLore = new ArrayList<>();
-                                for (String s : lore) {
-                                    formattedLore.add(s.replace("%mob%", t.name()).replace("%value%", state));
+                            Set<EntityType> flag = land.getWGLand().getFlag(Flags.DENY_SPAWN);
+                            String state;
+                            if (flag != null)
+                                state = (flag.contains(t) ? "DENY" : "ALLOW");
+                            else
+                                state = "ALLOW";
+
+                            List<String> formattedLore = new ArrayList<>();
+                            for (String s : lore) {
+                                formattedLore.add(s.replace("%mob%", t.getName()).replace("%value%", state));
+                            }
+
+                            meta.setLore(formattedLore);
+                            spawnEgg.setItemMeta(meta);
+
+                            Icon ic = new Icon(spawnEgg);
+                            ic.addClickAction((clickingPlayer) -> {
+
+                                for (OwnedLand region : regions) {
+                                    Set<EntityType> localFlag = (Set<EntityType>) region.getWGLand().getFlag(Flags.DENY_SPAWN);
+                                    // Toggle spawning of specific mob
+                                    if (localFlag != null) {
+                                        if (localFlag.contains(t))
+                                            localFlag.remove(t);
+                                        else
+                                            localFlag.add(t);
+                                    } else {
+                                        Set<EntityType> set = new HashSet<>();
+                                        set.add(t);
+                                        region.getWGLand().setFlag(Flags.DENY_SPAWN, set);
+                                    }
                                 }
 
-                                meta.setLore(formattedLore);
-                                spawnEgg.setItemMeta(meta);
+                                Set<EntityType> newFlag = regions.get(0).getWGLand().getFlag(Flags.DENY_SPAWN);
+                                // update icon text
+                                String iconState;
+                                if (newFlag != null)
+                                    iconState = (newFlag.contains(t) ? "DENY" : "ALLOW");
+                                else
+                                    iconState = "ALLOW";
 
-                                Icon ic = new Icon(spawnEgg);
-                                ic.addClickAction((clickingPlayer) -> {
+                                List<String> newLore = new ArrayList<>();
+                                for (String s : lore) {
+                                    newLore.add(s.replace("%mob%", t.getName()).replace("%value%", iconState));
+                                }
 
-                                    for (OwnedLand region : regions) {
-                                        Set<EntityType> localFlag = region.getWGLand().getFlag(DefaultFlag.DENY_SPAWN);
-                                        // Toggle spawning of specific mob
-                                        if (localFlag != null) {
-                                            if (localFlag.contains(t))
-                                                localFlag.remove(t);
-                                            else
-                                                localFlag.add(t);
-                                        } else {
-                                            Set<EntityType> set = new HashSet<>();
-                                            set.add(t);
-                                            region.getWGLand().setFlag(DefaultFlag.DENY_SPAWN, set);
-                                        }
-                                    }
-
-                                    Set<EntityType> newFlag = regions.get(0).getWGLand().getFlag(DefaultFlag.DENY_SPAWN);
-                                    // update icon text
-                                    String iconState;
-                                    if (newFlag != null)
-                                        iconState = (newFlag.contains(t) ? "DENY" : "ALLOW");
-                                    else
-                                        iconState = "ALLOW";
-
-                                    List<String> newLore = new ArrayList<>();
-                                    for (String s : lore) {
-                                        newLore.add(s.replace("%mob%", t.name()).replace("%value%", iconState));
-                                    }
-
-                                    // System.out.println(newLore + " :");
-                                    ic.setLore(newLore);
-                                    gui.refresh();
-                                });
-                                icons.add(ic);
-                            }
+                                // System.out.println(newLore + " :");
+                                ic.setLore(newLore);
+                                gui.refresh();
+                            });
+                            icons.add(ic);
                         }
+
                         gui.display();
                     }));
             position++;
         }
-
         // set farewell icon
         if (plugin.getConfig().getBoolean("Manage.setfarewell.enable")) {
-            String currentFarewell = land.getWGLand().getFlag(DefaultFlag.FAREWELL_MESSAGE);
+            String currentFarewell = land.getWGLand().getFlag(Flags.FAREWELL_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setfarewell.item")), 1,
                     lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
                     .addClickAction(((p) -> {

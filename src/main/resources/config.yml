@@ -416,7 +416,7 @@ Manage:
     item: BAKED_POTATO
   setfarewell:
     enable: true
-    item: CARROT_ITEM
+    item: CARROT_ON_A_STICK
   unclaim:
     enable: true
     item: BLAZE_POWDER

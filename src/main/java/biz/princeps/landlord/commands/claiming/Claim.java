@@ -315,6 +315,7 @@ public class Claim extends LandlordCommand {
                         .replace("%claims%", claims + ""))
                         .color(ChatColor.YELLOW)
                         .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
+
                 player.spigot().sendMessage(builder.create());
                 return false;
             }

@@ -35,7 +35,7 @@ public class Clear extends LandlordCommand {
                 // Clearing all regions in one world
                 if (target == null) {
                     World world = player.getWorld();
-                    RegionManager regionManager = plugin.getWgHandler().getWG().getRegionManager(world);
+                    RegionManager regionManager = plugin.getWgHandler().getRegionManager(world);
 
                     Map<String, ProtectedRegion> regions = regionManager.getRegions();
                     int count;
@@ -68,7 +68,7 @@ public class Clear extends LandlordCommand {
                                     for (ProtectedRegion protectedRegion : rgs) {
                                         toDelete.add(protectedRegion.getId());
                                     }
-                                    RegionManager rgm = plugin.getWgHandler().getWG().getRegionManager(world);
+                                    RegionManager rgm = plugin.getWgHandler().getRegionManager(world);
                                     for (String s : toDelete) {
                                         plugin.getOfferManager().removeOffer(s);
                                         rgm.removeRegion(s);

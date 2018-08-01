@@ -2,8 +2,8 @@ package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.commands.LandlordCommand;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -29,7 +29,7 @@ public class Update extends LandlordCommand {
         issuer.sendMessage("Starting to update lands...");
 
         for (World w : Bukkit.getWorlds()) {
-            for (ProtectedRegion pr : plugin.getWgHandler().getWG().getRegionManager(w).getRegions().values()) {
+            for (ProtectedRegion pr : plugin.getWgHandler().getRegionManager(w).getRegions().values()) {
 
                 if (pr.getId().split("_").length == 3 && w.getName().equals(pr.getId().split("_")[0])) {
 
@@ -40,7 +40,7 @@ public class Update extends LandlordCommand {
                     flaggy.forEach(s -> flags.add(s.split(" ")[0]));
 
                     //Iterate over all existing flags
-                    for (Flag<?> flag : DefaultFlag.getFlags()) {
+                    for (Flag<?> flag : plugin.getWgHandler().getFlags()) {
                         if (flag instanceof StateFlag) {
                             boolean failed = false;
                             if (flags.contains(flag.getName())) {
@@ -80,11 +80,11 @@ public class Update extends LandlordCommand {
                     String greeting = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", name);
                     String farewell = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", name);
 
-                    if (!pr.getFlags().containsKey(DefaultFlag.GREET_MESSAGE)) {
-                        pr.setFlag(DefaultFlag.GREET_MESSAGE, greeting);
+                    if (!pr.getFlags().containsKey(Flags.GREET_MESSAGE)) {
+                        pr.setFlag(Flags.GREET_MESSAGE, greeting);
                     }
-                    if (!pr.getFlags().containsKey(DefaultFlag.FAREWELL_MESSAGE)) {
-                        pr.setFlag(DefaultFlag.FAREWELL_MESSAGE, farewell);
+                    if (!pr.getFlags().containsKey(Flags.FAREWELL_MESSAGE)) {
+                        pr.setFlag(Flags.FAREWELL_MESSAGE, farewell);
                     }
                 }
 
@@ -101,7 +101,7 @@ public class Update extends LandlordCommand {
         sender.sendMessage("Starting to reset lands...");
 
         for (World w : Bukkit.getWorlds()) {
-            for (ProtectedRegion pr : plugin.getWgHandler().getWG().getRegionManager(w).getRegions().values()) {
+            for (ProtectedRegion pr : plugin.getWgHandler().getRegionManager(w).getRegions().values()) {
 
                 if (pr.getId().split("_").length == 3 && Bukkit.getWorld(pr.getId().split("_")[0]) == w) {
 
@@ -111,7 +111,7 @@ public class Update extends LandlordCommand {
                     flaggy.forEach(s -> flags.add(s.split(" ")[0]));
 
                     //Iterate over all existing flags
-                    for (Flag<?> flag : DefaultFlag.getFlags()) {
+                    for (Flag<?> flag : plugin.getWgHandler().getFlags()) {
                         if (flag instanceof StateFlag) {
                             boolean failed = false;
                             if (flags.contains(flag.getName())) {
@@ -150,14 +150,14 @@ public class Update extends LandlordCommand {
                     String greeting = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", name);
                     String farewell = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", name);
 
-                    String actualGreeting = pr.getFlag(DefaultFlag.GREET_MESSAGE);
-                    String actualFarewell = pr.getFlag(DefaultFlag.FAREWELL_MESSAGE);
+                    String actualGreeting = pr.getFlag(Flags.GREET_MESSAGE);
+                    String actualFarewell = pr.getFlag(Flags.FAREWELL_MESSAGE);
 
                     if (!greeting.equals(actualGreeting)) {
-                        pr.setFlag(DefaultFlag.GREET_MESSAGE, greeting);
+                        pr.setFlag(Flags.GREET_MESSAGE, greeting);
                     }
                     if (!farewell.equals(actualFarewell)) {
-                        pr.setFlag(DefaultFlag.FAREWELL_MESSAGE, farewell);
+                        pr.setFlag(Flags.FAREWELL_MESSAGE, farewell);
                     }
                 }
 

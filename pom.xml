@@ -103,15 +103,19 @@
             <id>inventive-repo</id>
             <url>https://repo.inventivetalent.org/content/groups/public/</url>
         </repository>
+
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
     </repositories>
 
 
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot_1_13_pre7</artifactId>
-            <version>1.0</version>
-            <classifier>pre7</classifier>
+            <artifactId>spigot</artifactId>
+            <version>1.13-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -119,7 +123,8 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib-API</artifactId>
             <version>4.3.0</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>/home/alex/Repositories/LandLord/target/Testserver/plugins/ProtocolLib.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -133,7 +138,20 @@
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
             <version>LATEST</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>
+                /home/alex/Repositories/LandLord/target/Testserver/plugins/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar
+            </systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>worldedit</artifactId>
+            <version>LATEST</version>
+            <scope>system</scope>
+            <systemPath>
+                /home/alex/Repositories/LandLord/target/Testserver/plugins/worldedit-bukkit-7.0.0-SNAPSHOT-dist.jar
+            </systemPath>
         </dependency>
 
         <dependency>
@@ -167,6 +185,7 @@
             <artifactId>bukkit</artifactId>
             <version>1.4.0</version>
         </dependency>
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

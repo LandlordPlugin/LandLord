@@ -3,21 +3,23 @@ package biz.princeps.landlord.handler;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 
-import static com.sk89q.worldguard.bukkit.BukkitUtil.toVector;
 
 /**
  * Project: LandLord
@@ -26,10 +28,12 @@ import static com.sk89q.worldguard.bukkit.BukkitUtil.toVector;
  */
 public class WorldGuardHandler {
 
-    private WorldGuardPlugin wg;
+    private WorldGuardPlugin wgPlugin;
+    private WorldGuard wg;
 
-    public WorldGuardHandler(WorldGuardPlugin wg) {
-        this.wg = wg;
+    public WorldGuardHandler(WorldGuardPlugin wgPlugin) {
+        this.wg = WorldGuard.getInstance();
+        this.wgPlugin = wgPlugin;
     }
 
     public void claim(Chunk chunk, UUID owner) {
@@ -51,8 +55,7 @@ public class WorldGuardHandler {
 
         // flag management
         pr = setDefaultFlags(pr, down.getChunk());
-
-        RegionManager manager = wg.getRegionContainer().get(world);
+        RegionManager manager = getRegionManager(world);
 
         if (manager != null) {
             manager.addRegion(pr);
@@ -60,13 +63,17 @@ public class WorldGuardHandler {
     }
 
     public OwnedLand getRegion(Chunk chunk) {
-        RegionManager manager = wg.getRegionContainer().get(chunk.getWorld());
+        RegionManager manager = getRegionManager(chunk.getWorld());
         ProtectedRegion pr = manager != null ? manager.getRegion(OwnedLand.getName(chunk)) : null;
         return (pr != null ? new OwnedLand(pr, chunk) : null);
     }
 
     public OwnedLand getRegion(Location loc) {
         return getRegion(loc.getChunk());
+    }
+
+    public RegionContainer getRegionContainer() {
+        return wg.getPlatform().getRegionContainer();
     }
 
     public OwnedLand getRegion(ProtectedRegion pr) {
@@ -92,15 +99,19 @@ public class WorldGuardHandler {
     }
 
     public void unclaim(World world, String regionname) {
-        wg.getRegionManager(world).removeRegion(regionname);
+        getRegionManager(world).removeRegion(regionname);
+    }
+
+    public List<Flag<?>> getFlags() {
+        return wg.getFlagRegistry().getAll();
     }
 
     public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region, Chunk chunk) {
         OwnedLand land = new OwnedLand(region, chunk);
-
-        region.setFlag(DefaultFlag.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell")
+        region.setFlag(Flags.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell")
                 .replace("%owner%", land.printOwners()));
-        region.setFlag(DefaultFlag.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting")
+
+        region.setFlag(Flags.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting")
                 .replace("%owner%", land.printOwners()));
 
         List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
@@ -109,7 +120,7 @@ public class WorldGuardHandler {
         flaggy.forEach(s -> flags.add(s.split(" ")[0]));
 
         //Iterate over all existing flags
-        for (Flag<?> flag : DefaultFlag.getFlags()) {
+        for (Flag<?> flag : wg.getFlagRegistry().getAll()) {
             if (flag instanceof StateFlag) {
                 boolean failed = false;
                 if (flags.contains(flag.getName())) {
@@ -141,7 +152,11 @@ public class WorldGuardHandler {
         return region;
     }
 
-    public WorldGuardPlugin getWG() {
+    public WorldGuardPlugin getWGPlugin() {
+        return wgPlugin;
+    }
+
+    public WorldGuard getWg() {
         return wg;
     }
 
@@ -161,20 +176,35 @@ public class WorldGuardHandler {
 
     public List<ProtectedRegion> getRegions(UUID id, World world) {
         List<ProtectedRegion> regions = new ArrayList<>();
-        for (ProtectedRegion protectedRegion : this.getWG().getRegionManager(world).getRegions().values()) {
+        for (ProtectedRegion protectedRegion : getRegionManager(world).getRegions().values()) {
             if (protectedRegion.getOwners().getUniqueIds().contains(id))
                 regions.add(protectedRegion);
         }
         return regions;
     }
 
+    public RegionManager getRegionManager(World world) {
+        return getRegionContainer().get(wg.getPlatform().getWorldByName(world.getName()));
+    }
+
+
+    public RegionManager getRegionManager(String world) {
+        return getRegionContainer().get(wg.getPlatform().getWorldByName(world));
+    }
+
     public boolean canClaim(Player player, Chunk currChunk) {
-        RegionManager regionManager = wg.getRegionManager(player.getWorld());
+        RegionManager regionManager = getRegionManager(player.getWorld());
         if (regionManager != null) {
-            ProtectedRegion check = new ProtectedCuboidRegion("check", toVector(currChunk.getBlock(0, 0, 0)), toVector(currChunk.getBlock(15, 127, 15)));
-            List<ProtectedRegion> intersects = check.getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
+            Vector v1 = currChunk.getBlock(0, 0, 0).getLocation().toVector();
+            Vector v2 = currChunk.getBlock(15, 127, 15).getLocation().toVector();
+
+            ProtectedRegion check = new ProtectedCuboidRegion("check",
+                    new BlockVector(v1.getX(), v1.getY(), v1.getZ()),
+                    new BlockVector(v2.getX(), v2.getY(), v2.getZ()));
+            List<ProtectedRegion> intersects = check
+                    .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
             for (ProtectedRegion intersect : intersects) {
-                if (!regionManager.getApplicableRegions(intersect).canBuild(wg.wrapPlayer(player))) {
+                if (!regionManager.getApplicableRegions(intersect).canBuild(wgPlugin.wrapPlayer(player))) {
                     return false;
                 }
             }
@@ -189,7 +219,7 @@ public class WorldGuardHandler {
             for (World world : Bukkit.getWorlds()) {
                 // Only count enabled worlds
                 if (!Landlord.getInstance().getConfig().getStringList("disabled-worlds").contains(world.getName()))
-                    count += getWG().getRegionManager(world).getRegionCountOfPlayer(getWG().wrapOfflinePlayer(op));
+                    count += getRegionManager(world).getRegionCountOfPlayer(getWGPlugin().wrapOfflinePlayer(op));
             }
         return count;
     }

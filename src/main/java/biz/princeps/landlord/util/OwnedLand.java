@@ -5,7 +5,6 @@ import biz.princeps.landlord.flags.LLFlag;
 import biz.princeps.lib.PrincepsLib;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -43,7 +42,7 @@ public class OwnedLand {
         flaggy.forEach(s -> flags.add(s.split(" ")[0]));
 
         //Iterate over all existing flags
-        for (Flag<?> flag : DefaultFlag.getFlags()) {
+        for (Flag<?> flag : Landlord.getInstance().getWgHandler().getFlags()) {
             if (flag instanceof StateFlag) {
                 boolean failed = false;
                 if (flags.contains(flag.getName())) {
@@ -205,7 +204,7 @@ public class OwnedLand {
 
     }
 
-    public LLFlag getFlag(DefaultFlag flag) {
+    public LLFlag getFlag(Flag<?> flag) {
         for (LLFlag llFlag : flags) {
             if (llFlag.getWGFlag().equals(flag))
                 return llFlag;

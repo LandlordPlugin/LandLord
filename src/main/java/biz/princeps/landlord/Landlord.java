@@ -76,8 +76,9 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
             getLogger().warning("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to use LandLord");
             getPluginLoader().disablePlugin(this);
             return;
-        } else
+        } else {
             wgHandler = new WorldGuardHandler(getWorldGuard());
+        }
 
         if (getVault() == null) {
             getLogger().warning("Vault not found! Not all features of landlord are working.");
@@ -107,11 +108,11 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
         String dbpath = getConfig().getString("MySQL.Database");
         DatabaseType dbtype = DatabaseType.valueOf(getConfig().getString("DatabaseType"));
-        if(dbtype == DatabaseType.SQLite){
+        if (dbtype == DatabaseType.SQLite) {
             getLogger().warning("SQLite is not longer supported! Use H2 instead!");
             getPluginLoader().disablePlugin(this);
-        }else if(dbtype == DatabaseType.H2){
-           dbpath = getDataFolder() + "/" + getConfig().getString("MySQL.Database");
+        } else if (dbtype == DatabaseType.H2) {
+            dbpath = getDataFolder() + "/" + getConfig().getString("MySQL.Database");
         }
         db = new Database(getLogger(), DatabaseType.valueOf(getConfig().getString("DatabaseType")),
                 getConfig().getString("MySQL.Hostname"),
