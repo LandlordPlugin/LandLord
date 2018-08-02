@@ -92,21 +92,12 @@
             <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
             <id>placeholderapi</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
             <id>inventive-repo</id>
             <url>https://repo.inventivetalent.org/content/groups/public/</url>
-        </repository>
-
-        <repository>
-            <id>bungeecord-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
 
@@ -138,6 +129,7 @@
             <artifactId>worldguard</artifactId>
             <version>1.13</version>
             <scope>provided</scope>
+            <classifier>dist</classifier>
         </dependency>
 
         <dependency>
@@ -145,6 +137,7 @@
             <artifactId>worldedit</artifactId>
             <version>1.13</version>
             <scope>provided</scope>
+            <classifier>dist</classifier>
         </dependency>
 
         <dependency>
@@ -162,21 +155,17 @@
         </dependency>
 
         <dependency>
-            <groupId>me.tigerhix.lib</groupId>
-            <artifactId>scoreboard</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>co.aikar</groupId>
             <artifactId>taskchain-bukkit</artifactId>
             <version>3.6.0</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.inventivetalent.spiget-update</groupId>
             <artifactId>bukkit</artifactId>
             <version>1.4.0</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

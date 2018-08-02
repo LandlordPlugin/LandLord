@@ -4,7 +4,6 @@ import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.landlord.util.SimpleScoreboard;
-import me.tigerhix.lib.scoreboard.common.EntryBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;

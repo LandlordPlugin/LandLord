@@ -28,7 +28,6 @@ import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -130,7 +129,6 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         offerManager = new OfferManager(db);
 
         mapManager = new MapManager();
-        ScoreboardLib.setPluginInstance(this);
         costManager = new CostManager();
 
         executorService = Executors.newCachedThreadPool();

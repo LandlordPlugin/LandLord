@@ -59,7 +59,7 @@ public class SimpleScoreboard {
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         for (int i = 0; i < scores.size(); i++) {
-            obj.getScore(scores.get(i)).setScore(i);
+            obj.getScore(scores.get(scores.size() - 1 - i)).setScore(i);
         }
     }
 
@@ -78,6 +78,7 @@ public class SimpleScoreboard {
     }
 
     public void deactivate() {
-        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        player.setScoreboard(this.scoreboard);
     }
 }
