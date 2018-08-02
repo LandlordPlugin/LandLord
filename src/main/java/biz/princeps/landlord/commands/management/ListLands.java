@@ -33,7 +33,7 @@ public class ListLands extends LandlordCommand {
             if (mode.equals("gui")) {
                 MultiPagedGUI landGui = new MultiPagedGUI(sender, 5, plugin.getLangManager().getRawString("Commands.ListLands.header").replace("%player%", target.getName()));
 
-                lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
+                lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS_BLOCK))
                                 .setName(land.getId())
                        /*
                         * ATTENTION; THIS IS A HUGE EXPLOIT!!!!! PLAYERS ARE ABLE TO MANAGE ANY LAND BY OPENING THE LAND LIST GUI
