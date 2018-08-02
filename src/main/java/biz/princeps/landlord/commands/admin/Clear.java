@@ -2,7 +2,6 @@ package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.util.UUIDFetcher;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;

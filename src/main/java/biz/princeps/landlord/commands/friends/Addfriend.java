@@ -2,9 +2,6 @@ package biz.princeps.landlord.commands.friends;
 
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
-import biz.princeps.landlord.util.UUIDFetcher;
-import com.google.common.collect.Lists;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
