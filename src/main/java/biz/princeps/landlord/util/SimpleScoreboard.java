@@ -1,8 +1,10 @@
 package biz.princeps.landlord.util;
 
+import biz.princeps.landlord.Landlord;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -18,6 +20,7 @@ public class SimpleScoreboard {
     private String title;
     private List<String> scores;
     private Player player;
+    private BukkitRunnable runnable;
 
     public SimpleScoreboard(String title, Player p) {
         Objects.requireNonNull(p);
@@ -61,7 +64,8 @@ public class SimpleScoreboard {
 
     public void reset() {
         scores.clear();
-        deactivate();
+        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        player.setScoreboard(this.scoreboard);
     }
 
     public Scoreboard getScoreboard() {
@@ -73,8 +77,21 @@ public class SimpleScoreboard {
         player.setScoreboard(scoreboard);
     }
 
+    public void scheduleUpdate(Runnable run, long delay, long timer) {
+        this.runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                run.run();
+            }
+        };
+        this.runnable.runTaskTimer(Landlord.getInstance(), delay, timer);
+    }
+
     public void deactivate() {
+        if (runnable != null)
+            this.runnable.cancel();
         this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         player.setScoreboard(this.scoreboard);
+
     }
 }

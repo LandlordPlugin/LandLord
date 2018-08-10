@@ -296,7 +296,7 @@ public class LandMap {
 
         scoreboard = new SimpleScoreboard(messages.getRawString("Commands.LandMap.header"), p);
 
-        new BukkitRunnable() {
+        scoreboard.scheduleUpdate(new Runnable() {
             List<String> prev;
 
             @Override
@@ -307,16 +307,15 @@ public class LandMap {
                     }
                 }
                 update = false;
-                updateMap();
+                LandMap.this.updateMap();
                 scoreboard.reset();
-                String[] mapData = buildMap(p);
+                String[] mapData = LandMap.this.buildMap(p);
                 for (String aMapData : mapData) {
                     scoreboard.add(aMapData);
                 }
                 scoreboard.send();
             }
-        }.runTaskTimer(plugin, 0, plugin.getConfig().getLong("Map.refreshRate", 10));
-
+        }, 0, plugin.getConfig().getLong("Map.refreshRate", 10));
 
         return scoreboard;
 
