@@ -204,7 +204,8 @@ public class WorldGuardHandler {
             List<ProtectedRegion> intersects = check
                     .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
             for (ProtectedRegion intersect : intersects) {
-                if (!regionManager.getApplicableRegions(intersect).canBuild(wgPlugin.wrapPlayer(player))) {
+                //TODO check this out, might not work. canBuild was removed in 1.13.1 and Im not sure if isMemberOfAll is equivalent
+                if (!regionManager.getApplicableRegions(intersect).isMemberOfAll(wgPlugin.wrapPlayer(player))) {
                     return false;
                 }
             }
