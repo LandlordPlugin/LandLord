@@ -38,7 +38,7 @@ public class WorldGuardHandler {
 
     public void claim(Chunk chunk, UUID owner) {
         Location down = chunk.getBlock(0, 0, 0).getLocation();
-        Location upper = chunk.getBlock(15, 256, 15).getLocation();
+        Location upper = chunk.getBlock(15, 255, 15).getLocation();
 
         this.claim(owner, OwnedLand.getName(chunk), chunk.getWorld(), down, upper);
     }
