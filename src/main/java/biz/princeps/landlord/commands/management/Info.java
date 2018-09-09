@@ -102,7 +102,8 @@ public class Info extends LandlordCommand {
                         if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
                             player.sendMessage(replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen,
                                     plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
-                            OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
+                            if (plugin.getConfig().getBoolean("Particles.info"))
+                                OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
                             return;
                         }
 
@@ -115,7 +116,8 @@ public class Info extends LandlordCommand {
                             // normal owned land
                             player.sendMessage(replaceInMessage(owned, land.getName(), land.printOwners(), land.printMembers(), lastseen, ""));
                         }
-                        OwnedLand.highlightLand(player, Particle.DRIP_WATER);
+                        if (plugin.getConfig().getBoolean("Particles.info"))
+                            OwnedLand.highlightLand(player, Particle.DRIP_WATER);
 
                     } else {
                         // unclaimed
