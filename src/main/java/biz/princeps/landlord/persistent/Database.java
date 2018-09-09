@@ -75,9 +75,12 @@ public class Database extends Datastorage {
     }
 
     public LPlayer getPlayer(Object obj, Mode mode) {
-        ResultSet res = executeQuery("SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" + obj + "'");
-
+        Triplet triplet = executeQuery("SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
+                sanitize(obj.toString()) + "'");
+        System.out.println("Query: " + "SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
+                sanitize(obj.toString()) + "'");
         try {
+            ResultSet res = triplet.getResultSet();
             if (!res.next()) {
                 return null;
             } else {
@@ -91,13 +94,14 @@ public class Database extends Datastorage {
         } catch (SQLException e) {
             logger.warning("Error while handling getPlayer!\nError:" + e.getMessage());
         } finally {
-            try {
-                res.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            triplet.close();
         }
         return null;
+    }
+
+    private String sanitize(String input){
+        return input.split(" ")[0].replace(";","").replace("\\","")
+                .replace("'", "").replace("\"", "");
     }
 
     public void save(LPlayer lp) {
