@@ -8,6 +8,7 @@ import biz.princeps.landlord.util.OwnedLand;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
 /**
@@ -95,6 +96,9 @@ public class Unclaim extends LandlordCommand {
                     }
                 }
             }
+
+            if (plugin.getConfig().getBoolean("Particles.unclaim"))
+                OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
 
             // Remove possible advertisements
             plugin.getOfferManager().removeOffer(pr.getName());

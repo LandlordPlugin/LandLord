@@ -265,7 +265,8 @@ public class Claim extends LandlordCommand {
                 .replace("%chunk%", OwnedLand.getName(chunk))
                 .replace("%world%", chunk.getWorld().getName()));
 
-        OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
+        if (plugin.getConfig().getBoolean("Particles.claim"))
+            OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
 
         if (plugin.getConfig().getBoolean("Homes.enable")) {
             if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null)
