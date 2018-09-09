@@ -6,6 +6,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,5 +81,10 @@ public class LangManager {
         } else {
             return ChatColor.translateAlternateColorCodes('&', message);
         }
+    }
+
+    public void sendMessage(Player player, String msg) {
+        if (msg.equals("null") || msg.isEmpty()) {
+        } else player.sendMessage(msg);
     }
 }

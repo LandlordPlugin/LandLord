@@ -36,7 +36,7 @@ public class Home extends LandlordCommand {
     public void onHome(Properties props, String targetPlayer) {
         Player player = props.getPlayer();
         if (!Options.enabled_homes()) {
-            player.sendMessage(lm.getString("Commands.SetHome.disabled"));
+            lm.sendMessage(player, lm.getString("Commands.SetHome.disabled"));
             return;
         }
 
@@ -51,11 +51,11 @@ public class Home extends LandlordCommand {
 
             plugin.getPlayerManager().getOfflinePlayerAsync(targetPlayer, lPlayer -> {
                 if (lPlayer == null) {
-                    player.sendMessage(lm.getString("Commands.Home.otherNoHome"));
+                    lm.sendMessage(player, lm.getString("Commands.Home.otherNoHome"));
                 } else {
                     Location home = lPlayer.getHome();
                     if (home == null) {
-                        player.sendMessage(lm.getString("Commands.Home.otherNoHome"));
+                        lm.sendMessage(player, lm.getString("Commands.Home.otherNoHome"));
                         return;
                     }
 
@@ -71,7 +71,7 @@ public class Home extends LandlordCommand {
         double cost = plugin.getConfig().getDouble("Homes.teleportCost");
         if (Options.isVaultEnabled()) {
             if (!plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
-                player.sendMessage(lm.getString("Commands.Home.notEnoughMoney").replace("%cost%", plugin.getVaultHandler().format(cost)));
+                lm.sendMessage(player, lm.getString("Commands.Home.notEnoughMoney").replace("%cost%", plugin.getVaultHandler().format(cost)));
                 return;
             }
         }
@@ -85,10 +85,10 @@ public class Home extends LandlordCommand {
 
         if (cost > 0 && Options.isVaultEnabled()) {
             plugin.getVaultHandler().take(player.getUniqueId(), cost);
-            player.sendMessage(lm.getString("Commands.Home.costing")
+            lm.sendMessage(player, lm.getString("Commands.Home.costing")
                     .replace("%cost%", plugin.getVaultHandler().format(cost)));
         }
         player.teleport(toGo);
-        player.sendMessage(lm.getString("Commands.Home.welcomeHome").replace("%player%", playerHome));
+        lm.sendMessage(player, lm.getString("Commands.Home.welcomeHome").replace("%player%", playerHome));
     }
 }

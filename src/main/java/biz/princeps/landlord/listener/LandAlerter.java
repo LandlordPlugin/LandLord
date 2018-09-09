@@ -288,6 +288,11 @@ public class LandAlerter extends BasicListener {
         this.previousLands.replace(p.getUniqueId(), new ChunkCoords(e.getFrom()));
         this.currentLands.replace(p.getUniqueId(), new ChunkCoords(e.getTo()));
         this.playerPosition.replace(p.getUniqueId(), e.getTo());
+
+        OwnedLand toLand = pl.getLand(e.getTo());
+        if(toLand != null){
+            send(toLand.getWGLand().getFlag(Flags.GREET_MESSAGE), p);
+        }
     }
 
     @EventHandler
