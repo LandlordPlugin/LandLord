@@ -18,7 +18,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -84,6 +87,9 @@ public class LandAlerter extends BasicListener {
     private Landlord pl = Landlord.getInstance();
     private HashMap<UUID, ChunkCoords> currentLands;
     private HashMap<UUID, ChunkCoords> previousLands;
+    // We need to update the player position separately bc spigot or worldguard sends the greeting message before actually
+    // transferring the player to the teleported location
+    private HashMap<UUID, Location> playerPosition;
     private LandMessageDisplay type;
 
     /**
@@ -92,6 +98,7 @@ public class LandAlerter extends BasicListener {
     public LandAlerter() {
         currentLands = new HashMap<>();
         previousLands = new HashMap<>();
+        playerPosition = new HashMap<>();
 
         type = LandMessageDisplay.valueOf(pl.getConfig().getString("LandMessage"));
 
@@ -112,7 +119,9 @@ public class LandAlerter extends BasicListener {
                 StructureModifier<WrappedChatComponent> components = packet.getChatComponents();
                 Player p = event.getPlayer();
 
-                OwnedLand regionInsideNow = pl.getWgHandler().getRegion(p.getLocation());
+                OwnedLand regionInsideNow = pl.getWgHandler().getRegion(playerPosition.get(event.getPlayer().getUniqueId()));
+                // System.out.println("Position: " + playerPosition.get(event.getPlayer().getUniqueId()));
+                // System.out.println("RegionInsideNw: " + regionInsideNow);
                 OwnedLand before = (previousLands.get(p.getUniqueId()) == null ? null : pl.getLand(previousLands.get(p.getUniqueId()).getLocation()));
 
                 JSONObject json = null;
@@ -173,6 +182,7 @@ public class LandAlerter extends BasicListener {
 
                         // on leave null
                         // on enter da wo man nun ist
+                        // System.out.println(goingOn);
                         if (goingOn) {
                             event.setCancelled(true);
                         }
@@ -230,6 +240,7 @@ public class LandAlerter extends BasicListener {
         ChunkCoords landFrom = new ChunkCoords(comingFrom);
         ChunkCoords landTowards = new ChunkCoords(headingTowards);
 
+        this.playerPosition.replace(p.getUniqueId(), p.getLocation());
 
         ChunkCoords currentLand = this.currentLands.get(p.getUniqueId());
         ChunkCoords prevLand = this.previousLands.get(p.getUniqueId());
@@ -243,7 +254,6 @@ public class LandAlerter extends BasicListener {
             prevLand = landFrom;
         }
         if (landFrom.equals(landTowards)) {
-            return;
         } else {
             // Unequals, so they changed
             if (!currentLand.equals(landTowards)) {
@@ -254,6 +264,7 @@ public class LandAlerter extends BasicListener {
 
                 OwnedLand prev = plugin.getLand(prevLand.getLocation());
                 OwnedLand curr = plugin.getLand(currentLand.getLocation());
+                // System.out.println(prev + "  " + curr);
 
                 if (prev == null && curr != null) {
                     send(curr.getWGLand().getFlag(Flags.GREET_MESSAGE), p);
@@ -269,6 +280,19 @@ public class LandAlerter extends BasicListener {
             }
         }
 
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onTeleport(PlayerTeleportEvent e) {
+        Player p = e.getPlayer();
+        this.previousLands.replace(p.getUniqueId(), new ChunkCoords(e.getFrom()));
+        this.currentLands.replace(p.getUniqueId(), new ChunkCoords(e.getTo()));
+        this.playerPosition.replace(p.getUniqueId(), e.getTo());
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e){
+        this.playerPosition.put(e.getPlayer().getUniqueId(), e.getPlayer().getLocation());
     }
 
 
