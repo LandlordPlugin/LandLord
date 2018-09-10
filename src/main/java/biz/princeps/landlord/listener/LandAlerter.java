@@ -119,7 +119,8 @@ public class LandAlerter extends BasicListener {
                 StructureModifier<WrappedChatComponent> components = packet.getChatComponents();
                 Player p = event.getPlayer();
 
-                OwnedLand regionInsideNow = pl.getWgHandler().getRegion(playerPosition.get(event.getPlayer().getUniqueId()));
+                Location ploc = playerPosition.get(event.getPlayer().getUniqueId());
+                OwnedLand regionInsideNow = (ploc == null ? null : pl.getWgHandler().getRegion(ploc));
                 // System.out.println("Position: " + playerPosition.get(event.getPlayer().getUniqueId()));
                 // System.out.println("RegionInsideNw: " + regionInsideNow);
                 OwnedLand before = (previousLands.get(p.getUniqueId()) == null ? null : pl.getLand(previousLands.get(p.getUniqueId()).getLocation()));

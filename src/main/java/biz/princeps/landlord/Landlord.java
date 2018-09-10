@@ -33,6 +33,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 /**
  * Project: LandLord
@@ -135,12 +137,13 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
         //Retrieve the LPlayer objects for all online players (in case of reload)
         Bukkit.getOnlinePlayers().forEach(p -> {
-            LPlayer lPlayer = lPlayerManager.get(p.getUniqueId());
-            if (lPlayer == null) {
-                lPlayer = new LPlayer(p.getUniqueId());
-            }
-            this.getPlayerManager().add(lPlayer);
-
+            lPlayerManager.getOfflinePlayerAsync(p.getUniqueId(), lPlayer1 -> {
+                if (lPlayer1 == null) {
+                    this.getPlayerManager().add(new LPlayer(p.getUniqueId()));
+                } else {
+                    this.getPlayerManager().add(lPlayer1);
+                }
+            });
         });
 
         if (getConfig().getBoolean("EnableMetrics")) {
@@ -174,6 +177,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
             mapManager.removeAllMaps();
 
         Bukkit.getOnlinePlayers().forEach(p -> getPlayerManager().saveSync(getPlayerManager().get(p.getUniqueId())));
+        db.close();
     }
 
     private void manageCommands() {

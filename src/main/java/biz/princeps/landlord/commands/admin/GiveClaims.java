@@ -41,13 +41,13 @@ public class GiveClaims extends LandlordCommand {
                         plugin.getVaultHandler().take(player.getUniqueId(), cost);
                         plugin.getPlayerManager().get(player.getUniqueId()).addClaims(amount);
                         player.sendMessage(plugin.getLangManager().getString("Shop.success")
-                                .replace("%amount%", amount + "")
+                                .replace("%number%", amount + "")
                                 .replace("%cost%", plugin.getVaultHandler().format(cost)));
                         player.closeInventory();
                         addClaims(issuer, target, amount);
                     } else {
                         player.sendMessage(plugin.getLangManager().getString("Shop.notEnoughMoney")
-                                .replace("%amount%", amount + "")
+                                .replace("%number%", amount + "")
                                 .replace("%cost%", plugin.getVaultHandler().format(cost)));
                         player.closeInventory();
                         return;

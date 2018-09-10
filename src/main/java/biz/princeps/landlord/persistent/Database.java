@@ -77,8 +77,8 @@ public class Database extends Datastorage {
     public LPlayer getPlayer(Object obj, Mode mode) {
         Triplet triplet = executeQuery("SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
                 sanitize(obj.toString()) + "'");
-        System.out.println("Query: " + "SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
-                sanitize(obj.toString()) + "'");
+        //System.out.println("Query: " + "SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
+         //       sanitize(obj.toString()) + "'");
         try {
             ResultSet res = triplet.getResultSet();
             if (!res.next()) {
@@ -105,7 +105,7 @@ public class Database extends Datastorage {
     }
 
     public void save(LPlayer lp) {
-        // System.out.println("Saving... " + lp);
+        //System.out.println("Saving... " + lp);
         execute("REPLACE INTO ll_players (uuid, name, claims, home, lastseen) VALUES ('" + lp.getUuid() + "', '" +
                 lp.getName() + "', " + lp.getClaims() + ", '" +
                 SpigotUtil.exactlocationToString(lp.getHome()) + "', '" + lp.getLastSeenAsString() + "')");
