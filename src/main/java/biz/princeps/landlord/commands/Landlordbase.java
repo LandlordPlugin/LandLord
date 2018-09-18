@@ -24,6 +24,7 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.storage_old.AbstractDatabase;
 import biz.princeps.lib.storage_old.MySQL;
 import biz.princeps.lib.storage_old.SQLite;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -55,7 +56,7 @@ public class Landlordbase extends MainCommand {
                 pl.getConfig().getStringList("CommandSettings.Main.aliases").toArray(new String[]{}));
 
         subcommands = new HashMap<>();
-        subcommands.put("claim", new Claim());
+        subcommands.put("claim", new Claim(false));
         subcommands.put("info", new Info());
         subcommands.put("unclaim", new Unclaim());
         subcommands.put("unclaimall", new UnclaimAll());
@@ -79,6 +80,7 @@ public class Landlordbase extends MainCommand {
         subcommands.put("admintp", new AdminTeleport());
         subcommands.put("item", new LLItem());
         subcommands.put("listfriends", new ListFriends());
+        subcommands.put("multiclaim", new MultiClaim());
     }
 
     @Override
@@ -126,6 +128,11 @@ public class Landlordbase extends MainCommand {
                         } else {
                             Bukkit.getOnlinePlayers().stream()
                                     .filter(p -> p.getName().startsWith(args[1])).forEach(p -> tabReturn.add(p.getName()));
+                        }
+                        return tabReturn;
+                    }else if (subcmd instanceof MultiClaimCMD){
+                        for (MultiClaim.MultiClaimMode value : MultiClaim.MultiClaimMode.values()) {
+                            tabReturn.add(value.name());
                         }
                         return tabReturn;
                     }
@@ -181,7 +188,8 @@ public class Landlordbase extends MainCommand {
         @Override
         public void onCommand(Properties properties, Arguments arguments) {
             if (properties.isPlayer()) {
-                ((Claim) subcommands.get("claim")).onClaim(properties.getPlayer());
+                Chunk chunk = properties.getPlayer().getWorld().getChunkAt(properties.getPlayer().getLocation());
+                ((Claim) subcommands.get("claim")).onClaim(properties.getPlayer(), chunk);
             }
         }
     }
@@ -653,6 +661,21 @@ public class Landlordbase extends MainCommand {
             if (properties.isPlayer()) {
                 ((Borders) subcommands.get("borders")).onToggleBorder(properties.getPlayer());
             }
+        }
+    }
+
+    class MultiClaimCMD extends SubCommand {
+
+        public MultiClaimCMD() {
+            super(pl.getConfig().getString("CommandSettings.MultiClaim.name"),
+                    pl.getConfig().getString("CommandSettings.MultiClaim.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiClaim.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.MultiClaim.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            ((MultiClaim) subcommands.get("multiclaim")).onMultiClaim(properties, arguments);
         }
     }
 

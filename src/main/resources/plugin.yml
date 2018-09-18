@@ -82,6 +82,10 @@ permissions:
     description: Permission to advertise a land
     default: true
 
+  landlord.player.multiclaim:
+    description: Permission to claim multiple lands at once
+    default: true
+
   landlord.player.homeother:
     description: Permission to teleport to other homes
     default: false

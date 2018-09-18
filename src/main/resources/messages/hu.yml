@@ -40,6 +40,11 @@ Commands:
       - '&f&lLand&c&lLord &a- Szabad föld'
       - '&7Földnév&8: &c%landid%'
       - '&7&oÁra: &c&o%price%'
+  MultiClaim:
+    guiMessage: 'Claim %amount% lands (%cost%)'
+    chatMessage: '&aClick to confirm the purchase of %amount% lands! This will cost %cost%!'
+    noLands: '&cThere are no claimable lands in your selected radius!'
+    abort: '&cYou aborted the claim of %amount% lands!'
   Unclaim:
     notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
     notOwnFreeLand: '&7Nem a sajátod ennek a darabnak'
@@ -240,7 +245,7 @@ Confirmation:
 Shop:
   title: 'Igény bolt. Igényléseid (%regions%/%claims%)'
   notEnoughMoney: '&7Nincs elég pénzed, hogy vásárolj %number% egényt &7&o(Ára&8&o: &c&o%cost%&7&o)'
-  success: '&aSikeresen megvásároltad %amount% egényt %cost% pénzért'
+  success: '&aSikeresen megvásároltad %number% egényt %cost% pénzért'
   notAllowed: '&eNem vehetsz több igényt'
   item:
     header: '%number% extra igény'
@@ -267,4 +272,4 @@ MaItem:
     - '&l&ba levegőben:'
     - '&cjobb klikk: &7térkép kapcsolása'
     - '&cbal klikk: &7határok kapcsolása'
-version: 16
+version: 17

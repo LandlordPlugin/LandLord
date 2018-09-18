@@ -41,6 +41,11 @@ Commands:
       - '&f&lLand&c&lLord &a- Свободный участок'
       - '&7Landname&8: &c%landid%'
       - '&7&oPrice: &c&o%price%'
+  MultiClaim:
+    guiMessage: 'Claim %amount% lands (%cost%)'
+    chatMessage: '&aClick to confirm the purchase of %amount% lands! This will cost %cost%!'
+    noLands: '&cThere are no claimable lands in your selected radius!'
+    abort: '&cYou aborted the claim of %amount% lands!'
   Unclaim:
     notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
     notOwnFreeLand: '&7Вы не владелец данного учатска'
@@ -241,7 +246,7 @@ Confirmation:
 Shop:
   title: 'Claims Shop. Your claims (%regions%/%claims%)'
   notEnoughMoney: '&7You dont have enough money buy %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
-  success: '&aYou successfully bought %amount% claims for %cost%'
+  success: '&aYou successfully bought %number% claims for %cost%'
   notAllowed: '&eYou are not allowed to buy more claims'
   item:
     header: '%number% extra claims'
@@ -268,4 +273,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 16
+version: 17

@@ -40,8 +40,12 @@ public class CostManager {
     }
 
     public double calculateCost(UUID uuid) {
+        return this.calculateCost(uuid, plugin.getWgHandler().getRegionCountOfPlayer(uuid));
+    }
+
+    public double calculateCost(UUID uuid, int regionCount) {
         int freeLands = plugin.getConfig().getInt("Freelands");
-        int x = plugin.getWgHandler().getRegionCountOfPlayer(uuid);
+        int x = regionCount;
 
         if (x < freeLands)
             return 0;

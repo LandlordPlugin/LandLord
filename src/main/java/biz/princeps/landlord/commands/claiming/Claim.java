@@ -28,13 +28,18 @@ import java.util.List;
  */
 public class Claim extends LandlordCommand {
 
-    public void onClaim(Player player) {
+    private boolean overrideConfirmations;
+
+    public Claim(boolean overrideConfirmations) {
+        this.overrideConfirmations = overrideConfirmations;
+    }
+
+    public void onClaim(Player player, Chunk chunk) {
 
         if (this.worldDisabled(player)) {
             player.sendMessage(lm.getString("Disabled-World"));
             return;
         }
-        Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
         OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
         String landname = chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
         String confirmcmd = "/" + plugin.getConfig().getString("CommandSettings.Main.name") + " confirm";
@@ -219,7 +224,7 @@ public class Claim extends LandlordCommand {
                                     .replace("%chunk%", landname)
                                     .replace("%price%", plugin.getVaultHandler().format(calculatedCost));
 
-                            if (plugin.getConfig().getBoolean("ConfirmationDialog.onNormalClaim")) {
+                            if (plugin.getConfig().getBoolean("ConfirmationDialog.onNormalClaim") && !overrideConfirmations) {
                                 PrincepsLib.getConfirmationManager().draw(player, guiDesc, chatDesc,
                                         (p) -> {
                                             plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);

@@ -41,6 +41,11 @@ Commands:
       - '&f&lLand&c&lLord &a- Chunk libre'
       - '&7Nom du chunk&8: &c%landid%'
       - '&7&oPrix: &c&o%price%'
+  MultiClaim:
+    guiMessage: 'Claim %amount% lands (%cost%)'
+    chatMessage: '&aClick to confirm the purchase of %amount% lands! This will cost %cost%!'
+    noLands: '&cThere are no claimable lands in your selected radius!'
+    abort: '&cYou aborted the claim of %amount% lands!'
   Unclaim:
     notOwn: '&7Vous ne possédez pas ce chunk. Il appartient à &c%owner%'
     notOwnFreeLand: '&7Vous ne possédez pas ce chunk'
@@ -241,7 +246,7 @@ Confirmation:
 Shop:
   title: 'Boutique des claims. Vos claims (%regions%/%claims%)'
   notEnoughMoney: '&7Vous n''avez pas assez d''argent pour acheter %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
-  success: '&aSUccès: Vous avez acheté %amount% claims pour %cost%'
+  success: '&aSUccès: Vous avez acheté %number% claims pour %cost%'
   notAllowed: '&eVous n''avez pas l''autorisation d''acheter plus de claims'
   item:
     header: '%number% extra claims'
@@ -268,4 +273,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 16
+version: 17

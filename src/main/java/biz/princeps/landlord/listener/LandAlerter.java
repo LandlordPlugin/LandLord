@@ -79,7 +79,6 @@ public class LandAlerter extends BasicListener {
 
         @Override
         public int hashCode() {
-
             return Objects.hash(x, z, world);
         }
     }

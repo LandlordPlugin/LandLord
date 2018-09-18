@@ -41,6 +41,11 @@ Commands:
       - '&f&lLand&c&lLord &a- Terreno libre'
       - '&7ID-Terreno&8: &a%landid%'
       - '&7&oPrecio: &a&o%price%'
+  MultiClaim:
+    guiMessage: 'Claim %amount% lands (%cost%)'
+    chatMessage: '&aClick to confirm the purchase of %amount% lands! This will cost %cost%!'
+    noLands: '&cThere are no claimable lands in your selected radius!'
+    abort: '&cYou aborted the claim of %amount% lands!'
   Unclaim:
     notOwn: '&7Usted no es dueño de este chunk. El propiedad es &c%owner%'
     notOwnFreeLand: '&7Usted no es dueño de este chunk'
@@ -242,7 +247,7 @@ Confirmation:
 Shop:
   title: 'Tienda de reclamos. tus reclamos (%regions%/%claims%)'
   notEnoughMoney: '&7No tienes suficiente dinero para comprar %number% Reclamos &7&o(Cost&8&o: &c&o%cost%&7&o)'
-  success: '&aUsted compró con éxito %amount% Reclamaciones por %cost%'
+  success: '&aUsted compró con éxito %number% Reclamaciones por %cost%'
   notAllowed: '&eNo tiene permitido comprar más reclamos'
   item:
     header: '%number% Tickets de Reclamo'
@@ -269,4 +274,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 16
+version: 17

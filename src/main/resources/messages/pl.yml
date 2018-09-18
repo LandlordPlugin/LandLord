@@ -41,6 +41,11 @@ Commands:
       - '&f&lLand&c&lLord &a- Darmowy teren!!'
       - '&7Nazwa terenu&8: &c%landid%'
       - '&7&oCena: &c&o%price%'
+  MultiClaim:
+    guiMessage: 'Claim %amount% lands (%cost%)'
+    chatMessage: '&aClick to confirm the purchase of %amount% lands! This will cost %cost%!'
+    noLands: '&cThere are no claimable lands in your selected radius!'
+    abort: '&cYou aborted the claim of %amount% lands!'
   Unclaim:
     notOwn: '&7Ten teren nie nalaży do ciebie. Należy on do &c%owner%'
     notOwnFreeLand: '&7Nie jesteś właścicielem tego terenu'
@@ -241,7 +246,7 @@ Confirmation:
 Shop:
   title: 'Sklep chunków. Twoje tereny (%regions%/%claims%)'
   notEnoughMoney: '&7Nie masz wystarczająco pieniędzy, aby kupić %number% chunków &7&o(Cost&8&o: &c&o%cost%&7&o)'
-  success: '&aPomyślnie kupiłeś %amount% chunków za %cost%'
+  success: '&aPomyślnie kupiłeś %number% chunków za %cost%'
   notAllowed: '&eNie możesz kupić więcej chunków'
   item:
     header: '&e&l%number% &c&lekstra chunk'
@@ -268,4 +273,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7włącz mapę'
     - '&cleftclick: &7włącz granice'
-version: 16
+version: 17

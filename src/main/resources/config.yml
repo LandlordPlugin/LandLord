@@ -112,6 +112,7 @@ ConfirmationDialog:
   timeout: 10
   onNormalClaim: true
   onBuyUp: true
+  multiClaim: true
 
 # You can enable/disable the particles for particular events here
 Particles:
@@ -149,7 +150,7 @@ CommandSettings:
     # Newly claimed lands are delimited by this material. You can add data e.g. for colored wool WOOL:3 for cyan wool
     delimitMaterial: TORCH
     # When a player does not own any lands, he may claim any free chunk. later only adjacent chunks
-    claimOnlyAdjacent: true
+    claimOnlyAdjacent: false
     # If this is enabled, there must be one free chunk between two different owners. See https://tinyurl.com/y8xzelga
     needsGapBetweenOwners: false
 
@@ -160,6 +161,15 @@ CommandSettings:
     aliases:
       - buy
       - cl
+
+  MultiClaim:
+    name: multiclaim
+    usage: 'Usage: /land multiclaim <option> <parameter>'
+    permissions:
+    - landlord.player.multiclaim
+    aliases:
+    - mc
+    - mcl
 
   Info:
     name: info
@@ -500,4 +510,4 @@ Manage:
 # Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
 EnableMetrics: true
 checkUpdatesPeriodically: true
-version: 18
+version: 19
