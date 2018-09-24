@@ -13,7 +13,7 @@ echo "BuildTools downloaded!"
 
 echo "Enter your versions:"
 
-versions="latest"
+versions="1.13.1"
 
 for i in ${versions} ; do
 	java -jar BuildTools.jar --rev ${i}

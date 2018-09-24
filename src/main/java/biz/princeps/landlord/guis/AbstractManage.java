@@ -11,7 +11,6 @@ import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import co.aikar.taskchain.TaskChain;
-import com.sk89q.worldedit.world.entity.EntityType;
 import com.sk89q.worldguard.protection.flags.Flags;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -19,6 +18,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Egg;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -179,7 +180,7 @@ public abstract class AbstractManage extends AbstractGUI {
         }
 
         //TODO add functionality for manageall
-        if (plugin.getConfig().getBoolean("Manage.mob-spawning.enable")) {
+        if (plugin.getConfig().getBoolean("Manage.mob-spawning.enable") && false) {
             String title = lm.getRawString("Commands.Manage.AllowMob-spawning.title");
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.mob-spawning.item")), 1,
                     title, lm.getStringList("Commands.Manage.AllowMob-spawning.description")))
@@ -187,26 +188,27 @@ public abstract class AbstractManage extends AbstractGUI {
                         // Open a new gui with spawneggs where you can manage the spawns by clicking on them
 
                         List<Icon> icons = new ArrayList<>();
-                        EntityType[] types = EntityType.REGISTRY.values().toArray(new EntityType[0]);
+                        EntityType[] types = EntityType.values();
                         List<String> lore = lm.getStringList("Commands.Manage.AllowMob-spawning.toggleItem.description");
 
                         MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
                         };
-
+                        System.out.println(toggleMobs);
+                        System.out.println("___________");
                         for (EntityType t : types) {
+                            if (!t.isAlive() || !t.isSpawnable()) continue;
 
-                            if (!org.bukkit.entity.EntityType.valueOf(t.getName()).isAlive() ||
-                                    !org.bukkit.entity.EntityType.valueOf(t.getName()).isSpawnable())
-                                continue;
-                            if (!toggleMobs.contains(t.getName())) continue;
 
-                            System.out.println(Material.getMaterial(t.getName().toUpperCase()));
+                            //System.out.println(t);
+                            if (!toggleMobs.contains(t.toString())) continue;
+                            System.out.println(t);
+
                             ItemStack spawnEgg = new ItemStack(Material.LEGACY_MONSTER_EGG);
                             SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
-                            meta.setSpawnedType(org.bukkit.entity.EntityType.valueOf(t.getName()));
+                            meta.setSpawnedType(t);
                             meta.setDisplayName(lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title").replace("%mob%", t.getName()));
 
-                            Set<EntityType> flag = land.getWGLand().getFlag(Flags.DENY_SPAWN);
+                            Set<com.sk89q.worldedit.world.entity.EntityType> flag = land.getWGLand().getFlag(Flags.DENY_SPAWN);
                             String state;
                             if (flag != null)
                                 state = (flag.contains(t) ? "DENY" : "ALLOW");
@@ -225,21 +227,21 @@ public abstract class AbstractManage extends AbstractGUI {
                             ic.addClickAction((clickingPlayer) -> {
 
                                 for (OwnedLand region : regions) {
-                                    Set<EntityType> localFlag = (Set<EntityType>) region.getWGLand().getFlag(Flags.DENY_SPAWN);
+                                    Set<com.sk89q.worldedit.world.entity.EntityType> localFlag = region.getWGLand().getFlag(Flags.DENY_SPAWN);
                                     // Toggle spawning of specific mob
                                     if (localFlag != null) {
                                         if (localFlag.contains(t))
                                             localFlag.remove(t);
                                         else
-                                            localFlag.add(t);
+                                            localFlag.add(com.sk89q.worldedit.world.entity.EntityType.REGISTRY.get(t.getName()));
                                     } else {
-                                        Set<EntityType> set = new HashSet<>();
-                                        set.add(t);
+                                        Set<com.sk89q.worldedit.world.entity.EntityType> set = new HashSet<>();
+                                        set.add(com.sk89q.worldedit.world.entity.EntityType.REGISTRY.get(t.getName()));
                                         region.getWGLand().setFlag(Flags.DENY_SPAWN, set);
                                     }
                                 }
 
-                                Set<EntityType> newFlag = regions.get(0).getWGLand().getFlag(Flags.DENY_SPAWN);
+                                Set<com.sk89q.worldedit.world.entity.EntityType> newFlag = regions.get(0).getWGLand().getFlag(Flags.DENY_SPAWN);
                                 // update icon text
                                 String iconState;
                                 if (newFlag != null)
