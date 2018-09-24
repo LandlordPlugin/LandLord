@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.claiming;
 
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
@@ -40,18 +41,20 @@ public class MultiClaim extends LandlordCommand {
 
             int initalRegionCount = plugin.getWgHandler().getRegionCountOfPlayer(player.getPlayer().getUniqueId());
             double cost = 0;
-            for (Chunk chunk : toClaim) {
+            for (Chunk ignored : toClaim) {
                 cost += plugin.getCostManager().calculateCost(player.getPlayer().getUniqueId(), initalRegionCount);
                 initalRegionCount++;
             }
 
+            String formattedCost = (Options.isVaultEnabled() ? plugin.getVault().format(cost) : "");
+
             PrincepsLib.getConfirmationManager().draw(player.getPlayer(),
                     lm.getRawString("Commands.MultiClaim.guiMessage")
                             .replace("%amount%", toClaim.size() + "")
-                            .replace("%cost%", plugin.getVault().format(cost)),
+                            .replace("%cost%", formattedCost),
                     lm.getString("Commands.MultiClaim.chatMessage")
                             .replace("%amount%", toClaim.size() + "")
-                            .replace("%cost%", plugin.getVault().format(cost)),
+                            .replace("%cost%", formattedCost),
                     (p) -> {
                         toClaim.forEach(cl -> claim.onClaim(player.getPlayer(), cl));
                     },
