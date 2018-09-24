@@ -33,7 +33,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,7 +41,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 
 /**
  * Project: LandLord
@@ -106,6 +104,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
 
         langManager = new LangManager(this, getConfig().getString("language", "en"));
+        setupTranslateableStrings();
 
         String dbpath = getConfig().getString("MySQL.Database");
         DatabaseType dbtype = DatabaseType.valueOf(getConfig().getString("DatabaseType"));
@@ -152,6 +151,11 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         }
 
         new Updater();
+    }
+
+    private void setupTranslateableStrings() {
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getString("Confirmation.accept"));
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getString("Confirmation.decline"));
     }
 
     private void checkWorldNames() {
