@@ -2,17 +2,16 @@ package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.PrincepsLib;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Project: LandLord
@@ -36,10 +35,12 @@ public class Clear extends LandlordCommand {
                     World world = player.getWorld();
                     RegionManager regionManager = plugin.getWgHandler().getRegionManager(world);
 
-                    Map<String, ProtectedRegion> regions = regionManager.getRegions();
-                    int count;
+                    Map<String, ProtectedRegion> regions = new HashMap<>(regionManager.getRegions());
 
-                    count = regions.size();
+                    regions.keySet().removeIf(key -> !evaluateRegion(key));
+
+                    int count = regions.size();
+
                     regions.keySet().forEach(regionManager::removeRegion);
 
                     player.sendMessage(lm.getString("Commands.ClearWorld.success")
@@ -85,5 +86,19 @@ public class Clear extends LandlordCommand {
                 }
             }
         }.runTaskAsynchronously(plugin);
+    }
+
+    private boolean evaluateRegion(String a) {
+
+        String[] split = a.split("_");
+        try {
+            int x = Integer.valueOf(split[1]);
+            int z = Integer.valueOf(split[2]);
+            Chunk chunk = Bukkit.getWorld(split[0]).getChunkAt(x, z);
+
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }
