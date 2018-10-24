@@ -65,7 +65,8 @@ public class TresholdListener extends BasicListener {
         if (!plugin.getConfig().getStringList("disabled-worlds").contains(loc.getWorld().getName())) {
 
             LocalPlayer localPlayer = plugin.getWgHandler().getWGPlugin().wrapPlayer(p);
-            ApplicableRegionSet applicableRegions = plugin.getWgHandler().getRegionManager(loc.getWorld()).getApplicableRegions(localPlayer.getLocation().toVector());
+            ApplicableRegionSet applicableRegions = plugin.getWgHandler().getRegionManager(
+                    loc.getWorld()).getApplicableRegions(localPlayer.getLocation().toVector());
             if (applicableRegions.getRegions().size() < 1) {
                 boolean isAllowed = false;
                 for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) {
@@ -83,11 +84,13 @@ public class TresholdListener extends BasicListener {
                 int landcount = plugin.getWgHandler().getRegionCountOfPlayer(p.getUniqueId());
 
                 if (landcount < treshold) {
-                    String rawString = plugin.getLangManager().getRawString("Alerts.tresholdNotReached").replace("%x%", treshold + "");
+                    String rawString = plugin.getLangManager().getRawString("Alerts.tresholdNotReached")
+                            .replace("%x%", treshold + "");
                     if (display == LandAlerter.LandMessageDisplay.ActionBar) {
                         PrincepsLib.getStuffManager().sendActionBar(p, rawString);
                     } else if (display == LandAlerter.LandMessageDisplay.Chat) {
-                        p.sendMessage(plugin.getLangManager().getString("Alerts.tresholdNotReached").replace("%x%", treshold + ""));
+                        p.sendMessage(plugin.getLangManager().getString("Alerts.tresholdNotReached")
+                                .replace("%x%", treshold + ""));
                     } else if (display == LandAlerter.LandMessageDisplay.Title) {
                         p.sendTitle(rawString, null, 10, 70, 10);
                     }

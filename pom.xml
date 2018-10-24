@@ -113,14 +113,14 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.13.1-R0.1-SNAPSHOT</version>
+            <version>1_13_2</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib-API</artifactId>
-            <version>4.3.1</version>
+            <version>4.4.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -141,8 +141,9 @@
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
-            <version>1.13.1</version>
+            <version>1.13.2</version>
             <scope>provided</scope>
+            <classifier>dist</classifier>
         </dependency>
 
         <dependency>
