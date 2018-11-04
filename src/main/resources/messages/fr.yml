@@ -90,9 +90,27 @@ Commands:
     friends: 'Friends'
     others: 'Others'
   ClearWorld:
-    success: '&7&c%count% &7claims dans le monde &c%world% ont été effacés avec succès'
-    successPlayer: '&7&c%count% &7claims du joueur &c%player% ont été effacés avec succès'
-    noPlayer: '&7Les joueurs suivants n''ont pas été trouvés&8: &c%players%'
+    noPlayer: '&7Could not find following players&8: &c%players%'
+    gui:
+      title: "Clear menu"
+      clearcurrentland:
+        name: "Clear current land"
+        desc: "Only clears the current land|you are standing inside"
+        confirm: "Unclaim this land?"
+        abort: "&cUnclaim action aborted!"
+        success: "&7Unclaimed %land% successfully"
+      clearplayer:
+        name: "Clear player"
+        desc: "Clears all lands of the player,|who owns the land|you are currently|standing in"
+        confirm: "Unclaim player?"
+        abort: "&cUnclaim action aborted!"
+        success: '&7Successfully cleared &c%count% &7lands from player &c%player%'
+      clearworld:
+        name: "Clear the entire world"
+        desc: "Clears all lands in the world|you are currently in!||BE CAREFUL!"
+        confirm: "Unclaim all lands in %world%?"
+        abort: "&cUnclaim action aborted!"
+        success: '&7Successfully cleared &c%count% &7lands in world &c%world%'
   Item:
     noPlayer: '&7Les joueurs suivants n''ont pas été trouvés&8: &c%players%'
   Manage:
@@ -273,4 +291,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 17
+version: 18

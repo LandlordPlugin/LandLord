@@ -29,6 +29,8 @@ public interface LandLordAPI {
     List<ProtectedRegion> getRegions(UUID id, World world);
 
     WorldGuardHandler getWgHandler();
+
+    boolean isLLRegion(String a);
 }
 
 

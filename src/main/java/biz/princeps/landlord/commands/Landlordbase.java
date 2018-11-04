@@ -24,7 +24,6 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.storage_old.AbstractDatabase;
 import biz.princeps.lib.storage_old.MySQL;
 import biz.princeps.lib.storage_old.SQLite;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -130,7 +129,7 @@ public class Landlordbase extends MainCommand {
                                     .filter(p -> p.getName().startsWith(args[1])).forEach(p -> tabReturn.add(p.getName()));
                         }
                         return tabReturn;
-                    }else if (subcmd instanceof MultiClaimCMD){
+                    } else if (subcmd instanceof MultiClaimCMD) {
                         for (MultiClaim.MultiClaimMode value : MultiClaim.MultiClaimMode.values()) {
                             tabReturn.add(value.name());
                         }
@@ -440,11 +439,7 @@ public class Landlordbase extends MainCommand {
         @Override
         public void onCommand(Properties properties, Arguments arguments) {
             if (properties.isPlayer()) {
-                try {
-                    ((Clear) subcommands.get("clearworld")).onClearWorld(properties.getPlayer(), arguments.get(0));
-                } catch (ArgumentsOutOfBoundsException e) {
-                    ((Clear) subcommands.get("clearworld")).onClearWorld(properties.getPlayer(), null);
-                }
+                ((Clear) subcommands.get("clearworld")).onClearWorld(properties.getPlayer());
             }
         }
     }
