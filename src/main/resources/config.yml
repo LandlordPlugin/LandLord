@@ -14,6 +14,7 @@ disabled-worlds:
 
 language: en
 
+# amount of entries per page in the help menu
 HelpCommandPerSite: 10
 
 # Disables the warning for invalid world names on startup. Be careful!
@@ -58,7 +59,9 @@ Growth:
 
 # on unclaim, this percentage of the original price is paid back.
 Payback: 0.8
+# amount of free lands every user got before he has to pay
 Freelands: 1
+# cost for regenerate inside ll manage
 ResetCost: 1000.0
 
 # here you can manage your claims shop.
@@ -94,6 +97,7 @@ Homes:
   enable: true
   spawnParticles: true
   teleportCost: 100.0
+# delay in seconds
   delay: 3
 
 # This option allows players to buy up the lands of players, who are not playing actively any longer
