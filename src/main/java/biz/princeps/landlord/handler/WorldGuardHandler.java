@@ -2,7 +2,7 @@ package biz.princeps.landlord.handler;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.util.OwnedLand;
-import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
@@ -44,8 +44,8 @@ public class WorldGuardHandler {
     }
 
     public void claim(UUID owner, String landname, World world, Location down, Location upper) {
-        BlockVector vec1 = OwnedLand.locationToVec(down);
-        BlockVector vec2 = OwnedLand.locationToVec(upper);
+        BlockVector3 vec1 = OwnedLand.locationToVec(down);
+        BlockVector3 vec2 = OwnedLand.locationToVec(upper);
 
         ProtectedCuboidRegion pr = new ProtectedCuboidRegion(landname, vec1, vec2);
 
@@ -199,8 +199,8 @@ public class WorldGuardHandler {
             Vector v2 = currChunk.getBlock(15, 127, 15).getLocation().toVector();
 
             ProtectedRegion check = new ProtectedCuboidRegion("check",
-                    new BlockVector(v1.getX(), v1.getY(), v1.getZ()),
-                    new BlockVector(v2.getX(), v2.getY(), v2.getZ()));
+                    BlockVector3.at(v1.getX(), v1.getY(), v1.getZ()),
+                    BlockVector3.at(v2.getX(), v2.getY(), v2.getZ()));
             List<ProtectedRegion> intersects = check
                     .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
             for (ProtectedRegion intersect : intersects) {

@@ -66,7 +66,7 @@ public class TresholdListener extends BasicListener {
 
             LocalPlayer localPlayer = plugin.getWgHandler().getWGPlugin().wrapPlayer(p);
             ApplicableRegionSet applicableRegions = plugin.getWgHandler().getRegionManager(
-                    loc.getWorld()).getApplicableRegions(localPlayer.getLocation().toVector());
+                    loc.getWorld()).getApplicableRegions(localPlayer.getLocation().toVector().toBlockPoint());
             if (applicableRegions.getRegions().size() < 1) {
                 boolean isAllowed = false;
                 for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) {

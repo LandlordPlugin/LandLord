@@ -76,7 +76,7 @@ public class Unclaim extends LandlordCommand {
                     if (regionCount <= freeLands)
                         payback = 0;
                     else {
-                        payback = plugin.getCostManager().calculateCost(player.getUniqueId()) * plugin.getConfig().getDouble("Payback");
+                        payback = plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble("Payback");
                         // System.out.println(payback);
                         if (payback > 0)
                             plugin.getVaultHandler().give(player.getUniqueId(), payback);

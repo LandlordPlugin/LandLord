@@ -134,16 +134,17 @@
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
-            <version>1.13.1</version>
+            <version>1.13.2.1</version>
+            <classifier>dist</classifier>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
-            <version>1.13.2</version>
-            <scope>provided</scope>
+            <version>1.13.2.1</version>
             <classifier>dist</classifier>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

@@ -40,12 +40,17 @@ public class CostManager {
     }
 
     public double calculateCost(UUID uuid) {
-        return this.calculateCost(uuid, plugin.getWgHandler().getRegionCountOfPlayer(uuid));
+        return this.calculateCost(plugin.getWgHandler().getRegionCountOfPlayer(uuid));
     }
 
-    public double calculateCost(UUID uuid, int regionCount) {
+    /**
+     * Calculates cost for the next land to claim
+     *
+     * @param x current amt of lands
+     * @return amount to pay for next land
+     */
+    public double calculateCost(int x) {
         int freeLands = plugin.getConfig().getInt("Freelands");
-        int x = regionCount;
 
         if (x < freeLands)
             return 0;
