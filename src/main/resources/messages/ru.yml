@@ -74,15 +74,25 @@ Commands:
     success: '&7Успешно удалён &c%players% &7из всех &c%count% &7земель принадлежащих вам'
     noFriend: '&c%player% &7Не является другом на ваших землях'
   ListLands:
-    noLands: '&7У вас нет земли'
-    header: '&7%player%s земли:'
-    landSegment: '&7Land&8: &cX: %realX%, Z: %realZ%'
-    manageAll: '&7Управление всеми землями'
+    noLands: '&7You do not own any land'
+    gui:
+      header: '&2%player%s lands'
+      itemname: '&d%name%'
+      lore:
+      - '&aName: &f%name%'
+      - ''
+      - '&aReal Coords: &f%realx%&c/&f%realz%'
+      - ''
+      - '&aMembers: &f%members%'
+      - ''
+      - '%flags%'
+      flagformat: '&a%flagname%: &f%flagvalue%'
+      manageAll: '&7Manage all lands'
     chat:
       previous: '&8[&7Previous&8]'
       next: '&8[&7Next&8]'
-      segment: '&eНазвание: &c%landname% &eЧлены: &c%members%'
-    noPlayer: '&7Не удалось найти игроков&8: &c%player%'
+      segment: '&eName: &c%landname% &eMembers: &c%members%'
+    noPlayer: '&7Could not find following player&8: &c%player%'
   LandMap:
     disabled: '&7Карта земель &cdisabled'
     header: '&e&m==&r&6&c&lLand&r&e&m=='
@@ -291,4 +301,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 18
+version: 19

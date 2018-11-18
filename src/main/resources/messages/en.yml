@@ -75,9 +75,19 @@ Commands:
     noFriend: '&c%player% &7is not a friend on any of your lands'
   ListLands:
     noLands: '&7You do not own any land'
-    header: '&7%player%s lands:'
-    landSegment: '&7Land&8: &cX: %realX%, Z: %realZ%'
-    manageAll: '&7Manage all lands'
+    gui:
+      header: '&2%player%s lands'
+      itemname: '&d%name%'
+      lore:
+        - '&aName: &f%name%'
+        - ''
+        - '&aReal Coords: &f%realx%&c/&f%realz%'
+        - ''
+        - '&aMembers: &f%members%'
+        - ''
+        - '%flags%'
+      flagformat: '&a%flagname%: &f%flagvalue%'
+      manageAll: '&7Manage all lands'
     chat:
       previous: '&8[&7Previous&8]'
       next: '&8[&7Next&8]'
@@ -291,4 +301,4 @@ MaItem:
   - '&l&bin the air:'
   - '&crightclick: &7toggle map'
   - '&cleftclick: &7toggle borders'
-version: 18
+version: 19

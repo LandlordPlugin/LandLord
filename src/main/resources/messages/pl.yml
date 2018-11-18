@@ -74,15 +74,25 @@ Commands:
     success: '&7usunałeś gracza &c%player% &7do &4wszystkich&7 &c%count% &7Terenów w twoim posiadaniu'
     noFriend: '&c%player% &7Nie jest dodany jako przyjaciel'
   ListLands:
-    noLands: '&7Nie posiadasz terenu'
-    header: '&7%player%s Tereny:'
-    landSegment: '&7Tereny&8: &cX: %realX%, Z: %realZ%'
-    manageAll: '&7Zażądzaj wszystkimi'
+    noLands: '&7You do not own any land'
+    gui:
+      header: '&2%player%s lands'
+      itemname: '&d%name%'
+      lore:
+      - '&aName: &f%name%'
+      - ''
+      - '&aReal Coords: &f%realx%&c/&f%realz%'
+      - ''
+      - '&aMembers: &f%members%'
+      - ''
+      - '%flags%'
+      flagformat: '&a%flagname%: &f%flagvalue%'
+      manageAll: '&7Manage all lands'
     chat:
-      previous: '&8[&7wcześniejsza strona&8]'
-      next: '&8[&7Następna strona&8]'
-      segment: '&eNazwae: &c%landname% &eMembers: &c%members%'
-    noPlayer: '&7Nie można odnaleść danego gracza&8: &c%players%'
+      previous: '&8[&7Previous&8]'
+      next: '&8[&7Next&8]'
+      segment: '&eName: &c%landname% &eMembers: &c%members%'
+    noPlayer: '&7Could not find following player&8: &c%player%'
   LandMap:
     disabled: '&7Mapa jest &cWyłączona'
     header: '&e&m==&r&6&c&lTereny&r&e&m=='
@@ -290,4 +300,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7włącz mapę'
     - '&cleftclick: &7włącz granice'
-version: 18
+version: 19

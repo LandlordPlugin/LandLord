@@ -73,15 +73,25 @@ Commands:
     success: '&7Sikeresen eltávolítva &c%players% &7minden &c%count% &7saját tulajdonú földhöz'
     noFriend: '&c%player% &7nem barátod bármelyik földeden'
   ListLands:
-    noLands: '&7Nem rendelkezel egy földdel sem'
-    header: '&7%player%s föld:'
-    landSegment: '&7Föld&8: &cX: %realX%, Z: %realZ%'
-    manageAll: '&7Összes föld kezelése'
+    noLands: '&7You do not own any land'
+    gui:
+      header: '&2%player%s lands'
+      itemname: '&d%name%'
+      lore:
+      - '&aName: &f%name%'
+      - ''
+      - '&aReal Coords: &f%realx%&c/&f%realz%'
+      - ''
+      - '&aMembers: &f%members%'
+      - ''
+      - '%flags%'
+      flagformat: '&a%flagname%: &f%flagvalue%'
+      manageAll: '&7Manage all lands'
     chat:
-      previous: '&8[&7Előző&8]'
-      next: '&8[&7Következő&8]'
-      segment: '&eNév: &c%landname% &eTagok: &c%members%'
-    noPlayer: '&7Nem található a következő játékos&8: &c%player%'
+      previous: '&8[&7Previous&8]'
+      next: '&8[&7Next&8]'
+      segment: '&eName: &c%landname% &eMembers: &c%members%'
+    noPlayer: '&7Could not find following player&8: &c%player%'
   LandMap:
     disabled: '&7A földtérkép &cletiltva'
     header: '&e&m==&r&6&c&lFöld&r&e&m=='
@@ -290,4 +300,4 @@ MaItem:
     - '&l&ba levegőben:'
     - '&cjobb klikk: &7térkép kapcsolása'
     - '&cbal klikk: &7határok kapcsolása'
-version: 18
+version: 19

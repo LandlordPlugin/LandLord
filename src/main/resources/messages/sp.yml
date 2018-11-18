@@ -71,19 +71,28 @@ Commands:
     alreadyOwn: '&7No puede agregar al propietario como miembro'
   UnfriendAll:
     noPlayer: '&7No pude encontrar los siguientes jugadores&8: &c%players%'
-    success: '&7Eliminado con éxito &c%players% &7de todas &c(%count%) &7tierras que posee
-'
+    success: '&7Eliminado con éxito &c%players% &7de todas &c(%count%) &7tierras que posee'
     noFriend: '&c%player% &7no es un amigo en ninguna de tus tierras'
   ListLands:
-    noLands: '&7Usted no posee ninguna tierra'
-    header: '&7%player%s Terrenos:'
-    landSegment: '&7Terreno&8: &cX: %realX%, Z: %realZ%'
-    manageAll: '&7Administrar todas las tierras'
+    noLands: '&7You do not own any land'
+    gui:
+      header: '&2%player%s lands'
+      itemname: '&d%name%'
+      lore:
+      - '&aName: &f%name%'
+      - ''
+      - '&aReal Coords: &f%realx%&c/&f%realz%'
+      - ''
+      - '&aMembers: &f%members%'
+      - ''
+      - '%flags%'
+      flagformat: '&a%flagname%: &f%flagvalue%'
+      manageAll: '&7Manage all lands'
     chat:
-      previous: '&8[&7Previo&8]'
-      next: '&8[&7Siguiente&8]'
-      segment: '&eTerreno-ID: &c%landname% &eTiembros: &c%members%'
-    noPlayer: '&7No se pudo encontrar el siguiente jugador&8: &c%player%'
+      previous: '&8[&7Previous&8]'
+      next: '&8[&7Next&8]'
+      segment: '&eName: &c%landname% &eMembers: &c%members%'
+    noPlayer: '&7Could not find following player&8: &c%player%'
   LandMap:
     disabled: '&7Mapa terrenos esta &cdeshabilitado'
     header: '&e&m==&r&6&c&lLand&r&e&m=='
@@ -292,4 +301,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 18
+version: 19

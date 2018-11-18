@@ -74,15 +74,25 @@ Commands:
     success: '&7Vous avez retiré &c%players% &7des &c%count% &7chunks que vous détenez'
     noFriend: '&c%player% &7is not a friend on any of your lands'
   ListLands:
-    noLands: '&7Vous ne possédez aucun chunk'
-    header: '&7%player%s chunks:'
-    landSegment: '&7Chunk&8: &cX: %realX%, Z: %realZ%'
-    manageAll: '&7Gérer tous les chunks'
+    noLands: '&7You do not own any land'
+    gui:
+      header: '&2%player%s lands'
+      itemname: '&d%name%'
+      lore:
+      - '&aName: &f%name%'
+      - ''
+      - '&aReal Coords: &f%realx%&c/&f%realz%'
+      - ''
+      - '&aMembers: &f%members%'
+      - ''
+      - '%flags%'
+      flagformat: '&a%flagname%: &f%flagvalue%'
+      manageAll: '&7Manage all lands'
     chat:
-      previous: '&8[&7Précédent&8]'
-      next: '&8[&7Suivant&8]'
-      segment: '&eNom: &c%landname% &eMembres: &c%members%'
-    noPlayer: '&7Le joueur suivantn''a pas été trouvé&8: &c%player%'
+      previous: '&8[&7Previous&8]'
+      next: '&8[&7Next&8]'
+      segment: '&eName: &c%landname% &eMembers: &c%members%'
+    noPlayer: '&7Could not find following player&8: &c%player%'
   LandMap:
     disabled: '&7La carte des chunks est &cdésactivée'
     header: '&e&m==&r&6&c&lLand&r&e&m=='
@@ -291,4 +301,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 18
+version: 19
