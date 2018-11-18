@@ -9,8 +9,8 @@ MySQL:
   Password: passy
 
 disabled-worlds:
-  - world_nether
-  - world_the_end
+- world_nether
+- world_the_end
 
 language: en
 
@@ -29,29 +29,29 @@ Economy:
 # Available are: LINEAR, EXPONENTIAL, LOGARITHMIC, SINUS, LIMITED
 Growth:
   function: LIMITED
-# x is the amount of owned lands!
-# Formula: minCost + multiplier * x
+  # x is the amount of owned lands!
+  # Formula: minCost + multiplier * x
   LINEAR:
     minCost: 500.0
     multiplier: 1.0
-# Formula: minCost + multiplier * x ^ exponent
+  # Formula: minCost + multiplier * x ^ exponent
   EXPONENTIAL:
     minCost: 500.0
     multiplier: 1.0
     exponent: 2.0
-# Formula: minCost + multiplier * lg (b * x + c)
+  # Formula: minCost + multiplier * lg (b * x + c)
   LOGARITHMIC:
     minCost: 500.0
     multiplier: 1.0
     b: 1.0
     c: 1
-# Formula: minCost + multiplier * sin (b * x + c)
+  # Formula: minCost + multiplier * sin (b * x + c)
   SINUS:
     minCost: 500.0
     multiplier: 3.0
     b: 1.0
     c: 1.0
-# Formula: maxCost - ( maxCost - minCost ) * multiplier ^ x
+  # Formula: maxCost - ( maxCost - minCost ) * multiplier ^ x
   LIMITED:
     maxCost: 3000.0
     minCost: 500.0
@@ -69,51 +69,51 @@ ResetCost: 1000.0
 # e.g. 10:5000
 # which means, an user can buy 10 additional claims for 5000 dollars
 Shop:
-# set this to false, if you want to use the traditional permission based system
+  # set this to false, if you want to use the traditional permission based system
   enable: true
   extras:
-    - PAPER:10:5000.0
-    - PAPER:20:9000.0
-    - PAPER:30:13500.0
-    - PAPER:50:45000.0
+  - PAPER:10:5000.0
+  - PAPER:20:9000.0
+  - PAPER:30:13500.0
+  - PAPER:50:45000.0
 
 # These are hard caps. If a player has the permission "landlord.limit.10" he will be able to buy up to 20 lands, but cant buy more claims than that.
 # Please sort the entries ascending!
 limits:
-  - 10
-  - 20
-  - 30
-  - 40
+- 10
+- 20
+- 30
+- 40
 
 # Secures the world in which landlord is active. This means, players wont be able to destroy anything in free lands
 SecureWorld:
   enable: true
-# If player reach this treshold (amount of ownedlands) they will be able to build in the normal world)
-# This way you can allow your veteran players to be able to build pathes and commonly used stuff in the world, but prevent newbies from griefing
+  # If player reach this treshold (amount of ownedlands) they will be able to build in the normal world)
+  # This way you can allow your veteran players to be able to build pathes and commonly used stuff in the world, but prevent newbies from griefing
   treshold: 10
-# Where to display the warning that you are not to allowed in free lands until x lands has been reached: ActionBar, Chat, Title, Disabled
+  # Where to display the warning that you are not to allowed in free lands until x lands has been reached: ActionBar, Chat, Title, Disabled
   displayWarning: ActionBar
 
 Homes:
   enable: true
   spawnParticles: true
   teleportCost: 100.0
-# delay in seconds
+  # delay in seconds
   delay: 3
 
 # This option allows players to buy up the lands of players, who are not playing actively any longer
 BuyUpInactive:
   enable: false
-# amount of days until a player is marked as "inactive" and his lands may be bought up
+  # amount of days until a player is marked as "inactive" and his lands may be bought up
   timegate: 30
 
 # Where should the "Entering XXX's land" be displayed? Available are ActionBar, Chat, Title, Disabled
 LandMessage: ActionBar
 
 ConfirmationDialog:
-# Modes: CHAT GUI
+  # Modes: CHAT GUI
   mode: CHAT
-# Timeout for chat based confirmation. The user has x seconds time to click the chat
+  # Timeout for chat based confirmation. The user has x seconds time to click the chat
   timeout: 10
   onNormalClaim: true
   onBuyUp: true
@@ -128,7 +128,7 @@ Particles:
 # -----------        Map Stuff        ------------
 Map:
   enable: true
-# Refreshrate in Ticks. 20 ticks is equal to one second. The lower you set the value the more laggy it might be
+  # Refreshrate in Ticks. 20 ticks is equal to one second. The lower you set the value the more laggy it might be
   refreshRate: 10
 
 Borders:
@@ -143,17 +143,34 @@ CommandSettings:
     description: The basic command, /llhelp
     usage: 'Usage: /llhelp'
     permissions:
-      - landlord.use
+    - landlord.use
     aliases:
-      - ll
-      - land
-      - landlord
-      - gs
+    - ll
+    - land
+    - landlord
+    - gs
 
   Claim:
     enableDelimit: true
     # Newly claimed lands are delimited by this material. You can add data e.g. for colored wool WOOL:3 for cyan wool
-    delimitMaterial: TORCH
+    delimitation:
+    - 'define: x=TORCH'
+    - 'xxxxxxxxxxxxxxxx'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'x--------------x'
+    - 'xxxxxxxxxxxxxxxx'
     # When a player does not own any lands, he may claim any free chunk. later only adjacent chunks
     claimOnlyAdjacent: false
     # If this is enabled, there must be one free chunk between two different owners. See https://tinyurl.com/y8xzelga
@@ -162,10 +179,10 @@ CommandSettings:
     name: claim
     usage: 'Usage: /land claim'
     permissions:
-      - landlord.player.own
+    - landlord.player.own
     aliases:
-      - buy
-      - cl
+    - buy
+    - cl
 
   MultiClaim:
     name: multiclaim
@@ -180,83 +197,83 @@ CommandSettings:
     name: info
     usage: '/land info - Shows information about the land you are standing on'
     permissions:
-      - landlord.player.info
+    - landlord.player.info
     aliases:
-      - i
+    - i
 
   Unclaim:
     name: unclaim
     usage: '/land unclaim - Unclaim the chunk you are standing on'
     permissions:
-      - landlord.player.unclaim
+    - landlord.player.unclaim
     aliases:
-      - sell
+    - sell
 
   UnclaimAll:
     name: unclaimall
     usage: '/land unclaimall - Unclaims all your lands'
     permissions:
-      - landlord.player.unclaim
+    - landlord.player.unclaim
     aliases:
-      - sellall
+    - sellall
 
   Listfriends:
     name: listfriends
     usage: '/land friends - Shows all friended players'
     permissions:
-      - landlord.player.own
+    - landlord.player.own
     aliases:
-      - friends
-      - fr
+    - friends
+    - fr
 
   Addfriend:
     name: addfriend
     usage: '/land addfriend - Adds a friend to your land'
     permissions:
-      - landlord.player.own
+    - landlord.player.own
     aliases:
-      - friendadd
-      - addmember
+    - friendadd
+    - addmember
 
   RemoveFriend:
     name: removefriend
     usage: '/land unfriend - removes a friend from your land'
     permissions:
-      - landlord.player.own
+    - landlord.player.own
     aliases:
-      - unfriend
-      - friendremove
-      - frienddelete
-      - deletefriend
-      - removefriend
+    - unfriend
+    - friendremove
+    - frienddelete
+    - deletefriend
+    - removefriend
 
   AddfriendAll:
     name: addfriendall
     usage: '/land addfriendall - Adds a friend to all of your lands'
     permissions:
-      - landlord.player.own
+    - landlord.player.own
     aliases:
-      - friendaddall
-      - addmemberall
-      - friendall
+    - friendaddall
+    - addmemberall
+    - friendall
 
   RemovefriendAll:
     name: removefriendall
     usage: '/land removefriendall - unfriend someone on all your lands'
     permissions:
-      - landlord.player.own
+    - landlord.player.own
     aliases:
-      - unfriendall
-      - removeallfriends
+    - unfriendall
+    - removeallfriends
 
   ListLands:
     name: list
     usage: '/land list - lists all your lands'
     permissions:
-      - landlord.player.own
+    - landlord.player.own
     aliases:
-      - listlands
-      - landlist
+    - listlands
+    - landlist
     enable: true
     # gui or chat
     mode: gui
@@ -275,121 +292,121 @@ CommandSettings:
       friends: '█'
       others: '█'
     permissions:
-      - landlord.player.map
+    - landlord.player.map
     aliases:
-      - landmap
+    - landmap
 
   Clear:
     name: clear
     usage: '/land clear - clear a world'
     permissions:
-      - landlord.admin.clearworld
+    - landlord.admin.clearworld
     aliases:
-      - clearworld
+    - clearworld
 
   Manage:
     name: manage
     usage: '/land manage - manages the land you are standing on'
     permissions:
-      - landlord.player.manage
+    - landlord.player.manage
     aliases:
-      - mgn
+    - mgn
 
   ManageAll:
     name: manageall
     usage: '/land manageall - manages all your lands at the same time'
     permissions:
-      - landlord.player.manage
+    - landlord.player.manage
     aliases:
-      - mall
+    - mall
 
   Update:
     name: update
     usage: '<-r> - updates all lands in one world. Parameter -r forces to reset all lands to their default state'
     permissions:
-      - landlord.admin.update
+    - landlord.admin.update
     aliases:
-      - upd
+    - upd
 
   Shop:
     name: shop
     usage: '/land shop - displays the land shop'
     permissions:
-      - landlord.player.shop
+    - landlord.player.shop
     aliases:
-      - claimshop
+    - claimshop
 
   Reload:
     name: reload
     usage: '/land reload - THIS IS NOT RECOMMENDED!!!'
     permissions:
-      - landlord.admin.reload
+    - landlord.admin.reload
     aliases:
-      - rl
+    - rl
 
   Claims:
     name: claims
     usage: '/land claims - shows the amount of your claims'
     permissions:
-      - landlord.player.shop
+    - landlord.player.shop
     aliases:
-      - clms
+    - clms
 
   Sethome:
     name: sethome
     usage: '/land sethome - sets your current land home'
     permissions:
-      - landlord.player.home
+    - landlord.player.home
     aliases:
-      - homeset
+    - homeset
 
   Home:
     name: home
     usage: '/land home teleports you to your home'
     permissions:
-      - landlord.player.home
+    - landlord.player.home
     aliases:
-      - h
+    - h
 
   GiveClaims:
     name: giveclaims
     usage: '/land giveclaims - gives someone claims'
     permissions:
-      - landlord.claims.give
+    - landlord.claims.give
     aliases:
-      - gcl
+    - gcl
 
   Advertise:
     name: advertise
     usage: '/land advertise <price> || /land advertise <landName> <price>'
     permissions:
-      - landlord.player.advertise
+    - landlord.player.advertise
     aliases:
-      - adv
+    - adv
 
   Borders:
     name: borders
     usage: '/land borders'
     permissions:
-      - landlord.player.borders
+    - landlord.player.borders
     aliases:
-      - toggleborders
+    - toggleborders
 
   AdminTP:
     name: admintp
     usage: '/land admintp <name> - teleports to the land of a player'
     permissions:
-      - landlord.admin.admintp
+    - landlord.admin.admintp
     aliases:
-      - adminteleport
+    - adminteleport
 
   MAItem:
     name: item
     usage: '/land item <name> - gives the player the managementitem'
     permissions:
-      - landlord.player.item
+    - landlord.player.item
     aliases:
-      - maitem
+    - maitem
 
 
 
@@ -400,30 +417,30 @@ CommandSettings:
 # this allows toggling the flagstate between allowing interaction for everyone and just allow oweners and members
 # if you are adding a new flag, you must implement the necessary strings in the language file! Just copy paste it from an existing flag.
 Flags:
-  - 'interact allow all:deny nonmembers'
-  - 'chest-access deny nonmembers:allow all'
-  - 'creeper-explosion deny all:allow all'
-  - 'pvp deny all:allow all'
-  - 'build deny nonmembers:allow all'
+- 'interact allow all:deny nonmembers'
+- 'chest-access deny nonmembers:allow all'
+- 'creeper-explosion deny all:allow all'
+- 'pvp deny all:allow all'
+- 'build deny nonmembers:allow all'
 
 MaItem:
   enabled: true
   item: STICK
-# define your modes of operation here.
-# Syntax: clickaction:condition:whatshouldhappen
-# Available actions:
-# - leftclickblock, leftclickair, shiftleftclickblock, shiftleftclickair (same for right obv)
-# Available conditions:
-# - ownland, otherland, anyland
-# Available whatshouldhappen:
-# - info, buy, manage, manageall, togglemap, toggleborders
+  # define your modes of operation here.
+  # Syntax: clickaction:condition:whatshouldhappen
+  # Available actions:
+  # - leftclickblock, leftclickair, shiftleftclickblock, shiftleftclickair (same for right obv)
+  # Available conditions:
+  # - ownland, otherland, anyland
+  # Available whatshouldhappen:
+  # - info, buy, manage, manageall, togglemap, toggleborders
   modes:
-    - 'rightclickblock:anyland:info'
-    - 'leftclickblock:anyland:buy'
-    - 'shiftrightclickblock:ownland:manage'
-    - 'shiftleftclickblock:ownland:manageall'
-    - 'rightclickair:anyland:togglemap'
-    - 'leftclickair:anyland:toggleborders'
+  - 'rightclickblock:anyland:info'
+  - 'leftclickblock:anyland:buy'
+  - 'shiftrightclickblock:ownland:manage'
+  - 'shiftleftclickblock:ownland:manageall'
+  - 'rightclickair:anyland:togglemap'
+  - 'leftclickair:anyland:toggleborders'
 
 # These options will be manageable in ll manage
 Manage:
@@ -459,60 +476,60 @@ Manage:
   mob-spawning:
     enable: true
     item: LEGACY_MONSTER_EGG
-# If you dont want your users to manage a specific mobspawn, just comment out the line with #
+    # If you dont want your users to manage a specific mobspawn, just comment out the line with #
     toggleableMobs:
-      - ELDER_GUARDIAN
-      - WITHER_SKELETON
-      - STRAY
-      - HUSK
-      - ZOMBIE_VILLAGER
-      - SKELETON_HORSE
-      - ZOMBIE_HORSE
-      - ARMOR_STAND
-      - DONKEY
-      - MULE
-      - EVOKER
-      - VEX
-      - VINDICATOR
-      - ILLUSIONER
-      - CREEPER
-      - SKELETON
-      - SPIDER
-      - GIANT
-      - ZOMBIE
-      - SLIME
-      - GHAST
-      - PIG_ZOMBIE
-      - ENDERMAN
-      - CAVE_SPIDER
-      - SILVERFISH
-      - BLAZE
-      - MAGMA_CUBE
-      - ENDER_DRAGON
-      - WITHER
-      - BAT
-      - WITCH
-      - ENDERMITE
-      - GUARDIAN
-      - SHULKER
-      - PIG
-      - SHEEP
-      - COW
-      - CHICKEN
-      - SQUID
-      - WOLF
-      - MUSHROOM_COW
-      - SNOWMAN
-      - OCELOT
-      - IRON_GOLEM
-      - HORSE
-      - RABBIT
-      - POLAR_BEAR
-      - LLAMA
-      - PARROT
-      - VILLAGER
+    - ELDER_GUARDIAN
+    - WITHER_SKELETON
+    - STRAY
+    - HUSK
+    - ZOMBIE_VILLAGER
+    - SKELETON_HORSE
+    - ZOMBIE_HORSE
+    - ARMOR_STAND
+    - DONKEY
+    - MULE
+    - EVOKER
+    - VEX
+    - VINDICATOR
+    - ILLUSIONER
+    - CREEPER
+    - SKELETON
+    - SPIDER
+    - GIANT
+    - ZOMBIE
+    - SLIME
+    - GHAST
+    - PIG_ZOMBIE
+    - ENDERMAN
+    - CAVE_SPIDER
+    - SILVERFISH
+    - BLAZE
+    - MAGMA_CUBE
+    - ENDER_DRAGON
+    - WITHER
+    - BAT
+    - WITCH
+    - ENDERMITE
+    - GUARDIAN
+    - SHULKER
+    - PIG
+    - SHEEP
+    - COW
+    - CHICKEN
+    - SQUID
+    - WOLF
+    - MUSHROOM_COW
+    - SNOWMAN
+    - OCELOT
+    - IRON_GOLEM
+    - HORSE
+    - RABBIT
+    - POLAR_BEAR
+    - LLAMA
+    - PARROT
+    - VILLAGER
 
 # Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
 EnableMetrics: true
 checkUpdatesPeriodically: true
-version: 19
+version: 20

@@ -5,6 +5,7 @@ import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.util.Delimitation;
 import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
@@ -279,7 +280,7 @@ public class Claim extends LandlordCommand {
         }
 
         if (plugin.getConfig().getBoolean("CommandSettings.Claim.enableDelimit")) {
-            delimit(chunk);
+            Delimitation.delimit(chunk);
         }
 
         plugin.getMapManager().updateAll();

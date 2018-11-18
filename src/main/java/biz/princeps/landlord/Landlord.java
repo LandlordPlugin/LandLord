@@ -8,10 +8,7 @@ import biz.princeps.landlord.items.Maitem;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
 import biz.princeps.landlord.listener.TresholdListener;
-import biz.princeps.landlord.manager.CostManager;
-import biz.princeps.landlord.manager.LPlayerManager;
-import biz.princeps.landlord.manager.LangManager;
-import biz.princeps.landlord.manager.OfferManager;
+import biz.princeps.landlord.manager.*;
 import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.LPlayer;
@@ -101,7 +98,6 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         saveDefaultConfig();
         ConfigUtil.handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
         saveDefaultConfig();
-
 
         langManager = new LangManager(this, getConfig().getString("language", "en"));
         setupTranslateableStrings();
