@@ -25,6 +25,7 @@ public class GiveClaims extends LandlordCommand {
         switch (args.size()) {
             case 3:
                 // ll giveclaims name price amount
+                // used for shop give claims
                 try {
                     target = args.get(0);
                     cost = args.getDouble(1);
@@ -35,22 +36,22 @@ public class GiveClaims extends LandlordCommand {
                 }
 
                 Player player = Bukkit.getPlayer(target);
-
                 if (player != null) {
-                    if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
-                        plugin.getVaultHandler().take(player.getUniqueId(), cost);
-                        plugin.getPlayerManager().get(player.getUniqueId()).addClaims(amount);
-                        player.sendMessage(plugin.getLangManager().getString("Shop.success")
-                                .replace("%number%", amount + "")
-                                .replace("%cost%", plugin.getVaultHandler().format(cost)));
-                        player.closeInventory();
-                        addClaims(issuer, target, amount);
-                    } else {
-                        player.sendMessage(plugin.getLangManager().getString("Shop.notEnoughMoney")
-                                .replace("%number%", amount + "")
-                                .replace("%cost%", plugin.getVaultHandler().format(cost)));
-                        player.closeInventory();
-                        return;
+                    if (checkPermission(player, amount)) {
+                        if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
+                            plugin.getVaultHandler().take(player.getUniqueId(), cost);
+                            player.sendMessage(plugin.getLangManager().getString("Shop.success")
+                                    .replace("%number%", amount + "")
+                                    .replace("%cost%", plugin.getVaultHandler().format(cost)));
+                            player.closeInventory();
+                            addClaims(issuer, target, amount);
+                        } else {
+                            player.sendMessage(plugin.getLangManager().getString("Shop.notEnoughMoney")
+                                    .replace("%number%", amount + "")
+                                    .replace("%cost%", plugin.getVaultHandler().format(cost)));
+                            player.closeInventory();
+                            return;
+                        }
                     }
                 }
                 break;
@@ -65,9 +66,8 @@ public class GiveClaims extends LandlordCommand {
                     return;
                 }
                 if (Bukkit.getPlayer(target) != null) {
-                    if(checkPermission(Bukkit.getPlayer(target), amount)) {
-                        addClaims(issuer, target, amount);
-                    }
+                    addClaims(issuer, target, amount);
+
                 }
                 break;
 
@@ -81,9 +81,7 @@ public class GiveClaims extends LandlordCommand {
                 }
 
                 if (issuer.isPlayer()) {
-                    if(checkPermission(issuer.getPlayer(), amount)) {
-                        addClaims(issuer, issuer.getPlayer().getName(), amount);
-                    }
+                    addClaims(issuer, issuer.getPlayer().getName(), amount);
                 } else {
                     issuer.sendUsage();
                 }
@@ -95,38 +93,36 @@ public class GiveClaims extends LandlordCommand {
     }
 
     private void addClaims(Properties issuer, String target, int amount) {
-        if(plugin.getPlayerManager().get(target) != null){
-            LPlayer lPlayer = plugin.getPlayerManager().get(target);
+        LPlayer lPlayer = plugin.getPlayerManager().get(target);
+
+        if (Bukkit.getPlayer(target).isOnline() && lPlayer != null) {
             lPlayer.addClaims(amount);
             Bukkit.getPlayer(target).sendMessage(lm.getString("Commands.GiveClaims.success").replace("%amount%", String.valueOf(amount)));
-            return;
-        }
-
-        plugin.getPlayerManager().getOfflinePlayerAsync(target, p -> {
-            if (p != null) {
-                p.addClaims(amount);
-                plugin.getPlayerManager().saveSync(p);
-                if (Bukkit.getOfflinePlayer(p.getUuid()).isOnline()) {
-                    Bukkit.getPlayer(p.getUuid()).sendMessage(lm.getString("Commands.GiveClaims.success").replace("%amount%", String.valueOf(amount)));
+        } else {
+            plugin.getPlayerManager().getOfflinePlayerAsync(target, p -> {
+                if (p != null) {
+                    p.addClaims(amount);
+                    plugin.getPlayerManager().saveSync(p);
+                    if (Bukkit.getOfflinePlayer(p.getUuid()).isOnline()) {
+                        Bukkit.getPlayer(p.getUuid()).sendMessage(lm.getString("Commands.GiveClaims.success").replace("%amount%", String.valueOf(amount)));
+                    }
+                } else {
+                    issuer.sendMessage(lm.getString("Commands.GiveClaims.noPlayer"));
                 }
-            } else {
-                issuer.sendMessage(lm.getString("Commands.GiveClaims.noPlayer"));
-            }
-        });
+            });
+        }
     }
 
-    public boolean checkPermission(Player player, int amount) {
+    // TODO clean up this mess Claim#hasLimitPermission!! This is so bad style, i get ill just by thinking about i wrote this bullshit
+    private boolean checkPermission(Player player, int amount) {
         if (!player.hasPermission("landlord.limit.override")) {
-            // int regionCount = pl.getWgHandler().getWG().getRegionManager(player.getWorld()).getRegionCountOfPlayer(pl.getWgHandler().getWG().wrapPlayer(player));
             int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
             List<Integer> limitlist = plugin.getConfig().getIntegerList("limits");
 
             int highestAllowedLandCount = -1;
             for (Integer integer : limitlist) {
-                if (claimcount + amount <= integer) {
-                    if (player.hasPermission("landlord.limit." + integer)) {
-                        highestAllowedLandCount = integer;
-                    }
+                if (player.hasPermission("landlord.limit." + integer)) {
+                    highestAllowedLandCount = integer;
                 }
             }
             if (claimcount + amount > highestAllowedLandCount) {

@@ -78,6 +78,7 @@ Shop:
     - PAPER:50:45000.0
 
 # These are hard caps. If a player has the permission "landlord.limit.10" he will be able to buy up to 20 lands, but cant buy more claims than that.
+# Please sort the entries ascending!
 limits:
   - 10
   - 20

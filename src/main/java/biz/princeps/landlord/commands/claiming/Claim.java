@@ -292,13 +292,13 @@ public class Claim extends LandlordCommand {
         List<Integer> limitlist = plugin.getConfig().getIntegerList("limits");
 
         if (!player.hasPermission("landlord.limit.override")) {
+            // We need to find out, whats the maximum limit.x permission is a player has
 
             int highestAllowedLandCount = -1;
             for (Integer integer : limitlist) {
-                if (regionCount <= integer)
-                    if (player.hasPermission("landlord.limit." + integer)) {
-                        highestAllowedLandCount = integer;
-                    }
+                if (player.hasPermission("landlord.limit." + integer)) {
+                    highestAllowedLandCount = integer;
+                }
             }
 
             if (regionCount >= highestAllowedLandCount) {
