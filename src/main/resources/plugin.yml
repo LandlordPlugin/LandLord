@@ -39,7 +39,7 @@ permissions:
       landlord.admin.reload: true
       landlord.admin.modifyfriends: true
       landlord.admin.giveclaims: true
-      landlord.admin.update: true 
+      landlord.admin.update: true
       landlord.admin.admintp: true
 
   landlord.use:

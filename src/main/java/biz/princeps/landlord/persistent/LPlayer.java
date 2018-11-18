@@ -30,16 +30,16 @@ public class LPlayer {
         this.localDateTime = TimeUtil.stringToTime(lastseen);
     }
 
+    public LPlayer(UUID uuid) {
+        this.uuid = uuid;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public LPlayer(UUID uuid) {
-        this.uuid = uuid;
     }
 
     public UUID getUuid() {

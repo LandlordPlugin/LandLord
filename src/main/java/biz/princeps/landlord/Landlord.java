@@ -8,7 +8,10 @@ import biz.princeps.landlord.items.Maitem;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
 import biz.princeps.landlord.listener.TresholdListener;
-import biz.princeps.landlord.manager.*;
+import biz.princeps.landlord.manager.CostManager;
+import biz.princeps.landlord.manager.LPlayerManager;
+import biz.princeps.landlord.manager.LangManager;
+import biz.princeps.landlord.manager.OfferManager;
 import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.LPlayer;
@@ -26,11 +29,13 @@ import co.aikar.taskchain.TaskChainFactory;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.spigotmc.SpigotConfig;
 
 import java.util.List;
 import java.util.UUID;
@@ -45,11 +50,9 @@ import java.util.concurrent.Executors;
 public class Landlord extends JavaPlugin implements LandLordAPI {
 
     private static Landlord instance;
-
+    private static TaskChainFactory taskChainFactory;
     private Database db;
     private ExecutorService executorService;
-    private static TaskChainFactory taskChainFactory;
-
     private WorldGuardHandler wgHandler;
     private VaultHandler vaultHandler;
 
@@ -61,6 +64,17 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     public static Landlord getInstance() {
         return instance;
+    }
+
+    /**
+     * Task Chain Stuff
+     **/
+    public static <T> TaskChain<T> newChain() {
+        return taskChainFactory.newChain();
+    }
+
+    public static <T> TaskChain<T> newSharedChain(String name) {
+        return taskChainFactory.newSharedChain(name);
     }
 
     @Override
@@ -311,17 +325,6 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Task Chain Stuff
-     **/
-    public static <T> TaskChain<T> newChain() {
-        return taskChainFactory.newChain();
-    }
-
-    public static <T> TaskChain<T> newSharedChain(String name) {
-        return taskChainFactory.newSharedChain(name);
     }
 
 }

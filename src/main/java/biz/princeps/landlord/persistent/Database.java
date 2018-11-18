@@ -78,7 +78,7 @@ public class Database extends Datastorage {
         Triplet triplet = executeQuery("SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
                 sanitize(obj.toString()) + "'");
         //System.out.println("Query: " + "SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
-         //       sanitize(obj.toString()) + "'");
+        //       sanitize(obj.toString()) + "'");
         try {
             ResultSet res = triplet.getResultSet();
             if (!res.next()) {
@@ -99,8 +99,8 @@ public class Database extends Datastorage {
         return null;
     }
 
-    private String sanitize(String input){
-        return input.split(" ")[0].replace(";","").replace("\\","")
+    private String sanitize(String input) {
+        return input.split(" ")[0].replace(";", "").replace("\\", "")
                 .replace("'", "").replace("\"", "");
     }
 

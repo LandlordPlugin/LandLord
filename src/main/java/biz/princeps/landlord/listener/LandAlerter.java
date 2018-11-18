@@ -37,52 +37,6 @@ import java.util.UUID;
  */
 public class LandAlerter extends BasicListener {
 
-    class ChunkCoords {
-        int x;
-        int z;
-        World world;
-
-        public ChunkCoords(World world, int x, int z) {
-            this.x = x;
-            this.z = z;
-            this.world = world;
-        }
-
-        public ChunkCoords(Location loc) {
-            this.x = loc.getChunk().getX();
-            this.z = loc.getChunk().getZ();
-            this.world = loc.getWorld();
-        }
-
-        public Location getLocation() {
-            return new Location(world, x * 16, 0, z * 16);
-        }
-
-        @Override
-        public String toString() {
-            return "ChunkCoords{" +
-                    "x=" + x +
-                    ", z=" + z +
-                    ", world=" + world.getName() +
-                    '}';
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ChunkCoords that = (ChunkCoords) o;
-            return x == that.x &&
-                    z == that.z &&
-                    Objects.equals(world, that.world);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, z, world);
-        }
-    }
-
     private Landlord pl = Landlord.getInstance();
     private HashMap<UUID, ChunkCoords> currentLands;
     private HashMap<UUID, ChunkCoords> previousLands;
@@ -90,7 +44,6 @@ public class LandAlerter extends BasicListener {
     // transferring the player to the teleported location
     private HashMap<UUID, Location> playerPosition;
     private LandMessageDisplay type;
-
     /**
      * such a mess, but I cant think of a less intrusive way
      */
@@ -290,22 +243,67 @@ public class LandAlerter extends BasicListener {
         this.playerPosition.replace(p.getUniqueId(), e.getTo());
 
         OwnedLand toLand = pl.getLand(e.getTo());
-        if(toLand != null){
+        if (toLand != null) {
             send(toLand.getWGLand().getFlag(Flags.GREET_MESSAGE), p);
         }
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e){
+    public void onJoin(PlayerJoinEvent e) {
         this.playerPosition.put(e.getPlayer().getUniqueId(), e.getPlayer().getLocation());
     }
-
 
     enum LandMessageDisplay {
         ActionBar,
         Chat,
         Title,
         Disabled
+    }
+
+    class ChunkCoords {
+        int x;
+        int z;
+        World world;
+
+        public ChunkCoords(World world, int x, int z) {
+            this.x = x;
+            this.z = z;
+            this.world = world;
+        }
+
+        public ChunkCoords(Location loc) {
+            this.x = loc.getChunk().getX();
+            this.z = loc.getChunk().getZ();
+            this.world = loc.getWorld();
+        }
+
+        public Location getLocation() {
+            return new Location(world, x * 16, 0, z * 16);
+        }
+
+        @Override
+        public String toString() {
+            return "ChunkCoords{" +
+                    "x=" + x +
+                    ", z=" + z +
+                    ", world=" + world.getName() +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ChunkCoords that = (ChunkCoords) o;
+            return x == that.x &&
+                    z == that.z &&
+                    Objects.equals(world, that.world);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, z, world);
+        }
     }
 
 }

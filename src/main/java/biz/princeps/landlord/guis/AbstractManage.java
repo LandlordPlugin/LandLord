@@ -158,8 +158,6 @@ public abstract class AbstractManage extends AbstractGUI {
             position++;
         }
 
-
-        //TODO add proper land manage commands, so that you can manage lands from within landlist
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet.enable")) {
             String currentGreet = land.getWGLand().getFlag(Flags.GREET_MESSAGE);

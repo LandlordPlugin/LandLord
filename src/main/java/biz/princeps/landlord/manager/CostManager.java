@@ -14,14 +14,6 @@ public class CostManager {
     private Landlord plugin;
     private COST_FUNCTION selectedFunction;
 
-    enum COST_FUNCTION {
-        LIMITED,
-        LINEAR,
-        EXPONENTIAL,
-        LOGARITHMIC,
-        SINUS
-    }
-
     public CostManager() {
         this.plugin = Landlord.getInstance();
 
@@ -98,5 +90,13 @@ public class CostManager {
         }
 
         return -1;
+    }
+
+    enum COST_FUNCTION {
+        LIMITED,
+        LINEAR,
+        EXPONENTIAL,
+        LOGARITHMIC,
+        SINUS
     }
 }

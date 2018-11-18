@@ -24,12 +24,12 @@ public class LandUnclaimEvent extends Event implements Cancellable {
         this.land = land;
     }
 
-    @Override
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    @Override
+    public HandlerList getHandlers() {
         return handlers;
     }
 

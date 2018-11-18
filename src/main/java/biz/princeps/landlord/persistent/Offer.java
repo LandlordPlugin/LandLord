@@ -19,17 +19,16 @@ public class Offer {
         this.seller = seller;
     }
 
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public String getLandname() {
         return landname;
     }
 
     public double getPrice() {
         return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public UUID getSeller() {

@@ -22,8 +22,8 @@ import java.util.List;
 public class Maitem extends AbstractItem {
     // So called My-Item or Management-Item. Whatever sounds better to you <3
 
-    private static final ItemStack STACK = new ItemStack(Material.valueOf(Landlord.getInstance().getConfig().getString("MaItem.item")));
     public static final String NAME = "maitem";
+    private static final ItemStack STACK = new ItemStack(Material.valueOf(Landlord.getInstance().getConfig().getString("MaItem.item")));
     private ArrayList<ItemClickAction> clickActions = new ArrayList<>();
 
     private Landlord plugin = Landlord.getInstance();
@@ -34,7 +34,7 @@ public class Maitem extends AbstractItem {
         setItemAppearance();
     }
 
-    private void setItemAppearance(){
+    private void setItemAppearance() {
         List<String> lore = plugin.getLangManager().getStringList("MaItem.lore");
         String name = plugin.getLangManager().getRawString("MaItem.itemname");
 

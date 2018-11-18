@@ -24,7 +24,7 @@ public class ManageAll extends LandlordCommand {
         List<OwnedLand> lands = new ArrayList<>();
 
         for (World world : Bukkit.getWorlds()) {
-            for(ProtectedRegion pr : plugin.getWgHandler().getRegions(player.getUniqueId(), world)){
+            for (ProtectedRegion pr : plugin.getWgHandler().getRegions(player.getUniqueId(), world)) {
                 lands.add(plugin.getLand(pr));
             }
         }

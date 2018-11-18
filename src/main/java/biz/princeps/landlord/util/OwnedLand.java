@@ -34,6 +34,62 @@ public class OwnedLand {
         this.initFlags();
     }
 
+    /**
+     * Highlights the border around the chunk with a particle effect.
+     *
+     * @param p player
+     * @param e effect to play
+     */
+    public static void highlightLand(Player p, Particle e) {
+        highlightLand(p, e, 5);
+    }
+
+    public static void highlightLand(Player p, Particle e, int amt) {
+        if (!Landlord.getInstance().getConfig().getBoolean("options.particleEffects", true)) {
+            return;
+        }
+        Chunk chunk = p.getLocation().getChunk();
+        List<Location> edgeBlocks = new ArrayList<>();
+        for (int i = 0; i < 16; i++) {
+            for (int ii = -1; ii <= 10; ii++) {
+                edgeBlocks.add(chunk.getBlock(i, (int) (p.getLocation().getY()) + ii, 15).getLocation());
+                edgeBlocks.add(chunk.getBlock(i, (int) (p.getLocation().getY()) + ii, 0).getLocation());
+                edgeBlocks.add(chunk.getBlock(0, (int) (p.getLocation().getY()) + ii, i).getLocation());
+                edgeBlocks.add(chunk.getBlock(15, (int) (p.getLocation().getY()) + ii, i).getLocation());
+            }
+        }
+        for (Location edgeBlock : edgeBlocks) {
+            edgeBlock.setZ(edgeBlock.getBlockZ() + .5);
+            edgeBlock.setX(edgeBlock.getBlockX() + .5);
+            PrincepsLib.getStuffManager().spawnParticle(edgeBlock, e, amt);
+        }
+    }
+
+    // statics
+    public static BlockVector3 locationToVec(Location loc) {
+        return BlockVector3.at(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    }
+
+    public static String getName(Chunk chunk) {
+        return chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
+    }
+
+    public static Location getLocationFromName(String name) {
+        String[] split = name.split("_");
+        if (split.length == 3) {
+            World w = Bukkit.getWorld(split[0]);
+            int x = Integer.parseInt(split[1]);
+            int z = Integer.parseInt(split[2]);
+            return new Location(w, x * 16, w.getHighestBlockYAt(x * 16, z * 16), z * 16);
+        } else
+            return null;
+
+    }
+
+    public static OwnedLand fromString(String id) {
+        Location locationFromName = getLocationFromName(id);
+        return Landlord.getInstance().getLand(locationFromName);
+    }
 
     private void initFlags() {
         List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
@@ -148,65 +204,6 @@ public class OwnedLand {
 
     public ProtectedRegion getWGLand() {
         return this.region;
-    }
-
-
-    /**
-     * Highlights the border around the chunk with a particle effect.
-     *
-     * @param p player
-     * @param e effect to play
-     */
-    public static void highlightLand(Player p, Particle e) {
-        highlightLand(p, e, 5);
-    }
-
-    public static void highlightLand(Player p, Particle e, int amt) {
-        if (!Landlord.getInstance().getConfig().getBoolean("options.particleEffects", true)) {
-            return;
-        }
-        Chunk chunk = p.getLocation().getChunk();
-        List<Location> edgeBlocks = new ArrayList<>();
-        for (int i = 0; i < 16; i++) {
-            for (int ii = -1; ii <= 10; ii++) {
-                edgeBlocks.add(chunk.getBlock(i, (int) (p.getLocation().getY()) + ii, 15).getLocation());
-                edgeBlocks.add(chunk.getBlock(i, (int) (p.getLocation().getY()) + ii, 0).getLocation());
-                edgeBlocks.add(chunk.getBlock(0, (int) (p.getLocation().getY()) + ii, i).getLocation());
-                edgeBlocks.add(chunk.getBlock(15, (int) (p.getLocation().getY()) + ii, i).getLocation());
-            }
-        }
-        for (Location edgeBlock : edgeBlocks) {
-            edgeBlock.setZ(edgeBlock.getBlockZ() + .5);
-            edgeBlock.setX(edgeBlock.getBlockX() + .5);
-            PrincepsLib.getStuffManager().spawnParticle(edgeBlock, e, amt);
-        }
-    }
-
-
-    // statics
-    public static BlockVector3 locationToVec(Location loc) {
-        return BlockVector3.at(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-    }
-
-    public static String getName(Chunk chunk) {
-        return chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
-    }
-
-    public static Location getLocationFromName(String name) {
-        String[] split = name.split("_");
-        if (split.length == 3) {
-            World w = Bukkit.getWorld(split[0]);
-            int x = Integer.parseInt(split[1]);
-            int z = Integer.parseInt(split[2]);
-            return new Location(w, x * 16, w.getHighestBlockYAt(x * 16, z * 16), z * 16);
-        } else
-            return null;
-
-    }
-
-    public static OwnedLand fromString(String id){
-        Location locationFromName = getLocationFromName(id);
-        return Landlord.getInstance().getLand(locationFromName);
     }
 
     public LLFlag getFlag(Flag<?> flag) {

@@ -23,5 +23,4 @@ public class ManageGUIAll extends AbstractManage {
     }
 
 
-
 }

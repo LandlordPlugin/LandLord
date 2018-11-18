@@ -44,8 +44,8 @@ import java.util.logging.Logger;
  */
 public class Landlordbase extends MainCommand {
 
-    private Map<String, LandlordCommand> subcommands;
     private static Landlord pl = Landlord.getInstance();
+    private Map<String, LandlordCommand> subcommands;
 
     public Landlordbase() {
         super(pl.getConfig().getString("CommandSettings.Main.name"),
@@ -173,6 +173,51 @@ public class Landlordbase extends MainCommand {
                 .setPreviousString(lm.getRawString("Commands.Help.previous"))
                 .setCommand(pl.getConfig().getString("CommandSettings.Main.name"), argsN).build();
         properties.getPlayer().spigot().sendMessage(msg.create());
+    }
+
+    void migrate(AbstractDatabase db, String tablename, String ownerColumn, String worldColumn, String xColumn, String zColumn) {
+        List<DataObject> objs = new ArrayList<>();
+
+        db.executeQuery("SELECT * FROM " + tablename, res -> {
+
+            try {
+                while (res.next()) {
+                    UUID owner = UUID.fromString(res.getString(ownerColumn));
+                    String world = res.getString(worldColumn);
+                    int x = res.getInt(xColumn);
+                    int z = res.getInt(zColumn);
+
+                    objs.add(new DataObject(owner, world, x, z));
+                }
+            } catch (SQLException e) {
+                Landlord.getInstance().getLogger().warning("There was an error while trying to fetching original data: " + e);
+            }
+        });
+        db.getLogger().info("Finished fetching data from old database. Size: " + objs.size() + " lands");
+        db.getLogger().info("The next step will take around " + objs.size() / 20 / 60 + " minutes");
+
+        new BukkitRunnable() {
+            int counter = 0;
+
+            @Override
+            public void run() {
+                if (counter >= objs.size() - 1) {
+                    db.getLogger().info("Finished migrating database. Migrated " + objs.size() + " lands!");
+                    cancel();
+                }
+
+                DataObject next = objs.get(counter);
+                World world1 = Bukkit.getWorld(next.world);
+                if (world1 != null) {
+                    Chunk chunk = world1.getChunkAt(next.x, next.z);
+                    Landlord.getInstance().getWgHandler().claim(chunk, next.owner);
+                }
+                counter++;
+
+                if (counter % 600 == 0)
+                    db.getLogger().info("Processed " + counter + " lands already. " + (objs.size() - counter) / 20 / 60 + " minutes remaining!");
+            }
+        }.runTaskTimer(Landlord.getInstance(), 0, 1);
     }
 
     class ClaimCMD extends SubCommand {
@@ -410,8 +455,6 @@ public class Landlordbase extends MainCommand {
     }
 
     class MapCMD extends SubCommand {
-        //TODO fix on reconnect
-        // 15-07-18 SP: I have no clue what I mean with this to do. MapManager already takes care...
         public MapCMD() {
             super(pl.getConfig().getString("CommandSettings.Map.name"),
                     pl.getConfig().getString("CommandSettings.Map.usage"),
@@ -796,51 +839,5 @@ public class Landlordbase extends MainCommand {
             this.x = x;
             this.z = z;
         }
-    }
-
-
-    void migrate(AbstractDatabase db, String tablename, String ownerColumn, String worldColumn, String xColumn, String zColumn) {
-        List<DataObject> objs = new ArrayList<>();
-
-        db.executeQuery("SELECT * FROM " + tablename, res -> {
-
-            try {
-                while (res.next()) {
-                    UUID owner = UUID.fromString(res.getString(ownerColumn));
-                    String world = res.getString(worldColumn);
-                    int x = res.getInt(xColumn);
-                    int z = res.getInt(zColumn);
-
-                    objs.add(new DataObject(owner, world, x, z));
-                }
-            } catch (SQLException e) {
-                Landlord.getInstance().getLogger().warning("There was an error while trying to fetching original data: " + e);
-            }
-        });
-        db.getLogger().info("Finished fetching data from old database. Size: " + objs.size() + " lands");
-        db.getLogger().info("The next step will take around " + objs.size() / 20 / 60 + " minutes");
-
-        new BukkitRunnable() {
-            int counter = 0;
-
-            @Override
-            public void run() {
-                if (counter >= objs.size() - 1) {
-                    db.getLogger().info("Finished migrating database. Migrated " + objs.size() + " lands!");
-                    cancel();
-                }
-
-                DataObject next = objs.get(counter);
-                World world1 = Bukkit.getWorld(next.world);
-                if (world1 != null) {
-                    Chunk chunk = world1.getChunkAt(next.x, next.z);
-                    Landlord.getInstance().getWgHandler().claim(chunk, next.owner);
-                }
-                counter++;
-
-                if (counter % 600 == 0)
-                    db.getLogger().info("Processed " + counter + " lands already. " + (objs.size() - counter) / 20 / 60 + " minutes remaining!");
-            }
-        }.runTaskTimer(Landlord.getInstance(), 0, 1);
     }
 }

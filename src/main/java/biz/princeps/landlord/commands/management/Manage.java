@@ -10,8 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-
 /**
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
