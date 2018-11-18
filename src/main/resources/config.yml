@@ -77,7 +77,8 @@ Shop:
   - PAPER:30:13500.0
   - PAPER:50:45000.0
 
-# These are hard caps. If a player has the permission "landlord.limit.10" he will be able to buy up to 20 lands, but cant buy more claims than that.
+# These are hard caps. If a player has the permission "landlord.limit.10" he will be able to buy up to 10 lands.
+# define all the landlord.limit.x permissions you wanna use here in this list.
 # Please sort the entries ascending!
 limits:
 - 10
@@ -152,7 +153,7 @@ CommandSettings:
 
   Claim:
     enableDelimit: true
-    # Newly claimed lands are delimited by this material. You can add data e.g. for colored wool WOOL:3 for cyan wool
+    # Newly claimed lands are delimited by this material. Example below should be self explanatory
     delimitation:
     - 'define: x=TORCH'
     - 'xxxxxxxxxxxxxxxx'
