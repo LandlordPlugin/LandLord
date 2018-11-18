@@ -204,6 +204,11 @@ public class OwnedLand {
 
     }
 
+    public static OwnedLand fromString(String id){
+        Location locationFromName = getLocationFromName(id);
+        return Landlord.getInstance().getLand(locationFromName);
+    }
+
     public LLFlag getFlag(Flag<?> flag) {
         for (LLFlag llFlag : flags) {
             if (llFlag.getWGFlag().equals(flag))

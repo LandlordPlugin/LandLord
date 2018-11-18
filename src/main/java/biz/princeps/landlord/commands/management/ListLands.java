@@ -21,8 +21,7 @@ import java.util.List;
  * Date: 18/7/17
  */
 public class ListLands extends LandlordCommand {
-    //TODO fix land manage <id>
-    // TODO fix unclaim in gui wrong map display
+
     public void onListLands(Player sender, LPlayer target, int page) {
 
         List<OwnedLand> lands = plugin.getWgHandler().getRegionsAsOL(target.getUuid());

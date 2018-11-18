@@ -21,46 +21,34 @@ public class Manage extends LandlordCommand {
 
     public void onManage(Player player, String[] args) {
 
-        OwnedLand land = plugin.getWgHandler().getRegion(player.getLocation().getChunk());
-
-        if (land == null) {
-            player.sendMessage(lm.getString("Commands.Manage.notOwnFreeLand"));
-            return;
-        }
-
-        if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.manage")) {
-            player.sendMessage(lm.getString("Commands.Manage.notOwn")
-                    .replace("%owner%", land.printOwners()));
-            return;
-        }
-
         // land manage
-        if (args.length == 0) {
-            ManageGUI gui = new ManageGUI(player, land);
-            gui.display();
-        } else if (args.length == 1 && !args[0].equals("setgreet")
+        if (args.length == 0 || (args.length == 1 && !args[0].equals("setgreet")
                 && !args[0].equals("setgreetall")
                 && !args[0].equals("setfarewell")
-                && !args[0].equals("setfarewellall")) {
+                && !args[0].equals("setfarewellall"))) {
 
-            // land manage <landid>
-            World world;
-            try {
-                world = Bukkit.getWorld(args[0].split("_")[0]);
-            } catch (IndexOutOfBoundsException e) {
-                player.sendMessage(lm.getString("Commands.manage.invalidArguments"));
+            OwnedLand land;
+            if (args.length == 0) {
+                land = plugin.getWgHandler().getRegion(player.getLocation().getChunk());
+            } else {
+                // land manage <landid>
+                land = OwnedLand.fromString(args[0]);
+            }
+
+            if (land == null) {
+                player.sendMessage(lm.getString("Commands.Manage.notOwnFreeLand"));
                 return;
             }
-            if (Bukkit.getWorlds().contains(world)) {
-                RegionManager rm = plugin.getWgHandler().getRegionManager(world);
-                if (rm != null) {
-                    ProtectedRegion target = rm.getRegion(args[0]);
-                    if (target != null) {
-                        ManageGUI gui = new ManageGUI(player, plugin.getLand(target));
-                        gui.display();
-                    }
-                }
+
+            if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.manage")) {
+                player.sendMessage(lm.getString("Commands.Manage.notOwn")
+                        .replace("%owner%", land.printOwners()));
+                return;
             }
+
+            ManageGUI gui = new ManageGUI(player, land);
+            gui.display();
+
         } else {
             // land manage <allCommands>
             switch (args[0]) {
@@ -100,7 +88,7 @@ public class Manage extends LandlordCommand {
 
                     break;
                 case "setgreet":
-                    System.out.println("greet " + Arrays.toString(args));
+                    //System.out.println("greet " + Arrays.toString(args));
                     setGreet(player, args, plugin.getLand(player.getLocation()).getWGLand(), 1);
 
                     break;
