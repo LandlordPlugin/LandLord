@@ -26,13 +26,11 @@ import co.aikar.taskchain.TaskChainFactory;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.spigotmc.SpigotConfig;
 
 import java.util.List;
 import java.util.UUID;
@@ -67,24 +65,43 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     @Override
     public void onEnable() {
+        if (!Bukkit.getVersion().contains("1.13.2")) {
+            haltPlugin("Invalid spigot version detected! LandLord requires 1.13.2");
+            return;
+        }
+
+        if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+            haltPlugin("ProtocolLib not found! Please ensure you have the correct version of ProtocolLib in order to use LandLord");
+            return;
+        }
+
         // Dependency stuff
         if (getWorldGuard() == null) {
-            getLogger().warning("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to use LandLord");
-            getPluginLoader().disablePlugin(this);
+            haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to use LandLord");
             return;
         } else {
+            String v = Bukkit.getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
+            boolean flag = false;
+            try {
+                int version = Integer.valueOf(v.split(";")[1].split("-")[0]);
+                if (version < 1754) {
+                    flag = true;
+                }
+            } catch (Exception ex) {
+                flag = true;
+            }
+            if (flag) {
+                haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 1754+");
+                return;
+            }
+
             wgHandler = new WorldGuardHandler(getWorldGuard());
         }
 
         if (getVault() == null) {
             getLogger().warning("Vault not found! Not all features of landlord are working.");
-        } else
+        } else {
             vaultHandler = new VaultHandler(getVault());
-
-        if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
-            getLogger().warning("ProtocolLib not found! Please ensure you have the correct version of ProtocolLib in order to use LandLord");
-            getPluginLoader().disablePlugin(this);
-            return;
         }
 
         instance = this;
@@ -149,6 +166,11 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         new Updater();
     }
 
+    private void haltPlugin(String warning) {
+        getLogger().warning(warning);
+        getPluginLoader().disablePlugin(this);
+    }
+
     private void setupTranslateableStrings() {
         PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getString("Confirmation.accept"));
         PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getString("Confirmation.decline"));
@@ -173,11 +195,13 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     @Override
     public void onDisable() {
-        if (mapManager != null)
+        if (mapManager != null) {
             mapManager.removeAllMaps();
-
+        }
         Bukkit.getOnlinePlayers().forEach(p -> getPlayerManager().saveSync(getPlayerManager().get(p.getUniqueId())));
-        db.close();
+        if (db != null) {
+            db.close();
+        }
     }
 
     private void manageCommands() {
