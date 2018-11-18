@@ -208,11 +208,14 @@ Commands:
   Help:
     header: '&f&lLand&c&lLord'
     admins:
-    - '&cThis is a String, which will be only displayed to a user with the permission landlord.admin.help'
-    - '&cThis is a second line'
+    - '&c/land clear &8- &7Opens the clear dialog'
+    - '&c/land admintp &8- &7Opens the admin tp dialog'
+    - '&c/land update &8- &7Updates lands with new flags'
+    - '&c/land giveclaims &8- &7Give claims to users'
     players:
     - '&c/land &8- &7View the commands'
     - '&c/land claim &8- &7Claim the chunk you are standing in'
+    - '&c/land multiclaim &8- &7Claims multiple chunks at once'
     - '&c/land unclaim &8- &7Unclaim the chunk you are standing in'
     - '&c/land addfriend <player> &8- &7Add a player as a friend on your land'
     - '&c/land unfriend <player> &8- &7Remove a player as a friend on your land'
@@ -223,6 +226,13 @@ Commands:
     - '&c/land list &8- &7List your owned land'
     - '&c/land info &8- &7View general info about the land you are standing in'
     - '&c/land map &8- &7Toggle the land map'
+    - '&c/land shop &8- &7Opens the claim shop'
+    - '&c/land sethome &8- &7Places your home into one of your lands'
+    - '&c/land home &8- &7Teleports you to your home'
+    - '&c/land borders &8- &7Toggles the border display'
+    - '&c/land item &8- &7Gives you the magic management item (nobody uses it tho)'
+    - '&c/land advertise &8- &7Advertise your land for sale'
+    - '&c/land removeadvertise &8- &7Remove your land from advertisement'
     previous: '&8[&7Previous&8]'
     next: '&8[&7Next&8]'
   Reload:
