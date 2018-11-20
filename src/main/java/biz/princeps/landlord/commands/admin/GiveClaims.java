@@ -62,6 +62,7 @@ public class GiveClaims extends LandlordCommand {
                     target = args.get(0);
                     amount = args.getInt(1);
                 } catch (ArgumentsOutOfBoundsException e) {
+                    //TODO proper error handling
                     e.printStackTrace();
                     return;
                 }

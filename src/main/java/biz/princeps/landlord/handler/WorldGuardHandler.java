@@ -20,6 +20,8 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
+import static io.netty.util.internal.SystemPropertyUtil.contains;
+
 
 /**
  * Project: LandLord
@@ -177,8 +179,11 @@ public class WorldGuardHandler {
     public List<ProtectedRegion> getRegions(UUID id, World world) {
         List<ProtectedRegion> regions = new ArrayList<>();
         for (ProtectedRegion protectedRegion : getRegionManager(world).getRegions().values()) {
-            if (protectedRegion.getOwners().getUniqueIds().contains(id))
-                regions.add(protectedRegion);
+            if (protectedRegion.getOwners().getUniqueIds().contains(id)) {
+                if (getRegion(protectedRegion) != null) {
+                    regions.add(protectedRegion);
+                }
+            }
         }
         return regions;
     }
@@ -217,38 +222,52 @@ public class WorldGuardHandler {
     public int getRegionCountOfPlayer(UUID id) {
         int count = 0;
         OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-        if (op != null)
+        if (op != null) {
+            List<String> worlds = Landlord.getInstance().getConfig().getStringList("disabled-worlds");
+
             for (World world : Bukkit.getWorlds()) {
                 // Only count enabled worlds
-                if (!Landlord.getInstance().getConfig().getStringList("disabled-worlds").contains(world.getName()))
+                if (!worlds.contains(world.getName())) {
                     count += getRegionManager(world).getRegionCountOfPlayer(getWGPlugin().wrapOfflinePlayer(op));
+                }
             }
+        }
         return count;
     }
 
     public Set<ProtectedRegion> getRegions(UUID id) {
         Set<ProtectedRegion> set = new HashSet<>();
         OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-        if (op != null)
+        if (op != null) {
+            List<String> worlds = Landlord.getInstance().getConfig().getStringList("disabled-worlds");
             for (World world : Bukkit.getWorlds()) {
                 // Only count enabled worlds
-                if (!Landlord.getInstance().getConfig().getStringList("disabled-worlds").contains(world.getName()))
+                if (!worlds.contains(world.getName())) {
                     set.addAll(getRegions(id, world));
+                }
             }
+        }
         return set;
     }
 
     public List<OwnedLand> getRegionsAsOL(UUID id) {
         List<OwnedLand> list = new ArrayList<>();
         OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-        if (op != null)
+        if (op != null) {
+            List<String> worlds = Landlord.getInstance().getConfig().getStringList("disabled-worlds");
+
             for (World world : Bukkit.getWorlds()) {
                 // Only count enabled worlds
-                if (!Landlord.getInstance().getConfig().getStringList("disabled-worlds").contains(world.getName()))
+                if (!worlds.contains(world.getName())) {
                     for (ProtectedRegion protectedRegion : getRegions(id, world)) {
-                        list.add(getRegion(protectedRegion));
+                        OwnedLand region = getRegion(protectedRegion);
+                        if (region != null) {
+                            list.add(region);
+                        }
                     }
+                }
             }
+        }
         return list;
     }
 
