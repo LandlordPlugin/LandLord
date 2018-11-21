@@ -3,6 +3,7 @@ package biz.princeps.landlord.handler;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
@@ -228,7 +229,17 @@ public class WorldGuardHandler {
             for (World world : Bukkit.getWorlds()) {
                 // Only count enabled worlds
                 if (!worlds.contains(world.getName())) {
-                    count += getRegionManager(world).getRegionCountOfPlayer(getWGPlugin().wrapOfflinePlayer(op));
+                    RegionManager rm = getRegionManager(world);
+                    LocalPlayer localPlayer = getWGPlugin().wrapOfflinePlayer(op);
+                    if (localPlayer == null) {
+                        System.out.println("Local Player is null!!");
+                        return -1;
+                    }
+                    if (rm == null) {
+                        System.out.println("Region Manager is null!!");
+                        return -1;
+                    }
+                    count += rm.getRegionCountOfPlayer(localPlayer);
                 }
             }
         }
