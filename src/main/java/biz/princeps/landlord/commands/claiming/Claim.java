@@ -98,7 +98,7 @@ public class Claim extends LandlordCommand {
             }
 
             // Ckeck for adjacent claims
-            if (!isAdjacentLandOwned(player, chunk)) {
+            if (!isAdjacentLandOwned(player, chunk, regionCount)) {
                 return;
             }
 
@@ -331,11 +331,9 @@ public class Claim extends LandlordCommand {
         return true;
     }
 
-    private boolean isAdjacentLandOwned(Player player, Chunk chunk) {
+    private boolean isAdjacentLandOwned(Player player, Chunk chunk, int amountOfOwnedLands) {
         if (plugin.getConfig().getBoolean("CommandSettings.Claim.claimOnlyAdjacent")) {
             // Only allow claiming of adjacent chunks
-            int amountOfOwnedLands = plugin.getWgHandler().getRegionCountOfPlayer(player.getUniqueId());
-
             if (amountOfOwnedLands > 0) {
                 // Get adjacent lands of the land, which a player wants to claim.
                 // Only when one of the 4 adjacent is already owned, allow to claim

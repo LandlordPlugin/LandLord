@@ -21,8 +21,7 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
-import static io.netty.util.internal.SystemPropertyUtil.contains;
-
+import static javax.swing.UIManager.get;
 
 /**
  * Project: LandLord
@@ -190,7 +189,19 @@ public class WorldGuardHandler {
     }
 
     public RegionManager getRegionManager(World world) {
-        return getRegionContainer().get(wg.getPlatform().getWorldByName(world.getName()));
+        com.sk89q.worldedit.world.World worldByName = wg.getPlatform().getWorldByName(world.getName());
+        if (worldByName == null) {
+            System.out.println("Worldbyname is null");
+        }
+        RegionContainer regionContainer = getRegionContainer();
+        if (regionContainer == null) {
+            System.out.println("Regioncontainer is null");
+        }
+
+        if (regionContainer.get(worldByName) == null) {
+            System.out.println("regioncontainer does not contain worldbyname " + worldByName.getName());
+        }
+        return regionContainer.get(worldByName);
     }
 
 
@@ -231,13 +242,9 @@ public class WorldGuardHandler {
                 if (!worlds.contains(world.getName())) {
                     RegionManager rm = getRegionManager(world);
                     LocalPlayer localPlayer = getWGPlugin().wrapOfflinePlayer(op);
-                    if (localPlayer == null) {
-                        System.out.println("Local Player is null!!");
-                        return -1;
-                    }
                     if (rm == null) {
                         System.out.println("Region Manager is null!!");
-                        return -1;
+                        continue;
                     }
                     count += rm.getRegionCountOfPlayer(localPlayer);
                 }
