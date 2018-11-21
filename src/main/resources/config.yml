@@ -385,6 +385,15 @@ CommandSettings:
     aliases:
     - adv
 
+  RemoveAdvertise:
+    name: removeadvertise
+    usage: '/land removeadvertise'
+    permissions:
+    - landlord.player.advertise
+    aliases:
+    - remadv
+    - remadvertise
+
   Borders:
     name: borders
     usage: '/land borders'

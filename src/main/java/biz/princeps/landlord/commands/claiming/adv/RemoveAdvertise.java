@@ -14,27 +14,18 @@ import org.bukkit.entity.Player;
  */
 public class RemoveAdvertise extends LandlordCommand {
 
-    public void onAdvertise(Player player, String landname) {
+    public void onRemoveAdvertise(Player player, String landname) {
 
         if (this.worldDisabled(player)) {
             player.sendMessage(lm.getString("Disabled-World"));
             return;
         }
-        Chunk chunk = null;
+        OwnedLand pr;
         if (landname.equals("this")) {
-            chunk = player.getWorld().getChunkAt(player.getLocation());
+            pr = plugin.getWgHandler().getRegion(player.getLocation().getChunk());
         } else {
-            String[] split = landname.split("_");
-            try {
-                int x = Integer.valueOf(split[1]);
-                int z = Integer.valueOf(split[2]);
-                chunk = Bukkit.getWorld(split[0]).getChunkAt(x, z);
-
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
+            pr = OwnedLand.fromString(landname);
         }
-        OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
 
         if (pr == null) {
             player.sendMessage(lm.getString("Commands.Advertise.notOwnFreeLand"));

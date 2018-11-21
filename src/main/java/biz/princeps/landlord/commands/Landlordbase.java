@@ -8,6 +8,7 @@ import biz.princeps.landlord.commands.admin.GiveClaims;
 import biz.princeps.landlord.commands.admin.Update;
 import biz.princeps.landlord.commands.claiming.*;
 import biz.princeps.landlord.commands.claiming.adv.Advertise;
+import biz.princeps.landlord.commands.claiming.adv.RemoveAdvertise;
 import biz.princeps.landlord.commands.friends.*;
 import biz.princeps.landlord.commands.homes.Home;
 import biz.princeps.landlord.commands.homes.SetHome;
@@ -75,6 +76,7 @@ public class Landlordbase extends MainCommand {
         subcommands.put("giveclaims", new GiveClaims());
         subcommands.put("update", new Update());
         subcommands.put("advertise", new Advertise());
+        subcommands.put("remadvertise", new RemoveAdvertise());
         subcommands.put("borders", new Borders());
         subcommands.put("admintp", new AdminTeleport());
         subcommands.put("item", new LLItem());
@@ -677,6 +679,34 @@ public class Landlordbase extends MainCommand {
                         }
 
                         ((Advertise) subcommands.get("advertise")).onAdvertise(properties.getPlayer(), landname, price);
+                    } catch (ArgumentsOutOfBoundsException e) {
+                        properties.sendUsage();
+                    }
+                }
+            }
+        }
+    }
+
+
+    class RemoveAdvertiseCMD extends SubCommand {
+
+        public RemoveAdvertiseCMD() {
+            super(pl.getConfig().getString("CommandSettings.RemoveAdvertise.name"),
+                    pl.getConfig().getString("CommandSettings.RemoveAdvertise.usage"),
+                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveAdvertise.permissions")),
+                    pl.getConfig().getStringList("CommandSettings.RemoveAdvertise.aliases").toArray(new String[]{}));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            if (properties.isPlayer()) {
+                if (Options.isVaultEnabled()) {
+                    try {
+                        String landname = "this";
+                        if (arguments.size() == 1) {
+                            landname = arguments.get(0);
+                        }
+                        ((RemoveAdvertise) subcommands.get("remadvertise")).onRemoveAdvertise(properties.getPlayer(), landname);
                     } catch (ArgumentsOutOfBoundsException e) {
                         properties.sendUsage();
                     }
