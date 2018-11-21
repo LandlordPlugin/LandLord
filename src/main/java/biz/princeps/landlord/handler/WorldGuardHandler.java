@@ -190,23 +190,8 @@ public class WorldGuardHandler {
 
     public RegionManager getRegionManager(World world) {
         com.sk89q.worldedit.world.World worldByName = wg.getPlatform().getWorldByName(world.getName());
-        if (worldByName == null) {
-            System.out.println("Worldbyname is null");
-        }
         RegionContainer regionContainer = getRegionContainer();
-        if (regionContainer == null) {
-            System.out.println("Regioncontainer is null");
-        }
-
-        if (regionContainer.get(worldByName) == null) {
-            System.out.println("regioncontainer does not contain worldbyname " + worldByName.getName());
-        }
         return regionContainer.get(worldByName);
-    }
-
-
-    public RegionManager getRegionManager(String world) {
-        return getRegionContainer().get(wg.getPlatform().getWorldByName(world));
     }
 
     public boolean canClaim(Player player, Chunk currChunk) {
@@ -242,10 +227,6 @@ public class WorldGuardHandler {
                 if (!worlds.contains(world.getName())) {
                     RegionManager rm = getRegionManager(world);
                     LocalPlayer localPlayer = getWGPlugin().wrapOfflinePlayer(op);
-                    if (rm == null) {
-                        System.out.println("Region Manager is null!!");
-                        continue;
-                    }
                     count += rm.getRegionCountOfPlayer(localPlayer);
                 }
             }
