@@ -143,6 +143,7 @@ CommandSettings:
     name: llhelp
     description: The basic command, /llhelp
     usage: 'Usage: /llhelp'
+    enableMissingStringWarning: true
     permissions:
     - landlord.use
     aliases:

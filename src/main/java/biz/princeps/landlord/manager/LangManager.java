@@ -84,7 +84,10 @@ public class LangManager {
     }
 
     public void sendMessage(Player player, String msg) {
-        if (msg.equals("null") || msg.isEmpty()) {
+        if (msg.equals("MISSING STRING") &&
+                pl.getConfig().getBoolean("CommandSettings.Main.enableMissingStringWarning")) {
+            player.sendMessage("&cThe string you are looking for does not exist. Please check the log for further information!");
+        } else if (msg.equals("null") || msg.isEmpty()) {
         } else player.sendMessage(msg);
     }
 }
