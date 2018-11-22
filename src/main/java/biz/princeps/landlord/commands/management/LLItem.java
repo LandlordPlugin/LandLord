@@ -21,11 +21,16 @@ public class LLItem extends LandlordCommand {
             if (player instanceof Player) {
                 targetingPlayer = (Player) player;
             }
-        } else
+        } else {
             targetingPlayer = Bukkit.getPlayer(target);
+        }
 
         if (targetingPlayer == null) {
-            player.sendMessage(lm.getString("Commands.Item.noPlayer").replace("%player%", target));
+            if (player instanceof Player) {
+                lm.sendMessage((Player) player, lm.getString("Commands.Item.noPlayer").replace("%player%", target));
+            } else {
+                player.sendMessage(lm.getString("Commands.Item.noPlayer").replace("%player%", target));
+            }
             return;
         }
 

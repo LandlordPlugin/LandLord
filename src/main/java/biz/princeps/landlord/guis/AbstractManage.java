@@ -129,22 +129,25 @@ public abstract class AbstractManage extends AbstractGUI {
                                             if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
                                                 plugin.getVaultHandler().take(player.getUniqueId(), cost);
                                                 flag = true;
-                                            } else
-                                                player.sendMessage(lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
+                                            } else {
+                                                lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
                                                         .replace("%cost%", plugin.getVaultHandler().format(cost))
                                                         .replace("%name%", land.getName()));
-                                        else flag = true;
+                                            }
+                                        else {
+                                            flag = true;
+                                        }
                                         if (flag) {
                                             if (land.isOwner(player.getUniqueId())) {
                                                 player.getWorld().regenerateChunk(land.getChunk().getX(), land.getChunk().getZ());
-                                                player.sendMessage(lm.getString("Commands.Manage.Regenerate.success")
+                                                lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.success")
                                                         .replace("%land%", land.getName()));
                                                 display();
                                             }
                                         }
 
                                     }, (p2) -> {
-                                player.sendMessage(lm.getString("Commands.Manage.Regenerate.abort")
+                                lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.abort")
                                         .replace("%land%", land.getName()));
                                 display();
                             }, this);

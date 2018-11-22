@@ -50,7 +50,7 @@ public class ClearGUI extends AbstractGUI {
                             a.closeInventory();
                         },
                         (d) -> {
-                            d.sendMessage(lm.getString("Commands.ClearWorld.gui.clearcurrentland.abort"));
+                            lm.sendMessage(d, lm.getString("Commands.ClearWorld.gui.clearcurrentland.abort"));
                             d.closeInventory();
                         }, this);
                 confirm.display();
@@ -73,7 +73,7 @@ public class ClearGUI extends AbstractGUI {
                             a.closeInventory();
                         },
                         (d) -> {
-                            d.sendMessage(lm.getString("Commands.ClearWorld.gui.clearplayer.abort"));
+                            lm.sendMessage(d, lm.getString("Commands.ClearWorld.gui.clearplayer.abort"));
                             d.closeInventory();
                         }, this);
                 confirm.display();
@@ -92,7 +92,7 @@ public class ClearGUI extends AbstractGUI {
                         a.closeInventory();
                     },
                     (d) -> {
-                        d.sendMessage(lm.getString("Commands.ClearWorld.gui.clearworld.abort"));
+                        lm.sendMessage(d, lm.getString("Commands.ClearWorld.gui.clearworld.abort"));
                         d.closeInventory();
                     }, this);
             confirm.display();
@@ -105,7 +105,7 @@ public class ClearGUI extends AbstractGUI {
         RegionManager rgm = plugin.getWgHandler().getRegionManager(land.getWorld());
         rgm.removeRegion(land.getName());
 
-        player.sendMessage(lm.getString("Commands.ClearWorld.gui.clearcurrentland.success")
+        lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearcurrentland.success")
                 .replace("%land%", land.getName()));
     }
 
@@ -120,7 +120,7 @@ public class ClearGUI extends AbstractGUI {
 
         regions.keySet().forEach(regionManager::removeRegion);
 
-        player.sendMessage(lm.getString("Commands.ClearWorld.gui.clearworld.success")
+        lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearworld.success")
                 .replace("%count%", String.valueOf(count))
                 .replace("%world%", world.getName()));
 
@@ -133,7 +133,7 @@ public class ClearGUI extends AbstractGUI {
 
             if (lPlayer == null) {
                 // Failure
-                player.sendMessage(lm.getString("Commands.ClearWorld.noPlayer")
+                lm.sendMessage(player, lm.getString("Commands.ClearWorld.noPlayer")
                         .replace("%players%", id.toString()));
             } else {
                 // Success
@@ -156,7 +156,7 @@ public class ClearGUI extends AbstractGUI {
                     }
                 }
 
-                player.sendMessage(lm.getString("Commands.ClearWorld.gui.clearplayer.success")
+                lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearplayer.success")
                         .replace("%count%", String.valueOf(amt))
                         .replace("%player%", lPlayer.getName()));
 

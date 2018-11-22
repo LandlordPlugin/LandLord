@@ -18,23 +18,23 @@ public class ListFriends extends LandlordCommand {
     public void onListFriends(Player player, String landname) {
 
         if (worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
+            lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
 
         if (landname == null) {
-            player.sendMessage(lm.getString("Commands.Listfriends.freeLand"));
+            lm.sendMessage(player, lm.getString("Commands.Listfriends.freeLand"));
             return;
         }
         String[] split = landname.split("_");
 
         if (split.length != 3) {
-            player.sendMessage(lm.getString("Commands.Listfriends.invalidGeneral"));
+            lm.sendMessage(player, lm.getString("Commands.Listfriends.invalidGeneral"));
             return;
         }
         World world = Bukkit.getWorld(split[0]);
         if (world == null) {
-            player.sendMessage(lm.getString("Commands.Listfriends.invalidWorld"));
+            lm.sendMessage(player, lm.getString("Commands.Listfriends.invalidWorld"));
             return;
         }
         try {
@@ -42,16 +42,16 @@ public class ListFriends extends LandlordCommand {
             OwnedLand land = plugin.getWgHandler().getRegion(loc);
 
             if (land == null) {
-                player.sendMessage(lm.getString("Commands.Listfriends.freeLand"));
+                lm.sendMessage(player, lm.getString("Commands.Listfriends.freeLand"));
                 return;
             }
             if (land.getWGLand().getMembers().size() > 0)
-                player.sendMessage(lm.getString("Commands.Listfriends.friends").replace("%friends%", land.printMembers()));
+                lm.sendMessage(player, lm.getString("Commands.Listfriends.friends").replace("%friends%", land.printMembers()));
             else
-                player.sendMessage(lm.getString("Commands.Listfriends.noFriends"));
+                lm.sendMessage(player, lm.getString("Commands.Listfriends.noFriends"));
 
         } catch (NumberFormatException ex) {
-            player.sendMessage(lm.getString("Commands.Listfriends.invalidGeneral"));
+            lm.sendMessage(player, lm.getString("Commands.Listfriends.invalidGeneral"));
         }
     }
 }

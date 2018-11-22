@@ -18,7 +18,7 @@ public class Unfriend extends LandlordCommand {
     public void onUnfriend(Player player, String[] names) {
 
         if (this.worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
+            lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
@@ -26,7 +26,7 @@ public class Unfriend extends LandlordCommand {
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
         if (land != null) {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
-                player.sendMessage(lm.getString("Commands.Unfriend.notOwn")
+                lm.sendMessage(player, lm.getString("Commands.Unfriend.notOwn")
                         .replace("%owner%", land.printOwners()));
                 return;
             }
@@ -35,12 +35,12 @@ public class Unfriend extends LandlordCommand {
                 plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
                     if (lPlayer == null) {
                         // Failure
-                        player.sendMessage(lm.getString("Commands.Unfriend.noPlayer")
+                        lm.sendMessage(player, lm.getString("Commands.Unfriend.noPlayer")
                                 .replace("%players%", Arrays.asList(names).toString()));
                     } else {
                         // Success
                         land.removeFriend(lPlayer.getUuid());
-                        player.sendMessage(lm.getString("Commands.Unfriend.success")
+                        lm.sendMessage(player, lm.getString("Commands.Unfriend.success")
                                 .replace("%players%", Arrays.asList(names).toString()));
                     }
                 });

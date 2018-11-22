@@ -72,7 +72,7 @@ public class Info extends LandlordCommand {
     public void onInfo(Player player) {
 
         if (worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
+            lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
 
@@ -100,7 +100,7 @@ public class Info extends LandlordCommand {
                         }
 
                         if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
-                            player.sendMessage(replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen,
+                            lm.sendMessage(player, replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen,
                                     plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
                             if (plugin.getConfig().getBoolean("Particles.info"))
                                 OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
@@ -110,18 +110,18 @@ public class Info extends LandlordCommand {
                         Offer offer = plugin.getOfferManager().getOffer(land.getName());
                         if (offer != null) {
                             // advertised land
-                            player.sendMessage(replaceInMessage(advertised, land.getName(), land.printOwners(), land.printMembers(), lastseen,
+                            lm.sendMessage(player, replaceInMessage(advertised, land.getName(), land.printOwners(), land.printMembers(), lastseen,
                                     plugin.getVaultHandler().format(offer.getPrice())));
                         } else {
                             // normal owned land
-                            player.sendMessage(replaceInMessage(owned, land.getName(), land.printOwners(), land.printMembers(), lastseen, ""));
+                            lm.sendMessage(player, replaceInMessage(owned, land.getName(), land.printOwners(), land.printMembers(), lastseen, ""));
                         }
                         if (plugin.getConfig().getBoolean("Particles.info"))
                             OwnedLand.highlightLand(player, Particle.DRIP_WATER);
 
                     } else {
                         // unclaimed
-                        player.sendMessage(replaceInMessage(free, OwnedLand.getName(chunk), "", "", "",
+                        lm.sendMessage(player, replaceInMessage(free, OwnedLand.getName(chunk), "", "", "",
                                 (Options.isVaultEnabled() ? plugin.getVaultHandler().format(
                                         plugin.getCostManager().calculateCost(player.getUniqueId())) : "")));
                         if (plugin.getConfig().getBoolean("Particles.info"))

@@ -25,7 +25,7 @@ public class Claims extends LandlordCommand {
 
 
             if (claimcount > 0) {
-                player.sendMessage(message.replace("%regions%", regionCount + "")
+                lm.sendMessage(player, message.replace("%regions%", regionCount + "")
                         .replace("%claims%", claimcount + ""));
             } else {
                 BaseComponent[] text = TextComponent.fromLegacyText(noClaims);
@@ -35,7 +35,7 @@ public class Claims extends LandlordCommand {
                 player.spigot().sendMessage(text);
             }
         } else {
-            player.sendMessage(lm.getString("Commands.Claims.disabled"));
+            lm.sendMessage(player, lm.getString("Commands.Claims.disabled"));
         }
     }
 

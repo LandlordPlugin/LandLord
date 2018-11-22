@@ -34,12 +34,12 @@ public class Manage extends LandlordCommand {
             }
 
             if (land == null) {
-                player.sendMessage(lm.getString("Commands.Manage.notOwnFreeLand"));
+                lm.sendMessage(player, lm.getString("Commands.Manage.notOwnFreeLand"));
                 return;
             }
 
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.manage")) {
-                player.sendMessage(lm.getString("Commands.Manage.notOwn")
+                lm.sendMessage(player, lm.getString("Commands.Manage.notOwn")
                         .replace("%owner%", land.printOwners()));
                 return;
             }
@@ -64,7 +64,7 @@ public class Manage extends LandlordCommand {
                         protectedRegion.setFlag(Flags.GREET_MESSAGE, newmsg1);
                     }
 
-                    player.sendMessage(lm.getString("Commands.Manage.SetGreet.successful")
+                    lm.sendMessage(player, lm.getString("Commands.Manage.SetGreet.successful")
                             .replace("%msg%", newmsg1));
 
                     break;
@@ -81,7 +81,7 @@ public class Manage extends LandlordCommand {
                         protectedRegion.setFlag(Flags.FAREWELL_MESSAGE, newmsg);
                     }
 
-                    player.sendMessage(lm.getString("Commands.Manage.SetFarewell.successful")
+                    lm.sendMessage(player, lm.getString("Commands.Manage.SetFarewell.successful")
                             .replace("%msg%", newmsg));
 
                     break;
@@ -113,7 +113,7 @@ public class Manage extends LandlordCommand {
                             }
                         }
                     } catch (IndexOutOfBoundsException e) {
-                        player.sendMessage(lm.getString("Commands.manage.invalidArguments"));
+                        lm.sendMessage(player, lm.getString("Commands.manage.invalidArguments"));
                     }
                     break;
             }
@@ -133,7 +133,7 @@ public class Manage extends LandlordCommand {
         }
 
         target.setFlag(Flags.GREET_MESSAGE, newmsg);
-        player.sendMessage(lm.getString("Commands.Manage.SetGreet.successful")
+        lm.sendMessage(player, lm.getString("Commands.Manage.SetGreet.successful")
                 .replace("%msg%", newmsg));
     }
 
@@ -147,7 +147,7 @@ public class Manage extends LandlordCommand {
             newmsg = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", player.getName());
         }
         target.setFlag(Flags.FAREWELL_MESSAGE, newmsg);
-        player.sendMessage(lm.getString("Commands.Manage.SetFarewell.successful")
+        lm.sendMessage(player, lm.getString("Commands.Manage.SetFarewell.successful")
                 .replace("%msg%", newmsg));
     }
 }

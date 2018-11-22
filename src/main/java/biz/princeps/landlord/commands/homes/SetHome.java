@@ -17,12 +17,12 @@ public class SetHome extends LandlordCommand {
     public void onSetHome(Player player) {
 
         if (!Options.enabled_homes()) {
-            player.sendMessage(lm.getString("Commands.SetHome.disabled"));
+            lm.sendMessage(player, lm.getString("Commands.SetHome.disabled"));
             return;
         }
 
         if (this.worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
+            lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
@@ -30,17 +30,17 @@ public class SetHome extends LandlordCommand {
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
 
         if (land == null) {
-            player.sendMessage(lm.getString("Commands.SetHome.nullLand"));
+            lm.sendMessage(player, lm.getString("Commands.SetHome.nullLand"));
             return;
         }
 
         if (!land.isOwner(player.getUniqueId())) {
-            player.sendMessage(lm.getString("Commands.SetHome.notOwn")
+            lm.sendMessage(player, lm.getString("Commands.SetHome.notOwn")
                     .replace("%owner%", land.printOwners()));
             return;
         }
 
         plugin.getPlayerManager().get(player.getUniqueId()).setHome(player.getLocation());
-        player.sendMessage(lm.getString("Commands.SetHome.success"));
+        lm.sendMessage(player, lm.getString("Commands.SetHome.success"));
     }
 }

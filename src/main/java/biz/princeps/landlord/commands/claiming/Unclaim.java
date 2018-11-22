@@ -21,7 +21,7 @@ public class Unclaim extends LandlordCommand {
     public void onUnclaim(Player player, String chunkname) {
 
         if (this.worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
+            lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
         Chunk chunk = null;
@@ -45,7 +45,7 @@ public class Unclaim extends LandlordCommand {
         OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
 
         if (pr == null) {
-            player.sendMessage(lm.getString("Commands.Unclaim.notOwnFreeLand"));
+            lm.sendMessage(player, lm.getString("Commands.Unclaim.notOwnFreeLand"));
             return;
         }
 
@@ -53,7 +53,7 @@ public class Unclaim extends LandlordCommand {
         boolean isAdmin = false;
         if (!player.hasPermission("landlord.admin.unclaim")) {
             if (!pr.isOwner(player.getUniqueId())) {
-                player.sendMessage(lm.getString("Commands.Unclaim.notOwn")
+                lm.sendMessage(player, lm.getString("Commands.Unclaim.notOwn")
                         .replace("%owner%", pr.printOwners()));
                 return;
             }
@@ -91,7 +91,7 @@ public class Unclaim extends LandlordCommand {
                 Location home = lPlayer.getHome();
                 if (home != null) {
                     if (pr.getWGLand().contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
-                        player.sendMessage(lm.getString("Commands.SetHome.removed"));
+                        lm.sendMessage(player, lm.getString("Commands.SetHome.removed"));
                         plugin.getPlayerManager().get(pr.getOwner()).setHome(null);
                     }
                 }
@@ -103,7 +103,7 @@ public class Unclaim extends LandlordCommand {
             // Remove possible advertisements
             plugin.getOfferManager().removeOffer(pr.getName());
 
-            player.sendMessage(lm.getString("Commands.Unclaim.success")
+            lm.sendMessage(player, lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", OwnedLand.getName(chunk))
                     .replace("%world%", chunk.getWorld().getName())
                     .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultHandler().format(payback) : "-eco disabled-")));

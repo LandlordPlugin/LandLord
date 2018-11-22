@@ -51,7 +51,7 @@ public class Borders extends LandlordCommand {
                 }
             }.runTaskTimer(plugin, 0, plugin.getConfig().getInt("Borders.refreshRate") * 20));
         } else {
-            p.sendMessage(lm.getString("Commands.Borders.deactivated"));
+            lm.sendMessage(p, lm.getString("Commands.Borders.deactivated"));
             tasks.get(p).cancel();
             tasks.remove(p);
         }

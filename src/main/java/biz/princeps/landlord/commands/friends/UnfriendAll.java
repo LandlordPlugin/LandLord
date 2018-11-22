@@ -17,7 +17,7 @@ public class UnfriendAll extends LandlordCommand {
     public void onUnfriendall(Player player, String name) {
 
         if (name == null || name.isEmpty()) {
-            player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
+            lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
                     .replace("%players%", Collections.singletonList("[]").toString()));
             return;
         }
@@ -26,7 +26,7 @@ public class UnfriendAll extends LandlordCommand {
 
             // Failure
             if (lPlayer == null) {
-                player.sendMessage(lm.getString("Commands.UnfriendAll.noPlayer")
+                lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noPlayer")
                         .replace("%players%", Collections.singletonList(name).toString()));
             } else {
                 // Success
@@ -39,7 +39,7 @@ public class UnfriendAll extends LandlordCommand {
                 }
 
                 if (count > 0) {
-                    player.sendMessage(lm.getString("Commands.UnfriendAll.success")
+                    lm.sendMessage(player, lm.getString("Commands.UnfriendAll.success")
                             .replace("%count%", String.valueOf(count))
                             .replace("%players%", name));
                     new BukkitRunnable() {
@@ -50,7 +50,7 @@ public class UnfriendAll extends LandlordCommand {
                         }
                     }.runTask(plugin);
                 } else {
-                    player.sendMessage(lm.getString("Commands.UnfriendAll.noFriend")
+                    lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noFriend")
                             .replace("%player%", name));
                 }
             }

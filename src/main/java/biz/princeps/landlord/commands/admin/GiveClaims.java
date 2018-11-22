@@ -6,6 +6,7 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -40,13 +41,13 @@ public class GiveClaims extends LandlordCommand {
                     if (checkPermission(player, amount)) {
                         if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
                             plugin.getVaultHandler().take(player.getUniqueId(), cost);
-                            player.sendMessage(plugin.getLangManager().getString("Shop.success")
+                            lm.sendMessage(player, plugin.getLangManager().getString("Shop.success")
                                     .replace("%number%", amount + "")
                                     .replace("%cost%", plugin.getVaultHandler().format(cost)));
                             player.closeInventory();
                             addClaims(issuer, target, amount);
                         } else {
-                            player.sendMessage(plugin.getLangManager().getString("Shop.notEnoughMoney")
+                            lm.sendMessage(player, plugin.getLangManager().getString("Shop.notEnoughMoney")
                                     .replace("%number%", amount + "")
                                     .replace("%cost%", plugin.getVaultHandler().format(cost)));
                             player.closeInventory();
@@ -94,20 +95,25 @@ public class GiveClaims extends LandlordCommand {
 
     private void addClaims(Properties issuer, String target, int amount) {
         LPlayer lPlayer = plugin.getPlayerManager().get(target);
-
-        if (Bukkit.getPlayer(target).isOnline() && lPlayer != null) {
+        Player player = Bukkit.getPlayer(target);
+        if (player != null && player.isOnline() && lPlayer != null) {
             lPlayer.addClaims(amount);
-            Bukkit.getPlayer(target).sendMessage(lm.getString("Commands.GiveClaims.success").replace("%amount%", String.valueOf(amount)));
+            lm.sendMessage(player, lm.getString("Commands.GiveClaims.success")
+                    .replace("%amount%", String.valueOf(amount)));
         } else {
             plugin.getPlayerManager().getOfflinePlayerAsync(target, p -> {
                 if (p != null) {
                     p.addClaims(amount);
                     plugin.getPlayerManager().saveSync(p);
-                    if (Bukkit.getOfflinePlayer(p.getUuid()).isOnline()) {
-                        Bukkit.getPlayer(p.getUuid()).sendMessage(lm.getString("Commands.GiveClaims.success").replace("%amount%", String.valueOf(amount)));
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(p.getUuid());
+
+                    if (op.isOnline()) {
+                        lm.sendMessage(op.getPlayer(), lm.getString("Commands.GiveClaims.success").replace("%amount%", String.valueOf(amount)));
                     }
                 } else {
-                    issuer.sendMessage(lm.getString("Commands.GiveClaims.noPlayer"));
+                    if (issuer.getPlayer() != null) {
+                        lm.sendMessage(issuer.getPlayer(), lm.getString("Commands.GiveClaims.noPlayer"));
+                    }
                 }
             });
         }
@@ -126,7 +132,7 @@ public class GiveClaims extends LandlordCommand {
                 }
             }
             if (claimcount + amount > highestAllowedLandCount) {
-                player.sendMessage(plugin.getLangManager().getString("Shop.notAllowed"));
+                lm.sendMessage(player,plugin.getLangManager().getString("Shop.notAllowed"));
                 return false;
             }
         }

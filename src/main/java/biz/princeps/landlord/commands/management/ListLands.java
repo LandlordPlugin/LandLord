@@ -104,7 +104,7 @@ public class ListLands extends LandlordCommand {
                 sender.spigot().sendMessage(message.create());
             }
         } else {
-            sender.sendMessage(plugin.getLangManager().getString("Commands.ListLands.noLands"));
+            lm.sendMessage(sender, plugin.getLangManager().getString("Commands.ListLands.noLands"));
         }
     }
 

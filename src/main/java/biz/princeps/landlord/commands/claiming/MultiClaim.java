@@ -46,7 +46,7 @@ public class MultiClaim extends LandlordCommand {
             Set<Chunk> toClaim = getToClaimChunks(mode, param, player.getPlayer().getLocation());
 
             if (toClaim.size() == 0) {
-                player.sendMessage(lm.getString("Commands.MultiClaim.noLands"));
+                lm.sendMessage(player.getPlayer(), lm.getString("Commands.MultiClaim.noLands"));
                 return;
             }
 
@@ -71,7 +71,7 @@ public class MultiClaim extends LandlordCommand {
                     },
                     (p) -> {
                         // on decline
-                        p.sendMessage(lm.getString("Commands.MultiClaim.abort")
+                        lm.sendMessage(p, lm.getString("Commands.MultiClaim.abort")
                                 .replace("%amount%", toClaim.size() + ""));
                     }, confirmcmd);
         } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ex) {

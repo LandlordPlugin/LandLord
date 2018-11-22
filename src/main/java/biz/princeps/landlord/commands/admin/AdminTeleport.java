@@ -26,7 +26,7 @@ public class AdminTeleport extends LandlordCommand {
 
             if (lplayer == null) {
                 // Failure
-                sender.sendMessage(lm.getString("Commands.AdminTp.noPlayer").replace("%player%", target));
+                lm.sendMessage(sender, lm.getString("Commands.AdminTp.noPlayer").replace("%player%", target));
             } else {
                 // Success
 
@@ -48,7 +48,7 @@ public class AdminTeleport extends LandlordCommand {
 
                     landGui.display();
                 } else {
-                    sender.sendMessage(lm.getString("Commands.AdminTp.noLands").replace("%player%", target));
+                    lm.sendMessage(sender, lm.getString("Commands.AdminTp.noLands").replace("%player%", target));
                 }
             }
         });

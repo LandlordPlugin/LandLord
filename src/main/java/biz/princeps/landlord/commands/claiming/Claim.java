@@ -38,7 +38,7 @@ public class Claim extends LandlordCommand {
     public void onClaim(Player player, Chunk chunk) {
 
         if (this.worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
+            lm.sendMessage(player,lm.getString("Disabled-World"));
             return;
         }
         OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
@@ -64,7 +64,7 @@ public class Claim extends LandlordCommand {
             // Check if there is an overlapping wg-region
             if (!plugin.getWgHandler().canClaim(player, chunk)) {
                 if (pr == null || (plugin.getOfferManager().getOffer(landname) == null && !inactive)) {
-                    player.sendMessage(lm.getString("Commands.Claim.notAllowed"));
+                    lm.sendMessage(player,lm.getString("Commands.Claim.notAllowed"));
                     return;
                 }
             }
@@ -72,14 +72,14 @@ public class Claim extends LandlordCommand {
             if (pr != null) {
                 if (pr.getOwner().equals(player.getUniqueId())) {
                     // cannot buy own land
-                    player.sendMessage(lm.getString("Commands.Claim.alreadyClaimed")
+                    lm.sendMessage(player,lm.getString("Commands.Claim.alreadyClaimed")
                             .replace("%owner%", pr.printOwners()));
                     return;
                 }
 
                 Offer offer = plugin.getOfferManager().getOffer(pr.getName());
                 if (!plugin.getPlayerManager().isInactive(pr.getOwner()) && offer == null) {
-                    player.sendMessage(lm.getString("Commands.Claim.notYetInactive")
+                    lm.sendMessage(player,lm.getString("Commands.Claim.notYetInactive")
                             .replace("%owner%", pr.printOwners())
                             .replace("%days%", "" + inactiveDays));
                     return;
@@ -132,7 +132,7 @@ public class Claim extends LandlordCommand {
                                             pr.getWGLand().getOwners().clear();
                                             pr.getWGLand().getOwners().addPlayer(player.getUniqueId());
 
-                                            player.sendMessage(lm.getString("Commands.Claim.boughtUp")
+                                            lm.sendMessage(player, lm.getString("Commands.Claim.boughtUp")
                                                     .replace("%player%", originalOwner)
                                                     .replace("%price%", plugin.getVaultHandler().format(costForBuyer))
                                                     .replace("%chunk%", pr.getName()));
@@ -142,7 +142,7 @@ public class Claim extends LandlordCommand {
 
                                             player.closeInventory();
                                         }, (p) -> {
-                                            player.sendMessage(lm.getString("Commands.Claim.aborted"));
+                                            lm.sendMessage(player, lm.getString("Commands.Claim.aborted"));
                                             player.closeInventory();
                                         }, confirmcmd);
 
@@ -153,7 +153,7 @@ public class Claim extends LandlordCommand {
                                 pr.getWGLand().getOwners().clear();
                                 pr.getWGLand().getOwners().addPlayer(player.getUniqueId());
 
-                                player.sendMessage(lm.getString("Commands.Claim.boughtUp")
+                                lm.sendMessage(player, lm.getString("Commands.Claim.boughtUp")
                                         .replace("%player%", originalOwner)
                                         .replace("%price%", plugin.getVaultHandler().format(costForBuyer))
                                         .replace("%chunk%", pr.getName()));
@@ -164,7 +164,7 @@ public class Claim extends LandlordCommand {
                             return;
                         } else {
                             // Not enough money
-                            player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
+                            lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
                                     .replace("%money%", plugin.getVaultHandler().format(costForBuyer))
                                     .replace("%chunk%", OwnedLand.getName(chunk)));
                             return;
@@ -188,12 +188,13 @@ public class Claim extends LandlordCommand {
                                 pr.getWGLand().getOwners().clear();
                                 pr.getWGLand().getOwners().addPlayer(player.getUniqueId());
 
-                                player.sendMessage(lm.getString("Commands.Claim.success")
+                                lm.sendMessage(player, lm.getString("Commands.Claim.success")
                                         .replace("%chunk%", OwnedLand.getName(chunk))
                                         .replace("%world%", chunk.getWorld().getName()));
 
-                                if (Bukkit.getPlayer(offer.getSeller()).isOnline()) {
-                                    Bukkit.getPlayer(offer.getSeller()).sendMessage(lm.getString("Commands.Claim.p2pSuccess")
+                                Player pp = Bukkit.getPlayer(offer.getSeller());
+                                if (pp.isOnline()) {
+                                    lm.sendMessage(pp, lm.getString("Commands.Claim.p2pSuccess")
                                             .replace("%player%", p.getName())
                                             .replace("%chunk%", OwnedLand.getName(chunk))
                                             .replace("%world%", chunk.getWorld().getName())
@@ -205,13 +206,13 @@ public class Claim extends LandlordCommand {
 
                                 player.closeInventory();
                             }, (p) -> {
-                                player.sendMessage(lm.getString("Commands.Claim.aborted"));
+                                lm.sendMessage(player, lm.getString("Commands.Claim.aborted"));
                                 player.closeInventory();
                             }, confirmcmd);
 
                         } else {
                             // Not enough money
-                            player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
+                            lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
                                     .replace("%money%", plugin.getVaultHandler().format(offer.getPrice()))
                                     .replace("%chunk%", OwnedLand.getName(chunk)));
                             return;
@@ -230,20 +231,20 @@ public class Claim extends LandlordCommand {
                                         (p) -> {
                                             plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
                                             if (calculatedCost > 0)
-                                                player.sendMessage(lm.getString("Commands.Claim.moneyTook")
+                                                lm.sendMessage(player, lm.getString("Commands.Claim.moneyTook")
                                                         .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
                                                         .replace("%chunk%", OwnedLand.getName(chunk)));
                                             performClaim(player, chunk);
                                             p.closeInventory();
                                         },
                                         (p) -> {
-                                            player.sendMessage(lm.getString("Commands.Claim.aborted"));
+                                            lm.sendMessage(player, lm.getString("Commands.Claim.aborted"));
                                             p.closeInventory();
                                         }, confirmcmd);
                             } else {
                                 plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
                                 if (calculatedCost > 0)
-                                    player.sendMessage(lm.getString("Commands.Claim.moneyTook")
+                                    lm.sendMessage(player, lm.getString("Commands.Claim.moneyTook")
                                             .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
                                             .replace("%chunk%", OwnedLand.getName(chunk)));
                                 performClaim(player, chunk);
@@ -252,7 +253,7 @@ public class Claim extends LandlordCommand {
                             return;
                         } else {
                             // NOT ENOUGH MONEY
-                            player.sendMessage(lm.getString("Commands.Claim.notEnoughMoney")
+                            lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
                                     .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
                                     .replace("%chunk%", OwnedLand.getName(chunk)));
                             return;
@@ -267,7 +268,7 @@ public class Claim extends LandlordCommand {
     private void performClaim(Player player, Chunk chunk) {
         plugin.getWgHandler().claim(chunk, player.getUniqueId());
 
-        player.sendMessage(lm.getString("Commands.Claim.success")
+        lm.sendMessage(player, lm.getString("Commands.Claim.success")
                 .replace("%chunk%", OwnedLand.getName(chunk))
                 .replace("%world%", chunk.getWorld().getName()));
 
@@ -303,7 +304,7 @@ public class Claim extends LandlordCommand {
             }
 
             if (regionCount >= highestAllowedLandCount) {
-                player.sendMessage(lm.getString("Commands.Claim.hardcap").replace("%regions%", highestAllowedLandCount + ""));
+                lm.sendMessage(player,lm.getString("Commands.Claim.hardcap").replace("%regions%", highestAllowedLandCount + ""));
                 return false;
             }
             return true;
@@ -356,7 +357,7 @@ public class Claim extends LandlordCommand {
 
                 if (!hasNearbyLand) {
                     // no nearby land is already claimed => Display error msg
-                    player.sendMessage(lm.getString("Commands.Claim.onlyClaimAdjacentChunks").replace("%land%", OwnedLand.getName(chunk)));
+                    lm.sendMessage(player,lm.getString("Commands.Claim.onlyClaimAdjacentChunks").replace("%land%", OwnedLand.getName(chunk)));
                     return false;
                 }
             }
@@ -387,7 +388,7 @@ public class Claim extends LandlordCommand {
 
             if (differentOwner) {
                 // one of the nearby lands is not owned by the player nor its free
-                player.sendMessage(lm.getString("Commands.Claim.needsGap").replace("%land%", OwnedLand.getName(chunk)));
+                lm.sendMessage(player,lm.getString("Commands.Claim.needsGap").replace("%land%", OwnedLand.getName(chunk)));
                 return false;
             }
         }

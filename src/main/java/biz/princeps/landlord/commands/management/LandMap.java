@@ -15,14 +15,14 @@ public class LandMap extends LandlordCommand {
     public void onToggleLandMap(Player player) {
 
         if (this.worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
+            lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
 
         if (Options.enabled_map())
             plugin.getMapManager().toggleMap(player);
         else {
-            player.sendMessage(lm.getString("Commands.LandMap.disabled"));
+            lm.sendMessage(player, lm.getString("Commands.LandMap.disabled"));
         }
 
     }

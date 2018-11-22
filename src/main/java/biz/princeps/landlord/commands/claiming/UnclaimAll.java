@@ -19,7 +19,7 @@ public class UnclaimAll extends LandlordCommand {
     public void onUnclaim(Player player) {
 
         if (this.worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
+            lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
 
@@ -29,15 +29,13 @@ public class UnclaimAll extends LandlordCommand {
         }
 
         if (landsOfPlayer.isEmpty()) {
-            player.sendMessage(lm.getString("Commands.Unclaim.notOwnFreeLand"));
+            lm.sendMessage(player, lm.getString("Commands.Unclaim.notOwnFreeLand"));
             return;
         }
 
         // Normal unclaim
         for (ProtectedRegion protectedRegion : landsOfPlayer) {
-
             Bukkit.dispatchCommand(player, "ll unclaim " + protectedRegion.getId());
-
         }
 
     }

@@ -152,7 +152,7 @@ public class LandAlerter extends BasicListener {
                 PrincepsLib.getStuffManager().sendActionBar(p, msg);
                 return true;
             case Chat:
-                p.sendMessage(msg);
+                pl.getLangManager().sendMessage(p,msg);
                 return true;
             case Title:
                 p.sendTitle(msg, null, 10, 70, 10);

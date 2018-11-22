@@ -45,7 +45,7 @@ public class Home extends LandlordCommand {
             teleport(toGo, player, player.getName());
         } else {
             if (!player.hasPermission("landlord.player.homeother")) {
-                props.sendMessage(lm.getString("noPermissions"));
+                lm.sendMessage(player, lm.getString("noPermissions"));
                 return;
             }
 

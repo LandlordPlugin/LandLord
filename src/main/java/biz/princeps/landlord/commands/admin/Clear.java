@@ -13,7 +13,7 @@ public class Clear extends LandlordCommand {
 
     public void onClearWorld(Player player) {
         if (this.worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
+            lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
         /*

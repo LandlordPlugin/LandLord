@@ -29,7 +29,6 @@ public class ManageAll extends LandlordCommand {
             }
         }
 
-
         ManageGUIAll gui = new ManageGUIAll(player, lands);
         gui.display();
     }

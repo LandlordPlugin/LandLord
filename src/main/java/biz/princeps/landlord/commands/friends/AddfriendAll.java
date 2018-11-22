@@ -14,7 +14,7 @@ public class AddfriendAll extends LandlordCommand {
 
     public void onAddfriend(Player player, String name) {
         if (name == null || name.isEmpty()) {
-            player.sendMessage(lm.getString("Commands.AddfriendAll.noPlayer")
+            lm.sendMessage(player, lm.getString("Commands.AddfriendAll.noPlayer")
                     .replace("%player%", name == null ? "[]" : name));
             return;
         }
@@ -22,7 +22,7 @@ public class AddfriendAll extends LandlordCommand {
         plugin.getPlayerManager().getOfflinePlayerAsync(name, lPlayer -> {
             if (lPlayer == null) {
                 // Failure
-                player.sendMessage(lm.getString("Commands.AddfriendAll.noPlayer")
+                lm.sendMessage(player, lm.getString("Commands.AddfriendAll.noPlayer")
                         .replace("%player%", name));
             } else {
                 int count = 0;
@@ -33,7 +33,7 @@ public class AddfriendAll extends LandlordCommand {
                     }
                 }
 
-                player.sendMessage(lm.getString("Commands.AddfriendAll.success")
+                lm.sendMessage(player, lm.getString("Commands.AddfriendAll.success")
                         .replace("%player%", name)
                         .replace("%count%", count + ""));
 

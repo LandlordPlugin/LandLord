@@ -55,7 +55,6 @@ public class LPlayer {
     }
 
     public void addClaims(int amount) {
-        System.out.println("Added " + amount + " claims to " + name);
         claims += amount;
     }
 

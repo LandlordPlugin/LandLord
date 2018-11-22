@@ -17,7 +17,7 @@ public class Advertise extends LandlordCommand {
     public void onAdvertise(Player player, String landname, double price) {
 
         if (this.worldDisabled(player)) {
-            player.sendMessage(lm.getString("Disabled-World"));
+            lm.sendMessage(player,lm.getString("Disabled-World"));
             return;
         }
         Chunk chunk = null;
@@ -37,19 +37,19 @@ public class Advertise extends LandlordCommand {
         OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
 
         if (pr == null) {
-            player.sendMessage(lm.getString("Commands.Advertise.notOwnFreeLand"));
+            lm.sendMessage(player,lm.getString("Commands.Advertise.notOwnFreeLand"));
             return;
         }
 
         if (!pr.isOwner(player.getUniqueId())) {
-            player.sendMessage(lm.getString("Commands.Advertise.notOwn").replace("%owner%", pr.printOwners()));
+            lm.sendMessage(player,lm.getString("Commands.Advertise.notOwn").replace("%owner%", pr.printOwners()));
             return;
         }
 
         Offer offer = new Offer(pr.getName(), price, player.getUniqueId());
         plugin.getOfferManager().addOffer(offer);
 
-        player.sendMessage(lm.getString("Commands.Advertise.success")
+        lm.sendMessage(player,lm.getString("Commands.Advertise.success")
                 .replace("%landname%", pr.getName())
                 .replace("%price%", price + ""));
 

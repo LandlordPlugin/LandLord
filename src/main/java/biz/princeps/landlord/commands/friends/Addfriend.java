@@ -22,13 +22,13 @@ public class Addfriend extends LandlordCommand {
         OwnedLand land = plugin.getWgHandler().getRegion(chunk);
         if (land != null) {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
-                player.sendMessage(lm.getString("Commands.Addfriend.notOwn")
+                lm.sendMessage(player, lm.getString("Commands.Addfriend.notOwn")
                         .replace("%owner%", land.printOwners()));
                 return;
             }
 
             if (names.length == 0) {
-                player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
+                lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
                         .replace("%players%", Arrays.asList(names).toString()));
                 return;
             }
@@ -37,16 +37,16 @@ public class Addfriend extends LandlordCommand {
 
                 plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
                     if (lPlayer == null) {
-                        player.sendMessage(lm.getString("Commands.Addfriend.noPlayer")
+                        lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
                                 .replace("%players%", Arrays.asList(names).toString()));
                     } else {
                         // Success
                         if (!land.getWGLand().getOwners().getUniqueIds().contains(lPlayer.getUuid())) {
                             land.getWGLand().getMembers().addPlayer(lPlayer.getUuid());
-                            player.sendMessage(lm.getString("Commands.Addfriend.success")
+                            lm.sendMessage(player, lm.getString("Commands.Addfriend.success")
                                     .replace("%players%", Arrays.asList(names).toString()));
                         } else {
-                            player.sendMessage(lm.getString("Commands.Addfriend.alreadyOwn"));
+                            lm.sendMessage(player, lm.getString("Commands.Addfriend.alreadyOwn"));
                         }
                     }
                 });
