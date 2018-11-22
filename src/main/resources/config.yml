@@ -371,7 +371,7 @@ CommandSettings:
 
   GiveClaims:
     name: giveclaims
-    usage: '/land giveclaims - gives someone claims'
+    usage: '/land giveclaims <amount> - give claims to yourself|/land giveclaims <name> <amount> - give claims to somebody else|/land giveclaims <name> <price> <amount> - gives claims to somebody and take money for it'
     permissions:
     - landlord.claims.give
     aliases:

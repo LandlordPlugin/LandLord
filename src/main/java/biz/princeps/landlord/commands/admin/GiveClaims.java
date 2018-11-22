@@ -20,7 +20,7 @@ public class GiveClaims extends LandlordCommand {
     public void onGiveClaims(Properties issuer, Arguments args) {
         String target;
         int amount;
-        double cost = -1;
+        double cost;
 
         switch (args.size()) {
             case 3:
@@ -31,7 +31,7 @@ public class GiveClaims extends LandlordCommand {
                     cost = args.getDouble(1);
                     amount = args.getInt(2);
                 } catch (ArgumentsOutOfBoundsException e) {
-                    e.printStackTrace();
+                    issuer.sendUsage();
                     return;
                 }
 
@@ -62,8 +62,7 @@ public class GiveClaims extends LandlordCommand {
                     target = args.get(0);
                     amount = args.getInt(1);
                 } catch (ArgumentsOutOfBoundsException e) {
-                    //TODO proper error handling
-                    e.printStackTrace();
+                    issuer.sendUsage();
                     return;
                 }
                 if (Bukkit.getPlayer(target) != null) {
@@ -77,7 +76,7 @@ public class GiveClaims extends LandlordCommand {
                 try {
                     amount = args.getInt(0);
                 } catch (ArgumentsOutOfBoundsException e) {
-                    e.printStackTrace();
+                    issuer.sendUsage();
                     return;
                 }
 
