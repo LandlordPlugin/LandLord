@@ -5,6 +5,7 @@ import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.landlord.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -105,6 +106,7 @@ public class Unclaim extends LandlordCommand {
 
             lm.sendMessage(player, lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", OwnedLand.getName(chunk))
+                    .replace("%location%", Util.getLocationFormatted(chunk))
                     .replace("%world%", chunk.getWorld().getName())
                     .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultHandler().format(payback) : "-eco disabled-")));
 
