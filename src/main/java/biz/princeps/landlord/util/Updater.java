@@ -12,13 +12,15 @@ import org.inventivetalent.update.spiget.comparator.VersionComparator;
  * Date: 12/04/18
  */
 public class Updater {
-    SpigetUpdate updater = new SpigetUpdate(Landlord.getInstance(), 44398);
+    private SpigetUpdate updater = new SpigetUpdate(Landlord.getInstance(), 44398);
 
     public Updater() {
         if (Landlord.getInstance().getConfig().getBoolean("checkUpdatesPeriodically", true)) {
             Bukkit.getScheduler().scheduleAsyncRepeatingTask(Landlord.getInstance(), this::checkForUpdate, 0, 20 * 60 * 60 * 24);
         } else {
-            checkForUpdate();
+            if (Landlord.getInstance().getConfig().getBoolean("checkUpdateOnStart", true)) {
+                checkForUpdate();
+            }
         }
     }
 
@@ -36,7 +38,7 @@ public class Updater {
 
             @Override
             public void upToDate() {
-                //// Plugin is up-to-date
+                // Plugin is up-to-date
             }
         });
     }
