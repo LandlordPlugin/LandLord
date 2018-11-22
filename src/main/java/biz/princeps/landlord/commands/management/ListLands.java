@@ -96,7 +96,7 @@ public class ListLands extends LandlordCommand {
 
 
                 MultiPagedMessage message = new MultiPagedMessage("/land list",
-                        plugin.getLangManager().getRawString("Commands.ListLands.header")
+                        plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
                                 .replace("%player%", target.getName()),
                         plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
                         formatted, prev, next, page);

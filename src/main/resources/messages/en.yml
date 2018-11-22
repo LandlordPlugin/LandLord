@@ -89,6 +89,7 @@ Commands:
       flagformat: '&a%flagname%: &f%flagvalue%'
       manageAll: '&7Manage all lands'
     chat:
+      header: '&2%player%s lands'
       previous: '&8[&7Previous&8]'
       next: '&8[&7Next&8]'
       segment: '&eName: &c%landname% &eMembers: &c%members%'
@@ -311,4 +312,4 @@ MaItem:
   - '&l&bin the air:'
   - '&crightclick: &7toggle map'
   - '&cleftclick: &7toggle borders'
-version: 19
+version: 20
