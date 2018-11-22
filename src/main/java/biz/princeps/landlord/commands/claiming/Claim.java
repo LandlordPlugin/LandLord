@@ -393,19 +393,5 @@ public class Claim extends LandlordCommand {
         }
         return true;
     }
-
-    private void delimit(Chunk chunk) {
-        DataStack s = new DataStack(plugin.getConfig().getString("CommandSettings.Claim.delimitMaterial"));
-        World w = chunk.getWorld();
-
-        if (s.getMaterial() != null) {
-            for (int i = 0; i < 16; i++) {
-                s.place(w, w.getHighestBlockAt(chunk.getBlock(i, 0, 0).getLocation().add(0, 1, 0)).getLocation());
-                s.place(w, w.getHighestBlockAt(chunk.getBlock(0, 0, i).getLocation().add(0, 1, 0)).getLocation());
-                s.place(w, w.getHighestBlockAt(chunk.getBlock(15 - i, 0, 15).getLocation().add(0, 1, 0)).getLocation());
-                s.place(w, w.getHighestBlockAt(chunk.getBlock(15, 0, 15 - i).getLocation().add(0, 1, 0)).getLocation());
-            }
-        }
-    }
 }
 

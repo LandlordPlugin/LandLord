@@ -22,7 +22,7 @@ public class Delimitation {
 
     /**
      * Returns the delimitation pattern defined in the config in a way, the plugin can work with
-     *   x --------->
+     * x --------->
      * z mmmmmmmmmmmmmmmm
      * | m--------------m
      * | m--------------m
@@ -84,6 +84,10 @@ public class Delimitation {
                 if (mat != null) {
                     int highestY = chunk.getWorld().getHighestBlockYAt(chunk.getX() * 16 + x, chunk.getZ() * 16 + z);
                     Block b = chunk.getBlock(x, highestY, z);
+
+                    while (b.getType() != Material.AIR) {
+                        b = chunk.getBlock(x, ++highestY, z);
+                    }
                     b.setType(mat);
                 }
             }
