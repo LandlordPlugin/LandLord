@@ -16,6 +16,17 @@ public class MultiClaim extends LandlordCommand {
 
     private Claim claim = new Claim(true);
 
+    /**
+     * Executed when a player enters /land multiclaim
+     * Expected parameters is
+     * /land multiclaim <option>
+     * Option is either circular or rectangular!
+     * <p>
+     * All the individual claims are redirected to the function that handles /land claim
+     *
+     * @param player    the player who wants to claim
+     * @param arguments option
+     */
     public void onMultiClaim(Properties player, Arguments arguments) {
         if (player.isConsole()) {
             player.sendMessage("Player command only!");
@@ -72,6 +83,7 @@ public class MultiClaim extends LandlordCommand {
         Set<Chunk> toClaim = new HashSet<>();
         switch (mode) {
             case CIRCULAR:
+                //TODO implement circular multiclaim
                 break;
             case RECTANGULAR:
                 int xCenter = center.getChunk().getX();
