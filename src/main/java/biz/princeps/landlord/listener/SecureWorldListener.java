@@ -1,14 +1,17 @@
 package biz.princeps.landlord.listener;
 
+import biz.princeps.landlord.api.events.PlayerBrokeSecureWorldEvent;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -18,43 +21,64 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 3/12/17
  */
-public class TresholdListener extends BasicListener {
+public class SecureWorldListener extends BasicListener {
 
     private LandAlerter.LandMessageDisplay display;
     private int treshold;
 
-    public TresholdListener() {
+    public SecureWorldListener() {
         super();
-        this.treshold = plugin.getConfig().getInt("SecureWorld.treshold");
+        this.treshold = plugin.getConfig().getInt("SecureWorld.threshold");
 
         this.display = LandAlerter.LandMessageDisplay.valueOf(plugin.getConfig().getString("SecureWorld.displayWarning"));
     }
 
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
-
         Player p = e.getPlayer();
         OwnedLand land = plugin.getLand(e.getBlock().getLocation());
 
-        handleLand(p, e.getBlock().getLocation(), land, e);
+        if (land == null) {
+            PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlock(), e);
+            Bukkit.getPluginManager().callEvent(event);
+        }
     }
 
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
-
         Player p = e.getPlayer();
-        OwnedLand land = plugin.getLand(e.getBlock().getLocation());
+        OwnedLand land = plugin.getLand(e.getBlockPlaced().getLocation());
 
-        handleLand(p, e.getBlockPlaced().getLocation(), land, e);
+        if (land == null) {
+            PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlockPlaced(), e);
+            Bukkit.getPluginManager().callEvent(event);
+        }
     }
 
     @EventHandler
     public void onBucketEmpty(PlayerBucketEmptyEvent e) {
-
         Player p = e.getPlayer();
         OwnedLand land = plugin.getLand(e.getBlockClicked().getLocation());
 
-        handleLand(p, e.getBlockClicked().getLocation(), land, e);
+        if (land == null) {
+            PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlockClicked(), e);
+            Bukkit.getPluginManager().callEvent(event);
+        }
+    }
+
+    @EventHandler
+    public void onThresholdEvent(PlayerBrokeSecureWorldEvent event) {
+        OwnedLand land = plugin.getLand(event.getBlock().getLocation());
+        if (!event.isCancelled()) {
+            handleLand(event.getPlayer(), event.getBlock().getLocation(), land, event.getCancellable());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onThresholdEvent1(PlayerBrokeSecureWorldEvent event) {
+        if (event.getBlock().getY() < 64) {
+            event.setCancelled(true);
+        }
     }
 
     public void handleLand(Player p, Location loc, OwnedLand land, Cancellable e) {

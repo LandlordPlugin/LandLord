@@ -7,7 +7,7 @@ import biz.princeps.landlord.handler.WorldGuardHandler;
 import biz.princeps.landlord.items.Maitem;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
-import biz.princeps.landlord.listener.TresholdListener;
+import biz.princeps.landlord.listener.SecureWorldListener;
 import biz.princeps.landlord.manager.CostManager;
 import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.manager.LangManager;
@@ -243,7 +243,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         new MapManager();
 
         if (getConfig().getBoolean("SecureWorld.enable"))
-            new TresholdListener();
+            new SecureWorldListener();
 
         if (getServer().getPluginManager().getPlugin("ProtocolLib") != null)
             new LandAlerter();

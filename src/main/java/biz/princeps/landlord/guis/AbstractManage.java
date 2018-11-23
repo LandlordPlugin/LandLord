@@ -193,6 +193,7 @@ public abstract class AbstractManage extends AbstractGUI {
                         MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
                         };
 
+                        //TODO fix mob toggle from config
                         for (Mobs m : Mobs.values()) {
                             ItemStack spawnEgg = new ItemStack(m.getEgg());
                             SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
