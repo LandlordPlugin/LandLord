@@ -25,7 +25,6 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.storage_old.AbstractDatabase;
 import biz.princeps.lib.storage_old.MySQL;
 import biz.princeps.lib.storage_old.SQLite;
-import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -52,7 +51,7 @@ public class Landlordbase extends MainCommand {
         super(pl.getConfig().getString("CommandSettings.Main.name"),
                 pl.getConfig().getString("CommandSettings.Main.description"),
                 pl.getConfig().getString("CommandSettings.Main.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Main.permissions")),
+                new HashSet<>(pl.getConfig().getStringList("CommandSettings.Main.permissions")),
                 pl.getConfig().getStringList("CommandSettings.Main.aliases").toArray(new String[]{}));
 
         subcommands = new HashMap<>();
@@ -227,7 +226,7 @@ public class Landlordbase extends MainCommand {
         public ClaimCMD() {
             super(pl.getConfig().getString("CommandSettings.Claim.name"),
                     pl.getConfig().getString("CommandSettings.Claim.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claim.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Claim.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Claim.aliases").toArray(new String[]{}));
         }
 
@@ -245,7 +244,7 @@ public class Landlordbase extends MainCommand {
         public InfoCMD() {
             super(pl.getConfig().getString("CommandSettings.Info.name"),
                     pl.getConfig().getString("CommandSettings.Info.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Info.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Info.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Info.aliases").toArray(new String[]{}));
         }
 
@@ -262,7 +261,7 @@ public class Landlordbase extends MainCommand {
         public UnclaimCMD() {
             super(pl.getConfig().getString("CommandSettings.Unclaim.name"),
                     pl.getConfig().getString("CommandSettings.Unclaim.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Unclaim.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Unclaim.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Unclaim.aliases").toArray(new String[]{}));
         }
 
@@ -285,7 +284,7 @@ public class Landlordbase extends MainCommand {
         public UnclaimAllCMD() {
             super(pl.getConfig().getString("CommandSettings.UnclaimAll.name"),
                     pl.getConfig().getString("CommandSettings.UnclaimAll.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.UnclaimAll.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.UnclaimAll.permissions")),
                     pl.getConfig().getStringList("CommandSettings.UnclaimAll.aliases").toArray(new String[]{}));
         }
 
@@ -302,7 +301,7 @@ public class Landlordbase extends MainCommand {
         public ListfriendsCMD() {
             super(pl.getConfig().getString("CommandSettings.Listfriends.name"),
                     pl.getConfig().getString("CommandSettings.Listfriends.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Listfriends.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Listfriends.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Listfriends.aliases").toArray(new String[]{}));
         }
 
@@ -331,7 +330,7 @@ public class Landlordbase extends MainCommand {
         public AddfriendCMD() {
             super(pl.getConfig().getString("CommandSettings.Addfriend.name"),
                     pl.getConfig().getString("CommandSettings.Addfriend.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Addfriend.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Addfriend.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Addfriend.aliases").toArray(new String[]{}));
         }
 
@@ -348,7 +347,7 @@ public class Landlordbase extends MainCommand {
         public RemoveFriendCMD() {
             super(pl.getConfig().getString("CommandSettings.RemoveFriend.name"),
                     pl.getConfig().getString("CommandSettings.RemoveFriend.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveFriend.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.RemoveFriend.permissions")),
                     pl.getConfig().getStringList("CommandSettings.RemoveFriend.aliases").toArray(new String[]{}));
         }
 
@@ -365,7 +364,7 @@ public class Landlordbase extends MainCommand {
         public AddFriendAllCMD() {
             super(pl.getConfig().getString("CommandSettings.AddfriendAll.name"),
                     pl.getConfig().getString("CommandSettings.AddfriendAll.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AddfriendAll.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.AddfriendAll.permissions")),
                     pl.getConfig().getStringList("CommandSettings.AddfriendAll.aliases").toArray(new String[]{}));
         }
 
@@ -387,7 +386,7 @@ public class Landlordbase extends MainCommand {
         public RemoveFriendAllCMD() {
             super(pl.getConfig().getString("CommandSettings.RemovefriendAll.name"),
                     pl.getConfig().getString("CommandSettings.RemovefriendAll.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemovefriendAll.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.RemovefriendAll.permissions")),
                     pl.getConfig().getStringList("CommandSettings.RemovefriendAll.aliases").toArray(new String[]{}));
         }
 
@@ -408,7 +407,7 @@ public class Landlordbase extends MainCommand {
         public ListLandsCMD() {
             super(pl.getConfig().getString("CommandSettings.ListLands.name"),
                     pl.getConfig().getString("CommandSettings.ListLands.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ListLands.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.ListLands.permissions")),
                     pl.getConfig().getStringList("CommandSettings.ListLands.aliases").toArray(new String[]{}));
         }
 
@@ -460,7 +459,7 @@ public class Landlordbase extends MainCommand {
         public MapCMD() {
             super(pl.getConfig().getString("CommandSettings.Map.name"),
                     pl.getConfig().getString("CommandSettings.Map.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Map.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Map.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Map.aliases").toArray(new String[]{}));
         }
 
@@ -477,7 +476,7 @@ public class Landlordbase extends MainCommand {
         public ClearWorldCMD() {
             super(pl.getConfig().getString("CommandSettings.Clear.name"),
                     pl.getConfig().getString("CommandSettings.Clear.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Clear.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Clear.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Clear.aliases").toArray(new String[]{}));
         }
 
@@ -494,7 +493,7 @@ public class Landlordbase extends MainCommand {
         public ManageCMD() {
             super(pl.getConfig().getString("CommandSettings.Manage.name"),
                     pl.getConfig().getString("CommandSettings.Manage.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Manage.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Manage.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Manage.aliases").toArray(new String[]{}));
         }
 
@@ -511,7 +510,7 @@ public class Landlordbase extends MainCommand {
         public ManageAllCMD() {
             super(pl.getConfig().getString("CommandSettings.ManageAll.name"),
                     pl.getConfig().getString("CommandSettings.ManageAll.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ManageAll.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.ManageAll.permissions")),
                     pl.getConfig().getStringList("CommandSettings.ManageAll.aliases").toArray(new String[]{}));
         }
 
@@ -528,7 +527,7 @@ public class Landlordbase extends MainCommand {
         public UpdateCMD() {
             super(pl.getConfig().getString("CommandSettings.Update.name"),
                     pl.getConfig().getString("CommandSettings.Update.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Update.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Update.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Update.aliases").toArray(new String[]{}));
         }
 
@@ -549,7 +548,7 @@ public class Landlordbase extends MainCommand {
         public ShopCMD() {
             super(pl.getConfig().getString("CommandSettings.Shop.name"),
                     pl.getConfig().getString("CommandSettings.Shop.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Shop.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Shop.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Shop.aliases").toArray(new String[]{}));
         }
 
@@ -566,7 +565,7 @@ public class Landlordbase extends MainCommand {
         public ReloadCMD() {
             super(pl.getConfig().getString("CommandSettings.Reload.name"),
                     pl.getConfig().getString("CommandSettings.Reload.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Reload.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Reload.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Reload.aliases").toArray(new String[]{}));
         }
 
@@ -588,7 +587,7 @@ public class Landlordbase extends MainCommand {
         public ClaimsCMD() {
             super(pl.getConfig().getString("CommandSettings.Claims.name"),
                     pl.getConfig().getString("CommandSettings.Claims.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claims.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Claims.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Claims.aliases").toArray(new String[]{}));
         }
 
@@ -605,7 +604,7 @@ public class Landlordbase extends MainCommand {
         public SetHomeCMD() {
             super(pl.getConfig().getString("CommandSettings.Sethome.name"),
                     pl.getConfig().getString("CommandSettings.Sethome.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Sethome.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Sethome.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Sethome.aliases").toArray(new String[]{}));
         }
 
@@ -622,7 +621,7 @@ public class Landlordbase extends MainCommand {
         public HomeCMD() {
             super(pl.getConfig().getString("CommandSettings.Home.name"),
                     pl.getConfig().getString("CommandSettings.Home.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Home.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Home.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Home.aliases").toArray(new String[]{}));
         }
 
@@ -645,7 +644,7 @@ public class Landlordbase extends MainCommand {
         public GiveClaimsCMD() {
             super(pl.getConfig().getString("CommandSettings.GiveClaims.name"),
                     pl.getConfig().getString("CommandSettings.GiveClaims.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.GiveClaims.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.GiveClaims.permissions")),
                     pl.getConfig().getStringList("CommandSettings.GiveClaims.aliases").toArray(new String[]{}));
         }
 
@@ -660,7 +659,7 @@ public class Landlordbase extends MainCommand {
         public AdvertiseCMD() {
             super(pl.getConfig().getString("CommandSettings.Advertise.name"),
                     pl.getConfig().getString("CommandSettings.Advertise.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Advertise.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Advertise.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Advertise.aliases").toArray(new String[]{}));
         }
 
@@ -693,7 +692,7 @@ public class Landlordbase extends MainCommand {
         public RemoveAdvertiseCMD() {
             super(pl.getConfig().getString("CommandSettings.RemoveAdvertise.name"),
                     pl.getConfig().getString("CommandSettings.RemoveAdvertise.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveAdvertise.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.RemoveAdvertise.permissions")),
                     pl.getConfig().getStringList("CommandSettings.RemoveAdvertise.aliases").toArray(new String[]{}));
         }
 
@@ -720,7 +719,7 @@ public class Landlordbase extends MainCommand {
         public BordersCMD() {
             super(pl.getConfig().getString("CommandSettings.Borders.name"),
                     pl.getConfig().getString("CommandSettings.Borders.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Borders.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Borders.permissions")),
                     pl.getConfig().getStringList("CommandSettings.Borders.aliases").toArray(new String[]{}));
         }
 
@@ -737,7 +736,7 @@ public class Landlordbase extends MainCommand {
         public MultiClaimCMD() {
             super(pl.getConfig().getString("CommandSettings.MultiClaim.name"),
                     pl.getConfig().getString("CommandSettings.MultiClaim.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiClaim.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.MultiClaim.permissions")),
                     pl.getConfig().getStringList("CommandSettings.MultiClaim.aliases").toArray(new String[]{}));
         }
 
@@ -752,7 +751,7 @@ public class Landlordbase extends MainCommand {
         public AdminTPCMD() {
             super(pl.getConfig().getString("CommandSettings.AdminTP.name"),
                     pl.getConfig().getString("CommandSettings.AdminTP.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AdminTP.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.AdminTP.permissions")),
                     pl.getConfig().getStringList("CommandSettings.AdminTP.aliases").toArray(new String[]{}));
         }
 
@@ -776,7 +775,7 @@ public class Landlordbase extends MainCommand {
         public MAItemCMD() {
             super(pl.getConfig().getString("CommandSettings.MAItem.name"),
                     pl.getConfig().getString("CommandSettings.MAItem.usage"),
-                    Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MAItem.permissions")),
+                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.MAItem.permissions")),
                     pl.getConfig().getStringList("CommandSettings.MAItem.aliases").toArray(new String[]{}));
         }
 
@@ -808,7 +807,7 @@ public class Landlordbase extends MainCommand {
 
         public MigrateCMD() {
             super("migrate", "/ll migrate <v1|v2> (v1 the original landlord, v2 Princeps upgraded version)",
-                    Sets.newHashSet("landlord.admin.migrate"));
+                    new HashSet<>(Collections.singletonList("landlord.admin.migrate")));
         }
 
         @Override
