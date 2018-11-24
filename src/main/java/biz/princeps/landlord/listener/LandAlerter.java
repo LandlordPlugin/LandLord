@@ -42,7 +42,6 @@ public class LandAlerter extends BasicListener {
     private HashMap<UUID, ChunkCoords> previousLands;
     // We need to update the player position separately bc spigot or worldguard sends the greeting message before actually
     // transferring the player to the teleported location
-    private HashMap<UUID, Location> playerPosition;
     private LandMessageDisplay type;
 
     /**
@@ -51,7 +50,6 @@ public class LandAlerter extends BasicListener {
     public LandAlerter() {
         currentLands = new HashMap<>();
         previousLands = new HashMap<>();
-        playerPosition = new HashMap<>();
 
         type = LandMessageDisplay.valueOf(pl.getConfig().getString("LandMessage"));
 
@@ -211,8 +209,6 @@ public class LandAlerter extends BasicListener {
         ChunkCoords landFrom = new ChunkCoords(comingFrom);
         ChunkCoords landTowards = new ChunkCoords(headingTowards);
 
-        this.playerPosition.replace(p.getUniqueId(), p.getLocation());
-
         ChunkCoords currentLand = this.currentLands.get(p.getUniqueId());
         ChunkCoords prevLand = this.previousLands.get(p.getUniqueId());
 
@@ -258,17 +254,11 @@ public class LandAlerter extends BasicListener {
         Player p = e.getPlayer();
         this.previousLands.replace(p.getUniqueId(), new ChunkCoords(e.getFrom()));
         this.currentLands.replace(p.getUniqueId(), new ChunkCoords(e.getTo()));
-        this.playerPosition.replace(p.getUniqueId(), e.getTo());
 
         OwnedLand toLand = pl.getLand(e.getTo());
         if (toLand != null) {
             send(toLand.getWGLand().getFlag(Flags.GREET_MESSAGE), p);
         }
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        this.playerPosition.put(e.getPlayer().getUniqueId(), e.getPlayer().getLocation());
     }
 
     enum LandMessageDisplay {
