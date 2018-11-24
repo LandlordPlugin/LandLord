@@ -502,11 +502,9 @@ Manage:
     - EVOKER
     - VEX
     - VINDICATOR
-    - ILLUSIONER
     - CREEPER
     - SKELETON
     - SPIDER
-    - GIANT
     - ZOMBIE
     - SLIME
     - GHAST
@@ -516,29 +514,32 @@ Manage:
     - SILVERFISH
     - BLAZE
     - MAGMA_CUBE
-    - ENDER_DRAGON
-    - WITHER
     - BAT
     - WITCH
-    - ENDERMITE
     - GUARDIAN
-    - SHULKER
+    - GUARDIAN
     - PIG
     - SHEEP
     - COW
     - CHICKEN
     - SQUID
     - WOLF
-    - MUSHROOM_COW
-    - SNOWMAN
     - OCELOT
-    - IRON_GOLEM
     - HORSE
     - RABBIT
     - POLAR_BEAR
     - LLAMA
     - PARROT
     - VILLAGER
+    - TURTLE
+    - PHANTOM
+    - COD
+    - SALMON
+    - PUFFERFISH
+    - TROPICAL_FISH
+    - DROWNED
+    - DOLPHIN
+
 
 # Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
 EnableMetrics: true

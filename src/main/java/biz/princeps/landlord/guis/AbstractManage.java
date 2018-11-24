@@ -193,8 +193,14 @@ public abstract class AbstractManage extends AbstractGUI {
                         MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
                         };
 
-                        //TODO fix mob toggle from config
+                        List<String> toggleMobs = plugin.getConfig().getStringList("Manage.mob-spawning.toggleableMobs");
                         for (Mobs m : Mobs.values()) {
+
+                            // Skip mob if its not in the list, because that means this mob should not be manageable
+                            if(!toggleMobs.contains(m.name())){
+                                continue;
+                            }
+
                             ItemStack spawnEgg = new ItemStack(m.getEgg());
                             SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
                             meta.setDisplayName(lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title").replace("%mob%", m.getName()));
