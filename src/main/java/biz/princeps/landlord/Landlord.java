@@ -79,20 +79,45 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     @Override
     public void onEnable() {
+        boolean everythingFine = checkVersions();
+        if (!everythingFine) {
+            return;
+        }
+
+        instance = this;
+        setupPrincepsLib();
+
+        checkWorldNames();
+
+        setupConfig();
+        setupTranslateableStrings();
+        setupDatabase();
+        setupCommands();
+        setupListeners();
+        setupPlacerholders();
+        setupItems();
+        setupManagers();
+        setupPlayers();
+        setupMetrics();
+
+        new Updater();
+    }
+
+    private boolean checkVersions() {
         if (!Bukkit.getVersion().contains("1.13.2")) {
             haltPlugin("Invalid spigot version detected! LandLord requires 1.13.2");
-            return;
+            return false;
         }
 
         if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
             haltPlugin("ProtocolLib not found! Please ensure you have the correct version of ProtocolLib in order to use LandLord");
-            return;
+            return false;
         }
 
         // Dependency stuff
         if (getWorldGuard() == null) {
             haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to use LandLord");
-            return;
+            return false;
         } else {
             String v = Bukkit.getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
             boolean flag = false;
@@ -101,12 +126,12 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
                 if (version < 1754) {
                     flag = true;
                 }
-            } catch (Exception ex) {
+            } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
                 flag = true;
             }
             if (flag) {
                 haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 1754+");
-                return;
+                return false;
             }
 
             String worldeditVerison = Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
@@ -116,12 +141,12 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
                 if (version < 3937) {
                     flag = true;
                 }
-            } catch (Exception ex) {
+            } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
                 flag = true;
             }
             if (flag) {
                 haltPlugin("Invalid WorldEdit Version found. LandLord requires WE 3937+");
-                return;
+                return false;
             }
 
             wgHandler = new WorldGuardHandler(getWorldGuard());
@@ -133,21 +158,24 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
             vaultHandler = new VaultHandler(getVault());
         }
 
-        instance = this;
+        return true;
+    }
+
+
+    private void setupConfig() {
+        saveDefaultConfig();
+        ConfigUtil.handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
+        saveDefaultConfig();
+    }
+
+    private void setupPrincepsLib() {
         PrincepsLib.setPluginInstance(this);
         PrincepsLib.getConfirmationManager().setState(ConfirmationManager.STATE.valueOf(getConfig().getString("ConfirmationDialog.mode")));
         PrincepsLib.getConfirmationManager().setTimout(getConfig().getInt("ConfirmationDialog.timeout"));
         taskChainFactory = BukkitTaskChainFactory.create(this);
+    }
 
-        checkWorldNames();
-
-        saveDefaultConfig();
-        ConfigUtil.handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
-        saveDefaultConfig();
-
-        langManager = new LangManager(this, getConfig().getString("language", "en"));
-        setupTranslateableStrings();
-
+    private void setupDatabase() {
         String dbpath = getConfig().getString("MySQL.Database");
         DatabaseType dbtype = DatabaseType.valueOf(getConfig().getString("DatabaseType"));
         if (dbtype == DatabaseType.SQLite) {
@@ -162,20 +190,9 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
                 getConfig().getString("MySQL.User"),
                 getConfig().getString("MySQL.Password"),
                 dbpath);
+    }
 
-        manageCommands();
-        manageListeners();
-        managePlaceholders();
-        manageItems();
-
-        lPlayerManager = new LPlayerManager(db);
-        offerManager = new OfferManager(db);
-
-        mapManager = new MapManager();
-        costManager = new CostManager();
-
-        executorService = Executors.newCachedThreadPool();
-
+    private void setupPlayers() {
         //Retrieve the LPlayer objects for all online players (in case of reload)
         Bukkit.getOnlinePlayers().forEach(p -> {
             lPlayerManager.getOfflinePlayerAsync(p.getUniqueId(), lPlayer1 -> {
@@ -186,13 +203,18 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
                 }
             });
         });
+    }
 
-        if (getConfig().getBoolean("EnableMetrics")) {
-            Metrics metrics = new Metrics(this);
-            //TODO maybe add some interesting statistics
-        }
+    private void setupManagers() {
+        langManager = new LangManager(this, getConfig().getString("language", "en"));
 
-        new Updater();
+        lPlayerManager = new LPlayerManager(db);
+        offerManager = new OfferManager(db);
+
+        mapManager = new MapManager();
+        costManager = new CostManager();
+
+        executorService = Executors.newCachedThreadPool();
     }
 
     private void haltPlugin(String warning) {
@@ -212,11 +234,11 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         }
     }
 
-    private void manageItems() {
+    private void setupItems() {
         PrincepsLib.getItemManager().registerItem(Maitem.NAME, Maitem.class);
     }
 
-    private void managePlaceholders() {
+    private void setupPlacerholders() {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new LandLordPlacehodlers(this).hook();
         }
@@ -233,22 +255,30 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         }
     }
 
-    private void manageCommands() {
+    private void setupCommands() {
         Landlordbase landlordbase = new Landlordbase();
         PrincepsLib.getCommandManager().registerCommand(landlordbase);
     }
 
-    private void manageListeners() {
+    private void setupListeners() {
         new JoinListener();
         new MapManager();
 
-        if (getConfig().getBoolean("SecureWorld.enable"))
+        if (getConfig().getBoolean("SecureWorld.enable")) {
             new SecureWorldListener();
-
-        if (getServer().getPluginManager().getPlugin("ProtocolLib") != null)
+        }
+        if (getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
             new LandAlerter();
-        else
+        } else {
             getLogger().warning("ProtocolLib has not been found. LandAlerts wont function properly");
+        }
+    }
+
+    private void setupMetrics() {
+        if (getConfig().getBoolean("EnableMetrics")) {
+            Metrics metrics = new Metrics(this);
+            //TODO maybe add some interesting statistics
+        }
     }
 
     private WorldGuardPlugin getWorldGuard() {

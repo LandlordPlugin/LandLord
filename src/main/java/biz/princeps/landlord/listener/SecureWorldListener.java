@@ -74,14 +74,7 @@ public class SecureWorldListener extends BasicListener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void onThresholdEvent1(PlayerBrokeSecureWorldEvent event) {
-        if (event.getBlock().getY() < 64) {
-            event.setCancelled(true);
-        }
-    }
-
-    public void handleLand(Player p, Location loc, OwnedLand land, Cancellable e) {
+    private void handleLand(Player p, Location loc, OwnedLand land, Cancellable e) {
         // is free land
         if (p.isOp() || p.hasPermission("landlord.admin.bypass"))
             return;
