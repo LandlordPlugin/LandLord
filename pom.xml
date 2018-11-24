@@ -57,7 +57,7 @@
                                     <include>me.tigerhix.lib:scoreboard</include>
                                     <include>biz.princeps:PrincepsLib</include>
                                     <include>org.slf4j:slf4j-api</include>
-                                    <include>org.slf4j:slf4j-simple</include>
+                                    <include>org.slf4j:slf4j-nop</include>
                                     <include>net.jodah:expiringmap</include>
                                     <include>*:taskchain*</include>
                                     <include>org.inventivetalent.spiget-update:bukkit</include>
@@ -105,6 +105,9 @@
         <repository>
             <id>inventive-repo</id>
             <url>https://repo.inventivetalent.org/content/groups/public/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -179,6 +182,14 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.197</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-nop -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.25</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

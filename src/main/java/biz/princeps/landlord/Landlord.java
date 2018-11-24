@@ -90,15 +90,15 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         checkWorldNames();
 
         setupConfig();
-        setupTranslateableStrings();
         setupDatabase();
-        setupCommands();
         setupListeners();
         setupPlacerholders();
         setupItems();
         setupManagers();
+        setupCommands();
         setupPlayers();
         setupMetrics();
+        setupTranslateableStrings();
 
         new Updater();
     }
