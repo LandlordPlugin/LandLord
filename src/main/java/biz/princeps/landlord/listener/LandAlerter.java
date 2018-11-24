@@ -44,6 +44,7 @@ public class LandAlerter extends BasicListener {
     // transferring the player to the teleported location
     private HashMap<UUID, Location> playerPosition;
     private LandMessageDisplay type;
+
     /**
      * such a mess, but I cant think of a less intrusive way
      */
@@ -61,7 +62,6 @@ public class LandAlerter extends BasicListener {
             public void onPacketSending(PacketEvent event) {
                 PacketContainer packet = event.getPacket();
 
-                //   packet.getChatTypes().getValues().forEach(System.out::println);
                 if (Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3].split("_")[1]) < 12) {
                     if (packet.getBytes().getValues().get(0) != 1)
                         return;
@@ -69,13 +69,28 @@ public class LandAlerter extends BasicListener {
                     return;
 
                 StructureModifier<WrappedChatComponent> components = packet.getChatComponents();
+                // System.out.println(packet);
                 Player p = event.getPlayer();
 
-                Location ploc = playerPosition.get(event.getPlayer().getUniqueId());
+                Location ploc = p.getLocation();
+                // Problem is, that the event somehow trigger's before the player actually crossed the border
+                // Thats why we get a nullland as regionInside now!
+                // So i decided to just check if the message is equals to one of the 4 surrounding lands, since
+                // vector calculations are not very accurate
                 OwnedLand regionInsideNow = (ploc == null ? null : pl.getWgHandler().getRegion(ploc));
-                // System.out.println("Position: " + playerPosition.get(event.getPlayer().getUniqueId()));
+                // System.out.println("Position: " + ploc);
+                // System.out.println("Chunk: " + ploc.getChunk());
                 // System.out.println("RegionInsideNw: " + regionInsideNow);
                 OwnedLand before = (previousLands.get(p.getUniqueId()) == null ? null : pl.getLand(previousLands.get(p.getUniqueId()).getLocation()));
+
+                OwnedLand[] surroundings = new OwnedLand[]{
+                        (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ()))),
+                        (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX() + 1, ploc.getChunk().getZ()))),
+                        (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX() - 1, ploc.getChunk().getZ()))),
+                        (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() + 1))),
+                        (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() - 1))),
+                };
+
 
                 JSONObject json = null;
                 try {
@@ -84,7 +99,6 @@ public class LandAlerter extends BasicListener {
                                 parser.parse(components.read(0).getJson()) instanceof JSONObject)
                             json = (JSONObject) parser.parse(components.read(0).getJson());
                 } catch (Exception ignored) {
-
                 }
 
                 if (json != null && json.get("extra") instanceof JSONArray) {
@@ -103,6 +117,21 @@ public class LandAlerter extends BasicListener {
                         // System.out.println("Trimmed message: " + msg);
 
                         boolean goingOn = false;
+
+                        int i = 0;
+                        // check surrounding lands for equal greet message
+                        for (OwnedLand surrounding : surroundings) {
+                            // System.out.println(i + ":" + surrounding);
+                            if (surrounding == null) {
+                                continue;
+                            }
+                            String greet = stripColors(surrounding.getWGLand().getFlag(Flags.GREET_MESSAGE));
+                            if (msg.equals(greet)) {
+                                goingOn = true;
+                                break;
+                            }
+
+                        }
 
                         if (regionInsideNow != null) {
                             String greet = stripColors(regionInsideNow.getWGLand().getFlag(Flags.GREET_MESSAGE));
@@ -125,17 +154,6 @@ public class LandAlerter extends BasicListener {
                         }
                         // System.out.println(goingOn);
 
-
-                        // on leave: da wo man her kam
-                        // on enter null
-                        //  if (regionInsideNow == null)
-                        //       System.out.println("1. null");
-                        //   else
-                        //      System.out.println(regionInsideNow.getName());
-
-                        // on leave null
-                        // on enter da wo man nun ist
-                        // System.out.println(goingOn);
                         if (goingOn) {
                             event.setCancelled(true);
                         }
@@ -152,7 +170,7 @@ public class LandAlerter extends BasicListener {
                 PrincepsLib.getStuffManager().sendActionBar(p, msg);
                 return true;
             case Chat:
-                pl.getLangManager().sendMessage(p,msg);
+                pl.getLangManager().sendMessage(p, msg);
                 return true;
             case Title:
                 p.sendTitle(msg, null, 10, 70, 10);
