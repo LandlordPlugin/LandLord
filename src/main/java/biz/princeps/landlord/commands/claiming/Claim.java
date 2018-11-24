@@ -39,7 +39,7 @@ public class Claim extends LandlordCommand {
     public void onClaim(Player player, Chunk chunk) {
 
         if (this.worldDisabled(player)) {
-            lm.sendMessage(player,lm.getString("Disabled-World"));
+            lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
         OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
@@ -65,7 +65,7 @@ public class Claim extends LandlordCommand {
             // Check if there is an overlapping wg-region
             if (!plugin.getWgHandler().canClaim(player, chunk)) {
                 if (pr == null || (plugin.getOfferManager().getOffer(landname) == null && !inactive)) {
-                    lm.sendMessage(player,lm.getString("Commands.Claim.notAllowed"));
+                    lm.sendMessage(player, lm.getString("Commands.Claim.notAllowed"));
                     return;
                 }
             }
@@ -73,14 +73,14 @@ public class Claim extends LandlordCommand {
             if (pr != null) {
                 if (pr.getOwner().equals(player.getUniqueId())) {
                     // cannot buy own land
-                    lm.sendMessage(player,lm.getString("Commands.Claim.alreadyClaimed")
+                    lm.sendMessage(player, lm.getString("Commands.Claim.alreadyClaimed")
                             .replace("%owner%", pr.printOwners()));
                     return;
                 }
 
                 Offer offer = plugin.getOfferManager().getOffer(pr.getName());
                 if (!plugin.getPlayerManager().isInactive(pr.getOwner()) && offer == null) {
-                    lm.sendMessage(player,lm.getString("Commands.Claim.notYetInactive")
+                    lm.sendMessage(player, lm.getString("Commands.Claim.notYetInactive")
                             .replace("%owner%", pr.printOwners())
                             .replace("%days%", "" + inactiveDays));
                     return;
@@ -292,9 +292,10 @@ public class Claim extends LandlordCommand {
         if (plugin.getConfig().getBoolean("Particles.claim"))
             OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
 
-        if (plugin.getConfig().getBoolean("Homes.enable")) {
-            if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null)
+        if (Options.enabled_homes() && plugin.getConfig().getBoolean("Homes.enableAutoSetHome", false)) {
+            if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null) {
                 Bukkit.dispatchCommand(player, "ll sethome");
+            }
         }
 
         if (plugin.getConfig().getBoolean("CommandSettings.Claim.enableDelimit")) {
@@ -321,7 +322,7 @@ public class Claim extends LandlordCommand {
             }
 
             if (regionCount >= highestAllowedLandCount) {
-                lm.sendMessage(player,lm.getString("Commands.Claim.hardcap").replace("%regions%", highestAllowedLandCount + ""));
+                lm.sendMessage(player, lm.getString("Commands.Claim.hardcap").replace("%regions%", highestAllowedLandCount + ""));
                 return false;
             }
             return true;
@@ -374,7 +375,7 @@ public class Claim extends LandlordCommand {
 
                 if (!hasNearbyLand) {
                     // no nearby land is already claimed => Display error msg
-                    lm.sendMessage(player,lm.getString("Commands.Claim.onlyClaimAdjacentChunks").replace("%land%", OwnedLand.getName(chunk)));
+                    lm.sendMessage(player, lm.getString("Commands.Claim.onlyClaimAdjacentChunks").replace("%land%", OwnedLand.getName(chunk)));
                     return false;
                 }
             }
@@ -405,7 +406,7 @@ public class Claim extends LandlordCommand {
 
             if (differentOwner) {
                 // one of the nearby lands is not owned by the player nor its free
-                lm.sendMessage(player,lm.getString("Commands.Claim.needsGap").replace("%land%", OwnedLand.getName(chunk)));
+                lm.sendMessage(player, lm.getString("Commands.Claim.needsGap").replace("%land%", OwnedLand.getName(chunk)));
                 return false;
             }
         }

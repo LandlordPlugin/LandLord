@@ -98,6 +98,8 @@ SecureWorld:
 
 Homes:
   enable: true
+  # enable to this to automatically set home on claim, when the user doesnt have a previous home
+  enableAutoSetHome: false
   spawnParticles: true
   teleportCost: 100.0
   # delay in seconds
