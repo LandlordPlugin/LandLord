@@ -55,6 +55,10 @@ public class Landlordbase extends MainCommand {
                 pl.getConfig().getStringList("CommandSettings.Main.aliases").toArray(new String[]{}));
 
         subcommands = new HashMap<>();
+        reloadCommands();
+    }
+
+    public void reloadCommands() {
         subcommands.put("claim", new Claim(false));
         subcommands.put("info", new Info());
         subcommands.put("unclaim", new Unclaim());
@@ -571,13 +575,15 @@ public class Landlordbase extends MainCommand {
 
         @Override
         public void onCommand(Properties properties, Arguments arguments) {
-            String msg = Landlord.getInstance().getLangManager().getString("Commands.Reload.success");
             CommandSender issuer = properties.getCommandSender();
 
             issuer.sendMessage(ChatColor.RED + "Reloading is not recommended! Before reporting any bugs, please restart your server.");
 
-            Landlord.getInstance().getPluginLoader().disablePlugin(Landlord.getInstance());
-            Landlord.getInstance().getPluginLoader().enablePlugin(Landlord.getInstance());
+            pl.getLangManager().reload();
+            pl.reloadConfig();
+            pl.setupCommands();
+
+            String msg = Landlord.getInstance().getLangManager().getString("Commands.Reload.success");
             issuer.sendMessage(msg);
         }
     }

@@ -253,9 +253,10 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         if (db != null) {
             db.close();
         }
+        instance = null;
     }
 
-    private void setupCommands() {
+    public void setupCommands() {
         Landlordbase landlordbase = new Landlordbase();
         PrincepsLib.getCommandManager().registerCommand(landlordbase);
     }
