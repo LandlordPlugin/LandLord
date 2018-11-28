@@ -193,9 +193,7 @@ public abstract class AbstractManage extends AbstractGUI {
                         MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
                         };
 
-                        List<String> toggleMobs = plugin.getConfig().getStringList("Manage.mob-spawning.toggleableMobs");
                         for (Mobs m : Mobs.values()) {
-
                             // Skip mob if its not in the list, because that means this mob should not be manageable
                             if(!toggleMobs.contains(m.name())){
                                 continue;
