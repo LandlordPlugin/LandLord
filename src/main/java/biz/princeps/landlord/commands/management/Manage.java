@@ -3,7 +3,7 @@ package biz.princeps.landlord.commands.management;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGUI;
 import biz.princeps.landlord.util.OwnedLand;
-import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
@@ -61,7 +61,7 @@ public class Manage extends LandlordCommand {
                     }
 
                     for (ProtectedRegion protectedRegion : plugin.getWgHandler().getRegions(player.getUniqueId())) {
-                        protectedRegion.setFlag(Flags.GREET_MESSAGE, newmsg1);
+                        protectedRegion.setFlag(DefaultFlag.GREET_MESSAGE, newmsg1);
                     }
 
                     lm.sendMessage(player, lm.getString("Commands.Manage.SetGreet.successful")
@@ -78,7 +78,7 @@ public class Manage extends LandlordCommand {
                         newmsg = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", player.getName());
                     }
                     for (ProtectedRegion protectedRegion : plugin.getWgHandler().getRegions(player.getUniqueId())) {
-                        protectedRegion.setFlag(Flags.FAREWELL_MESSAGE, newmsg);
+                        protectedRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, newmsg);
                     }
 
                     lm.sendMessage(player, lm.getString("Commands.Manage.SetFarewell.successful")
@@ -132,7 +132,7 @@ public class Manage extends LandlordCommand {
             newmsg = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", player.getName());
         }
 
-        target.setFlag(Flags.GREET_MESSAGE, newmsg);
+        target.setFlag(DefaultFlag.GREET_MESSAGE, newmsg);
         lm.sendMessage(player, lm.getString("Commands.Manage.SetGreet.successful")
                 .replace("%msg%", newmsg));
     }
@@ -146,7 +146,7 @@ public class Manage extends LandlordCommand {
         if (newmsg.isEmpty()) {
             newmsg = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", player.getName());
         }
-        target.setFlag(Flags.FAREWELL_MESSAGE, newmsg);
+        target.setFlag(DefaultFlag.FAREWELL_MESSAGE, newmsg);
         lm.sendMessage(player, lm.getString("Commands.Manage.SetFarewell.successful")
                 .replace("%msg%", newmsg));
     }

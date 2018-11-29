@@ -12,14 +12,14 @@ import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import co.aikar.taskchain.TaskChain;
-import com.sk89q.worldedit.world.entity.EntityType;
-import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -163,7 +163,7 @@ public abstract class AbstractManage extends AbstractGUI {
 
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet.enable")) {
-            String currentGreet = land.getWGLand().getFlag(Flags.GREET_MESSAGE);
+            String currentGreet = land.getWGLand().getFlag(DefaultFlag.GREET_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setgreet.item")), 1,
                     lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greetDesc, currentGreet)))
                     .addClickAction(((p) -> {
@@ -203,10 +203,10 @@ public abstract class AbstractManage extends AbstractGUI {
                             SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
                             meta.setDisplayName(lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title").replace("%mob%", m.getName()));
 
-                            Set<EntityType> flag = land.getWGLand().getFlag(Flags.DENY_SPAWN);
+                            Set<EntityType> flag = land.getWGLand().getFlag(DefaultFlag.DENY_SPAWN);
                             String state;
                             if (flag != null)
-                                state = (flag.contains(m.getWGType()) ? "DENY" : "ALLOW");
+                                state = (flag.contains(m.getType()) ? "DENY" : "ALLOW");
                             else
                                 state = "ALLOW";
 
@@ -222,25 +222,25 @@ public abstract class AbstractManage extends AbstractGUI {
                             ic.addClickAction((clickingPlayer) -> {
 
                                 for (OwnedLand region : regions) {
-                                    Set<EntityType> localFlag = region.getWGLand().getFlag(Flags.DENY_SPAWN);
+                                    Set<EntityType> localFlag = region.getWGLand().getFlag(DefaultFlag.DENY_SPAWN);
                                     // Toggle spawning of specific mob
                                     if (localFlag != null) {
-                                        if (localFlag.contains(m.getWGType()))
-                                            localFlag.remove(m.getWGType());
+                                        if (localFlag.contains(m.getType()))
+                                            localFlag.remove(m.getType());
                                         else
-                                            localFlag.add(m.getWGType());
+                                            localFlag.add(m.getType());
                                     } else {
                                         Set<EntityType> set = new HashSet<>();
-                                        set.add(m.getWGType());
-                                        region.getWGLand().setFlag(Flags.DENY_SPAWN, set);
+                                        set.add(m.getType());
+                                        region.getWGLand().setFlag(DefaultFlag.DENY_SPAWN, set);
                                     }
                                 }
 
-                                Set<EntityType> newFlag = regions.get(0).getWGLand().getFlag(Flags.DENY_SPAWN);
+                                Set<EntityType> newFlag = regions.get(0).getWGLand().getFlag(DefaultFlag.DENY_SPAWN);
                                 // update icon text
                                 String iconState;
                                 if (newFlag != null)
-                                    iconState = (newFlag.contains(m.getWGType()) ? "DENY" : "ALLOW");
+                                    iconState = (newFlag.contains(m.getType()) ? "DENY" : "ALLOW");
                                 else
                                     iconState = "ALLOW";
 
@@ -260,9 +260,10 @@ public abstract class AbstractManage extends AbstractGUI {
                     }));
             position++;
         }
+
         // set farewell icon
         if (plugin.getConfig().getBoolean("Manage.setfarewell.enable")) {
-            String currentFarewell = land.getWGLand().getFlag(Flags.FAREWELL_MESSAGE);
+            String currentFarewell = land.getWGLand().getFlag(DefaultFlag.FAREWELL_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setfarewell.item")), 1,
                     lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
                     .addClickAction(((p) -> {
@@ -391,7 +392,7 @@ public abstract class AbstractManage extends AbstractGUI {
     }
 
     private ItemStack createSkull(String owner, String displayname, List<String> lore) {
-        ItemStack skull = new ItemStack(Material.LEGACY_SKULL_ITEM, 1, (short) 3);
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(owner);
         skullMeta.setDisplayName(displayname);

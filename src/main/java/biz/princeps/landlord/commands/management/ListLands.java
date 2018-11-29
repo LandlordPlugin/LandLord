@@ -57,7 +57,7 @@ public class ListLands extends LandlordCommand {
                         }
                     }
 
-                    Icon icon = new Icon(new ItemStack(Material.GRASS_BLOCK));
+                    Icon icon = new Icon(new ItemStack(Material.GRASS));
                     icon.setName(lm.getRawString("Commands.ListLands.gui.itemname")
                             .replace("%name%", land.getName()));
                     icon.setLore(lore);

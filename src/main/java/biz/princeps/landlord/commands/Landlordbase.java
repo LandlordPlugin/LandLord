@@ -792,8 +792,8 @@ public class Landlordbase extends MainCommand {
             if (arguments.size() > 0) {
                 target = arguments.get()[0];
             }
-
-            ((LLItem) subcommands.get("item")).onItem(properties.getCommandSender(), target);
+            // TODO reimplement - fix nms shit and so on
+            //((LLItem) subcommands.get("item")).onItem(properties.getCommandSender(), target);
         }
     }
 

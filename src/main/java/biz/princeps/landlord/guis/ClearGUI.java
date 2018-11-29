@@ -39,7 +39,7 @@ public class ClearGUI extends AbstractGUI {
         int pos = 0;
         if (land != null) {
             // Only clear this land
-            Icon i1 = new Icon(new ItemStack(Material.GRASS_BLOCK));
+            Icon i1 = new Icon(new ItemStack(Material.GRASS));
             i1.setName(lm.getRawString("Commands.ClearWorld.gui.clearcurrentland.name"));
             i1.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearcurrentland.desc").split("\\|")));
             i1.addClickAction((player1) -> {
@@ -58,7 +58,7 @@ public class ClearGUI extends AbstractGUI {
             this.setIcon(pos++, i1);
 
             // Clear all for owner of current land
-            ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
+            ItemStack skull = new ItemStack(Material.SKULL_ITEM);
             SkullMeta itemMeta = (SkullMeta) skull.getItemMeta();
             itemMeta.setOwningPlayer(Bukkit.getOfflinePlayer(land.getOwner()));
             skull.setItemMeta(itemMeta);
@@ -81,7 +81,7 @@ public class ClearGUI extends AbstractGUI {
             this.setIcon(pos++, i2);
         }
         // Clear all lands in a world
-        Icon i3 = new Icon(new ItemStack(Material.FIRE_CHARGE));
+        Icon i3 = new Icon(new ItemStack(Material.FIREBALL));
         i3.setName(lm.getRawString("Commands.ClearWorld.gui.clearworld.name"));
         i3.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearworld.desc").split("\\|")));
         i3.addClickAction((player1) -> {

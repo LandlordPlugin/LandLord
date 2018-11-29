@@ -83,7 +83,7 @@ public class SecureWorldListener extends BasicListener {
 
             LocalPlayer localPlayer = plugin.getWgHandler().getWGPlugin().wrapPlayer(p);
             ApplicableRegionSet applicableRegions = plugin.getWgHandler().getRegionManager(
-                    loc.getWorld()).getApplicableRegions(localPlayer.getLocation().toVector().toBlockPoint());
+                    loc.getWorld()).getApplicableRegions(localPlayer.getPosition().toBlockPoint());
             if (applicableRegions.getRegions().size() < 1) {
                 boolean isAllowed = false;
                 for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) {

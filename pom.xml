@@ -31,15 +31,9 @@
                         </goals>
                         <configuration>
                             <outputFile>
-                                ${project.build.directory}/Testserver/plugins/Landlord-latest.jar
+                                ${project.build.directory}/Testserver12/plugins/Landlord-legacy.jar
                             </outputFile>
                             <relocations>
-                                <!--
-                                <relocation>
-                                    <pattern>com.google.common</pattern>
-                                    <shadedPattern>biz.princeps.lib.com.google.common</shadedPattern>
-                                </relocation>
-                                -->
                                 <relocation>
                                     <pattern>org.reflections</pattern>
                                     <shadedPattern>biz.princeps.lib.org.reflections</shadedPattern>
@@ -49,20 +43,17 @@
                                 <includes>
                                     <include>com.h2database:*</include>
                                     <include>org.reflections:reflections</include>
-                                    <!-- <include>com.google.guava:guava</include> -->
                                     <include>org.javassist:javassist</include>
                                     <include>com.zaxxer:HikariCP</include>
                                     <include>co.aikar:acf-bukkit</include>
                                     <include>co.aikar:acf-core</include>
                                     <include>co.aikar:locales</include>
                                     <include>co.aikar:minecraft-timings</include>
-                                    <include>me.tigerhix.lib:scoreboard</include>
-                                    <include>biz.princeps:PrincepsLib</include>
+                                    <include>biz.princeps:PrincepsLib-legacy</include>
                                     <include>org.slf4j:slf4j-api</include>
                                     <include>org.slf4j:slf4j-nop</include>
                                     <include>net.jodah:expiringmap</include>
                                     <include>*:taskchain*</include>
-                                    <include>org.inventivetalent.spiget-update:bukkit</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
@@ -117,8 +108,8 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1_13_2</version>
+            <artifactId>spigot_1_12_2</artifactId>
+            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -132,23 +123,21 @@
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
-            <version>1.6</version>
+            <version>1.7</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
-            <version>1.13.2.1</version>
-            <classifier>dist</classifier>
+            <version>1.12.2</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
-            <version>1.13.2.1</version>
-            <classifier>dist</classifier>
+            <version>1.12.2</version>
             <scope>provided</scope>
         </dependency>
 
@@ -161,8 +150,8 @@
 
         <dependency>
             <groupId>biz.princeps</groupId>
-            <artifactId>PrincepsLib</artifactId>
-            <version>1.6.9</version>
+            <artifactId>PrincepsLib-legacy</artifactId>
+            <version>1.0.1</version>
             <scope>compile</scope>
         </dependency>
 
@@ -170,13 +159,6 @@
             <groupId>co.aikar</groupId>
             <artifactId>taskchain-bukkit</artifactId>
             <version>3.6.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.inventivetalent.spiget-update</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.4.0</version>
             <scope>compile</scope>
         </dependency>
 

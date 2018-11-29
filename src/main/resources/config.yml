@@ -437,8 +437,9 @@ Flags:
 - 'pvp deny all:allow all'
 - 'build deny nonmembers:allow all'
 
+# Currently disabled in legacy landlord!
 MaItem:
-  enabled: true
+  enabled: false
   item: STICK
   # define your modes of operation here.
   # Syntax: clickaction:condition:whatshouldhappen
@@ -468,7 +469,7 @@ Manage:
     item: BAKED_POTATO
   setfarewell:
     enable: true
-    item: CARROT_ON_A_STICK
+    item: CARROT_STICK
   unclaim:
     enable: true
     item: BLAZE_POWDER
@@ -489,7 +490,7 @@ Manage:
     item: DIAMOND_SWORD
   mob-spawning:
     enable: true
-    item: LEGACY_MONSTER_EGG
+    item: MONSTER_EGG
     # If you dont want your users to manage a specific mobspawn, just comment out the line with #
     toggleableMobs:
     - ELDER_GUARDIAN
@@ -533,18 +534,11 @@ Manage:
     - LLAMA
     - PARROT
     - VILLAGER
-    - TURTLE
-    - PHANTOM
-    - COD
-    - SALMON
-    - PUFFERFISH
-    - TROPICAL_FISH
-    - DROWNED
-    - DOLPHIN
 
 
 # Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
 EnableMetrics: true
+# updater does not in legacy versions!!
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
 version: 21

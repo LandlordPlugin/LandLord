@@ -3,7 +3,7 @@ package biz.princeps.landlord.util;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.flags.LLFlag;
 import biz.princeps.lib.PrincepsLib;
-import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
@@ -66,8 +66,8 @@ public class OwnedLand {
     }
 
     // statics
-    public static BlockVector3 locationToVec(Location loc) {
-        return BlockVector3.at(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    public static BlockVector locationToVec(Location loc) {
+        return new BlockVector(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
     public static String getName(Chunk chunk) {

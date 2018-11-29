@@ -19,7 +19,6 @@ import biz.princeps.landlord.placeholderapi.LandLordPlacehodlers;
 import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.OwnedLand;
-import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
 import biz.princeps.lib.storage_old.DatabaseType;
@@ -99,13 +98,12 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         setupPlayers();
         setupMetrics();
         setupTranslateableStrings();
-
-        new Updater();
     }
 
     private boolean checkVersions() {
-        if (!Bukkit.getVersion().contains("1.13.2")) {
-            haltPlugin("Invalid spigot version detected! LandLord requires 1.13.2");
+        String bukkitv = Bukkit.getVersion();
+        if (bukkitv.contains("1.13") || bukkitv.contains("1.7")) {
+            haltPlugin("Invalid spigot version detected! LandLord requires 1.8.8-1.12.2");
             return false;
         }
 
@@ -120,32 +118,14 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
             return false;
         } else {
             String v = Bukkit.getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
-            boolean flag = false;
-            try {
-                int version = Integer.valueOf(v.split(";")[1].split("-")[0]);
-                if (version < 1754) {
-                    flag = true;
-                }
-            } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
-                flag = true;
-            }
-            if (flag) {
-                haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 1754+");
+            if (!v.contains("6.2.2")) {
+                haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 6.2.2!");
                 return false;
             }
 
             String worldeditVerison = Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
-            flag = false;
-            try {
-                int version = Integer.valueOf(worldeditVerison.split(";")[1].split("-")[0]);
-                if (version < 3937) {
-                    flag = true;
-                }
-            } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
-                flag = true;
-            }
-            if (flag) {
-                haltPlugin("Invalid WorldEdit Version found. LandLord requires WE 3937+");
+            if (!worldeditVerison.contains("6.1.9")) {
+                haltPlugin("Invalid WorldEdit Version found. LandLord requires WE 6.1.9");
                 return false;
             }
 

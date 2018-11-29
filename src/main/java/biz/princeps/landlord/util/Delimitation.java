@@ -1,7 +1,7 @@
 package biz.princeps.landlord.util;
 
 import biz.princeps.landlord.Landlord;
-import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.BlockVector;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class Delimitation {
 
     private static Landlord plugin = Landlord.getInstance();
-    private static Map<BlockVector2, Material> PATTERN;
+    private static Map<BlockVector, Material> PATTERN;
 
     /**
      * Returns the delimitation pattern defined in the config in a way, the plugin can work with
@@ -32,14 +32,14 @@ public class Delimitation {
      *
      * @return a map of a vector and a material
      */
-    public static Map<BlockVector2, Material> getDelimitationPattern() {
+    public static Map<BlockVector, Material> getDelimitationPattern() {
         if (PATTERN != null) {
             return PATTERN;
         }
 
         List<String> cfgString = plugin.getConfig().getStringList("CommandSettings.Claim.delimitation");
         Map<Character, Material> varToMaterial = new HashMap<>();
-        Map<BlockVector2, Material> delimitPattern = new HashMap<>();
+        Map<BlockVector, Material> delimitPattern = new HashMap<>();
 
         int x = 0;
         for (String s : cfgString) {
@@ -58,7 +58,7 @@ public class Delimitation {
                 for (int z = 0; z < 16; z++) {
                     char varString = s.charAt(z);
                     Material material = varToMaterial.get(varString);
-                    delimitPattern.put(BlockVector2.at(x, z), material);
+                    delimitPattern.put(new BlockVector(x, 0, z), material);
                 }
                 x++;
             } else {
@@ -72,14 +72,14 @@ public class Delimitation {
 
 
     public static void delimit(Chunk chunk) {
-        Map<BlockVector2, Material> pattern = getDelimitationPattern();
+        Map<BlockVector, Material> pattern = getDelimitationPattern();
         if (pattern == null) {
             plugin.getLogger().warning("Delimitation failed, because there was an error in the config!");
             return;
         }
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                Material mat = pattern.get(BlockVector2.at(x, z));
+                Material mat = pattern.get(new BlockVector(x, 0, z));
 
                 if (mat != null) {
                     int highestY = chunk.getWorld().getHighestBlockYAt(chunk.getX() * 16 + x, chunk.getZ() * 16 + z);

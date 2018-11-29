@@ -2,26 +2,21 @@ package biz.princeps.landlord.handler;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.util.OwnedLand;
-import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.*;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.*;
-
-import static javax.swing.UIManager.get;
 
 /**
  * Project: LandLord
@@ -31,10 +26,8 @@ import static javax.swing.UIManager.get;
 public class WorldGuardHandler {
 
     private WorldGuardPlugin wgPlugin;
-    private WorldGuard wg;
 
     public WorldGuardHandler(WorldGuardPlugin wgPlugin) {
-        this.wg = WorldGuard.getInstance();
         this.wgPlugin = wgPlugin;
     }
 
@@ -46,8 +39,8 @@ public class WorldGuardHandler {
     }
 
     public void claim(UUID owner, String landname, World world, Location down, Location upper) {
-        BlockVector3 vec1 = OwnedLand.locationToVec(down);
-        BlockVector3 vec2 = OwnedLand.locationToVec(upper);
+        BlockVector vec1 = OwnedLand.locationToVec(down);
+        BlockVector vec2 = OwnedLand.locationToVec(upper);
 
         ProtectedCuboidRegion pr = new ProtectedCuboidRegion(landname, vec1, vec2);
 
@@ -75,7 +68,7 @@ public class WorldGuardHandler {
     }
 
     public RegionContainer getRegionContainer() {
-        return wg.getPlatform().getRegionContainer();
+        return wgPlugin.getRegionContainer();
     }
 
     public OwnedLand getRegion(ProtectedRegion pr) {
@@ -104,16 +97,16 @@ public class WorldGuardHandler {
         getRegionManager(world).removeRegion(regionname);
     }
 
-    public List<Flag<?>> getFlags() {
-        return wg.getFlagRegistry().getAll();
+    public FlagRegistry getFlags() {
+        return wgPlugin.getFlagRegistry();
     }
 
     public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region, Chunk chunk) {
         OwnedLand land = new OwnedLand(region, chunk);
-        region.setFlag(Flags.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell")
+        region.setFlag(DefaultFlag.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell")
                 .replace("%owner%", land.printOwners()));
 
-        region.setFlag(Flags.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting")
+        region.setFlag(DefaultFlag.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting")
                 .replace("%owner%", land.printOwners()));
 
         List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
@@ -122,7 +115,7 @@ public class WorldGuardHandler {
         flaggy.forEach(s -> flags.add(s.split(" ")[0]));
 
         //Iterate over all existing flags
-        for (Flag<?> flag : wg.getFlagRegistry().getAll()) {
+        for (Flag<?> flag : wgPlugin.getFlagRegistry()) {
             if (flag instanceof StateFlag) {
                 boolean failed = false;
                 if (flags.contains(flag.getName())) {
@@ -158,10 +151,6 @@ public class WorldGuardHandler {
         return wgPlugin;
     }
 
-    public WorldGuard getWg() {
-        return wg;
-    }
-
     public Map<Chunk, OwnedLand> getNearbyLands(Location loc, int offsetX, int offsetZ) {
 
         Map<Chunk, OwnedLand> lands = new HashMap<>();
@@ -189,9 +178,8 @@ public class WorldGuardHandler {
     }
 
     public RegionManager getRegionManager(World world) {
-        com.sk89q.worldedit.world.World worldByName = wg.getPlatform().getWorldByName(world.getName());
         RegionContainer regionContainer = getRegionContainer();
-        return regionContainer.get(worldByName);
+        return regionContainer.get(world);
     }
 
     public boolean canClaim(Player player, Chunk currChunk) {
@@ -201,8 +189,8 @@ public class WorldGuardHandler {
             Vector v2 = currChunk.getBlock(15, 127, 15).getLocation().toVector();
 
             ProtectedRegion check = new ProtectedCuboidRegion("check",
-                    BlockVector3.at(v1.getX(), v1.getY(), v1.getZ()),
-                    BlockVector3.at(v2.getX(), v2.getY(), v2.getZ()));
+                    new BlockVector(v1.getX(), v1.getY(), v1.getZ()),
+                    new BlockVector(v2.getX(), v2.getY(), v2.getZ()));
             List<ProtectedRegion> intersects = check
                     .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
             for (ProtectedRegion intersect : intersects) {

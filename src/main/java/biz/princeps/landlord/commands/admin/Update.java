@@ -2,10 +2,7 @@ package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.commands.LandlordCommand;
-import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.*;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -80,11 +77,11 @@ public class Update extends LandlordCommand {
                     String greeting = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", name);
                     String farewell = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", name);
 
-                    if (!pr.getFlags().containsKey(Flags.GREET_MESSAGE)) {
-                        pr.setFlag(Flags.GREET_MESSAGE, greeting);
+                    if (!pr.getFlags().containsKey(DefaultFlag.GREET_MESSAGE)) {
+                        pr.setFlag(DefaultFlag.GREET_MESSAGE, greeting);
                     }
-                    if (!pr.getFlags().containsKey(Flags.FAREWELL_MESSAGE)) {
-                        pr.setFlag(Flags.FAREWELL_MESSAGE, farewell);
+                    if (!pr.getFlags().containsKey(DefaultFlag.FAREWELL_MESSAGE)) {
+                        pr.setFlag(DefaultFlag.FAREWELL_MESSAGE, farewell);
                     }
                 }
 
@@ -150,14 +147,14 @@ public class Update extends LandlordCommand {
                     String greeting = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", name);
                     String farewell = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", name);
 
-                    String actualGreeting = pr.getFlag(Flags.GREET_MESSAGE);
-                    String actualFarewell = pr.getFlag(Flags.FAREWELL_MESSAGE);
+                    String actualGreeting = pr.getFlag(DefaultFlag.GREET_MESSAGE);
+                    String actualFarewell = pr.getFlag(DefaultFlag.FAREWELL_MESSAGE);
 
                     if (!greeting.equals(actualGreeting)) {
-                        pr.setFlag(Flags.GREET_MESSAGE, greeting);
+                        pr.setFlag(DefaultFlag.GREET_MESSAGE, greeting);
                     }
                     if (!farewell.equals(actualFarewell)) {
-                        pr.setFlag(Flags.FAREWELL_MESSAGE, farewell);
+                        pr.setFlag(DefaultFlag.FAREWELL_MESSAGE, farewell);
                     }
                 }
 
