@@ -809,6 +809,20 @@ public class Landlordbase extends MainCommand {
         }
     }
 
+    class VersionCMD extends SubCommand {
+
+        public VersionCMD() {
+            super("version", "/ll version", new HashSet<>(Collections.singleton("landlord.admin")));
+        }
+
+        @Override
+        public void onCommand(Properties properties, Arguments arguments) {
+            String msg = pl.getLangManager().getTag() + " &aLandLord version: &7%version%"
+                    .replace("%version%", pl.getDescription().getVersion());
+            properties.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+        }
+    }
+
     class MigrateCMD extends SubCommand {
 
         public MigrateCMD() {
