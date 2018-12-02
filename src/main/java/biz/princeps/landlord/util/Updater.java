@@ -31,7 +31,7 @@ public class Updater {
         updater.checkForUpdate(new UpdateCallback() {
             @Override
             public void updateAvailable(String newVersion, String downloadUrl, boolean hasDirectDownload) {
-                if (Integer.parseInt(newVersion.substring(1)) >
+                if (Integer.parseInt(newVersion.substring(2)) >
                         Integer.parseInt(Landlord.getInstance().getDescription().getVersion().substring(2)))
                     Landlord.getInstance().getLogger().info("LandLord was updated! Download the latest version (" + newVersion + ") from " + downloadUrl);
             }
