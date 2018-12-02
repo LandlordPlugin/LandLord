@@ -67,12 +67,15 @@ public class MultiClaim extends LandlordCommand {
                             .replace("%amount%", toClaim.size() + "")
                             .replace("%cost%", formattedCost),
                     (p) -> {
+                        // on accept
                         toClaim.forEach(cl -> claim.onClaim(player.getPlayer(), cl));
+                        p.closeInventory();
                     },
                     (p) -> {
                         // on decline
                         lm.sendMessage(p, lm.getString("Commands.MultiClaim.abort")
                                 .replace("%amount%", toClaim.size() + ""));
+                        p.closeInventory();
                     }, confirmcmd);
         } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ex) {
             player.sendUsage();
