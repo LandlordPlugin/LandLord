@@ -16,8 +16,7 @@ Maven
     <groupId>biz.princeps</groupId>
     <artifactId>LandLord</artifactId>
     <version>0.1</version>
-    <scope>system</scope>
-    <systemPath>/home/alex/Repositories/LandLord-DynMap/target/Testserver/plugins/Landlord-latest.jar</systemPath>
+    <scope>provided</scope>
 </dependency>
 ```
 
