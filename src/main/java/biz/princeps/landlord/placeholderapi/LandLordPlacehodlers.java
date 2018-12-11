@@ -50,6 +50,13 @@ public class LandLordPlacehodlers extends EZPlaceholderHook {
             case "currentLandName":
                 return OwnedLand.getName(player.getLocation().getChunk());
 
+            case "nextLandPrice":
+                return String.valueOf(pl.getCostManager().calculateCost(player.getUniqueId()));
+
+            case "currentLandRefund":
+                int regionCount = pl.getWgHandler().getRegionCountOfPlayer(player.getUniqueId());
+                return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble("Payback"));
+
         }
         return null;
     }
