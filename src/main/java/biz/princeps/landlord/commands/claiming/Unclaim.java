@@ -99,7 +99,7 @@ public class Unclaim extends LandlordCommand {
             }
 
             if (plugin.getConfig().getBoolean("Particles.unclaim"))
-                OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
+                OwnedLand.highlightLand(player, Particle.LAVA);
 
             // Remove possible advertisements
             plugin.getOfferManager().removeOffer(pr.getName());

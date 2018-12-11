@@ -86,6 +86,9 @@ public class WorldGuardHandler {
         try {
             int x = Integer.parseInt(splitted[1]);
             int z = Integer.parseInt(splitted[2]);
+            if (!world.isChunkLoaded(x, z)) {
+                world.loadChunk(x, z);
+            }
             Chunk chunk = world.getChunkAt(x, z);
             return getRegion(chunk);
         } catch (NumberFormatException e) {

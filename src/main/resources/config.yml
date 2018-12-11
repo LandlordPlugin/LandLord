@@ -159,23 +159,23 @@ CommandSettings:
     enableDelimit: true
     # Newly claimed lands are delimited by this material. Example below should be self explanatory
     delimitation:
-    - 'define: x=TORCH'
-    - 'xxxxxxxxxxxxxxxx'
+    - 'define: x=GLOWSTONE'
     - 'x--------------x'
+    - '----------------'
+    - '----------------'
+    - '----------------'
+    - '----------------'
+    - '----------------'
+    - '----------------'
+    - '----------------'
+    - '----------------'
+    - '----------------'
+    - '----------------'
+    - '----------------'
+    - '----------------'
+    - '----------------'
+    - '----------------'
     - 'x--------------x'
-    - 'x--------------x'
-    - 'x--------------x'
-    - 'x--------------x'
-    - 'x--------------x'
-    - 'x--------------x'
-    - 'x--------------x'
-    - 'x--------------x'
-    - 'x--------------x'
-    - 'x--------------x'
-    - 'x--------------x'
-    - 'x--------------x'
-    - 'x--------------x'
-    - 'xxxxxxxxxxxxxxxx'
     # When a player does not own any lands, he may claim any free chunk. later only adjacent chunks
     claimOnlyAdjacent: false
     # If this is enabled, there must be one free chunk between two different owners. See https://tinyurl.com/y8xzelga

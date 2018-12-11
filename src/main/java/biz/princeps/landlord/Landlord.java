@@ -102,8 +102,8 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     private boolean checkVersions() {
         String bukkitv = Bukkit.getVersion();
-        if (bukkitv.contains("1.13") || bukkitv.contains("1.7")) {
-            haltPlugin("Invalid spigot version detected! LandLord requires 1.8.8-1.12.2");
+        if (!bukkitv.contains("(MC: 1.12.2)")) {
+            haltPlugin("Invalid spigot version detected! LandLord-legacy requires 1.12.2");
             return false;
         }
 

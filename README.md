@@ -1,29 +1,34 @@
-This is a recode of the original landlord!
-
-Jcdesimp seems to have abonded this project unfortunately, thats why I'm maintaining this project now.
-
-Featurewise it's way more advanced, also performance should be a lot better now (using worldguard as backend)
-
-Discussions: https://www.spigotmc.org/threads/beta-landlord-2.259023/
-
-
 Landlord
 ========
 
-Landlord is a bukkit plugin for players to prevent against griefing, stealing, and animal kills in a simplified manner.
+Landlord is a bukkit plugin for players to prevent against griefing, stealing, and animal kills in a simplified manner.  
+It is hosted on [spigotmc.org](https://www.spigotmc.org/resources/beta-landlord-2.44398/).
 
-Purpose
----------
-Landlord aims to keep the minecraft experience simple and fluid for players while also protecting their land. The idea is for this plugin to protect player builds with minimal gameplay interference, while also allowing them to tweak the protection details in a simple and user-friendly way.
+Maven
+=====
+```xml
+<repository>
+    <id>princepsrepo</id>
+    <url>http://princeps.biz:8081/nexus/content/repositories/princepsrepo/</url>
+</repository>
 
-Functionality
----------------
-Players claim land in chunks at a time for a configurable cost. That's all a player needs to do to protect their builds within that chunk. Each area of claimed land will have a very basic permissions system that users can choose to tweak with but also not touch if it isn't desired.
+<dependency>
+    <groupId>biz.princeps</groupId>
+    <artifactId>LandLord</artifactId>
+    <version>0.1</version>
+    <scope>provided</scope>
+</dependency>
+```
 
 
-TODOs for 1.13:
------
+Compilation
+================
 
-[ ] fix command (tab completion?)\
-[x] update princeps lib\
-[ ] fix the scoreboard, probably recode
+LandLord uses maven as dependency resolver. Execute the maven goal "package" to get a jar, that contains a compiled jar with all dependencies.
+In case you want to dive deeper into LandLord development, you can change the output path of the shade plugin directly into your server plugins folder (like I did).
+
+Contributing
+============
+1. Clone the repository 
+2. Change code
+3. Submit a pullrequest
