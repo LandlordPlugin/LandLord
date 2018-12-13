@@ -2,6 +2,7 @@ package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.api.Options;
+import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.flags.LLFlag;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.persistent.LPlayer;
@@ -101,9 +102,17 @@ public abstract class AbstractManage extends AbstractGUI {
                         title, formatList(description, iFlag.getStatus())))
                         .addClickAction((p) -> {
                             for (OwnedLand region : regions) {
+                                //TODO clean this mess up
                                 for (LLFlag llFlag : region.getFlags()) {
                                     if (llFlag.getWGFlag().equals(iFlag.getWGFlag())) {
-                                        llFlag.toggle();
+                                        for (OwnedLand ownedLand : regions) {
+                                            String oldstatus = iFlag.getStatus();
+                                            iFlag.toggle();
+                                            LandManageEvent landManageEvent = new LandManageEvent(player, ownedLand,
+                                                    iFlag.getWGFlag(), oldstatus, iFlag.getStatus());
+                                            Bukkit.getPluginManager().callEvent(landManageEvent);
+                                        }
+                                        break;
                                     }
                                 }
                             }
@@ -139,6 +148,8 @@ public abstract class AbstractManage extends AbstractGUI {
                                         }
                                         if (flag) {
                                             if (land.isOwner(player.getUniqueId())) {
+                                                LandManageEvent landManageEvent = new LandManageEvent(player, land, null, "REGENERATE", "REGENERATE");
+                                                Bukkit.getPluginManager().callEvent(landManageEvent);
                                                 player.getWorld().regenerateChunk(land.getChunk().getX(), land.getChunk().getZ());
                                                 lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.success")
                                                         .replace("%land%", land.getName()));
