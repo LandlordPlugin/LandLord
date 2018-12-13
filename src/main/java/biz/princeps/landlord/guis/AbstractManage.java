@@ -227,12 +227,17 @@ public abstract class AbstractManage extends AbstractGUI {
                                     if (localFlag != null) {
                                         if (localFlag.contains(m.getWGType()))
                                             localFlag.remove(m.getWGType());
-                                        else
+                                        else {
                                             localFlag.add(m.getWGType());
+                                        }
+                                        LandManageEvent landManageEvent = new LandManageEvent(player, land, Flags.MOB_SPAWNING, null, localFlag);
+                                        Bukkit.getPluginManager().callEvent(landManageEvent);
                                     } else {
                                         Set<EntityType> set = new HashSet<>();
                                         set.add(m.getWGType());
                                         region.getWGLand().setFlag(Flags.DENY_SPAWN, set);
+                                        LandManageEvent landManageEvent = new LandManageEvent(player, land, Flags.MOB_SPAWNING, null, set);
+                                        Bukkit.getPluginManager().callEvent(landManageEvent);
                                     }
                                 }
 
