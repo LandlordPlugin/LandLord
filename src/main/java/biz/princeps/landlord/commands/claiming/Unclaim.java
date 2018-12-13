@@ -21,29 +21,23 @@ public class Unclaim extends LandlordCommand {
 
     public void onUnclaim(Player player, String chunkname) {
 
-        if (this.worldDisabled(player)) {
+        OwnedLand pr;
+        if (chunkname.equals("null")) {
+            Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
+            pr = plugin.getWgHandler().getRegion(chunk);
+        } else {
+            if (!plugin.isLLRegion(chunkname)) {
+                Bukkit.dispatchCommand(player, "/ll help");
+                return;
+            }
+
+            pr = plugin.getWgHandler().getRegion(chunkname);
+        }
+
+        if (plugin.getConfig().getStringList("disabled-worlds").contains(chunkname.split("_")[0])) {
             lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
-        Chunk chunk = null;
-        if (chunkname.equals("null")) {
-            chunk = player.getWorld().getChunkAt(player.getLocation());
-        } else {
-            String[] split = chunkname.split("_");
-            try {
-                if (split.length != 3) {
-                    Bukkit.dispatchCommand(player, "/ll help");
-                    return;
-                }
-                int x = Integer.valueOf(split[1]);
-                int z = Integer.valueOf(split[2]);
-                chunk = Bukkit.getWorld(split[0]).getChunkAt(x, z);
-
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-        OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
 
         if (pr == null) {
             lm.sendMessage(player, lm.getString("Commands.Unclaim.notOwnFreeLand"));
@@ -84,7 +78,7 @@ public class Unclaim extends LandlordCommand {
                     }
                 }
             }
-            plugin.getWgHandler().unclaim(player.getWorld(), pr.getName());
+            plugin.getWgHandler().unclaim(pr.getWorld(), pr.getName());
 
             // remove possible homes
             LPlayer lPlayer = plugin.getPlayerManager().get(pr.getOwner());
@@ -105,9 +99,9 @@ public class Unclaim extends LandlordCommand {
             plugin.getOfferManager().removeOffer(pr.getName());
 
             lm.sendMessage(player, lm.getString("Commands.Unclaim.success")
-                    .replace("%chunk%", OwnedLand.getName(chunk))
-                    .replace("%location%", Util.getLocationFormatted(chunk))
-                    .replace("%world%", chunk.getWorld().getName())
+                    .replace("%chunk%", OwnedLand.getName(pr.getChunk()))
+                    .replace("%location%", Util.getLocationFormatted(pr.getChunk()))
+                    .replace("%world%", pr.getWorld().getName())
                     .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultHandler().format(payback) : "-eco disabled-")));
 
 

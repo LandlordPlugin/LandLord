@@ -28,9 +28,7 @@ public class Update extends LandlordCommand {
         for (World w : Bukkit.getWorlds()) {
             for (ProtectedRegion pr : plugin.getWgHandler().getRegionManager(w).getRegions().values()) {
 
-                if (pr.getId().split("_").length == 3 && w.getName().equals(pr.getId().split("_")[0])) {
-
-
+                if (plugin.isLLRegion(pr.getId())) {
                     List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
                     Set<String> flags = new HashSet<>();
 
@@ -100,7 +98,7 @@ public class Update extends LandlordCommand {
         for (World w : Bukkit.getWorlds()) {
             for (ProtectedRegion pr : plugin.getWgHandler().getRegionManager(w).getRegions().values()) {
 
-                if (pr.getId().split("_").length == 3 && Bukkit.getWorld(pr.getId().split("_")[0]) == w) {
+                if (plugin.isLLRegion(pr.getId())) {
 
                     List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
                     Set<String> flags = new HashSet<>();

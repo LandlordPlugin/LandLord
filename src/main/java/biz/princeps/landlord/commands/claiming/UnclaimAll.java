@@ -18,11 +18,6 @@ public class UnclaimAll extends LandlordCommand {
 
     public void onUnclaim(Player player) {
 
-        if (this.worldDisabled(player)) {
-            lm.sendMessage(player, lm.getString("Disabled-World"));
-            return;
-        }
-
         List<ProtectedRegion> landsOfPlayer = new ArrayList<>();
         for (World w : Bukkit.getWorlds()) {
             landsOfPlayer.addAll(plugin.getWgHandler().getRegions(player.getUniqueId(), w));

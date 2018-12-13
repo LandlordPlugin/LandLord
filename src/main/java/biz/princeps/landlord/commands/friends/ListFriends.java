@@ -26,20 +26,14 @@ public class ListFriends extends LandlordCommand {
             lm.sendMessage(player, lm.getString("Commands.Listfriends.freeLand"));
             return;
         }
-        String[] split = landname.split("_");
 
-        if (split.length != 3) {
+        if (plugin.isLLRegion(landname)) {
             lm.sendMessage(player, lm.getString("Commands.Listfriends.invalidGeneral"));
             return;
         }
-        World world = Bukkit.getWorld(split[0]);
-        if (world == null) {
-            lm.sendMessage(player, lm.getString("Commands.Listfriends.invalidWorld"));
-            return;
-        }
+
         try {
-            Chunk loc = world.getChunkAt(Integer.parseInt(split[1]), Integer.parseInt(split[2]));
-            OwnedLand land = plugin.getWgHandler().getRegion(loc);
+            OwnedLand land = plugin.getWgHandler().getRegion(landname);
 
             if (land == null) {
                 lm.sendMessage(player, lm.getString("Commands.Listfriends.freeLand"));

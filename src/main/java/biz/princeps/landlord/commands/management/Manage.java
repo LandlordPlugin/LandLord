@@ -95,9 +95,9 @@ public class Manage extends LandlordCommand {
                     break;
                 default:
                     try {
-                        World world = Bukkit.getWorld(args[0].split("_")[0]);
-                        if (Bukkit.getWorlds().contains(world)) {
-                            RegionManager rm = plugin.getWgHandler().getRegionManager(world);
+                        OwnedLand region = plugin.getWgHandler().getRegion(args[0]);
+                        if (region != null) {
+                            RegionManager rm = plugin.getWgHandler().getRegionManager(region.getWorld());
                             if (rm != null) {
                                 ProtectedRegion target = rm.getRegion(args[0]);
 
