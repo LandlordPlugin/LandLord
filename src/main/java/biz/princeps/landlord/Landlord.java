@@ -360,17 +360,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     @Override
     public boolean isLLRegion(String a) {
-
-        String[] split = a.split("_");
-        try {
-            int x = Integer.valueOf(split[1]);
-            int z = Integer.valueOf(split[2]);
-            Bukkit.getWorld(split[0]).getChunkAt(x, z);
-
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+        return wgHandler.isLLRegion(a);
     }
 
 }

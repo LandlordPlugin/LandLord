@@ -76,11 +76,19 @@ public class OwnedLand {
 
     public static Location getLocationFromName(String name) {
         String[] split = name.split("_");
-        if (split.length == 3) {
-            World w = Bukkit.getWorld(split[0]);
+        if (split.length >= 3) {
+            StringBuilder sb = new StringBuilder(split[0]);
+            for (int i = 1; i < split.length - 2; i++) {
+                sb.append("_").append(split[i]);
+            }
+
+            World world = Bukkit.getWorld(sb.toString());
+            if (world == null)
+                return null;
+
             int x = Integer.parseInt(split[1]);
             int z = Integer.parseInt(split[2]);
-            return new Location(w, x * 16, w.getHighestBlockYAt(x * 16, z * 16), z * 16);
+            return new Location(world, x * 16, world.getHighestBlockYAt(x * 16, z * 16), z * 16);
         } else
             return null;
 

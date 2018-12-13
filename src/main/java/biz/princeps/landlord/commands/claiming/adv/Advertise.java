@@ -17,39 +17,31 @@ public class Advertise extends LandlordCommand {
     public void onAdvertise(Player player, String landname, double price) {
 
         if (this.worldDisabled(player)) {
-            lm.sendMessage(player,lm.getString("Disabled-World"));
+            lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
-        Chunk chunk = null;
+        OwnedLand pr;
         if (landname.equals("this")) {
-            chunk = player.getWorld().getChunkAt(player.getLocation());
+            Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
+            pr = plugin.getWgHandler().getRegion(chunk);
         } else {
-            String[] split = landname.split("_");
-            try {
-                int x = Integer.valueOf(split[1]);
-                int z = Integer.valueOf(split[2]);
-                chunk = Bukkit.getWorld(split[0]).getChunkAt(x, z);
-
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
+            pr = plugin.getWgHandler().getRegion(landname);
         }
-        OwnedLand pr = plugin.getWgHandler().getRegion(chunk);
 
         if (pr == null) {
-            lm.sendMessage(player,lm.getString("Commands.Advertise.notOwnFreeLand"));
+            lm.sendMessage(player, lm.getString("Commands.Advertise.notOwnFreeLand"));
             return;
         }
 
         if (!pr.isOwner(player.getUniqueId())) {
-            lm.sendMessage(player,lm.getString("Commands.Advertise.notOwn").replace("%owner%", pr.printOwners()));
+            lm.sendMessage(player, lm.getString("Commands.Advertise.notOwn").replace("%owner%", pr.printOwners()));
             return;
         }
 
         Offer offer = new Offer(pr.getName(), price, player.getUniqueId());
         plugin.getOfferManager().addOffer(offer);
 
-        lm.sendMessage(player,lm.getString("Commands.Advertise.success")
+        lm.sendMessage(player, lm.getString("Commands.Advertise.success")
                 .replace("%landname%", pr.getName())
                 .replace("%price%", price + ""));
 

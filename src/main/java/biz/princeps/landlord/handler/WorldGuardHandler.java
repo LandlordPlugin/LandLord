@@ -79,20 +79,28 @@ public class WorldGuardHandler {
     }
 
     public OwnedLand getRegion(ProtectedRegion pr) {
-        String name = pr.getId();
+        return getRegion(pr.getId());
+    }
+
+    public OwnedLand getRegion(String name) {
         String[] splitted = name.split("_");
 
-        if (splitted.length != 3) {
+        if (splitted.length < 3) {
             return null;
         }
 
-        World world = Bukkit.getWorld(splitted[0]);
+        StringBuilder sb = new StringBuilder(splitted[0]);
+        for (int i = 1; i < splitted.length - 2; i++) {
+            sb.append("_").append(splitted[i]);
+        }
+
+        World world = Bukkit.getWorld(sb.toString());
         if (world == null)
             return null;
 
         try {
-            int x = Integer.parseInt(splitted[1]);
-            int z = Integer.parseInt(splitted[2]);
+            int x = Integer.parseInt(splitted[splitted.length - 2]);
+            int z = Integer.parseInt(splitted[splitted.length - 1]);
             if (!world.isChunkLoaded(x, z)) {
                 world.loadChunk(x, z);
             }
@@ -100,6 +108,31 @@ public class WorldGuardHandler {
             return getRegion(chunk);
         } catch (NumberFormatException e) {
             return null;
+        }
+    }
+
+    public boolean isLLRegion(String name) {
+        String[] splitted = name.split("_");
+
+        if (splitted.length < 3) {
+            return false;
+        }
+
+        StringBuilder sb = new StringBuilder(splitted[0]);
+        for (int i = 1; i < splitted.length - 2; i++) {
+            sb.append("_").append(splitted[i]);
+        }
+
+        World world = Bukkit.getWorld(sb.toString());
+        if (world == null)
+            return false;
+
+        try {
+            Integer.parseInt(splitted[splitted.length - 2]);
+            Integer.parseInt(splitted[splitted.length - 1]);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 
