@@ -1,7 +1,9 @@
 package biz.princeps.landlord.commands.friends;
 
+import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.util.OwnedLand;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -40,6 +42,10 @@ public class Unfriend extends LandlordCommand {
                     } else {
                         // Success
                         land.removeFriend(lPlayer.getUuid());
+                        LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                null, "FRIENDS", land.printMembers());
+                        Bukkit.getPluginManager().callEvent(landManageEvent);
+
                         lm.sendMessage(player, lm.getString("Commands.Unfriend.success")
                                 .replace("%players%", Arrays.asList(names).toString()));
                     }
