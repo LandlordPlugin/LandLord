@@ -72,7 +72,7 @@ public class WorldGuardHandler {
     }
 
     public OwnedLand getRegion(ProtectedRegion pr) {
-        return getRegion(pr.getId());
+        return OwnedLand.fromString(pr.getId());
     }
 
     public Collection<ProtectedRegion> getRegions(World w) {
@@ -87,7 +87,7 @@ public class WorldGuardHandler {
     }
 
     public ProtectedRegion getRegionAsPr(String name) {
-        return getRegionContainer().get(getWorld(name)).getRegion(name);
+        return Objects.requireNonNull(getRegionContainer().get(getWorld(name))).getRegion(name);
     }
 
     public World getWorld(String name) {
