@@ -75,6 +75,10 @@ public class WorldGuardHandler {
         return getRegion(pr.getId());
     }
 
+    public Collection<ProtectedRegion> getRegions(World w) {
+        return wgPlugin.getRegionManager(w).getRegions().values();
+    }
+
     public OwnedLand getRegion(String name) {
         String[] splitted = name.split("_");
 
