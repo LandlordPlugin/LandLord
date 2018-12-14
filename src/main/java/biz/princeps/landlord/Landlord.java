@@ -121,13 +121,15 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         } else {
             String v = Bukkit.getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
             boolean flag = false;
-            try {
-                int version = Integer.valueOf(v.split(";")[1].split("-")[0]);
-                if (version < 1754) {
+            if (!v.contains("beta")) {
+                try {
+                    int version = Integer.valueOf(v.split(";")[1].split("-")[0]);
+                    if (version < 1754) {
+                        flag = true;
+                    }
+                } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
                     flag = true;
                 }
-            } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
-                flag = true;
             }
             if (flag) {
                 haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 1754+");
