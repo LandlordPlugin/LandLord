@@ -83,6 +83,14 @@ public class WorldGuardHandler {
     }
 
     public OwnedLand getRegion(String name) {
+        return getRegion(getRegionAsPr(name));
+    }
+
+    public ProtectedRegion getRegionAsPr(String name) {
+        return getRegionContainer().get(getWorld(name)).getRegion(name);
+    }
+
+    public World getWorld(String name) {
         String[] splitted = name.split("_");
 
         if (splitted.length < 3) {
@@ -94,20 +102,34 @@ public class WorldGuardHandler {
             sb.append("_").append(splitted[i]);
         }
 
-        World world = Bukkit.getWorld(sb.toString());
-        if (world == null)
-            return null;
+        return Bukkit.getWorld(sb.toString());
+    }
+
+    public int getX(String name) {
+        String[] splitted = name.split("_");
+
+        if (splitted.length < 3) {
+            return Integer.MIN_VALUE;
+        }
 
         try {
-            int x = Integer.parseInt(splitted[splitted.length - 2]);
-            int z = Integer.parseInt(splitted[splitted.length - 1]);
-            if (!world.isChunkLoaded(x, z)) {
-                world.loadChunk(x, z);
-            }
-            Chunk chunk = world.getChunkAt(x, z);
-            return getRegion(chunk);
+            return Integer.parseInt(splitted[splitted.length - 2]);
         } catch (NumberFormatException e) {
-            return null;
+            return Integer.MIN_VALUE;
+        }
+    }
+
+    public int getZ(String name) {
+        String[] splitted = name.split("_");
+
+        if (splitted.length < 3) {
+            return Integer.MIN_VALUE;
+        }
+
+        try {
+            return Integer.parseInt(splitted[splitted.length - 1]);
+        } catch (NumberFormatException e) {
+            return Integer.MIN_VALUE;
         }
     }
 
