@@ -138,13 +138,15 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
             String worldeditVerison = Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
             flag = false;
-            try {
-                int version = Integer.valueOf(worldeditVerison.split(";")[1].split("-")[0]);
-                if (version < 3937) {
+            if (!worldeditVerison.contains("beta")) {
+                try {
+                    int version = Integer.valueOf(worldeditVerison.split(";")[1].split("-")[0]);
+                    if (version < 3937) {
+                        flag = true;
+                    }
+                } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
                     flag = true;
                 }
-            } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
-                flag = true;
             }
             if (flag) {
                 haltPlugin("Invalid WorldEdit Version found. LandLord requires WE 3937+");
