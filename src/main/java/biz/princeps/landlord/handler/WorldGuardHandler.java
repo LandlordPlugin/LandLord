@@ -76,6 +76,9 @@ public class WorldGuardHandler {
     }
 
     public Collection<ProtectedRegion> getRegions(World w) {
+        RegionManager rm = wgPlugin.getRegionManager(w);
+        if (rm == null)
+            return null;
         return wgPlugin.getRegionManager(w).getRegions().values();
     }
 
