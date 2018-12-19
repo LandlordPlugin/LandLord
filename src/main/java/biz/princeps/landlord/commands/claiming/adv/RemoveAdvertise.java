@@ -24,7 +24,7 @@ public class RemoveAdvertise extends LandlordCommand {
         if (landname.equals("this")) {
             pr = plugin.getWgHandler().getRegion(player.getLocation().getChunk());
         } else {
-            pr = OwnedLand.fromString(landname);
+            pr =plugin.getWgHandler().getRegion(landname);
         }
 
         if (pr == null) {
