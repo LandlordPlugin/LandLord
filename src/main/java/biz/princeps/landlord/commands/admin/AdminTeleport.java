@@ -36,7 +36,7 @@ public class AdminTeleport extends LandlordCommand {
                     MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
                             lm.getRawString("Commands.AdminTp.guiHeader").replace("%player%", target));
 
-                    lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS_BLOCK))
+                    lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
                             .setName(land.getId())
                             .addClickAction((p) -> {
                                         Location toTp = OwnedLand.getLocationFromName(land.getId());
