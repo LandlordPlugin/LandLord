@@ -88,15 +88,10 @@ public class OwnedLand {
 
             int x = Integer.parseInt(split[1]);
             int z = Integer.parseInt(split[2]);
-            return new Location(world, x * 16, world.getHighestBlockYAt(x * 16, z * 16), z * 16);
+            return new Location(world, x * 16, world.getHighestBlockYAt(x * 16, z * 16) + 1, z * 16);
         } else
             return null;
 
-    }
-
-    public static OwnedLand fromString(String id) {
-        Location locationFromName = getLocationFromName(id);
-        return Landlord.getInstance().getLand(locationFromName);
     }
 
     private void initFlags() {
