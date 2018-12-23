@@ -72,25 +72,6 @@ public class LandAlerter extends BasicListener {
                 Player p = event.getPlayer();
 
                 Location ploc = p.getLocation();
-                // Problem is, that the event somehow trigger's before the player actually crossed the border
-                // Thats why we get a nullland as regionInside now!
-                // So i decided to just check if the message is equals to one of the 4 surrounding lands, since
-                // vector calculations are not very accurate
-                OwnedLand regionInsideNow = (ploc == null ? null : pl.getWgHandler().getRegion(ploc));
-                // System.out.println("Position: " + ploc);
-                // System.out.println("Chunk: " + ploc.getChunk());
-                // System.out.println("RegionInsideNw: " + regionInsideNow);
-                OwnedLand before = (previousLands.get(p.getUniqueId()) == null ? null : pl.getLand(previousLands.get(p.getUniqueId()).getLocation()));
-
-                OwnedLand[] surroundings = new OwnedLand[]{
-                        (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ()))),
-                        (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX() + 1, ploc.getChunk().getZ()))),
-                        (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX() - 1, ploc.getChunk().getZ()))),
-                        (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() + 1))),
-                        (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() - 1))),
-                };
-
-
                 JSONObject json = null;
                 try {
                     if (components.read(0) != null)
@@ -115,9 +96,26 @@ public class LandAlerter extends BasicListener {
                         String msg = stripColors(sb.toString()).trim();
                         // System.out.println("Trimmed message: " + msg);
 
+                        // Problem is, that the event somehow trigger's before the player actually crossed the border
+                        // Thats why we get a nullland as regionInside now!
+                        // So i decided to just check if the message is equals to one of the 4 surrounding lands, since
+                        // vector calculations are not very accurate
+                        OwnedLand regionInsideNow = (ploc == null ? null : pl.getWgHandler().getRegion(ploc));
+                        // System.out.println("Position: " + ploc);
+                        // System.out.println("Chunk: " + ploc.getChunk());
+                        // System.out.println("RegionInsideNw: " + regionInsideNow);
+                        OwnedLand before = (previousLands.get(p.getUniqueId()) == null ? null : pl.getLand(previousLands.get(p.getUniqueId()).getLocation()));
+
+                        OwnedLand[] surroundings = new OwnedLand[]{
+                                (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ()))),
+                                (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX() + 1, ploc.getChunk().getZ()))),
+                                (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX() - 1, ploc.getChunk().getZ()))),
+                                (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() + 1))),
+                                (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() - 1))),
+                        };
+
                         boolean goingOn = false;
 
-                        int i = 0;
                         // check surrounding lands for equal greet message
                         for (OwnedLand surrounding : surroundings) {
                             // System.out.println(i + ":" + surrounding);

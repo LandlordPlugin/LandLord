@@ -1,11 +1,11 @@
 name: Landlord
-version: 3.102
+version: 3.105
 main: biz.princeps.landlord.Landlord
 author: SpatiumPrinceps
 website: https://www.spigotmc.org/resources/beta-landlord-2.44398/
 depend: [WorldGuard, ProtocolLib]
 softdepend: [Vault, PlaceholderAPI]
-api-version: 1.12
+api-version: 1.13
 
 permissions:
   landlord.*:
