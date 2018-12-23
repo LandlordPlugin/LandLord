@@ -138,7 +138,7 @@ public class LPlayerManager {
         long days = plugin.getConfig().getInt("BuyUpInactive.timegate");
         LPlayer lPlayer = db.getPlayer(owner, Database.Mode.UUID);
         if (lPlayer != null) {
-            return (int) (days - (Duration.between(LocalDateTime.now(), lPlayer.getLastSeen()).toDays()));
+            return (int) (days - (Duration.between(lPlayer.getLastSeen(), LocalDateTime.now()).toDays()));
         }
         return -1;
     }
