@@ -25,6 +25,7 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.storage_old.AbstractDatabase;
 import biz.princeps.lib.storage_old.MySQL;
 import biz.princeps.lib.storage_old.SQLite;
+import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -124,6 +125,12 @@ public class Landlordbase extends MainCommand {
         } else if (args.length == 2) {
             for (SubCommand subcmd : subCommandMap.values()) {
                 if (subcmd.matches(args[0])) {
+
+                    if (subcmd instanceof MapCMD) {
+                        tabReturn.add("on");
+                        tabReturn.add("off");
+                    }
+
                     if (subcmd instanceof AddfriendCMD || subcmd instanceof AddFriendAllCMD ||
                             subcmd instanceof RemoveFriendCMD || subcmd instanceof RemoveFriendAllCMD) {
 
@@ -469,8 +476,18 @@ public class Landlordbase extends MainCommand {
 
         @Override
         public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((LandMap) subcommands.get("landmap")).onToggleLandMap(properties.getPlayer());
+
+            if (arguments.size() == 0) {
+                // toggle
+                if (properties.isPlayer()) {
+                    ((LandMap) subcommands.get("landmap")).onToggleLandMap(properties.getPlayer());
+                }
+            } else if (arguments.size() == 1) {
+                // on/off
+                String arg = arguments.get()[0];
+                if (arg.toLowerCase().equals("on") || arg.toLowerCase().equals("off")) {
+                    ((LandMap) subcommands.get("landmap")).onToggleLandMap(properties.getPlayer(), arg.toLowerCase());
+                }
             }
         }
     }
