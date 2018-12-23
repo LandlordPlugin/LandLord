@@ -32,7 +32,7 @@ public class Manage extends LandlordCommand {
                 land = plugin.getWgHandler().getRegion(player.getLocation().getChunk());
             } else {
                 // land manage <landid>
-                land = OwnedLand.fromString(args[0]);
+                land =  plugin.getWgHandler().getRegion(args[0]);
             }
 
             if (land == null) {
