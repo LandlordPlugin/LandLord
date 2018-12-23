@@ -26,4 +26,21 @@ public class LandMap extends LandlordCommand {
         }
 
     }
+
+    public void onToggleLandMap(Player player, String state) {
+        if (this.worldDisabled(player)) {
+            lm.sendMessage(player, lm.getString("Disabled-World"));
+            return;
+        }
+
+        if (!Options.enabled_map()) {
+            lm.sendMessage(player, lm.getString("Commands.LandMap.disabled"));
+        }
+
+        if (state.equals("on")) {
+            plugin.getMapManager().addMap(player);
+        } else {
+            plugin.getMapManager().remMap(player);
+        }
+    }
 }

@@ -24,20 +24,22 @@ public class MapManager extends BasicListener {
         this.mapList = new HashMap<>();
     }
 
-    private void addMap(LandMap m) {
-        mapList.put(m.getMapViewer().getName(), m);
-    }
-
     public void toggleMap(Player p) {
         if (mapList.containsKey(p.getName())) {
-            remMap(p.getName());
+            remMap(p);
         } else {
-            addMap(new LandMap(p, this.plugin));
+            addMap(p);
         }
     }
 
-    public void remMap(String pName) {
+    public void addMap(Player player) {
+        if (!mapList.containsKey(player.getName())) {
+            mapList.put(player.getName(), new LandMap(player, this.plugin));
+        }
+    }
 
+    public void remMap(Player player) {
+        String pName = player.getName();
         if (mapList.containsKey(pName)) {
             LandMap curr = mapList.get(pName);
             curr.removeMap();
@@ -62,7 +64,7 @@ public class MapManager extends BasicListener {
     @EventHandler
     public void playerLeave(PlayerQuitEvent event) {
         if (mapList.containsKey(event.getPlayer().getName())) {
-            remMap(event.getPlayer().getName());
+            remMap(event.getPlayer());
         }
 
     }
@@ -70,7 +72,7 @@ public class MapManager extends BasicListener {
     @EventHandler
     public void playerWorldChange(PlayerChangedWorldEvent event) {
         if (mapList.containsKey(event.getPlayer().getName())) {
-            remMap(event.getPlayer().getName());
+            remMap(event.getPlayer());
         }
     }
 
