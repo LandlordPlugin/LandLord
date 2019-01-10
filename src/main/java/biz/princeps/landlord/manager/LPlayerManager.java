@@ -1,14 +1,19 @@
 package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.Options;
+import biz.princeps.landlord.api.IPlayerManager;
+import biz.princeps.landlord.api.exceptions.PlayerOfflineException;
 import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.LPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -18,7 +23,7 @@ import java.util.function.Consumer;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 17/7/17
  */
-public class LPlayerManager {
+public class LPlayerManager implements IPlayerManager {
 
     private Map<UUID, LPlayer> players;
 
@@ -47,19 +52,19 @@ public class LPlayerManager {
         players.remove(id);
     }
 
-    public void getOfflinePlayerAsync(UUID uuid, Consumer<LPlayer> consumer) {
+    public void getOfflinePlayerAsync(UUID uuid, Consumer<IPlayer> consumer) {
         plugin.getExecutorService().execute(() -> consumer.accept(db.getPlayer(uuid, Database.Mode.UUID)));
     }
 
-    public void getOfflinePlayerAsync(String name, Consumer<LPlayer> consumer) {
+    public void getOfflinePlayerAsync(String name, Consumer<IPlayer> consumer) {
         plugin.getExecutorService().execute(() -> consumer.accept(db.getPlayer(name, Database.Mode.NAME)));
     }
 
-    public LPlayer getOfflinePlayerSync(UUID uuid) {
+    public IPlayer getOfflinePlayerSync(UUID uuid) {
         return db.getPlayer(uuid, Database.Mode.UUID);
     }
 
-    public LPlayer getOfflinePlayerSync(String name) {
+    public IPlayer getOfflinePlayerSync(String name) {
         return db.getPlayer(name, Database.Mode.NAME);
     }
 
@@ -116,7 +121,7 @@ public class LPlayerManager {
      * @return if the given id is marked as inactive
      */
     public Boolean isInactive(UUID id) {
-        LPlayer lPlayer = db.getPlayer(id, Database.Mode.UUID);
+        LPlayer lPlayer = (LPlayer) db.getPlayer(id, Database.Mode.UUID);
         if (lPlayer != null) {
             return isInactive(lPlayer.getLastSeen());
         }
@@ -136,10 +141,50 @@ public class LPlayerManager {
     public int getInactiveRemainingDays(UUID owner) {
 
         long days = plugin.getConfig().getInt("BuyUpInactive.timegate");
-        LPlayer lPlayer = db.getPlayer(owner, Database.Mode.UUID);
+        LPlayer lPlayer = (LPlayer) db.getPlayer(owner, Database.Mode.UUID);
         if (lPlayer != null) {
             return (int) (days - (Duration.between(lPlayer.getLastSeen(), LocalDateTime.now()).toDays()));
         }
         return -1;
+    }
+
+
+    // API METHODS
+
+    /**
+     * @param id
+     * @return
+     * @throws PlayerOfflineException
+     */
+    @Override
+    public IPlayer getOnlinePlayer(UUID id) throws PlayerOfflineException {
+        if (get(id) == null) {
+            throw new PlayerOfflineException();
+        }
+        return get(id);
+    }
+
+    @Override
+    public void getOfflinePlayer(UUID id, Consumer<IPlayer> consumer) {
+        getOfflinePlayerAsync(id, consumer);
+    }
+
+    @Override
+    public int getMaxClaimPermission(Player player) {
+        List<Integer> limitlist = plugin.getConfig().getIntegerList("limits");
+
+        if (!player.hasPermission("landlord.limit.override")) {
+            // We need to find out, whats the maximum limit.x permission is a player has
+
+            int highestAllowedLandCount = -1;
+            for (Integer integer : limitlist) {
+                if (player.hasPermission("landlord.limit." + integer)) {
+                    highestAllowedLandCount = integer;
+                }
+            }
+            return highestAllowedLandCount;
+        } else {
+            return Integer.MIN_VALUE;
+        }
     }
 }

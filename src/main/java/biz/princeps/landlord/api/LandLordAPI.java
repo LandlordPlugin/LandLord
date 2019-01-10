@@ -1,7 +1,6 @@
 package biz.princeps.landlord.api;
 
 import biz.princeps.landlord.handler.WorldGuardHandler;
-import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.util.OwnedLand;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Chunk;
@@ -18,7 +17,7 @@ import java.util.UUID;
  */
 public interface LandLordAPI {
 
-    LPlayerManager getPlayerManager();
+    IPlayerManager getPlayerManager();
 
     OwnedLand getLand(Location loc);
 
