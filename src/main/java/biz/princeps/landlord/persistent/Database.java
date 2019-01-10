@@ -1,5 +1,6 @@
 package biz.princeps.landlord.persistent;
 
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.lib.storage.Datastorage;
 import biz.princeps.lib.storage_old.DatabaseType;
 import biz.princeps.lib.util.SpigotUtil;
@@ -74,7 +75,7 @@ public class Database extends Datastorage {
         execute("INSERT INTO ll_version (version) SELECT " + CURRENT_VERSION + " WHERE NOT EXISTS (SELECT * FROM ll_version)");
     }
 
-    public LPlayer getPlayer(Object obj, Mode mode) {
+    public IPlayer getPlayer(Object obj, Mode mode) {
         Triplet triplet = executeQuery("SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
                 sanitize(obj.toString()) + "'");
         //System.out.println("Query: " + "SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +

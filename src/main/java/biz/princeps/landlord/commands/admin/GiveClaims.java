@@ -103,8 +103,8 @@ public class GiveClaims extends LandlordCommand {
         } else {
             plugin.getPlayerManager().getOfflinePlayerAsync(target, p -> {
                 if (p != null) {
-                    p.addClaims(amount);
-                    plugin.getPlayerManager().saveSync(p);
+                    ((LPlayer) p).addClaims(amount);
+                    plugin.getPlayerManager().saveSync((LPlayer) p);
                     OfflinePlayer op = Bukkit.getOfflinePlayer(p.getUuid());
 
                     if (op.isOnline()) {
@@ -132,7 +132,7 @@ public class GiveClaims extends LandlordCommand {
                 }
             }
             if (claimcount + amount > highestAllowedLandCount) {
-                lm.sendMessage(player,plugin.getLangManager().getString("Shop.notAllowed"));
+                lm.sendMessage(player, plugin.getLangManager().getString("Shop.notAllowed"));
                 return false;
             }
         }

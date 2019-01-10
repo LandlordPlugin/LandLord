@@ -203,7 +203,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
                 if (lPlayer1 == null) {
                     this.getPlayerManager().add(new LPlayer(p.getUniqueId()));
                 } else {
-                    this.getPlayerManager().add(lPlayer1);
+                    this.getPlayerManager().add((LPlayer) lPlayer1);
                 }
             });
         });

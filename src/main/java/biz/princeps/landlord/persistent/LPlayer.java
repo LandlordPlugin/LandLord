@@ -1,5 +1,6 @@
 package biz.princeps.landlord.persistent;
 
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.lib.util.SpigotUtil;
 import biz.princeps.lib.util.TimeUtil;
 import org.bukkit.Location;
@@ -12,7 +13,7 @@ import java.util.UUID;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 17/7/17
  */
-public class LPlayer {
+public class LPlayer implements IPlayer {
 
     private UUID uuid;
     private String name;

@@ -14,6 +14,7 @@ import biz.princeps.landlord.commands.homes.Home;
 import biz.princeps.landlord.commands.homes.SetHome;
 import biz.princeps.landlord.commands.management.*;
 import biz.princeps.landlord.manager.LangManager;
+import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.chat.MultiPagedMessage;
@@ -458,7 +459,7 @@ public class Landlordbase extends MainCommand {
                                     .getString("Commands.ListLands.noPlayer").replace("%player%", finalTarget));
                         } else {
                             // Success
-                            ((ListLands) subcommands.get("listlands")).onListLands(properties.getPlayer(), lPlayer, finalPage);
+                            ((ListLands) subcommands.get("listlands")).onListLands(properties.getPlayer(), (LPlayer) lPlayer, finalPage);
                         }
                     });
                 }
