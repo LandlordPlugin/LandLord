@@ -83,7 +83,7 @@ public class WorldGuardHandler {
     }
 
     public Collection<ProtectedRegion> getRegions(World w) {
-        com.sk89q.worldedit.world.World worldByName = getWg().getPlatform().getWorldByName(w.getName());
+        com.sk89q.worldedit.world.World worldByName = getWg().getPlatform().getMatcher().getWorldByName(w.getName());
         return Objects.requireNonNull(getRegionContainer().get(worldByName)).getRegions().values();
     }
 
@@ -92,9 +92,7 @@ public class WorldGuardHandler {
     }
 
     public ProtectedRegion getRegionAsPr(String name) {
-        World world = getWorld(name);
-        com.sk89q.worldedit.world.World worldByName = getWg().getPlatform().getWorldByName(world.getName());
-
+        com.sk89q.worldedit.world.World worldByName = getWg().getPlatform().getMatcher().getWorldByName(name);
         return Objects.requireNonNull(getRegionContainer().get(worldByName)).getRegion(name);
     }
 
@@ -255,7 +253,7 @@ public class WorldGuardHandler {
     }
 
     public RegionManager getRegionManager(World world) {
-        com.sk89q.worldedit.world.World worldByName = wg.getPlatform().getWorldByName(world.getName());
+        com.sk89q.worldedit.world.World worldByName = getWg().getPlatform().getMatcher().getWorldByName(world.getName());
         RegionContainer regionContainer = getRegionContainer();
         return regionContainer.get(worldByName);
     }
