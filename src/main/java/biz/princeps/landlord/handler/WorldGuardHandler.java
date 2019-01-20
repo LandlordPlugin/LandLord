@@ -79,7 +79,17 @@ public class WorldGuardHandler {
     }
 
     public OwnedLand getRegion(ProtectedRegion pr) {
-        return new OwnedLand(pr, getWorld(pr.getId()).getChunkAt(getX(pr.getId()), getZ(pr.getId())));
+
+        World w = getWorld(pr.getId());
+        int x = getX(pr.getId());
+        int z = getZ(pr.getId());
+
+        if (w != null && x != Integer.MIN_VALUE && z != Integer.MIN_VALUE) {
+            Chunk c = w.getChunkAt(x, z);
+            new OwnedLand(pr, c);
+        }
+
+        return null;
     }
 
     public Collection<ProtectedRegion> getRegions(World w) {
