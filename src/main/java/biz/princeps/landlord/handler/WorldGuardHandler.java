@@ -78,8 +78,8 @@ public class WorldGuardHandler {
     public Collection<ProtectedRegion> getRegions(World w) {
         RegionManager rm = wgPlugin.getRegionManager(w);
         if (rm == null)
-            return null;
-        return wgPlugin.getRegionManager(w).getRegions().values();
+            return Collections.emptyList();
+        return rm.getRegions().values();
     }
 
     public OwnedLand getRegion(String name) {
@@ -232,7 +232,7 @@ public class WorldGuardHandler {
 
     public List<ProtectedRegion> getRegions(UUID id, World world) {
         List<ProtectedRegion> regions = new ArrayList<>();
-        for (ProtectedRegion protectedRegion : getRegionManager(world).getRegions().values()) {
+        for (ProtectedRegion protectedRegion : getRegions(world)) {
             if (protectedRegion.getOwners().getUniqueIds().contains(id)) {
                 if (getRegion(protectedRegion) != null) {
                     regions.add(protectedRegion);
