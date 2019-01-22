@@ -84,7 +84,7 @@ public class WorldGuardHandler {
 
         if (w != null && x != Integer.MIN_VALUE && z != Integer.MIN_VALUE) {
             Chunk c = w.getChunkAt(x, z);
-            new OwnedLand(pr, c);
+            return new OwnedLand(pr, c);
         }
 
         return null;
@@ -111,6 +111,7 @@ public class WorldGuardHandler {
             return null;
         }
 
+        // Handle world names with multiple spaces in the name
         StringBuilder sb = new StringBuilder(splitted[0]);
         for (int i = 1; i < splitted.length - 2; i++) {
             sb.append("_").append(splitted[i]);
