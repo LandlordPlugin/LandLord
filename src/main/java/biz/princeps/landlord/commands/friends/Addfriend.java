@@ -39,6 +39,7 @@ public class Addfriend extends LandlordCommand {
 
                 plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
                     if (lPlayer == null) {
+                        // TODO fix inconsistency with printing the entire names list
                         lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
                                 .replace("%players%", Arrays.asList(names).toString()));
                     } else {
