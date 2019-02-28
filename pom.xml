@@ -159,16 +159,18 @@
 
         <dependency>
             <groupId>com.sk89q</groupId>
-            <artifactId>WorldEdit_1</artifactId>
-            <version>1.13.2</version>
+            <artifactId>worldedit</artifactId>
+            <version>4057</version>
             <classifier>dist</classifier>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.sk89q</groupId>
-            <artifactId>WorldGuard_1</artifactId>
-            <version>1.13.2</version>
+            <artifactId>worldguard</artifactId>
+            <version>1806</version>
             <classifier>dist</classifier>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

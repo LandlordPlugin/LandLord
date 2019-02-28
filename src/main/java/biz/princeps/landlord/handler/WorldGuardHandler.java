@@ -100,8 +100,11 @@ public class WorldGuardHandler {
     }
 
     public ProtectedRegion getRegionAsPr(String name) {
-        com.sk89q.worldedit.world.World worldByName = getWg().getPlatform().getMatcher().getWorldByName(name);
-        return Objects.requireNonNull(getRegionContainer().get(worldByName)).getRegion(name);
+        if(!isLLRegion(name)){
+            return null;
+        }
+        com.sk89q.worldedit.world.World w = getWg().getPlatform().getMatcher().getWorldByName(getWorld(name).getName());
+        return Objects.requireNonNull(getRegionContainer().get(w)).getRegion(name);
     }
 
     public World getWorld(String name) {
