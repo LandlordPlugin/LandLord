@@ -108,8 +108,8 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot_1_12_2</artifactId>
-            <version>1.0</version>
+            <artifactId>spigot</artifactId>
+            <version>1_12_2</version>
             <scope>provided</scope>
         </dependency>
 
@@ -129,14 +129,14 @@
 
         <dependency>
             <groupId>com.sk89q</groupId>
-            <artifactId>worldedit</artifactId>
+            <artifactId>worldguard</artifactId>
             <version>1.12.2</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.sk89q</groupId>
-            <artifactId>worldguard</artifactId>
+            <artifactId>worldedit</artifactId>
             <version>1.12.2</version>
             <scope>provided</scope>
         </dependency>
@@ -151,7 +151,7 @@
         <dependency>
             <groupId>biz.princeps</groupId>
             <artifactId>PrincepsLib-legacy</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
             <scope>compile</scope>
         </dependency>
 
