@@ -72,6 +72,23 @@ public class WorldGuardHandler {
         return getRegion(loc.getChunk());
     }
 
+    public OwnedLand[] getSurroundings(Location ploc) {
+        if (ploc == null) return new OwnedLand[0];
+
+        ploc.getWorld().loadChunk(ploc.getChunk().getX() + 1, ploc.getChunk().getZ());
+        ploc.getWorld().loadChunk(ploc.getChunk().getX() - 1, ploc.getChunk().getZ());
+        ploc.getWorld().loadChunk(ploc.getChunk().getX(), ploc.getChunk().getZ() + 1);
+        ploc.getWorld().loadChunk(ploc.getChunk().getX(), ploc.getChunk().getZ() - 1);
+
+        return new OwnedLand[]{
+                getRegion(ploc),
+                getRegion(ploc.getWorld().getChunkAt(ploc.getChunk().getX() + 1, ploc.getChunk().getZ())),
+                getRegion(ploc.getWorld().getChunkAt(ploc.getChunk().getX() - 1, ploc.getChunk().getZ())),
+                getRegion(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() + 1)),
+                getRegion(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() - 1)),
+        };
+    }
+
     public RegionContainer getRegionContainer() {
         return wg.getPlatform().getRegionContainer();
     }
@@ -100,7 +117,7 @@ public class WorldGuardHandler {
     }
 
     public ProtectedRegion getRegionAsPr(String name) {
-        if(!isLLRegion(name)){
+        if (!isLLRegion(name)) {
             return null;
         }
         com.sk89q.worldedit.world.World w = getWg().getPlatform().getMatcher().getWorldByName(getWorld(name).getName());

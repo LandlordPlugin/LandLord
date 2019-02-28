@@ -105,13 +105,7 @@ public class LandAlerter extends BasicListener {
                         // System.out.println("RegionInsideNw: " + regionInsideNow);
                         OwnedLand before = (previousLands.get(p.getUniqueId()) == null ? null : pl.getLand(previousLands.get(p.getUniqueId()).getLocation()));
 
-                        OwnedLand[] surroundings = new OwnedLand[]{
-                                (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ()))),
-                                (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX() + 1, ploc.getChunk().getZ()))),
-                                (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX() - 1, ploc.getChunk().getZ()))),
-                                (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() + 1))),
-                                (ploc == null ? null : pl.getLand(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() - 1))),
-                        };
+                        OwnedLand[] surroundings = Landlord.getInstance().getWgHandler().getSurroundings(ploc);
 
                         boolean goingOn = false;
 
