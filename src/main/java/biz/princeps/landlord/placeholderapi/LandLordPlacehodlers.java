@@ -3,6 +3,7 @@ package biz.princeps.landlord.placeholderapi;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.util.OwnedLand;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 import org.bukkit.entity.Player;
 
@@ -43,9 +44,10 @@ public class LandLordPlacehodlers extends EZPlaceholderHook {
                 return String.valueOf(player1.getClaims());
 
             case "currentLandOwner":
-                OwnedLand land = pl.getWgHandler().getRegion(player.getLocation());
+                ProtectedRegion land = pl.getWgHandler().getRegion(player.getLocation());
+                OwnedLand region = pl.getWgHandler().getRegion(land);
                 if (land != null)
-                    return land.printOwners();
+                    return region.printOwners();
 
             case "currentLandName":
                 return OwnedLand.getName(player.getLocation().getChunk());

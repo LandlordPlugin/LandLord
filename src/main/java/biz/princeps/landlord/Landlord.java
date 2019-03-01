@@ -344,7 +344,8 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
      **/
     @Override
     public OwnedLand getLand(Location loc) {
-        return wgHandler.getRegion(loc);
+        ProtectedRegion region = wgHandler.getRegion(loc);
+        return wgHandler.getRegion(region);
     }
 
     @Override

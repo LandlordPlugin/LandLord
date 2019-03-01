@@ -68,24 +68,35 @@ public class WorldGuardHandler {
         return (pr != null ? new OwnedLand(pr, chunk) : null);
     }
 
-    public OwnedLand getRegion(Location loc) {
-        return getRegion(loc.getChunk());
+    public ProtectedRegion getRegion(Location loc) {
+        String name = loc.getWorld().getName().replace(" ", "_");
+        name += "_";
+
+        // x coord
+        int x = (int) Math.floor(loc.getX() / 16);
+        name += x;
+        name += "_";
+        // z coord
+        int z = (int) Math.floor(loc.getZ() / 16);
+        name += z;
+
+        return getRegionAsPr(name);
     }
 
-    public OwnedLand[] getSurroundings(Location ploc) {
-        if (ploc == null) return new OwnedLand[0];
+    /**
+     * Return the surrounding protected regions of a location.
+     * @param ploc the location
+     * @return an array of size 5 containing the region of the location itsself and all the surrounding regions
+     */
+    public ProtectedRegion[] getSurroundings(Location ploc) {
+        if (ploc == null) return new ProtectedRegion[0];
 
-        ploc.getWorld().loadChunk(ploc.getChunk().getX() + 1, ploc.getChunk().getZ());
-        ploc.getWorld().loadChunk(ploc.getChunk().getX() - 1, ploc.getChunk().getZ());
-        ploc.getWorld().loadChunk(ploc.getChunk().getX(), ploc.getChunk().getZ() + 1);
-        ploc.getWorld().loadChunk(ploc.getChunk().getX(), ploc.getChunk().getZ() - 1);
-
-        return new OwnedLand[]{
+        return new ProtectedRegion[]{
                 getRegion(ploc),
-                getRegion(ploc.getWorld().getChunkAt(ploc.getChunk().getX() + 1, ploc.getChunk().getZ())),
-                getRegion(ploc.getWorld().getChunkAt(ploc.getChunk().getX() - 1, ploc.getChunk().getZ())),
-                getRegion(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() + 1)),
-                getRegion(ploc.getWorld().getChunkAt(ploc.getChunk().getX(), ploc.getChunk().getZ() - 1)),
+                getRegion(ploc.clone().add(16, 0, 0)),
+                getRegion(ploc.clone().subtract(16, 0, 0)),
+                getRegion(ploc.clone().add(0, 0, 16)),
+                getRegion(ploc.clone().subtract(0, 0, 16)),
         };
     }
 
@@ -94,6 +105,7 @@ public class WorldGuardHandler {
     }
 
     public OwnedLand getRegion(ProtectedRegion pr) {
+        if (pr == null) return null;
 
         World w = getWorld(pr.getId());
         int x = getX(pr.getId());

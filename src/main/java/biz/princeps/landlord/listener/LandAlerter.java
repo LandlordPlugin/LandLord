@@ -12,6 +12,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,7 +20,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.json.simple.JSONArray;
@@ -99,23 +99,24 @@ public class LandAlerter extends BasicListener {
                         // Thats why we get a nullland as regionInside now!
                         // So i decided to just check if the message is equals to one of the 4 surrounding lands, since
                         // vector calculations are not very accurate
-                        OwnedLand regionInsideNow = (ploc == null ? null : pl.getWgHandler().getRegion(ploc));
+                        ProtectedRegion regionInsideNow = (ploc == null ? null : pl.getWgHandler().getRegion(ploc));
                         // System.out.println("Position: " + ploc);
                         // System.out.println("Chunk: " + ploc.getChunk());
                         // System.out.println("RegionInsideNw: " + regionInsideNow);
-                        OwnedLand before = (previousLands.get(p.getUniqueId()) == null ? null : pl.getLand(previousLands.get(p.getUniqueId()).getLocation()));
+                        ProtectedRegion before = (previousLands.get(p.getUniqueId()) == null ? null :
+                                pl.getWgHandler().getRegion(previousLands.get(p.getUniqueId()).getLocation()));
 
-                        OwnedLand[] surroundings = Landlord.getInstance().getWgHandler().getSurroundings(ploc);
+                        ProtectedRegion[] surroundings = Landlord.getInstance().getWgHandler().getSurroundings(ploc);
 
                         boolean goingOn = false;
 
                         // check surrounding lands for equal greet message
-                        for (OwnedLand surrounding : surroundings) {
-                            // System.out.println(i + ":" + surrounding);
+                        for (ProtectedRegion surrounding : surroundings) {
+                            // System.out.println("Surrounding: " + surrounding);
                             if (surrounding == null) {
                                 continue;
                             }
-                            String greet = stripColors(surrounding.getWGLand().getFlag(Flags.GREET_MESSAGE));
+                            String greet = stripColors(surrounding.getFlag(Flags.GREET_MESSAGE));
                             if (msg.equals(greet)) {
                                 goingOn = true;
                                 break;
@@ -124,8 +125,8 @@ public class LandAlerter extends BasicListener {
                         }
 
                         if (regionInsideNow != null) {
-                            String greet = stripColors(regionInsideNow.getWGLand().getFlag(Flags.GREET_MESSAGE));
-                            String farewell = stripColors(regionInsideNow.getWGLand().getFlag(Flags.FAREWELL_MESSAGE));
+                            String greet = stripColors(regionInsideNow.getFlag(Flags.GREET_MESSAGE));
+                            String farewell = stripColors(regionInsideNow.getFlag(Flags.FAREWELL_MESSAGE));
                             // System.out.println("RegionInsideNow: " + msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
@@ -134,8 +135,8 @@ public class LandAlerter extends BasicListener {
                         }
 
                         if (before != null) {
-                            String greet = stripColors(before.getWGLand().getFlag(Flags.GREET_MESSAGE));
-                            String farewell = stripColors(before.getWGLand().getFlag(Flags.FAREWELL_MESSAGE));
+                            String greet = stripColors(before.getFlag(Flags.GREET_MESSAGE));
+                            String farewell = stripColors(before.getFlag(Flags.FAREWELL_MESSAGE));
                             // System.out.println("before:" + msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
@@ -221,24 +222,23 @@ public class LandAlerter extends BasicListener {
                 prevLand = currentLand;
                 currentLand = landTowards;
 
-                OwnedLand prev = plugin.getLand(prevLand.getLocation());
-                OwnedLand curr = plugin.getLand(currentLand.getLocation());
+                ProtectedRegion prev = plugin.getWgHandler().getRegion(prevLand.getLocation());
+                ProtectedRegion curr = plugin.getWgHandler().getRegion(currentLand.getLocation());
                 // System.out.println(prev + "  " + curr);
 
                 if (prev == null && curr != null) {
-                    send(curr.getWGLand().getFlag(Flags.GREET_MESSAGE), p);
+                    send(curr.getFlag(Flags.GREET_MESSAGE), p);
                 }
                 if (prev != null && curr == null) {
-                    send(prev.getWGLand().getFlag(Flags.FAREWELL_MESSAGE), p);
+                    send(prev.getFlag(Flags.FAREWELL_MESSAGE), p);
                 }
                 if (prev != null && curr != null) {
-                    if (!prev.getOwner().equals(curr.getOwner())) {
-                        send(curr.getWGLand().getFlag(Flags.GREET_MESSAGE), p);
+                    if (!prev.getOwners().equals(curr.getOwners())) {
+                        send(curr.getFlag(Flags.GREET_MESSAGE), p);
                     }
                 }
             }
         }
-
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
