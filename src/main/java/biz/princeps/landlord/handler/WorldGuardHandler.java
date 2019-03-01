@@ -63,15 +63,45 @@ public class WorldGuardHandler {
         return (pr != null ? new OwnedLand(pr, chunk) : null);
     }
 
-    public OwnedLand getRegion(Location loc) {
-        return getRegion(loc.getChunk());
+    public ProtectedRegion getRegion(Location loc) {
+        String name = loc.getWorld().getName().replace(" ", "_");
+        name += "_";
+
+        // x coord
+        int x = (int) Math.floor(loc.getX() / 16);
+        name += x;
+        name += "_";
+
+        // z coord
+        int z = (int) Math.floor(loc.getZ() / 16);
+        name += z;
+
+        return getRegionAsPr(name);
     }
+
+    /**
+     * Return the surrounding protected regions of a location.
+     * @param ploc the location
+     * @return an array of size 5 containing the region of the location itsself and all the surrounding regions
+     */
+    public ProtectedRegion[] getSurroundings(Location ploc) {
+        if (ploc == null) return new ProtectedRegion[0];
+        return new ProtectedRegion[]{
+                getRegion(ploc),
+                getRegion(ploc.clone().add(16, 0, 0)),
+                getRegion(ploc.clone().subtract(16, 0, 0)),
+                getRegion(ploc.clone().add(0, 0, 16)),
+                getRegion(ploc.clone().subtract(0, 0, 16)),
+        };
+    }
+
 
     public RegionContainer getRegionContainer() {
         return wgPlugin.getRegionContainer();
     }
 
     public OwnedLand getRegion(ProtectedRegion pr) {
+        if(pr == null) return null;
         return new OwnedLand(pr, getWorld(pr.getId()).getChunkAt(getX(pr.getId()), getZ(pr.getId())));
     }
 
