@@ -31,7 +31,7 @@
                         </goals>
                         <configuration>
                             <outputFile>
-                                ${project.build.directory}/Testserver/plugins/Landlord-latest.jar
+                                ${project.build.directory}/Testserver_1.13.2/plugins/Landlord-latest.jar
                             </outputFile>
                             <relocations>
                                 <relocation>
