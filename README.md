@@ -6,6 +6,7 @@ It is hosted on [spigotmc.org](https://www.spigotmc.org/resources/beta-landlord-
 
 Maven
 =====
+Replace the version with the current version number!
 ```xml
 <repository>
     <id>princepsrepo</id>
@@ -15,7 +16,7 @@ Maven
 <dependency>
     <groupId>biz.princeps</groupId>
     <artifactId>LandLord</artifactId>
-    <version>0.1</version>
+    <version>3.129</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -24,11 +25,13 @@ Maven
 Compilation
 ================
 
-LandLord uses maven as dependency resolver. Execute the maven goal "package" to get a jar, that contains a compiled jar with all dependencies.
+LandLord uses maven as dependency resolver. Execute the maven goal "package" to get a jar, that contains all dependencies.
 In case you want to dive deeper into LandLord development, you can change the output path of the shade plugin directly into your server plugins folder (like I did).
+The setup.sh script will install a testserver in the target folder.
 
 Contributing
 ============
 1. Clone the repository 
-2. Change code
-3. Submit a pullrequest
+2. Execute setup.sh for installing the testserver with all dependencies
+3. Change code
+4. Submit a pull-request
