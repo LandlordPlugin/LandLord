@@ -72,7 +72,8 @@ public class Database extends Datastorage {
                 "PRIMARY KEY(version)" +
                 ");");
 
-        execute("INSERT INTO ll_version (version) SELECT " + CURRENT_VERSION + " WHERE NOT EXISTS (SELECT * FROM ll_version)");
+        execute("INSERT INTO ll_version (version) SELECT " + CURRENT_VERSION +
+                " FROM DUAL WHERE NOT EXISTS (SELECT * FROM ll_version)");
     }
 
     public IPlayer getPlayer(Object obj, Mode mode) {

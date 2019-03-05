@@ -26,15 +26,29 @@ public class Updater {
 
     private void checkForUpdate() {
         updater.setVersionComparator(VersionComparator.EQUAL);
-        //   updater.setVersionComparator(VersionComparator.);
 
         updater.checkForUpdate(new UpdateCallback() {
             @Override
             public void updateAvailable(String newVersion, String downloadUrl, boolean hasDirectDownload) {
                 try {
-                    if (Integer.parseInt(newVersion.substring(2)) >
-                            Integer.parseInt(Landlord.getInstance().getDescription().getVersion().substring(2)))
+                    String localVersion = Landlord.getInstance().getDescription().getVersion();
+
+                    // check for normal update
+                    if (newVersion.charAt(0) == localVersion.charAt(0)) {
+                        if (Integer.parseInt(newVersion.substring(2)) > Integer.parseInt(localVersion.substring(2))) {
+                            Landlord.getInstance().getLogger().info("LandLord was updated! Download the latest version (" + newVersion + ") from " + downloadUrl);
+                        }
+                    }else if (newVersion.charAt(0) > localVersion.charAt(0)){
+                        // in case there was a major update e.g. 3.xxx -> 4.0
                         Landlord.getInstance().getLogger().info("LandLord was updated! Download the latest version (" + newVersion + ") from " + downloadUrl);
+                    }
+
+                    //System.out.println(newVersion.charAt(0));
+                    //System.out.println(localVersion.charAt(0));
+
+                    //System.out.println(Integer.parseInt(newVersion.substring(2)));
+                    //System.out.println(Integer.parseInt(Landlord.getInstance().getDescription().getVersion().substring(2)));
+
                 } catch (NumberFormatException ignored) {
                 }
             }
