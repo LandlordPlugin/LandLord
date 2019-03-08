@@ -2,6 +2,7 @@ package biz.princeps.landlord.util;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.flags.LLFlag;
+import biz.princeps.landlord.handler.WorldGuardHandler;
 import biz.princeps.lib.PrincepsLib;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.domains.DefaultDomain;
@@ -21,16 +22,15 @@ import java.util.*;
 public class OwnedLand {
 
     private ProtectedRegion region;
-    private Chunk chunk;
     private Set<LLFlag> flags;
     private World world;
 
+    private WorldGuardHandler wg = Landlord.getInstance().getWgHandler();
 
-    public OwnedLand(ProtectedRegion region, Chunk chunk) {
+    public OwnedLand(ProtectedRegion region) {
         this.region = region;
-        this.chunk = chunk;
         this.flags = new HashSet<>();
-        this.world = chunk.getWorld();
+        this.world = wg.getWorld(region.getId());
         this.initFlags();
     }
 
@@ -74,6 +74,11 @@ public class OwnedLand {
         return chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
     }
 
+    /**
+     * also loads a chunk
+     * @param name the region id to get a location on
+     * @return returns a location on top of the chunk
+     */
     public static Location getLocationFromName(String name) {
         String[] split = name.split("_");
         if (split.length >= 3) {
@@ -152,7 +157,7 @@ public class OwnedLand {
     }
 
     public String getName() {
-        return getName(chunk);
+        return region.getId();
     }
 
     public boolean isOwner(UUID uuid) {
@@ -167,8 +172,19 @@ public class OwnedLand {
         return world;
     }
 
+    /**
+     * Loads a chunk!
+     * @return
+     */
     public Chunk getChunk() {
-        return chunk;
+        World w = wg.getWorld(region.getId());
+        int x = wg.getX(region.getId());
+        int z = wg.getZ(region.getId());
+
+        if (w != null && x != Integer.MIN_VALUE && z != Integer.MIN_VALUE) {
+            return w.getChunkAt(x, z);
+        }
+        return null;
     }
 
     public void addFriends(DefaultDomain domain) {
@@ -220,7 +236,7 @@ public class OwnedLand {
     @Override
     public String toString() {
         return "OwnedLand{" +
-                "chunk=" + chunk +
+                "chunk=" + region.getId() +
                 '}';
     }
 
