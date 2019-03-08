@@ -54,7 +54,7 @@ public class WorldGuardHandler {
         pr.setOwners(ownerDomain);
 
         // flag management
-        pr = setDefaultFlags(pr, down.getChunk());
+        pr = setDefaultFlags(pr);
         RegionManager manager = getRegionManager(world);
 
         if (manager != null) {
@@ -65,7 +65,7 @@ public class WorldGuardHandler {
     public OwnedLand getRegion(Chunk chunk) {
         RegionManager manager = getRegionManager(chunk.getWorld());
         ProtectedRegion pr = manager != null ? manager.getRegion(OwnedLand.getName(chunk)) : null;
-        return (pr != null ? new OwnedLand(pr, chunk) : null);
+        return (pr != null ? new OwnedLand(pr) : null);
     }
 
     public ProtectedRegion getRegion(Location loc) {
@@ -85,6 +85,7 @@ public class WorldGuardHandler {
 
     /**
      * Return the surrounding protected regions of a location.
+     *
      * @param ploc the location
      * @return an array of size 5 containing the region of the location itsself and all the surrounding regions
      */
@@ -107,16 +108,7 @@ public class WorldGuardHandler {
     public OwnedLand getRegion(ProtectedRegion pr) {
         if (pr == null) return null;
 
-        World w = getWorld(pr.getId());
-        int x = getX(pr.getId());
-        int z = getZ(pr.getId());
-
-        if (w != null && x != Integer.MIN_VALUE && z != Integer.MIN_VALUE) {
-            Chunk c = w.getChunkAt(x, z);
-            return new OwnedLand(pr, c);
-        }
-
-        return null;
+        return new OwnedLand(pr);
     }
 
     public Collection<ProtectedRegion> getRegions(World w) {
@@ -213,8 +205,10 @@ public class WorldGuardHandler {
         return wg.getFlagRegistry().getAll();
     }
 
-    public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region, Chunk chunk) {
-        OwnedLand land = new OwnedLand(region, chunk);
+    public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region) {
+        if (region == null) return null;
+
+        OwnedLand land = new OwnedLand(region);
         region.setFlag(Flags.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell")
                 .replace("%owner%", land.printOwners()));
 
