@@ -5,7 +5,6 @@ author: SpatiumPrinceps
 website: https://www.spigotmc.org/resources/beta-landlord-2.44398/
 depend: [WorldGuard, ProtocolLib]
 softdepend: [Vault, PlaceholderAPI]
-api-version: 1.13
 
 permissions:
   landlord.*:

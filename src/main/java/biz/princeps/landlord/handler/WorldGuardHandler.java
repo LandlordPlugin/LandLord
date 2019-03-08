@@ -196,8 +196,8 @@ public class WorldGuardHandler {
         return wgPlugin.getFlagRegistry();
     }
 
-    public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region, Chunk chunk) {
-        OwnedLand land = new OwnedLand(region, chunk);
+    public ProtectedCuboidRegion setDefaultFlags(ProtectedCuboidRegion region) {
+        OwnedLand land = new OwnedLand(region);
         region.setFlag(DefaultFlag.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell")
                 .replace("%owner%", land.printOwners()));
 
