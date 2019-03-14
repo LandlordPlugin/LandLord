@@ -288,8 +288,9 @@ public class Claim extends LandlordCommand {
                 .replace("%location%", Util.getLocationFormatted(chunk))
                 .replace("%world%", chunk.getWorld().getName()));
 
-        if (plugin.getConfig().getBoolean("Particles.claim"))
-            OwnedLand.highlightLand(player, Particle.VILLAGER_HAPPY);
+        if (plugin.getConfig().getBoolean("Particles.claim.enabled"))
+            OwnedLand.highlightLand(player,
+                    Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
 
         if (Options.enabled_homes() && plugin.getConfig().getBoolean("Homes.enableAutoSetHome", false)) {
             if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null) {
