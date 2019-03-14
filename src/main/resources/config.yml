@@ -165,8 +165,6 @@ CommandSettings:
 
   Claim:
     enableDelimit: true
-    # set this to false, if you want the delimitation to be placed physically in the world
-    enablePhantomBlocks: true
     # Newly claimed lands are delimited by this material. Example below should be self explanatory
     delimitation:
     - 'define: x=GLOWSTONE'

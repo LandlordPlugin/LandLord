@@ -2,17 +2,11 @@ package biz.princeps.landlord.util;
 
 import biz.princeps.landlord.Landlord;
 import com.sk89q.worldedit.BlockVector;
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.*;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,25 +90,10 @@ public class Delimitation {
                         b = chunk.getBlock(x, ++highestY, z);
                     }
 
-                    if (plugin.getConfig().getBoolean("CommandSettings.Claim.enablePhantomBlocks")) {
-                        sendBlockChangePacket(player, b.getLocation(), mat);
-                    } else {
-                        b.setType(mat);
-                    }
+
+                    b.setType(mat);
                 }
             }
-        }
-    }
-
-    private static void sendBlockChangePacket(Player p, Location loc, Material mat) {
-        PacketContainer fakeblock = new PacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
-        fakeblock.getBlockPositionModifier().write(0, new BlockPosition(
-                loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
-        fakeblock.getBlockData().write(0, WrappedBlockData.createData(mat));
-        try {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(p, fakeblock);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException("Cannot send packet " + fakeblock, e);
         }
     }
 }
