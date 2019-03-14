@@ -1,0 +1,315 @@
+Tag: '&8[&c&l!&8]'
+Disabled-World: '&7Grundstückkauf ist in dieser Welt deaktiviert'
+noPermissions: '&7Keine Erlaubnis'
+Commands:
+  Claim:
+    success: '&bSie haben erfolgreich das Grundstück %chunk% in Welt %world% gekauft'
+    p2pSuccess: '&bDer Spieler %player% hat dein Grundstück %chunk% in Welt %world% für %price% gekauft!'
+    notEnoughMoney: '&eSie haben nicht genug Geld (%money%) um das Grundstück (%chunk%) zu kaufen!'
+    moneyTook: '&4 %money% wurden für das Grundstück %chunk% abgezogen'
+    alreadyClaimed: '&eDieses Grundstück gehört bereits %owner%'
+    limit: '&eSie müssen erst eine Genehmigung kaufen um neue Grundstücke kaufen zu können (%regions%/%claims%)! Klicke hier um den Laden zu öffnen!'
+    hardcap: '&eSie können nicht mehr Grundstücke als %regions% besitzen!'
+    notAllowed: '&eSie dürfen dieses Grundstück nicht kaufen!'
+    aborted: '&eKauf abgebrochen!'
+    onlyClaimAdjacentChunks: '&cSie dürfen das Grundstück %land% nicht kaufen, weil Sie kein angrenzendes Grundstück besitzen!'
+    needsGap: '&cSie dürfen das Grundstück %land% nicht kaufen, weil es eine Lücke zwischen dem Grundstück von ihnen und dem anderer Spieler geben muss!'
+    boughtUp: '&bSie haben erfolgreich das Grundstück %chunk% von %player% für %price% gekauft'
+    notYetInactive: '&c%owner% ist noch nicht als inaktiv markiert, Sie müssen mindestens %days% Tage mehr warten'
+    confirmation: '&aSind Sie sicher, dass Sie das Grundstück %chunk% für %price% kaufen möchten? Klicken Sie hier, um zu bestätigen'
+  Info:
+    online: '&bONLINE'
+    noLastSeen: '&c-'
+    owned:
+    - '&f&lLand&c&lLord &a- Grundstück: Besitz'
+    - '&7Landname&8: &c%landid%'
+    - '&7Besitzer&8: &c%owner%   &7Zuletzt gesehen: &c%lastseen%'
+    - '&7Mitglieder&8: &c%member%'
+    advertised:
+    - '&f&lLand&c&lLord &a- Grundstück: Verkauf'
+    - '&7Landname&8: &c%landid%'
+    - '&7Besitzer&8: &c%owner%   &7Zuletzt gesehen: &c%lastseen%'
+    - '&7Mitglieder&8: &c%member%'
+    - '&7Preis&8: &c&o%price%'
+    inactive:
+    - '&f&lLand&c&lLord &a- Grundstück: Inaktiv'
+    - '&7Landname&8: &c%landid%'
+    - '&7Besitzer&8: &c%owner%   &7Zuletzt gesehen: &c%lastseen%'
+    - '&7Mitglieder&8: &c%member%'
+    - '&7Preis&8: &c&o%price%'
+    free:
+    - '&f&lLand&c&lLord &a- Grundstück: Frei'
+    - '&7Landname&8: &c%landid%'
+    - '&7&oPreis: &c&o%price%'
+  MultiClaim:
+    guiMessage: 'Kaufe %amount% Grundstücke für (%cost%).'
+    chatMessage: '&aKlicke hier um %amount% Grundstücke zu kaufen! Das kostet %cost%!'
+    noLands: '&cIn Ihrem ausgewählten Radius gibt es keine Grundstücke die Sie kaufen könnten!'
+    abort: '&cSie haben den Kauf von %amount% Grundstücke abgebrochen!'
+  Unclaim:
+    notOwn: '&7Dieses Grundstück gehört dir nicht.'
+    notOwnFreeLand: '&7Dieses Grundstück gehört dir nicht.'
+    success: '&7Sie haben erfolgreich das Grundstück &c%chunk% &7in Welt &c%world% &7frei gegeben und erhalten &c%money% &7zurück'
+  Listfriends:
+    invalidWorld: '&cDie angegebene Welt existiert nicht!'
+    invalidGeneral: '&cDie eingegebenen Koordinaten sind ungültig!'
+    freeLand: '&cEin nicht beanspruchtes Grundstück hat keine Freundesliste!'
+    friends: '&aFreunde: %friends%'
+    noFriends: '&cFür dieses Grundstück sind keine Freunde eingetragen.'
+  Addfriend:
+    notOwn: '&7Dieses Grundstück gehört dir nicht.'
+    noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
+    success: '&c%players% &7zur Freundesliste dieses Grundstücks hinzugefügt.'
+    alreadyOwn: '&7Der Besitzer kann nicht als Freund eingetragen werden.'
+  Unfriend:
+    notOwn: '&7Dieses Grundstück gehört dir nicht.'
+    noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
+    success: '&c%players% &7aus der Freundesliste dieses Grundstücks gelöscht.'
+  AddfriendAll:
+    noPlayer: '&7Folgender Spieler konnte nicht gefunden werden&8: &c%player%'
+    success: '&c%player% &7zur Freundesliste von alle &c%count% &7Grundstücke hinzugefügt.'
+    alreadyOwn: '&7Der Besitzer kann nicht als Freund eingetragen werden.'
+  UnfriendAll:
+    noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
+    success: '&c%players% &7aus der Freundesliste von alle &c%count% &7Grundstücke gelöscht.'
+    noFriend: '&c%player% &7ist in keiner Freundesliste deiner Grundstücke eingetragen.'
+  ListLands:
+    noLands: '&7Sie besitzen keine Grundstücke'
+    gui:
+      header: '&2%player%s Grundstück'
+      itemname: '&d%name%'
+      lore:
+      - '&aName: &f%name%'
+      - ''
+      - '&aReal Coords: &f%realx%&c/&f%realz%'
+      - ''
+      - '&aMembers: &f%members%'
+      - ''
+      - '%flags%'
+      flagformat: '&a%flagname%: &f%flagvalue%'
+      manageAll: '&7Alle Grundstücke verwalten'
+    chat:
+      header: '&2%player%s Grundstück'
+      previous: '&8[&7Previous&8]'
+      next: '&8[&7Next&8]'
+      segment: '&eName: &c%landname% &eMembers: &c%members%'
+    noPlayer: '&7Folgender Spieler konnte nicht gefunden werden&8: &c%player%'
+  LandMap:
+    disabled: '&7Grundstückskarte ist &cdeaktiviert'
+    header: '&e&m==&r&6&c&lLand&r&e&m=='
+    yours: 'Deins'
+    friends: 'Freunde'
+    others: 'Andere'
+  ClearWorld:
+    noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
+    gui:
+      title: "Freigeben Admin-Menu"
+      clearcurrentland:
+        name: "Aktuelles Grundstück freigeben"
+        desc: "Gibt das Grundstück an der aktuellen Position frei"
+        confirm: "Grundstück freigeben?"
+        abort: "&cFreigeben abgebrochen!"
+        success: "&7Grundstück %land% freigegeben!"
+      clearplayer:
+        name: "Freigeben Spieler"
+        desc: "Gibt alle Grundstücke des Spielers an der aktuellen Position frei"
+        confirm: "Alles von %player% freigeben?"
+        abort: "&cFreigeben abgebrochen!"
+        success: '&c%count% &7Grundstück/e von &c%player% &7freigegeben!'
+      clearworld:
+        name: "Freigeben Welt"
+        desc: "Gibt alle Grundstücke innerhalb der Welt in der Sie sich gerade befinden frei! VORSICHT!"
+        confirm: "Alle Grundstücke von Welt %world% freigeben?"
+        abort: "&cFreigeben abgebrochen!"
+        success: '&c%count% &7Grundstück/e in der Welt &c%world% &7freigegeben!'
+  Item:
+    noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
+  Manage:
+    all:
+      header: '&7Verwalte alle Grundstücke'
+    notOwn: '&7Dieses Grundstück gehört dir nicht.'
+    notOwnFreeLand: '&7Dieses Grundstück gehört dir nicht.'
+    header: '&7Verwalten&8: &c%info%'
+    invalidArguments: '&7Invalid arguments'
+    AllowBuild:
+      title: '&cBauen erlauben'
+      description:
+      - ' &7Anderen Spielern das Bauen'
+      - ' &7erlauben'
+      - ' &7Status&8: &c%var%'
+    AllowInteract:
+      title: '&cBenutzen erlauben'
+      description:
+      - ' &7Das benutzen von Objekten'
+      - ' &7erlauben (z.B. redstone Apparate)'
+      - ' &7Status&8: &c%var%'
+    AllowChest-access:
+      title: '&cBehälter erlauben'
+      description:
+      - ' &7Das öffnen von Behältern '
+      - ' &7erlauben (z.B. Truhe)'
+      - ' &7Status&8: &c%var%'
+    AllowCreeper-explosion:
+      title: '&cErlaube Creeper Explosion'
+      description:
+      - ' &7Erlaube Creeper das zerstören'
+      - ' &7von Blöcken (auch Schaden an Spieler)'
+      - ' &7Status&8: &c%var%'
+    AllowPvp:
+      title: '&cErlaube PvP'
+      description:
+      - ' &7Spielern erlauben anderen'
+      - ' &7Spielern Schaden zuzufügen'
+      - ' &7Status&8: &c%var%'
+    AllowMob-spawning:
+      title: '&cVerwalte NPC spawn'
+      description:
+      - ' &7Das erscheinen von Tiere/Monster'
+      - ' &7auf dem Grundstück erlauben'
+      toggleItem:
+        title: 'Spawn %mob%'
+        description:
+        - 'Spawning of %mob%: %value%'
+    Regenerate:
+      title: '&cRegenerieren'
+      description:
+      - ' &7Regeneriert das Grundstück'
+      - ' &7Cost&8: &c%var%'
+      confirmation: '&Regenerieren kostet &c%cost%'
+      success: '&7Regenerierung des Grundstücks &c%land% &7erfolgreich'
+      abort: '&7Regenerierung des Grundstücks &c%land% &7abgebrochen'
+      notEnoughMoney: '&7Sie haben nicht genug Geld um das Grundstück &c%name% &7zu regenerieren &o(Preis&8&o: &c&o%cost%&7&o)'
+    SetGreet:
+      title: '&cBegrüßungsnachricht'
+      description:
+      - ' &7Legt eine Begrüßungsnachricht fest für dieses Grundstück'
+      - ' &7Message&8: &c%var%'
+      clickMsg: '&7Klicke um eine neue Nachricht einzugeben'
+      successful: '&7Die neue Begrüßungsnachricht lautet: %msg%'
+    SetFarewell:
+      title: '&cAbschiedsnachricht'
+      description:
+      - ' &7Legt eine Abschiedsnachricht fest für dieses Grundstück'
+      - ' &7Message&8: &c%var%'
+      clickMsg: '&7Klicke um eine neue Nachricht einzugeben'
+      successful: '&7Die neue Abschiedsnachricht lautet: %msg%'
+    ManageFriends:
+      title: '&cVerwalte Freunde'
+      description:
+      - ' &7Verwalte die Freundesliste dieses Grundstücks'
+      friendSegment:
+      - ' &7Zuletzt gesehen&8: &c%seen%'
+      - ' &7&oKlicke zum entfernen'
+      unfriend: '&c%player% &7wurde aus der Freundesliste gelöscht'
+    Unclaim:
+      title: '&cFreigeben'
+      description:
+      - '&7Klicke hier zum freigeben dieses Grundstücks!'
+      confirmationTitle: '&aFreigegeben %land%'
+  Help:
+    header: '&f&lLand&c&lLord'
+    admins:
+    - '&c/land clear &8- &7Öffnet den Freigeben-Dialog'
+    - '&c/land admintp &8- &7Öffnet den Admin Teleport-Dialog'
+    - '&c/land update &8- &7Update Grundstücke mit neuen flags'
+    - '&c/land giveclaims &8- &7Gebe Genehmigungen an Spieler'
+    players:
+    - '&c/land &8- &7Zeigt die Befehle'
+    - '&c/land claim &8- &7Kauft das Grundstück an der aktuellen Position'
+    - '&c/land multiclaim &8- &7Kauft mehrere Grundstücke auf einmal'
+    - '&c/land unclaim &8- &7Das Grundstück an der aktuellen Position wird freigegeben'
+    - '&c/land addfriend <Spielername> &8- &7Fügt ein Spieler der Freundesliste des Grundstücks hinzu'
+    - '&c/land unfriend <Spielername> &8- &7Löscht ein Spieler aus der Freundesliste des Grundstücks'
+    - '&c/land friendall <Spielername> &8- &7Fügt ein Spieler der Freundesliste aller Grundstücke hinzu die aktuell im Besitz sind'
+    - '&c/land unfriendall <Spielername> &8- &7Löscht ein Spieler aus der Freundesliste aller Grundstücke die aktuell im Besitz sind'
+    - '&c/land friends &8- &7Zeigt die Freundesliste des Grundstücks an der aktuellen Position'
+    - '&c/land manage &8- &7Verwaltet das Grundstück an der aktuellen Position in einer Benutzeroberfläsche'
+    - '&c/land list &8- &7Zeigt eine Liste der Grundstücke'
+    - '&c/land info &8- &7Zeigt Informationen zu dem Grundstück an der aktuellen Position'
+    - '&c/land map &8- &7Ein/Aus der Grundstückskarte'
+    - '&c/land shop &8- &7Öffnet den Laden für Grundstück Genehmigungen'
+    - '&c/land sethome &8- &7Setzt an der aktuellen Position ein "Zuhause" zu dem man mit dem Befehl &c/land home &7teleportieren kann'
+    - '&c/land home &8- &7Teleportiert dich zu deinem Zuhause'
+    - '&c/land borders &8- &7Ein/Aus der visuellen Effekte für Grundstücksgrenzen '
+    - '&c/land item &8- &7Gibt dir ein magischen Verwaltungsgegenstand (Niemand benutzt es)'
+    - '&c/land advertise &8- &7Bietet das Grundstück an der aktuellen Position zum verkauf an'
+    - '&c/land removeadvertise &8- &7Das Grundstück an der aktuellen Position wird nicht mehr zum verkauf angeboten'
+    previous: '&8[&7Zurück&8]'
+    next: '&8[&7Vor&8]'
+  Reload:
+    success: '&aLandlord erfolgreich neu geladen!'
+  Claims:
+    message: '&aGrundstücke: %regions%/%claims%'
+    noClaims: '&eSie benötigen erst eine Grundstück Genehmigung, hier klicken um den Laden zu öffnen.'
+    disabled: '&eDiese Funktion ist derzeit deaktiviert!'
+  SetHome:
+    notOwn: '&7Dieses Grundstück gehört dir nicht.'
+    success: '&aDas "Zuhause" wurde an der aktuellen Position gesetzt.'
+    disabled: '&eDiese Funktion ist derzeit deaktiviert!'
+    removed: '&eDas "Zuhause" wurde entfernt da Sie das Grundstück verkauft oder freigegeben haben!'
+    nullLand: '&eUm hier ein "Zuhause" zu setzen müssen Sie das Grundstück erst kaufen!'
+  Home:
+    noHome: '&4Sie haben noch kein "Zuhause" gesetzt. Klicke hier um an der aktuellen Position ein "Zuhause" zu setzen'
+    dontMove: '&cDie Teleportation wird in %time% Sekunden ausgeführt. Nicht bewegen!'
+    youMoved: '&cSie haben sich bewegt! Teleportation abgebrochen!'
+    countdown: '&bNicht bewegen! &6-- &4&l%countdown% &6-- &bNicht bewegen!'
+    notEnoughMoney: '&7Sie haben nicht genug Geld um zu Teleportieren ! (Preis&8&o: &c&o%cost%&7&o)'
+    costing: '&a%cost% für das Teleportieren abgezogen.'
+    welcomeHome: '&aWillkommen %player% Zuhause!'
+    disabled: '&eDiese Funktion ist derzeit deaktiviert'
+    otherNoHome: '&4Der Spieler %player% hat noch kein "Zuhause" gesetzt!'
+  GiveClaims:
+    noPlayer: '&eKein Spieler mit den Namen gefunden'
+    success: '&aSie erhalten %amount% Grundstück/e!'
+  Advertise:
+    notOwnFreeLand: '&7Dieses Grundstück gehört dir nicht.'
+    notOwn: '&7Dieses Grundstück gehört dir nicht.'
+    success: '&eSie bieten jetzt das Grundstück %landname% für %price% an.'
+  RemoveAdvertise:
+    success: '&aFür das Grundstück %landname% wurde die Verkaufsabsicht zurückgezogen.'
+    noAdvertise: '%eDas Grundstück %landname% steht nicht zum verkauf!'
+  Borders:
+    activated: '&aVisuelle Effekte für die Grundstücksgrenze aktiviert. Klicken zum deaktivieren!'
+    deactivated: '&eVisuelle Effekte für die Grundstücksgrenze deaktiviert.'
+  AdminTp:
+    noPlayer: '&eKein Spieler Namens %player% gefunden'
+    noLands: '&eDer Spieler %player% besitzt kein Grundstück!'
+    guiHeader: 'Grundstück/e von %player%'
+Alerts:
+  defaultGreeting: '&7Sie betreten das Grundstück von %owner%'
+  defaultFarewell: '&7Sie verlassen das Grundstück von %owner%'
+  tresholdNotReached: '&cUm hier bauen zu dürfen müssen Sie erst %x% Grundstücke besitzen!'
+Confirmation:
+  accept: '&bAnnehmen!'
+  decline: '&eAblehnen!'
+Shop:
+  title: 'Grundstück/Genehmigung (%regions%/%claims%)'
+  notEnoughMoney: '&7Sie haben nicht genug Geld um %number% Genehmigungen zu kaufen &7&o(Preis&8&o: &c&o%cost%&7&o)'
+  success: '&aSie haben %number% Genehmigungen gekauft für %cost%'
+  notAllowed: '&eSie dürfen keine weiteren Genehmigungen kaufen!'
+  item:
+    header: '%number% Genehmigungen'
+    lore:
+    - 'Klicke hier um %number% Genehmigungen zu kaufen'
+    - 'Sie können dann %number% Grundstücke mehr'
+    - 'kaufen als zuvor.'
+    - 'Preis: %cost%'
+MaItem:
+  itemname: 'LL Maimaitem of doomness'
+  lore:
+  - ''
+  - '&l&fModes:'
+  - ''
+  - '&l&bon buyable lands'
+  - '&crightclick: &7show info'
+  - '&cleftclick: &7buy'
+  - ''
+  - '&l&bon own lands'
+  - '&crightclick: &7show info'
+  - '&cshift + rightclick: &7manage'
+  - '&cshift + leftclick: &7manageall'
+  - ''
+  - '&l&bin the air:'
+  - '&crightclick: &7toggle map'
+  - '&cleftclick: &7toggle borders'
+version: 20
