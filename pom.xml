@@ -6,7 +6,7 @@
 
     <groupId>biz.princeps</groupId>
     <artifactId>LandLord</artifactId>
-    <version>3.132</version>
+    <version>3.136</version>
 
     <build>
         <plugins>

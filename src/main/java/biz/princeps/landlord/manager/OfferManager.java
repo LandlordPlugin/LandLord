@@ -1,13 +1,14 @@
 package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.IOfferManager;
 import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.Offer;
 import org.bukkit.Bukkit;
 
 import java.util.Map;
 
-public class OfferManager {
+public class OfferManager implements IOfferManager {
 
     private Database db;
     private Landlord plugin;

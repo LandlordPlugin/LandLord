@@ -30,6 +30,8 @@ public interface LandLordAPI {
     WorldGuardHandler getWgHandler();
 
     boolean isLLRegion(String a);
+
+    IOfferManager getOfferManager();
 }
 
 
