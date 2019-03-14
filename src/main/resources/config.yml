@@ -125,9 +125,17 @@ ConfirmationDialog:
 
 # You can enable/disable the particles for particular events here
 Particles:
-  claim: true
-  unclaim: true
-  info: true
+  claim:
+    enabled: true
+    particle: VILLAGER_HAPPY
+  unclaim:
+    enabled: true
+    particle: VILLAGER_ANGRY
+  info:
+    enabled: true
+    unclaimed: DRIP_LAVA
+    claimed: DRIP_WATER
+    inactive: DRIP_LAVA
 
 # -----------        Map Stuff        ------------
 Map:
@@ -541,4 +549,4 @@ EnableMetrics: true
 # updater does not in legacy versions!!
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 21
+version: 22

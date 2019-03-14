@@ -103,7 +103,8 @@ public class Info extends LandlordCommand {
                             lm.sendMessage(player, replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen,
                                     plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
                             if (plugin.getConfig().getBoolean("Particles.info"))
-                                OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
+                                OwnedLand.highlightLand(player,
+                                        Particle.valueOf(plugin.getConfig().getString("Particles.info.inactive").toUpperCase()));
                             return;
                         }
 
@@ -117,7 +118,8 @@ public class Info extends LandlordCommand {
                             lm.sendMessage(player, replaceInMessage(owned, land.getName(), land.printOwners(), land.printMembers(), lastseen, ""));
                         }
                         if (plugin.getConfig().getBoolean("Particles.info"))
-                            OwnedLand.highlightLand(player, Particle.DRIP_WATER);
+                            OwnedLand.highlightLand(player,
+                                    Particle.valueOf(plugin.getConfig().getString("Particles.info.claimed").toUpperCase()));
 
                     } else {
                         // unclaimed
@@ -125,7 +127,8 @@ public class Info extends LandlordCommand {
                                 (Options.isVaultEnabled() ? plugin.getVaultHandler().format(
                                         plugin.getCostManager().calculateCost(player.getUniqueId())) : "")));
                         if (plugin.getConfig().getBoolean("Particles.info"))
-                            OwnedLand.highlightLand(player, Particle.DRIP_LAVA);
+                            OwnedLand.highlightLand(player,
+                                    Particle.valueOf(plugin.getConfig().getString("Particles.info.unclaimed").toUpperCase()));
                     }
 
 
