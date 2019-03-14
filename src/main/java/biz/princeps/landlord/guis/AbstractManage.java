@@ -95,7 +95,8 @@ public abstract class AbstractManage extends AbstractGUI {
             String title = lm.getRawString("Commands.Manage.Allow" + flagName.substring(0, 1).toUpperCase() + flagName.substring(1) + ".title");
             List<String> description = lm.getStringList("Commands.Manage.Allow" + flagName.substring(0, 1).toUpperCase() + flagName.substring(1) + ".description");
 
-            if (plugin.getConfig().getBoolean("Manage." + flagName + ".enable")) {
+            if (plugin.getConfig().getBoolean("Manage." + flagName + ".enable") &&
+                    player.hasPermission("landlord.player.manage." + flagName)) {
 
                 int finalPosition = position;
                 this.setIcon(position, new Icon(createItem(iFlag.getMaterial(), 1,
@@ -124,7 +125,8 @@ public abstract class AbstractManage extends AbstractGUI {
         }
 
         // Reminder: Regenerate is not implemented in Manageall, cos it might cos some trouble. Calculating costs might be a bit tedious
-        if (plugin.getConfig().getBoolean("Manage.regenerate.enable") && regions.size() == 1) {
+        if (plugin.getConfig().getBoolean("Manage.regenerate.enable") && regions.size() == 1 &&
+                player.hasPermission("landlord.player.manage.regenerate")) {
             double cost = plugin.getConfig().getDouble("ResetCost");
             this.setIcon(position, new Icon(createItem(Material.BARRIER, 1,
                     lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, (Options.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1"))))
@@ -173,7 +175,8 @@ public abstract class AbstractManage extends AbstractGUI {
         }
 
         // Set greet icon
-        if (plugin.getConfig().getBoolean("Manage.setgreet.enable")) {
+        if (plugin.getConfig().getBoolean("Manage.setgreet.enable") &&
+                player.hasPermission("landlord.player.manage.setgreet")) {
             String currentGreet = land.getWGLand().getFlag(Flags.GREET_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setgreet.item")), 1,
                     lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greetDesc, currentGreet)))
@@ -191,7 +194,8 @@ public abstract class AbstractManage extends AbstractGUI {
             position++;
         }
 
-        if (plugin.getConfig().getBoolean("Manage.mob-spawning.enable")) {
+        if (plugin.getConfig().getBoolean("Manage.mob-spawning.enable") &&
+                player.hasPermission("landlord.player.manage.mobspawn")) {
             String title = lm.getRawString("Commands.Manage.AllowMob-spawning.title");
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.mob-spawning.item")), 1,
                     title, lm.getStringList("Commands.Manage.AllowMob-spawning.description")))
@@ -206,7 +210,7 @@ public abstract class AbstractManage extends AbstractGUI {
 
                         for (Mobs m : Mobs.values()) {
                             // Skip mob if its not in the list, because that means this mob should not be manageable
-                            if(!toggleMobs.contains(m.name())){
+                            if (!toggleMobs.contains(m.name())) {
                                 continue;
                             }
 
@@ -277,7 +281,8 @@ public abstract class AbstractManage extends AbstractGUI {
             position++;
         }
         // set farewell icon
-        if (plugin.getConfig().getBoolean("Manage.setfarewell.enable")) {
+        if (plugin.getConfig().getBoolean("Manage.setfarewell.enable") &&
+                player.hasPermission("landlord.player.manage.setfarewell")) {
             String currentFarewell = land.getWGLand().getFlag(Flags.FAREWELL_MESSAGE);
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setfarewell.item")), 1,
                     lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
@@ -296,7 +301,8 @@ public abstract class AbstractManage extends AbstractGUI {
         }
 
         // set friends icon
-        if (plugin.getConfig().getBoolean("Manage.friends.enable")) {
+        if (plugin.getConfig().getBoolean("Manage.friends.enable") &&
+                player.hasPermission("landlord.player.manage.friends")) {
             ItemStack skull = createSkull(player.getName(), lm.getRawString("Commands.Manage.ManageFriends.title"), lm.getStringList("Commands.Manage.ManageFriends.description"));
             Set<UUID> friends = land.getWGLand().getMembers().getUniqueIds();
             MultiPagedGUI friendsGui = new MultiPagedGUI(player, (int) Math.ceil((double) friends.size() / 9.0), lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
@@ -334,7 +340,8 @@ public abstract class AbstractManage extends AbstractGUI {
             position++;
         }
 
-        if (plugin.getConfig().getBoolean("Manage.unclaim.enable")) {
+        if (plugin.getConfig().getBoolean("Manage.unclaim.enable") &&
+                player.hasPermission("landlord.player.manage.unclaim")) {
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.unclaim.item")),
                     1, lm.getRawString("Commands.Manage.Unclaim.title"), lm.getStringList("Commands.Manage.Unclaim.description")))
                     .addClickAction(((player1) -> {

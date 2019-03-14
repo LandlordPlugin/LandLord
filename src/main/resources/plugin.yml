@@ -26,6 +26,7 @@ permissions:
       landlord.player.home: true
       landlord.player.advertise: true
       landlord.player.manage: true
+      landlord.player.manage.*: true
 
 
   landlord.admin.*:
