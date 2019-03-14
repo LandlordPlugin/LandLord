@@ -300,7 +300,7 @@ public class Claim extends LandlordCommand {
         }
 
         if (plugin.getConfig().getBoolean("CommandSettings.Claim.enableDelimit")) {
-            Delimitation.delimit(chunk);
+            Delimitation.delimit(player, chunk);
         }
 
         plugin.getMapManager().updateAll();
