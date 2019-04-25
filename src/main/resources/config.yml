@@ -136,6 +136,9 @@ Particles:
     unclaimed: DRIP_LAVA
     claimed: DRIP_WATER
     inactive: DRIP_LAVA
+  borders:
+    enabled: true
+    particle: DRIP_LAVA
 
 # -----------        Map Stuff        ------------
 Map:
@@ -145,7 +148,7 @@ Map:
 
 Borders:
   # show the chunkborders with particles
-  enable: false
+  enable: true
   # interval in seconds
   refreshRate: 10
 
@@ -549,4 +552,4 @@ EnableMetrics: true
 # updater does not in legacy versions!!
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 22
+version: 23

@@ -43,9 +43,10 @@ public class Borders extends LandlordCommand {
 
                 @Override
                 public void run() {
-                    if (counter <= 360 / plugin.getConfig().getInt("Borders.refreshRate"))
-                        OwnedLand.highlightLand(p, Particle.DRIP_LAVA);
-                    else
+                    if (counter <= 360 / plugin.getConfig().getInt("Borders.refreshRate")) {
+                        if (plugin.getConfig().getBoolean("Particles.borders.enabled"))
+                            OwnedLand.highlightLand(p, Particle.valueOf(plugin.getConfig().getString("Particles.borders.particle")));
+                    } else
                         cancel();
                     counter++;
                 }
