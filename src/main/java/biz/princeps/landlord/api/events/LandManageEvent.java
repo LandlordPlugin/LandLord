@@ -6,6 +6,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: ?
+ * <p>
+ * <p>
+ * Called whenever a land ist being managed (on click in the gui). Doesnt trigger for setfarewell like flags.
+ */
 public class LandManageEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();

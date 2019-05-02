@@ -79,11 +79,9 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     @Override
     public void onEnable() {
-        boolean everythingFine = checkVersions();
-        if (!everythingFine) {
-            return;
-        }
+        if (!checkDependencies()) return;
 
+        taskChainFactory = BukkitTaskChainFactory.create(this);
         instance = this;
         setupPrincepsLib();
 
@@ -95,15 +93,29 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         setupPlacerholders();
         setupItems();
         setupManagers();
-        setupCommands();
         setupPlayers();
         setupMetrics();
-        setupTranslateableStrings();
 
         new Updater();
     }
 
-    private boolean checkVersions() {
+    /**
+     * Checks versions+availability for
+     * a) spigot
+     * b) protocollib
+     * c) worldguard
+     * d) worldedit
+     * e) vault
+     * <p>
+     * Historically during the 1.13.2 development there was a lot of chanage in worldguard/edit. People constantly
+     * complained about stuff not working because of some dumb updates that require variable renaming.
+     * <p>
+     * These checks should not be here in the first place in my opinion. So to my future me/anybody else: might wanna
+     * get rid of this!!
+     *
+     * @return returns if all dependencies are satisfied
+     */
+    private boolean checkDependencies() {
         if (!Bukkit.getVersion().contains("1.13.2")) {
             haltPlugin("Invalid spigot version detected! LandLord requires 1.13.2");
             return false;
@@ -166,19 +178,35 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
     }
 
 
+    /**
+     * In case there was a version change in the config (increment the tiny version variable) this will handle the
+     * update by backing up the old config and copying the new config to the right place
+     */
     private void setupConfig() {
         saveDefaultConfig();
         ConfigUtil.handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
         saveDefaultConfig();
     }
 
+    /**
+     * Sets up princeps lib. PrincepsLib is a dumb library I introduced some time, because I thought I would program
+     * more spigot plugins.
+     * <p>
+     * Here we are :shrug:
+     */
     private void setupPrincepsLib() {
         PrincepsLib.setPluginInstance(this);
         PrincepsLib.getConfirmationManager().setState(ConfirmationManager.STATE.valueOf(getConfig().getString("ConfirmationDialog.mode")));
         PrincepsLib.getConfirmationManager().setTimout(getConfig().getInt("ConfirmationDialog.timeout"));
-        taskChainFactory = BukkitTaskChainFactory.create(this);
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getString("Confirmation.accept"));
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getString("Confirmation.decline"));
+
+        PrincepsLib.getCommandManager().registerCommand(new Landlordbase());
     }
 
+    /**
+     * Sets up the database. H2 and Mysql take the same parameters, so dont wonder about that
+     */
     private void setupDatabase() {
         String dbpath = getConfig().getString("MySQL.Database");
         DatabaseType dbtype = DatabaseType.valueOf(getConfig().getString("DatabaseType"));
@@ -196,8 +224,10 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
                 dbpath);
     }
 
+    /**
+     * Retrieve the LPlayer objects for all online players (in case of reload)
+     */
     private void setupPlayers() {
-        //Retrieve the LPlayer objects for all online players (in case of reload)
         Bukkit.getOnlinePlayers().forEach(p -> {
             lPlayerManager.getOfflinePlayerAsync(p.getUniqueId(), lPlayer1 -> {
                 if (lPlayer1 == null) {
@@ -209,6 +239,16 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         });
     }
 
+    /**
+     * Sets up a bunch of different manager:
+     * a) LangManger: handle the translation files. access messages via this object
+     * b) LPlayerManager: handles player related stuff, like claims, last login ...
+     * c) OfferManager: handles advertised lands
+     * d) MapManager: handles the displaying of the land map
+     * e) CostManager: handles the cost calculations
+     * f) ThreadPool: For some parallel methods
+     * TODO recheck threadpool and maybe delete it in favour of BukkitRunnables
+     */
     private void setupManagers() {
         langManager = new LangManager(this, getConfig().getString("language", "en"));
 
@@ -226,11 +266,10 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         getPluginLoader().disablePlugin(this);
     }
 
-    private void setupTranslateableStrings() {
-        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getString("Confirmation.accept"));
-        PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getString("Confirmation.decline"));
-    }
-
+    /**
+     * I didnt planned to handle world names containing spaces in the first place, thats why this check exists.
+     * TODO add check for special signs in the world name
+     */
     private void checkWorldNames() {
         if (getConfig().getBoolean("DisableStartupWorldWarning")) {
             Bukkit.getWorlds().stream().filter(w -> w.getName().contains(" ")).forEach(w -> getLogger().warning("Found an invalid world name (" + w.getName() + ")! LandLord will not work in this world!"));
@@ -238,10 +277,17 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         }
     }
 
+    /**
+     * Registers special items (left/right click action; nbt data...) with the princepslib handler
+     */
     private void setupItems() {
         PrincepsLib.getItemManager().registerItem(Maitem.NAME, Maitem.class);
     }
 
+    /**
+     * Registers placeholders with different plugins
+     * TODO add FeatherBoard
+     */
     private void setupPlacerholders() {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new LandLordPlacehodlers(this).hook();
@@ -260,11 +306,10 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         instance = null;
     }
 
-    public void setupCommands() {
-        Landlordbase landlordbase = new Landlordbase();
-        PrincepsLib.getCommandManager().registerCommand(landlordbase);
-    }
-
+    /**
+     * Registers listeners with spigot.
+     * The LandAlerter is a special listener, since it listens on packets.
+     */
     private void setupListeners() {
         new JoinListener();
         new MapManager();
@@ -279,6 +324,9 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         }
     }
 
+    /**
+     * Register bStats metrics https://bstats.org/plugin/bukkit/Landlord
+     */
     private void setupMetrics() {
         if (getConfig().getBoolean("EnableMetrics")) {
             Metrics metrics = new Metrics(this);
@@ -286,6 +334,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         }
     }
 
+    // bunch of getter methods
     private WorldGuardPlugin getWorldGuard() {
         Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
         if (!(plugin instanceof WorldGuardPlugin)) {
@@ -301,10 +350,6 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         }
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         return (rsp == null ? null : rsp.getProvider());
-    }
-
-    public Database getDB() {
-        return db;
     }
 
     public WorldGuardHandler getWgHandler() {
