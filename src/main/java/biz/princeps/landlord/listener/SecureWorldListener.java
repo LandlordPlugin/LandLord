@@ -20,6 +20,10 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 3/12/17
+ *
+ * Structure wise it goes like this:
+ * 1. BlockBreak, BlockPlace, BucketEmpty calls PlayerBrokeSecureWorldEvent
+ * 2. PlaceBrokeSecureWorldEvent decides if the intrusion was allowed or not.
  */
 public class SecureWorldListener extends BasicListener {
 

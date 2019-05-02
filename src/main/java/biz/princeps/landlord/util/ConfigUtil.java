@@ -14,6 +14,11 @@ import java.io.*;
  */
 public class ConfigUtil {
 
+    /**
+     * In case you upgraded the config version (adding a field...) you have to increment the variable "version" in the
+     * config.yml. This will cause the old config to be backuped and the new (changed) config to be copied in the
+     * right place.
+     */
     public static void handleConfigUpdate(String pathToExisting, String pathInJar) {
 
         if (pathInJar == null || pathToExisting == null)

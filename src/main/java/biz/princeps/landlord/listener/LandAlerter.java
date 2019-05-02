@@ -45,7 +45,10 @@ public class LandAlerter extends BasicListener {
     private LandMessageDisplay type;
 
     /**
-     * such a mess, but I cant think of a less intrusive way
+     * such a mess, but I cant think of a less intrusive way.
+     * To be honest I never fully understand why and how this worked. If there ever is a problem with this piece of code
+     * message me somehow so that I can figure it out. This is a very weird combination of async chat events and moveevent.
+     * I feel like there are a hundred things that can go wrong here.
      */
     public LandAlerter() {
         currentLands = new HashMap<>();

@@ -36,6 +36,9 @@ public class WorldGuardHandler {
         this.wgPlugin = wgPlugin;
     }
 
+    /**
+     * Claims a chunk for a player in worldguard by selecting the most bottom and the highest point
+     */
     public void claim(Chunk chunk, UUID owner) {
         Location down = chunk.getBlock(0, 0, 0).getLocation();
         Location upper = chunk.getBlock(15, 255, 15).getLocation();
@@ -43,7 +46,11 @@ public class WorldGuardHandler {
         this.claim(owner, OwnedLand.getName(chunk), chunk.getWorld(), down, upper);
     }
 
-    public void claim(UUID owner, String landname, World world, Location down, Location upper) {
+    /**
+     * Internal helper method. No idea why its not in the calling method, but I really dont wanna break anything here.
+     * It is probably legacy that can be moved without breaking anything else.
+     */
+    private void claim(UUID owner, String landname, World world, Location down, Location upper) {
         BlockVector3 vec1 = OwnedLand.locationToVec(down);
         BlockVector3 vec2 = OwnedLand.locationToVec(upper);
 
@@ -91,7 +98,6 @@ public class WorldGuardHandler {
      */
     public ProtectedRegion[] getSurroundings(Location ploc) {
         if (ploc == null) return new ProtectedRegion[0];
-
         return new ProtectedRegion[]{
                 getRegion(ploc),
                 getRegion(ploc.clone().add(16, 0, 0)),
@@ -120,6 +126,12 @@ public class WorldGuardHandler {
         return getRegion(getRegionAsPr(name));
     }
 
+    /**
+     * Convert a region name to a protectedregion object
+     *
+     * @param name the name you want the pr for
+     * @return the corresponding pr if available else null
+     */
     public ProtectedRegion getRegionAsPr(String name) {
         if (!isLLRegion(name)) {
             return null;
@@ -144,6 +156,9 @@ public class WorldGuardHandler {
         return Bukkit.getWorld(sb.toString());
     }
 
+    /**
+     * Returns the x coordinate of a landname
+     */
     public int getX(String name) {
         String[] splitted = name.split("_");
 
@@ -158,6 +173,9 @@ public class WorldGuardHandler {
         }
     }
 
+    /**
+     * Returns the z coordinate of a landname
+     */
     public int getZ(String name) {
         String[] splitted = name.split("_");
 
@@ -172,6 +190,9 @@ public class WorldGuardHandler {
         }
     }
 
+    /**
+     * Checks if a string is a valid ll region e.g. world_12_34
+     */
     public boolean isLLRegion(String name) {
         String[] splitted = name.split("_");
 
@@ -293,6 +314,11 @@ public class WorldGuardHandler {
         return regionContainer.get(worldByName);
     }
 
+    /**
+     * Checks for overlapping regions.
+     * Returns false if there is another overlapping region.
+     * TODO figure out the 127 in vector2. My intuition tells me, that its wrong.
+     */
     public boolean canClaim(Player player, Chunk currChunk) {
         RegionManager regionManager = getRegionManager(player.getWorld());
         if (regionManager != null) {

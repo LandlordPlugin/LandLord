@@ -194,7 +194,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
      * <p>
      * Here we are :shrug:
      */
-    private void setupPrincepsLib() {
+    public void setupPrincepsLib() {
         PrincepsLib.setPluginInstance(this);
         PrincepsLib.getConfirmationManager().setState(ConfirmationManager.STATE.valueOf(getConfig().getString("ConfirmationDialog.mode")));
         PrincepsLib.getConfirmationManager().setTimout(getConfig().getInt("ConfirmationDialog.timeout"));

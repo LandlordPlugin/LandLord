@@ -87,6 +87,7 @@ public class SimpleScoreboard {
         this.runnable.runTaskTimer(Landlord.getInstance(), delay, timer);
     }
 
+    //TODO here may be some logic to restore the old scoreboard for featherboard. But i dunno, never got to check this out
     public void deactivate() {
         if (runnable != null)
             this.runnable.cancel();

@@ -29,7 +29,7 @@ public class Delimitation {
 
     /**
      * Returns the delimitation pattern defined in the config in a way, the plugin can work with
-     * x --------->
+     *   x --------->
      * z mmmmmmmmmmmmmmmm
      * | m--------------m
      * | m--------------m

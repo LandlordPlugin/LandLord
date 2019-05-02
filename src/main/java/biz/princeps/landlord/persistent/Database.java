@@ -41,10 +41,21 @@ public class Database extends Datastorage {
         }
     }
 
+    /**
+     * If you ever need to change the database scheme (adding a row...) you will need this method to alter the scheme
+     * for everyone else aswell.
+     * To upgrade the scheme follow these steps:
+     * 1) backup your existing database
+     * 2) increment the CURRENT_VERSION
+     * 3) add a case with the previous version here
+     * 4) Write some SQL statement that alters the table.
+     */
     private void executeUpgrade(int localVersion) {
         switch (localVersion) {
             case 3:
-                //TODO Handle upgrade from old scheme before this patch to v4
+                // TODO Handle upgrade from old scheme before this patch to v4
+                // 19-05-02 whatever, screw this. Yea I never had the motivation to implement this migration. No one
+                // complained, so here we are :shrug:
                 break;
         }
     }
@@ -101,6 +112,9 @@ public class Database extends Datastorage {
         return null;
     }
 
+    /**
+     * Sanite input to avoid sql injections.
+     */
     private String sanitize(String input) {
         return input.split(" ")[0].replace(";", "").replace("\\", "")
                 .replace("'", "").replace("\"", "");
