@@ -16,7 +16,7 @@ Replace the version with the current version number!
 <dependency>
     <groupId>biz.princeps</groupId>
     <artifactId>LandLord</artifactId>
-    <version>3.129</version>
+    <version>3.138</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -33,5 +33,6 @@ Contributing
 ============
 1. Clone the repository 
 2. Execute setup.sh for installing the testserver with all dependencies
+3. Testserver is available in the target folder (excluded from git)
 3. Change code
 4. Submit a pull-request
