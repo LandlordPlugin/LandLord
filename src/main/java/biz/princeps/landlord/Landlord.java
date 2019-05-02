@@ -19,6 +19,7 @@ import biz.princeps.landlord.placeholderapi.LandLordPlacehodlers;
 import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
 import biz.princeps.lib.storage_old.DatabaseType;
@@ -94,6 +95,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         setupManagers();
         setupPlayers();
         setupMetrics();
+        postloadPrincepsLib();
     }
 
     /**
@@ -173,6 +175,13 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
         PrincepsLib.setPluginInstance(this);
         PrincepsLib.getConfirmationManager().setState(ConfirmationManager.STATE.valueOf(getConfig().getString("ConfirmationDialog.mode")));
         PrincepsLib.getConfirmationManager().setTimout(getConfig().getInt("ConfirmationDialog.timeout"));
+    }
+
+    /**
+     * Since there is a cyclic dependency on startup I had to pull this one out.
+     * Some strings in Princepslib are translatable. set those here.
+     */
+    private void postloadPrincepsLib(){
         PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getString("Confirmation.accept"));
         PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getString("Confirmation.decline"));
 
