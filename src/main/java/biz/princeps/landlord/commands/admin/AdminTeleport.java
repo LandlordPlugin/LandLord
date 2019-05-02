@@ -29,10 +29,8 @@ public class AdminTeleport extends LandlordCommand {
                 lm.sendMessage(sender, lm.getString("Commands.AdminTp.noPlayer").replace("%player%", target));
             } else {
                 // Success
-
                 Set<ProtectedRegion> lands = plugin.getWgHandler().getRegions(lplayer.getUuid());
                 if (lands.size() > 0) {
-
                     MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
                             lm.getRawString("Commands.AdminTp.guiHeader").replace("%player%", target));
 
@@ -45,7 +43,6 @@ public class AdminTeleport extends LandlordCommand {
                                     }
                             )
                     ));
-
                     landGui.display();
                 } else {
                     lm.sendMessage(sender, lm.getString("Commands.AdminTp.noLands").replace("%player%", target));

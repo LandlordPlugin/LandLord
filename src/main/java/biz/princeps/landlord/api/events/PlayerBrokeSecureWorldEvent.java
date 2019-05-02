@@ -7,6 +7,15 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * Project: LandLord
+ * Created by Alex D. (SpatiumPrinceps)
+ * Date: ?
+ * <p>
+ * <p>
+ * Called whenever a player modifies the wilderness. This includes, but is not limited to breaking/placing blocks in
+ * unclaimed regions.
+ */
 public class PlayerBrokeSecureWorldEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
