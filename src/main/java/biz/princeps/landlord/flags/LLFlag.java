@@ -11,6 +11,9 @@ import org.bukkit.Material;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 10/22/17
+ * <p>
+ * I dont exactly recall why I choose to implement this class. I think it has something to do with portability.
+ * Basically this is class is able to toggle a flag worldguardflag between two states.
  */
 public class LLFlag {
 

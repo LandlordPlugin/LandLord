@@ -15,6 +15,8 @@ import org.bukkit.entity.Player;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 19/7/17
+ *
+ * If you are looking for the gui, check AbstractManage!
  */
 public class Manage extends LandlordCommand {
 

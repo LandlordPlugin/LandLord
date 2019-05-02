@@ -43,10 +43,19 @@ import java.util.logging.Logger;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 16/07/17
+ * <p>
+ * This command handler may look a bit unfamiliar. It is based on shitty system I programmed a long time ago (PrincepsLib)
+ * Basically a single command is created by extending MainCommand. For example you would do:
+ * class HealCommand extends MainCommand {...} // introduces a heal command
+ * Landlordbase describes the base command ./landlord
+ * Subcommands are created by creating a subclass in the main command class, that extends SubCommand.
+ * Always call super(cmdname, description, usage, permissions, aliases) to initialize the (sub)command with everything
+ * it needs to work.
  */
 public class Landlordbase extends MainCommand {
 
     private static Landlord pl = Landlord.getInstance();
+    // Subcommands map, has nothing to do with the Command system provided by princeps lib. See the comment at reloadCommands()
     private Map<String, LandlordCommand> subcommands;
 
     public Landlordbase() {
@@ -60,7 +69,16 @@ public class Landlordbase extends MainCommand {
         reloadCommands();
     }
 
+    /**
+     * Reloads all commands.
+     * Currently any subcommand is at first handled here in the corresponding class extending SubCommand, then its
+     * redirected to the correct class, that can be found in the hashmap subcommands, which is generated in this method.
+     * <p>
+     * Thats properly not optimal. Im totally not happy with this system, but it works for now. I think the problem
+     * with an annotation based system was, that I couldnt put stuff from configs there :shrug:
+     */
     public void reloadCommands() {
+        subcommands.clear();
         subcommands.put("claim", new Claim(false));
         subcommands.put("info", new Info());
         subcommands.put("unclaim", new Unclaim());
@@ -155,6 +173,13 @@ public class Landlordbase extends MainCommand {
         return tabReturn;
     }
 
+    /**
+     * Main onCommand function of ./landlord.
+     * Display the help menu here.
+     * This function is not called for subcommands like ./ll claim
+     * @param properties a cool properties object, that contains stuff like isPlayer, isConsole
+     * @param arguments the arguments passed here.
+     */
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
 
@@ -188,6 +213,11 @@ public class Landlordbase extends MainCommand {
         properties.getPlayer().spigot().sendMessage(msg.create());
     }
 
+    /**
+     * Hui this is some really old legacy shit. I would not dare to touch any of this ever.
+     * There used to be a different database scheme a very long time ago. Or maybe there wasnt. I don't really remember.
+     * Anyways, this function can be used to migrate this old database to the new one. Maybe.
+     */
     void migrate(AbstractDatabase db, String tablename, String ownerColumn, String worldColumn, String xColumn, String zColumn) {
         List<DataObject> objs = new ArrayList<>();
 
@@ -233,6 +263,10 @@ public class Landlordbase extends MainCommand {
         }.runTaskTimer(Landlord.getInstance(), 0, 1);
     }
 
+    /**
+     * I'll skip documentation at this point, since its quiet self explanatory. Most of the work is happening in the
+     * separate classes anyway (YISS this is shit design)
+     */
     class ClaimCMD extends SubCommand {
 
         public ClaimCMD() {
@@ -429,6 +463,7 @@ public class Landlordbase extends MainCommand {
                 String target = null;
                 int page = 0;
                 try {
+                    // check arguments for different sub sub commands like /ll list <name> <pagenr>
                     switch (arguments.size()) {
                         case 2:
                             target = arguments.get(0);
@@ -582,6 +617,10 @@ public class Landlordbase extends MainCommand {
         }
     }
 
+    /**
+     * This is shit.
+     * I hate reloading. Just makes stuff complicate. Tbh i have no idea how well this works
+     */
     class ReloadCMD extends SubCommand {
 
         public ReloadCMD() {
@@ -599,7 +638,7 @@ public class Landlordbase extends MainCommand {
 
             pl.getLangManager().reload();
             pl.reloadConfig();
-            pl.setupCommands();
+            pl.setupPrincepsLib();
 
             String msg = Landlord.getInstance().getLangManager().getString("Commands.Reload.success");
             issuer.sendMessage(msg);
@@ -794,6 +833,9 @@ public class Landlordbase extends MainCommand {
         }
     }
 
+    /**
+     * Lmao, didnt even realize I had the Managementitem disabled
+     */
     class MAItemCMD extends SubCommand {
 
         public MAItemCMD() {
@@ -810,7 +852,7 @@ public class Landlordbase extends MainCommand {
             if (arguments.size() > 0) {
                 target = arguments.get()[0];
             }
-            // TODO reimplement - fix nms shit and so on
+            // TODO reimplement MAItem - fix nms shit and so on
             //((LLItem) subcommands.get("item")).onItem(properties.getCommandSender(), target);
         }
     }
@@ -823,7 +865,7 @@ public class Landlordbase extends MainCommand {
 
         @Override
         public void onCommand(Properties properties, Arguments arguments) {
-            // just a placeholder for the confirmationmanager
+            // just a placeholder for the confirmationmanager, this is on purpose! Check PrincepsLib for more info.
         }
     }
 
@@ -841,6 +883,9 @@ public class Landlordbase extends MainCommand {
         }
     }
 
+    /**
+     * Do not touch! Black magic!
+     */
     class MigrateCMD extends SubCommand {
 
         public MigrateCMD() {

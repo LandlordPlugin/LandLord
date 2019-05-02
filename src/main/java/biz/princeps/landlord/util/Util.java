@@ -17,20 +17,6 @@ public class Util {
         int x, z, chunkX = chunk.getX() * 16, chunkZ = chunk.getZ() * 16;
         x = chunkX + 8;
         z = chunkZ + 8;
-        /*
-        if (chunkX >= 0 && chunkZ >= 0) {
-            x = chunkX + 8;
-            z = chunkZ + 8;
-        }
-        if (chunkX < 0 && chunkZ >= 0){
-            x = chunkX + 8;
-            z = chunkZ + 8;
-        }
-        if (chunkX < 0 && chunkZ < 0){
-            x = chunkX + 8;
-            z = chunkZ + 8;
-        }
-        */
 
         configString = configString.replace("%world%", chunk.getWorld().getName());
         configString = configString.replace("%x%", x + "");

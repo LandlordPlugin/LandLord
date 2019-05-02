@@ -33,6 +33,11 @@ import java.util.*;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 21/7/17
+ *
+ * Very important class, that handles the entire management process (manage, manageall)
+ * It is also relying on a GUI-System I implemented in PrincepsLib.
+ * This one is rather intuitive and not such a mess like the rest.
+ * Internally there's a lot of stuff happening, but for landlord only one method, the create() on is interesting.
  */
 public abstract class AbstractManage extends AbstractGUI {
 
@@ -73,6 +78,12 @@ public abstract class AbstractManage extends AbstractGUI {
         this.lm = plugin.getLangManager();
     }
 
+    /**
+     * Populate the gui with items.
+     * We are adding all the worldguard flags and some other static options like regenerate.
+     * This method might look overwhelming at first, but its not that hard. Its against coding conventions and should
+     * be splitted into smaller pieces.
+     */
     @Override
     protected void create() {
         List<String> regenerateDesc = lm.getStringList("Commands.Manage.Regenerate.description");

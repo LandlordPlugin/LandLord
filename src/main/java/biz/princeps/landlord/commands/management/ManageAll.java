@@ -15,6 +15,8 @@ import java.util.List;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 25/7/17
+ *
+ *  If you are looking for the gui, check AbstractManage
  */
 public class ManageAll extends LandlordCommand {
 

@@ -20,7 +20,8 @@ import java.util.List;
  * Date: 11/22/17
  */
 public class Maitem extends AbstractItem {
-    // So called My-Item or Management-Item. Whatever sounds better to you <3
+    // So called My-tem or Management-Item. Whatever sounds better to you <3
+    // 19-05-02 I must have been on drugs when I wrote that comment lmao.
 
     public static final String NAME = "maitem";
     private static final ItemStack STACK = new ItemStack(Material.valueOf(Landlord.getInstance().getConfig().getString("MaItem.item")));

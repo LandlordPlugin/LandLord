@@ -44,6 +44,7 @@ public class OwnedLand {
         highlightLand(p, e, 5);
     }
 
+    // TODO optimize this shit.
     public static void highlightLand(Player p, Particle e, int amt) {
         if (!Landlord.getInstance().getConfig().getBoolean("options.particleEffects", true)) {
             return;
