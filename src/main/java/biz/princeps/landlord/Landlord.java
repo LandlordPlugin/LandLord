@@ -19,7 +19,6 @@ import biz.princeps.landlord.placeholderapi.LandLordPlacehodlers;
 import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.OwnedLand;
-import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
 import biz.princeps.lib.storage_old.DatabaseType;
