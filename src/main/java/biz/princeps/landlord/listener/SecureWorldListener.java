@@ -11,7 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -88,9 +87,10 @@ public class SecureWorldListener extends BasicListener {
             LocalPlayer localPlayer = plugin.getWgHandler().getWGPlugin().wrapPlayer(p);
             ApplicableRegionSet applicableRegions = plugin.getWgHandler().getRegionManager(
                     loc.getWorld()).getApplicableRegions(localPlayer.getLocation().toVector().toBlockPoint());
-            if (applicableRegions.getRegions().size() < 1) {
+            if (applicableRegions.getRegions().size() < 1) { //Test of this list to know if it's empty.
                 boolean isAllowed = false;
-                for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) {
+                for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) { //Loop of this empty List.
+                    //I don't want to touch that for "securiry" but i think it's useless, empty list but loop, why ?
                     if (protectedRegion.isMember(localPlayer) || protectedRegion.isOwner(localPlayer)) {
                         isAllowed = true;
                         break;
