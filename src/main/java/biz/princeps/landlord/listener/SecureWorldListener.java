@@ -87,10 +87,9 @@ public class SecureWorldListener extends BasicListener {
             LocalPlayer localPlayer = plugin.getWgHandler().getWGPlugin().wrapPlayer(p);
             ApplicableRegionSet applicableRegions = plugin.getWgHandler().getRegionManager(
                     loc.getWorld()).getApplicableRegions(localPlayer.getLocation().toVector().toBlockPoint());
-            if (applicableRegions.getRegions().size() < 1) { //Test of this list to know if it's empty.
+            if (applicableRegions.getRegions().size() > 0) { // check for other lands, that may not be handled by landlord
                 boolean isAllowed = false;
-                for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) { //Loop of this empty List.
-                    //I don't want to touch that for "securiry" but i think it's useless, empty list but loop, why ?
+                for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) { 
                     if (protectedRegion.isMember(localPlayer) || protectedRegion.isOwner(localPlayer)) {
                         isAllowed = true;
                         break;
