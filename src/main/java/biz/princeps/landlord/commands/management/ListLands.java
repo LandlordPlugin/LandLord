@@ -43,10 +43,8 @@ public class ListLands extends LandlordCommand {
                         if (s.contains("%flags%")) {
                             String flagFormat = lm.getRawString("Commands.ListLands.gui.flagformat");
                             //       flagformat: '&a%flagname%: &f%flagvalue%'
-                            land.getWGLand().getFlags().forEach((flag, value) -> {
-                                lore.add(flagFormat.replace("%flagname%", flag.getName())
-                                        .replace("%flagvalue%", value.toString()));
-                            });
+                            land.getWGLand().getFlags().forEach((flag, value) -> lore.add(flagFormat.replace("%flagname%", flag.getName())
+                                    .replace("%flagvalue%", value.toString())));
 
                         } else {
                             lore.add(s.replace("%name%", land.getName())
@@ -86,10 +84,8 @@ public class ListLands extends LandlordCommand {
 
                 String segment = lm.getRawString("Commands.ListLands.chat.segment");
 
-                lands.forEach(land -> {
-                    formatted.add(segment.replace("%landname%", land.getName())
-                            .replace("%members%", land.printMembers()));
-                });
+                lands.forEach(land -> formatted.add(segment.replace("%landname%", land.getName())
+                        .replace("%members%", land.printMembers())));
 
                 String prev = lm.getRawString("Commands.ListLands.chat.previous");
                 String next = lm.getRawString("Commands.ListLands.chat.next");

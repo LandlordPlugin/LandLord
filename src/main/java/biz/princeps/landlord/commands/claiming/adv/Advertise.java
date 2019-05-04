@@ -3,7 +3,6 @@ package biz.princeps.landlord.commands.claiming.adv;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.landlord.util.OwnedLand;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 

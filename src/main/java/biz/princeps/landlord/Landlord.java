@@ -211,15 +211,13 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
      * Retrieve the LPlayer objects for all online players (in case of reload)
      */
     private void setupPlayers() {
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            lPlayerManager.getOfflinePlayerAsync(p.getUniqueId(), lPlayer1 -> {
-                if (lPlayer1 == null) {
-                    this.getPlayerManager().add(new LPlayer(p.getUniqueId()));
-                } else {
-                    this.getPlayerManager().add((LPlayer) lPlayer1);
-                }
-            });
-        });
+        Bukkit.getOnlinePlayers().forEach(p -> lPlayerManager.getOfflinePlayerAsync(p.getUniqueId(), lPlayer1 -> {
+            if (lPlayer1 == null) {
+                this.getPlayerManager().add(new LPlayer(p.getUniqueId()));
+            } else {
+                this.getPlayerManager().add((LPlayer) lPlayer1);
+            }
+        }));
     }
 
     /**
