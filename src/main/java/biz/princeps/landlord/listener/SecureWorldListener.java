@@ -4,13 +4,18 @@ import biz.princeps.landlord.api.events.PlayerBrokeSecureWorldEvent;
 import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
 import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.bukkit.event.block.PlaceBlockEvent;
+import com.sk89q.worldguard.bukkit.util.Materials;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -19,7 +24,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 3/12/17
- *
+ * <p>
  * Structure wise it goes like this:
  * 1. BlockBreak, BlockPlace, BucketEmpty calls PlayerBrokeSecureWorldEvent
  * 2. PlaceBrokeSecureWorldEvent decides if the intrusion was allowed or not.
@@ -89,7 +94,7 @@ public class SecureWorldListener extends BasicListener {
                     loc.getWorld()).getApplicableRegions(localPlayer.getLocation().toVector().toBlockPoint());
             if (applicableRegions.getRegions().size() > 0) { // check for other lands, that may not be handled by landlord
                 boolean isAllowed = false;
-                for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) { 
+                for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) {
                     if (protectedRegion.isMember(localPlayer) || protectedRegion.isOwner(localPlayer)) {
                         isAllowed = true;
                         break;
