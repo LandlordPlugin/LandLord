@@ -280,7 +280,6 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
     private void checkWorldNames() {
         if (!getConfig().getBoolean("DisableStartupWorldWarning")) {
             Bukkit.getWorlds().stream().filter(w -> Pattern.compile("[^A-Za-z0-9_-]+").matcher(w.getName()).find()).forEach(w -> getLogger().warning("Found an invalid world name (" + w.getName() + ")! LandLord will not work in this world!"));
-            getLogger().warning("Your world name may not contain special signs and must consist out of one word");
         }
     }
 
