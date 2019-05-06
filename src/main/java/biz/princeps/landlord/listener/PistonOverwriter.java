@@ -28,7 +28,7 @@ public class PistonOverwriter extends BasicListener {
     public void onPlaceBlock(final PlaceBlockEvent event) {
         Block block = event.getCause().getFirstBlock();
         if (block != null) {
-            if (Materials.isPistonBlock(block.getType())) {
+            if (Materials.isPistonBlock(block.getType()) || block.getType() == Material.MOVING_PISTON) {
                 if (sameOwner(block, event.getBlocks())) {
                     event.setAllowed(true);
                 }
