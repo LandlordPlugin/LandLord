@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 3/12/17
- *
+ * <p>
  * Structure wise it goes like this:
  * 1. BlockBreak, BlockPlace, BucketEmpty calls PlayerBrokeSecureWorldEvent
  * 2. PlaceBrokeSecureWorldEvent decides if the intrusion was allowed or not.
@@ -89,7 +89,7 @@ public class SecureWorldListener extends BasicListener {
                     loc.getWorld()).getApplicableRegions(localPlayer.getLocation().toVector().toBlockPoint());
             if (applicableRegions.getRegions().size() > 0) { // check for other lands, that may not be handled by landlord
                 boolean isAllowed = false;
-                for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) { 
+                for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) {
                     if (protectedRegion.isMember(localPlayer) || protectedRegion.isOwner(localPlayer)) {
                         isAllowed = true;
                         break;

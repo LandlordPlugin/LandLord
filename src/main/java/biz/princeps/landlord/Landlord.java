@@ -7,6 +7,7 @@ import biz.princeps.landlord.handler.WorldGuardHandler;
 import biz.princeps.landlord.items.Maitem;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
+import biz.princeps.landlord.listener.PistonOverwriter;
 import biz.princeps.landlord.listener.SecureWorldListener;
 import biz.princeps.landlord.manager.CostManager;
 import biz.princeps.landlord.manager.LPlayerManager;
@@ -275,7 +276,6 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
 
     /**
      * I didnt planned to handle world names containing spaces in the first place, thats why this check exists.
-     * TODO add check for special signs in the world name
      */
     private void checkWorldNames() {
         if (!getConfig().getBoolean("DisableStartupWorldWarning")) {
@@ -319,6 +319,7 @@ public class Landlord extends JavaPlugin implements LandLordAPI {
     private void setupListeners() {
         new JoinListener();
         new MapManager();
+        new PistonOverwriter();
 
         if (getConfig().getBoolean("SecureWorld.enable")) {
             new SecureWorldListener();
