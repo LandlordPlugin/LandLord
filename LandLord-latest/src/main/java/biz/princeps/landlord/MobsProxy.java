@@ -1,9 +1,9 @@
-package biz.princeps.landlord.util;
+package biz.princeps.landlord;
 
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
-public enum Mobs {
+public enum MobsProxy {
 
     ELDER_GUARDIAN(EntityType.ELDER_GUARDIAN, Material.ELDER_GUARDIAN_SPAWN_EGG),
     WITHER_SKELETON(EntityType.WITHER_SKELETON, Material.WITHER_SKELETON_SPAWN_EGG),
@@ -57,7 +57,7 @@ public enum Mobs {
     EntityType t;
     Material egg;
 
-    Mobs(EntityType t, Material egg) {
+    MobsProxy(EntityType t, Material egg) {
         this.t = t;
         this.egg = egg;
     }
@@ -84,9 +84,5 @@ public enum Mobs {
             }
         }
         return sb.toString();
-    }
-
-    public com.sk89q.worldedit.world.entity.EntityType getWGType() {
-        return com.sk89q.worldedit.world.entity.EntityType.REGISTRY.get(t.getName());
     }
 }

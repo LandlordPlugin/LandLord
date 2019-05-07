@@ -18,7 +18,7 @@ public class Claims extends LandlordCommand {
 
         if (plugin.getConfig().getBoolean("Shop.enable")) {
             int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
-            int regionCount = plugin.getWgproxy().getRegionCountOfPlayer(player.getUniqueId());
+            int regionCount = plugin.getWgproxy().getRegionCount(player.getUniqueId());
             String message = lm.getString("Commands.Claims.message");
             String noClaims = lm.getString("Commands.Claims.noClaims");
 

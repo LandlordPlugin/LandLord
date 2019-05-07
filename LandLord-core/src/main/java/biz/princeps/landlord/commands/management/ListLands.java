@@ -25,7 +25,7 @@ public class ListLands extends LandlordCommand {
 
     public void onListLands(Player sender, LPlayer target, int page) {
 
-        Set<IOwnedLand> lands = plugin.getWgproxy().getRegions(target.getUuid());
+        List<IOwnedLand> lands = new ArrayList<>(plugin.getWgproxy().getRegions(target.getUuid()));
 
         if (lands.size() > 0) {
 

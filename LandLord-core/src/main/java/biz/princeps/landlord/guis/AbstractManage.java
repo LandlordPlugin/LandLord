@@ -1,21 +1,17 @@
 package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandManageEvent;
-import biz.princeps.landlord.flags.LLFlag;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.persistent.LPlayer;
-import biz.princeps.landlord.util.Mobs;
-import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import co.aikar.taskchain.TaskChain;
-import com.sk89q.worldedit.world.entity.EntityType;
-import com.sk89q.worldguard.protection.flags.Flags;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
@@ -26,7 +22,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.inventory.meta.SpawnEggMeta;
 
 import java.util.*;
 
@@ -34,7 +29,7 @@ import java.util.*;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 21/7/17
- *
+ * <p>
  * Very important class, that handles the entire management process (manage, manageall)
  * It is also relying on a GUI-System I implemented in PrincepsLib.
  * This one is rather intuitive and not such a mess like the rest.
@@ -100,10 +95,10 @@ public abstract class AbstractManage extends AbstractGUI {
         IOwnedLand land = regions.get(0);
 
 
-        for (LLFlag iFlag : land.getFlags()) {
+        for (ILLFlag iFlag : land.getFlags()) {
 
             // For every IFlag of the land we wanna display an icon in the gui IF the flag is enabled for change
-            String flagName = iFlag.getWGFlag().getName();
+            String flagName = iFlag.getName();
             String title = lm.getRawString("Commands.Manage.Allow" + flagName.substring(0, 1).toUpperCase() + flagName.substring(1) + ".title");
             List<String> description = lm.getStringList("Commands.Manage.Allow" + flagName.substring(0, 1).toUpperCase() + flagName.substring(1) + ".description");
 
@@ -114,17 +109,15 @@ public abstract class AbstractManage extends AbstractGUI {
                 this.setIcon(position, new Icon(createItem(iFlag.getMaterial(), 1,
                         title, formatList(description, iFlag.getStatus())))
                         .addClickAction((p) -> {
-                            for (OwnedLand region : regions) {
-                                //TODO clean this mess up
-                                for (LLFlag llFlag : region.getFlags()) {
-                                    if (llFlag.getWGFlag().equals(iFlag.getWGFlag())) {
-                                        for (OwnedLand ownedLand : regions) {
-                                            String oldstatus = iFlag.getStatus();
-                                            iFlag.toggle();
-                                            LandManageEvent landManageEvent = new LandManageEvent(player, ownedLand,
-                                                    iFlag.getWGFlag(), oldstatus, iFlag.getStatus());
-                                            Bukkit.getPluginManager().callEvent(landManageEvent);
-                                        }
+                            // Switch flag for every region in the regions list
+                            for (IOwnedLand region : regions) {
+                                for (ILLFlag llFlag : region.getFlags()) {
+                                    if (llFlag.getName().equalsIgnoreCase(iFlag.getName())) {
+                                        String oldstatus = iFlag.getStatus();
+                                        iFlag.toggle();
+                                        LandManageEvent landManageEvent = new LandManageEvent(player, region,
+                                                iFlag.getName(), oldstatus, iFlag.getStatus());
+                                        Bukkit.getPluginManager().callEvent(landManageEvent);
                                         break;
                                     }
                                 }
@@ -189,7 +182,7 @@ public abstract class AbstractManage extends AbstractGUI {
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet.enable") &&
                 player.hasPermission("landlord.player.manage.setgreet")) {
-            String currentGreet = land.getWGLand().getFlag(Flags.GREET_MESSAGE);
+            String currentGreet = (String) land.getFlagValue("GREET_MESSAGE");
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setgreet.item")), 1,
                     lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greetDesc, currentGreet)))
                     .addClickAction(((p) -> {
@@ -200,7 +193,7 @@ public abstract class AbstractManage extends AbstractGUI {
                         else
                             builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreet "));
 
-                        p.spigot().sendMessage(builder.create());
+                        plugin.getUtilsProxy().send_basecomponent(p, builder.create());
                     }))
             );
             position++;
@@ -219,12 +212,14 @@ public abstract class AbstractManage extends AbstractGUI {
 
                         MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
                         };
-
+/*
                         for (Mobs m : Mobs.values()) {
                             // Skip mob if its not in the list, because that means this mob should not be manageable
                             if (!toggleMobs.contains(m.name())) {
                                 continue;
                             }
+
+
 
                             ItemStack spawnEgg = new ItemStack(m.getEgg());
                             SpawnEggMeta meta = (SpawnEggMeta) spawnEgg.getItemMeta();
@@ -287,7 +282,7 @@ public abstract class AbstractManage extends AbstractGUI {
                             });
                             icons.add(ic);
                         }
-
+*/
                         gui.display();
                     }));
             position++;
@@ -295,7 +290,7 @@ public abstract class AbstractManage extends AbstractGUI {
         // set farewell icon
         if (plugin.getConfig().getBoolean("Manage.setfarewell.enable") &&
                 player.hasPermission("landlord.player.manage.setfarewell")) {
-            String currentFarewell = land.getWGLand().getFlag(Flags.FAREWELL_MESSAGE);
+            String currentFarewell = (String) land.getFlagValue("FAREWELL_MESSAGE");
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setfarewell.item")), 1,
                     lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
                     .addClickAction(((p) -> {
@@ -306,7 +301,7 @@ public abstract class AbstractManage extends AbstractGUI {
                         else
                             builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewell "));
 
-                        p.spigot().sendMessage(builder.create());
+                        plugin.getUtilsProxy().send_basecomponent(p, builder.create());
                     }))
             );
             position++;
@@ -316,7 +311,7 @@ public abstract class AbstractManage extends AbstractGUI {
         if (plugin.getConfig().getBoolean("Manage.friends.enable") &&
                 player.hasPermission("landlord.player.manage.friends")) {
             ItemStack skull = createSkull(player.getName(), lm.getRawString("Commands.Manage.ManageFriends.title"), lm.getStringList("Commands.Manage.ManageFriends.description"));
-            Set<UUID> friends = land.getWGLand().getMembers().getUniqueIds();
+            Set<UUID> friends = land.getFriends();
             MultiPagedGUI friendsGui = new MultiPagedGUI(player, (int) Math.ceil((double) friends.size() / 9.0), lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
 
             };
@@ -426,7 +421,7 @@ public abstract class AbstractManage extends AbstractGUI {
     }
 
     private ItemStack createSkull(String owner, String displayname, List<String> lore) {
-        ItemStack skull = new ItemStack(Material.LEGACY_SKULL_ITEM, 1, (short) 3);
+        ItemStack skull = new ItemStack(plugin.getMaterialsProxy().getSkull(), 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(owner);
         skullMeta.setDisplayName(displayname);

@@ -1,7 +1,6 @@
 package biz.princeps.landlord.api.events;
 
 import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.IWrapperFlag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -20,12 +19,12 @@ public class LandManageEvent extends Event {
 
     private Player player;
     private IOwnedLand land;
-    private IWrapperFlag flagChanged;
+    private String flagChanged;
     private Object oldValue;
     private Object newValue;
 
 
-    public LandManageEvent(Player player, IOwnedLand land, IWrapperFlag flagChanged, Object oldValue, Object newValue) {
+    public LandManageEvent(Player player, IOwnedLand land, String flagChanged, Object oldValue, Object newValue) {
         this.player = player;
         this.land = land;
         this.flagChanged = flagChanged;
@@ -56,7 +55,7 @@ public class LandManageEvent extends Event {
         return handlers;
     }
 
-    public IWrapperFlag getFlagChanged() {
+    public String getFlagChanged() {
         return flagChanged;
     }
 

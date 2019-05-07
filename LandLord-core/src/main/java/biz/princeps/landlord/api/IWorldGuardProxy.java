@@ -34,6 +34,8 @@ public interface IWorldGuardProxy {
 
     int getRegionCount(World w);
 
+    void unclaim(IOwnedLand land);
+
     void unclaim(World world, String regionname);
 
     boolean canClaim(Player player, Chunk currChunk);

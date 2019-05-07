@@ -50,7 +50,7 @@ public class MultiClaim extends LandlordCommand {
                 return;
             }
 
-            int initalRegionCount = plugin.getWgproxy().getRegionCountOfPlayer(player.getPlayer().getUniqueId());
+            int initalRegionCount = plugin.getWgproxy().getRegionCount(player.getPlayer().getUniqueId());
             double cost = 0;
             for (Chunk ignored : toClaim) {
                 cost += plugin.getCostManager().calculateCost(initalRegionCount);

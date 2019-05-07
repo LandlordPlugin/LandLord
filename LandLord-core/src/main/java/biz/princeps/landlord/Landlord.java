@@ -1,8 +1,6 @@
 package biz.princeps.landlord;
 
-import biz.princeps.landlord.api.IUtilsProxy;
-import biz.princeps.landlord.api.IWorldGuardProxy;
-import biz.princeps.landlord.api.LandLordAPI;
+import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.handler.VaultHandler;
 import biz.princeps.landlord.items.Maitem;
@@ -49,6 +47,7 @@ public class Landlord implements LandLordAPI {
 
     private IWorldGuardProxy wgproxy;
     private IUtilsProxy utilsProxy;
+    private IMaterialsProxy materialsProxy;
 
     private Database db;
     private ExecutorService executorService;
@@ -310,6 +309,10 @@ public class Landlord implements LandLordAPI {
         return utilsProxy;
     }
 
+    public IMaterialsProxy getMaterialsProxy() {
+        return materialsProxy;
+    }
+
     public void setVaultHandler(VaultHandler vaultHandler) {
         if (this.vaultHandler == null) {
             this.vaultHandler = vaultHandler;
@@ -318,8 +321,14 @@ public class Landlord implements LandLordAPI {
     }
 
     public void setWgproxy(IWorldGuardProxy wgproxy) {
-        if (this.vaultHandler == null) {
+        if (this.getWgproxy() == null) {
             this.wgproxy = wgproxy;
+        }
+    }
+
+    public void setMaterialsProxy(IMaterialsProxy materialsProxy) {
+        if (this.materialsProxy == null) {
+            this.materialsProxy = materialsProxy;
         }
     }
 

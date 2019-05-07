@@ -1,10 +1,7 @@
 package biz.princeps.landlord;
 
-import biz.princeps.landlord.api.IFlagRegistry;
-import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.Flags;
 
-public enum FlagRegistry implements IFlagRegistry {
+public enum FlagRegistry {
 /*
     PASSTHROUGH(Flags.PASSTHROUGH),
     BUILD (Flags.BUILD),

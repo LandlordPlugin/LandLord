@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.admin.AdminTeleport;
 import biz.princeps.landlord.commands.admin.Clear;
@@ -15,7 +16,6 @@ import biz.princeps.landlord.commands.homes.SetHome;
 import biz.princeps.landlord.commands.management.*;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.persistent.LPlayer;
-import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
@@ -210,7 +210,7 @@ public class Landlordbase extends MainCommand {
                 .setNextString(lm.getRawString("Commands.Help.next"))
                 .setPreviousString(lm.getRawString("Commands.Help.previous"))
                 .setCommand(pl.getConfig().getString("CommandSettings.Main.name"), argsN).build();
-        properties.getPlayer().spigot().sendMessage(msg.create());
+        pl.getUtilsProxy().send_basecomponent(properties.getPlayer(), msg.create());
     }
 
     /**
@@ -253,7 +253,7 @@ public class Landlordbase extends MainCommand {
                 World world1 = Bukkit.getWorld(next.world);
                 if (world1 != null) {
                     Chunk chunk = world1.getChunkAt(next.x, next.z);
-                    Landlord.getInstance().getWgHandler().claim(chunk, next.owner);
+                    Landlord.getInstance().getWgproxy().claim(chunk, next.owner);
                 }
                 counter++;
 
@@ -359,8 +359,9 @@ public class Landlordbase extends MainCommand {
                 try {
                     landname = arguments.get(0);
                 } catch (ArgumentsOutOfBoundsException e) {
-                    if (pl.getWgHandler().getRegion(properties.getPlayer().getLocation()) != null) {
-                        landname = OwnedLand.getName(properties.getPlayer().getLocation().getChunk());
+                    IOwnedLand region = pl.getWgproxy().getRegion(properties.getPlayer().getLocation());
+                    if (region != null) {
+                        landname = region.getName();
                     } else {
                         landname = null;
                     }

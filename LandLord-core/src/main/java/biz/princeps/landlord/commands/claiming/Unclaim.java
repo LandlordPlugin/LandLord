@@ -62,7 +62,7 @@ public class Unclaim extends LandlordCommand {
         if (!event.isCancelled()) {
             double payback = -1;
             if (!isAdmin || ol.isOwner(player.getUniqueId())) {
-                int regionCount = plugin.getWgproxy().getRegionCountOfPlayer(player.getUniqueId());
+                int regionCount = plugin.getWgproxy().getRegionCount(player.getUniqueId());
                 int freeLands = plugin.getConfig().getInt("Freelands");
 
                 // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);

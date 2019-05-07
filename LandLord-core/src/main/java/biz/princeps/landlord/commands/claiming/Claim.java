@@ -86,7 +86,7 @@ public class Claim extends LandlordCommand {
                 }
             }
 
-            int regionCount = plugin.getWgproxy().getRegionCountOfPlayer(player.getUniqueId());
+            int regionCount = plugin.getWgproxy().getRegionCount(player.getUniqueId());
             // Ckeck for hardcap based on permissions
             if (!hasLimitPermissions(player, regionCount)) {
                 return;

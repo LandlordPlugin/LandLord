@@ -85,7 +85,7 @@ public class SecureWorldListener extends BasicListener {
             if (plugin.getWgproxy().isAllowedInOverlap(p, loc)) return;
 
             if (land == null) {
-                int landcount = plugin.getWgproxy().getRegionCountOfPlayer(p.getUniqueId());
+                int landcount = plugin.getWgproxy().getRegionCount(p.getUniqueId());
 
                 if (landcount < treshold) {
                     String rawString = plugin.getLangManager().getRawString("Alerts.tresholdNotReached")

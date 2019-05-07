@@ -49,18 +49,9 @@ public interface IOwnedLand {
 
     boolean contains(int x, int y, int z);
 
+    Set<ILLFlag> getFlags();
 
-    /*
-    Set<IWrapperFlag> getFlags();
+    Object getFlagValue(String flag);
 
-    void addFlag(IWrapperFlag flag);
-
-    void addRegionGroupFlag(String name, String state);
-
-    void addWGFlag(String name, String state);
-
-    void removeFlag(IWrapperFlag flag);
-
-    boolean containsFlag(String name);
-    */
+    void setFlagValue(String flag, Object value);
 }

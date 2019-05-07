@@ -16,7 +16,7 @@ public class Shop extends LandlordCommand {
     public void onShop(Player player) {
 
         if (Options.enabled_shop() && Options.isVaultEnabled()) {
-            int regionCount = plugin.getWgproxy().getRegionCountOfPlayer(player.getUniqueId());
+            int regionCount = plugin.getWgproxy().getRegionCount(player.getUniqueId());
             int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
 
             ShopGUI gui = new ShopGUI(player, plugin.getLangManager().getRawString("Shop.title")

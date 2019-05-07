@@ -15,7 +15,9 @@ public class LandLordLatest extends ALandLord {
     public void onEnable() {
         core = new Landlord();
         core.onEnable(this);
+        ((WorldGuardProxy) core.getWgproxy()).initCache();
         core.setUtilsProxy(new UtilsProxy());
+        core.setMaterialsProxy(new MaterialsProxy());
     }
 
     @Override

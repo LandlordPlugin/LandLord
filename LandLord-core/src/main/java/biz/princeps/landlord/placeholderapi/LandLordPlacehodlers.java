@@ -31,7 +31,7 @@ public class LandLordPlacehodlers extends EZPlaceholderHook {
         switch (s) {
 
             case "ownedlands":
-                int landcount = pl.getWgproxy().getRegionCountOfPlayer(player.getUniqueId());
+                int landcount = pl.getWgproxy().getRegionCount(player.getUniqueId());
                 return String.valueOf(landcount);
 
             case "claims":
@@ -55,7 +55,7 @@ public class LandLordPlacehodlers extends EZPlaceholderHook {
                 return String.valueOf(pl.getCostManager().calculateCost(player.getUniqueId()));
 
             case "currentLandRefund":
-                int regionCount = pl.getWgproxy().getRegionCountOfPlayer(player.getUniqueId());
+                int regionCount = pl.getWgproxy().getRegionCount(player.getUniqueId());
                 return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble("Payback"));
 
         }

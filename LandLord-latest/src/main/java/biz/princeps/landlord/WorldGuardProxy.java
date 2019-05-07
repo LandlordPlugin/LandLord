@@ -38,16 +38,16 @@ public class WorldGuardProxy extends AWorldGuardProxy {
     public WorldGuardProxy(WorldGuardPlugin worldGuard) {
         this.wg = WorldGuard.getInstance();
         this.wgPlugin = worldGuard;
-
-        this.initCache();
     }
 
     //TODO check performance of sync loading
-    private void initCache() {
+    void initCache() {
         for (World world : Bukkit.getWorlds()) {
             RegionManager manager = getRegionManager(world);
             for (ProtectedRegion value : manager.getRegions().values()) {
-                cache.add(OwnedLand.of(value));
+                if (isLLRegion(value.getId())) {
+                    cache.add(OwnedLand.of(value));
+                }
             }
         }
     }
@@ -136,6 +136,10 @@ public class WorldGuardProxy extends AWorldGuardProxy {
         };
     }
 
+    @Override
+    public void unclaim(IOwnedLand land) {
+        unclaim(land.getWorld(), land.getName());
+    }
 
     @Override
     public void unclaim(World world, String regionname) {
@@ -180,7 +184,7 @@ public class WorldGuardProxy extends AWorldGuardProxy {
     }
 
     @Override
-    public int getRegionCount(World w){
+    public int getRegionCount(World w) {
         return cache.getLands(w).size();
     }
 

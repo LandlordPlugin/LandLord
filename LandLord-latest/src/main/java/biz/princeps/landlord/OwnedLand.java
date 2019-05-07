@@ -1,5 +1,6 @@
 package biz.princeps.landlord;
 
+import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.IWorldGuardProxy;
 import biz.princeps.landlord.util.AOwnedLand;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -9,12 +10,10 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.World;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Project: LandLord
@@ -34,7 +33,9 @@ public class OwnedLand extends AOwnedLand {
         this.world = Landlord.getInstance().getWgproxy().getWorld(region.getId());
 
         // insert default flags
-        initFlags();
+        if (region.getFlags().size() == 0) {
+            initFlags();
+        }
     }
 
     @Override
@@ -130,8 +131,43 @@ public class OwnedLand extends AOwnedLand {
                 '}';
     }
 
-    protected ProtectedRegion getWGRegion() {
-        return region;
+    @Override
+    public Set<ILLFlag> getFlags() {
+        Set<ILLFlag> toReturn = new HashSet<>();
+        List<String> rawList = Landlord.getInstance().getConfig().getStringList("Flags");
+
+        for (String s : rawList) {
+            String[] toggleleft = s.split(":")[0].split(" ");
+            String[] toggleRight = s.split(":")[1].split(" ");
+            Flag flag = Flags.get(toggleleft[0].toUpperCase());
+            Material mat = Material.valueOf(Landlord.getInstance().getConfig()
+                    .getString("Manage." + toggleleft[0].toLowerCase() + ".item"));
+            StateFlag.State state1 = StateFlag.State.valueOf(toggleleft[1].toLowerCase());
+            StateFlag.State state2 = StateFlag.State.valueOf(toggleRight[0].toLowerCase());
+            boolean isGroup1 = toggleleft[2].equalsIgnoreCase("nonmembers");
+            boolean isGroup2 = toggleRight[1].equalsIgnoreCase("nonmembers");
+            toReturn.add(new LLFlag(region, flag, mat, state1, state2, isGroup1, isGroup2));
+        }
+        return toReturn;
+    }
+
+    @Override
+    public Object getFlagValue(String flag) {
+        System.out.println("Flag value for " +flag);
+        if (flag == null) return null;
+        Flag wgflag = Flags.get(flag.toUpperCase());
+        System.out.println("wgflag" + wgflag);
+        if (wgflag == null) return null;
+        System.out.println(region.getFlags().keySet());
+        return region.getFlag(wgflag);
+    }
+
+    @Override
+    public void setFlagValue(String flag, Object value) {
+        if (flag == null) return;
+        Flag wgflag = Flags.get(flag.toUpperCase());
+        if (wgflag == null) return;
+        region.setFlag(wgflag, value);
     }
 
     private void initFlags() {
