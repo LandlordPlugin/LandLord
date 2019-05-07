@@ -19,7 +19,7 @@ public class Options {
     }
 
     public static boolean isVaultEnabled() {
-        return plugin.getConfig().getBoolean("Economy.enable") && plugin.getVault() != null;
+        return plugin.getConfig().getBoolean("Economy.enable") && plugin.getVaultHandler() != null;
     }
 
     public static boolean enabled_borders() {

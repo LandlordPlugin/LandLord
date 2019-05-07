@@ -1,4 +1,6 @@
 package biz.princeps.landlord.api;
 
-public interface IFlag {
+public interface ILLFlag {
+
+
 }

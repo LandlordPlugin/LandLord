@@ -1,7 +1,10 @@
 package biz.princeps.landlord.api;
 
 import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.util.Set;
 import java.util.UUID;
@@ -30,7 +33,15 @@ public interface IOwnedLand {
 
     Chunk getChunk();
 
-    Set<IFlag> getFlags();
+    void highlightLand(Chunk chunk, Player p, Particle pa);
+
+    void highlightLand(Chunk chunk, Player p, Particle e, int amt);
+
+    void highlightLand(Player p, Particle e);
+
+    Location getALocation();
+
+    // Set<IFlag> getFlags();
 
     // IFlag getFlag(IFlag flag);
 }

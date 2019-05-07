@@ -1,10 +1,9 @@
 package biz.princeps.landlord.commands.admin;
 
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -29,17 +28,17 @@ public class AdminTeleport extends LandlordCommand {
                 lm.sendMessage(sender, lm.getString("Commands.AdminTp.noPlayer").replace("%player%", target));
             } else {
                 // Success
-                Set<ProtectedRegion> lands = plugin.getWgHandler().getRegions(lplayer.getUuid());
+                Set<IOwnedLand> lands = plugin.getWgproxy().getRegions(lplayer.getUuid());
                 if (lands.size() > 0) {
                     MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
                             lm.getRawString("Commands.AdminTp.guiHeader").replace("%player%", target));
 
-                    lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS_BLOCK))
-                            .setName(land.getId())
+                    lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(Material.GRASS))
+                            .setName(land.getName())
                             .addClickAction((p) -> {
-                                        Location toTp = OwnedLand.getLocationFromName(land.getId());
+                                        Location toTp = land.getALocation();
                                         sender.teleport(toTp);
-                                        OwnedLand.highlightLand(sender, Particle.VILLAGER_HAPPY);
+                                        land.highlightLand(sender, Particle.VILLAGER_HAPPY);
                                     }
                             )
                     ));

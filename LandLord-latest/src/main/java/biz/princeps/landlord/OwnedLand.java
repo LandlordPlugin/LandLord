@@ -1,6 +1,5 @@
 package biz.princeps.landlord;
 
-import biz.princeps.landlord.api.IFlag;
 import biz.princeps.landlord.api.IWorldGuardProxy;
 import biz.princeps.landlord.util.AOwnedLand;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -21,7 +20,6 @@ public class OwnedLand extends AOwnedLand {
 
     private ProtectedRegion region;
     private World world;
-    private Set<LLFlag> flags;
 
     public OwnedLand(ProtectedRegion region) {
         this.region = region;
@@ -101,11 +99,6 @@ public class OwnedLand extends AOwnedLand {
             return w.getChunkAt(x, z);
         }
         return null;
-    }
-
-    @Override
-    public Set<IFlag> getFlags() {
-        return flags;
     }
 
     @Override

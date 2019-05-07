@@ -41,7 +41,5 @@ public interface IWorldGuardProxy {
 
     int getX(String name);
 
-    int getY(String name);
-
     int getZ(String name);
 }

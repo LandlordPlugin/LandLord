@@ -70,28 +70,15 @@ public abstract class AWorldGuardProxy implements IWorldGuardProxy {
      * Checks if a string is a valid ll region e.g. world_12_34
      */
     public boolean isLLRegion(String name) {
-        String[] splitted = name.split("_");
 
-        if (splitted.length < 3) {
-            return false;
-        }
-
-        StringBuilder sb = new StringBuilder(splitted[0]);
-        for (int i = 1; i < splitted.length - 2; i++) {
-            sb.append("_").append(splitted[i]);
-        }
-
-        World world = Bukkit.getWorld(sb.toString());
+        World world = getWorld(name);
         if (world == null)
             return false;
 
-        try {
-            Integer.parseInt(splitted[splitted.length - 2]);
-            Integer.parseInt(splitted[splitted.length - 1]);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        int x = getX(name);
+        int z = getZ(name);
+
+        return x != Integer.MIN_VALUE && z != Integer.MIN_VALUE;
     }
 
     @Override
