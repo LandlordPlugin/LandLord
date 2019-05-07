@@ -1,7 +1,8 @@
 package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.Landlord;
-import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IWorldGuardProxy;
 import biz.princeps.lib.PrincepsLib;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -11,8 +12,6 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -38,6 +37,7 @@ import java.util.UUID;
 public class LandAlerter extends BasicListener {
 
     private Landlord pl = Landlord.getInstance();
+    private IWorldGuardProxy wg = pl.getWgproxy();
     private HashMap<UUID, ChunkCoords> currentLands;
     private HashMap<UUID, ChunkCoords> previousLands;
     // We need to update the player position separately bc spigot or worldguard sends the greeting message before actually
@@ -102,19 +102,19 @@ public class LandAlerter extends BasicListener {
                         // Thats why we get a nullland as regionInside now!
                         // So i decided to just check if the message is equals to one of the 4 surrounding lands, since
                         // vector calculations are not very accurate
-                        ProtectedRegion regionInsideNow = (ploc == null ? null : pl.getWgHandler().getRegion(ploc));
+                        IOwnedLand regionInsideNow = (ploc == null ? null : wg.getRegion(ploc));
                         // System.out.println("Position: " + ploc);
                         // System.out.println("Chunk: " + ploc.getChunk());
                         // System.out.println("RegionInsideNw: " + regionInsideNow);
-                        ProtectedRegion before = (previousLands.get(p.getUniqueId()) == null ? null :
-                                pl.getWgHandler().getRegion(previousLands.get(p.getUniqueId()).getLocation()));
+                        IOwnedLand before = (previousLands.get(p.getUniqueId()) == null ? null :
+                                wg.getRegion(previousLands.get(p.getUniqueId()).getLocation()));
 
-                        ProtectedRegion[] surroundings = Landlord.getInstance().getWgHandler().getSurroundings(ploc);
+                        IOwnedLand[] surroundings = wg.getSurroundings(ploc);
 
                         boolean goingOn = false;
 
                         // check surrounding lands for equal greet message
-                        for (ProtectedRegion surrounding : surroundings) {
+                        for (IOwnedLand surrounding : surroundings) {
                             // System.out.println("Surrounding: " + surrounding);
                             if (surrounding == null) {
                                 continue;
@@ -167,7 +167,7 @@ public class LandAlerter extends BasicListener {
                 pl.getLangManager().sendMessage(p, msg);
                 return true;
             case Title:
-                p.sendTitle(msg, null, 10, 70, 10);
+                p.sendTitle(msg, null);
                 return true;
             case Disabled:
             default:
@@ -225,8 +225,8 @@ public class LandAlerter extends BasicListener {
                 prevLand = currentLand;
                 currentLand = landTowards;
 
-                ProtectedRegion prev = plugin.getWgHandler().getRegion(prevLand.getLocation());
-                ProtectedRegion curr = plugin.getWgHandler().getRegion(currentLand.getLocation());
+                IOwnedLand prev = wg.getRegion(prevLand.getLocation());
+                IOwnedLand curr = wg.getRegion(currentLand.getLocation());
                 // System.out.println(prev + "  " + curr);
 
                 if (prev == null && curr != null) {
@@ -236,7 +236,7 @@ public class LandAlerter extends BasicListener {
                     send(prev.getFlag(Flags.FAREWELL_MESSAGE), p);
                 }
                 if (prev != null && curr != null) {
-                    if (!prev.getOwners().equals(curr.getOwners())) {
+                    if (!prev.getOwner().equals(curr.getOwner())) {
                         send(curr.getFlag(Flags.GREET_MESSAGE), p);
                     }
                 }
@@ -250,7 +250,7 @@ public class LandAlerter extends BasicListener {
         this.previousLands.replace(p.getUniqueId(), new ChunkCoords(e.getFrom()));
         this.currentLands.replace(p.getUniqueId(), new ChunkCoords(e.getTo()));
 
-        OwnedLand toLand = pl.getLand(e.getTo());
+        IOwnedLand toLand = wg.getRegion(e.getTo());
         if (toLand != null) {
             send(toLand.getWGLand().getFlag(Flags.GREET_MESSAGE), p);
         }

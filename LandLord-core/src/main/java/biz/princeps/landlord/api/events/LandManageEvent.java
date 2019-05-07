@@ -1,7 +1,7 @@
 package biz.princeps.landlord.api.events;
 
-import biz.princeps.landlord.util.OwnedLand;
-import com.sk89q.worldguard.protection.flags.Flag;
+import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IWrapperFlag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -19,13 +19,13 @@ public class LandManageEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private Player player;
-    private OwnedLand land;
-    private Flag<?> flagChanged;
+    private IOwnedLand land;
+    private IWrapperFlag flagChanged;
     private Object oldValue;
     private Object newValue;
 
 
-    public LandManageEvent(Player player, OwnedLand land, Flag<?> flagChanged, Object oldValue, Object newValue) {
+    public LandManageEvent(Player player, IOwnedLand land, IWrapperFlag flagChanged, Object oldValue, Object newValue) {
         this.player = player;
         this.land = land;
         this.flagChanged = flagChanged;
@@ -47,7 +47,7 @@ public class LandManageEvent extends Event {
     /**
      * Returns the bought land
      */
-    public OwnedLand getLand() {
+    public IOwnedLand getLand() {
         return land;
     }
 
@@ -56,7 +56,7 @@ public class LandManageEvent extends Event {
         return handlers;
     }
 
-    public Flag<?> getChangedFlag() {
+    public IWrapperFlag getFlagChanged() {
         return flagChanged;
     }
 

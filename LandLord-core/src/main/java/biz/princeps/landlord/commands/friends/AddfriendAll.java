@@ -1,8 +1,8 @@
 package biz.princeps.landlord.commands.friends;
 
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,12 +28,12 @@ public class AddfriendAll extends LandlordCommand {
                         .replace("%player%", name));
             } else {
                 int count = 0;
-                for (ProtectedRegion protectedRegion : plugin.getWgHandler().getRegions(player.getUniqueId())) {
-                    if (!protectedRegion.getMembers().getUniqueIds().contains(lPlayer.getUuid())) {
-                        protectedRegion.getMembers().addPlayer(lPlayer.getUuid());
+                for (IOwnedLand ol : plugin.getWgproxy().getRegions(player.getUniqueId())) {
+                    if (!ol.isFriend(lPlayer.getUuid())) {
+                        ol.addFriend(lPlayer.getUuid());
                         count++;
-                        LandManageEvent landManageEvent = new LandManageEvent(player, plugin.getLand(protectedRegion),
-                                null, "FRIENDS", plugin.getLand(protectedRegion).printMembers());
+                        LandManageEvent landManageEvent = new LandManageEvent(player, ol,
+                                null, "FRIENDS", ol.getMembersString());
                         Bukkit.getPluginManager().callEvent(landManageEvent);
                     }
                 }

@@ -1,6 +1,7 @@
 package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.flags.LLFlag;
@@ -60,18 +61,18 @@ public abstract class AbstractManage extends AbstractGUI {
         toggleMobs.addAll(Landlord.getInstance().getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
     }
 
-    private List<OwnedLand> regions;
+    private List<IOwnedLand> regions;
     private LangManager lm;
     private Landlord plugin;
 
-    public AbstractManage(Player player, String header, List<OwnedLand> land) {
+    public AbstractManage(Player player, String header, List<IOwnedLand> land) {
         super(player, SIZE, header);
         this.regions = land;
         this.plugin = Landlord.getInstance();
         this.lm = plugin.getLangManager();
     }
 
-    public AbstractManage(Player player, MultiPagedGUI landGui, String header, List<OwnedLand> land) {
+    public AbstractManage(Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land) {
         super(player, SIZE + 9, header, landGui);
         this.regions = land;
         this.plugin = Landlord.getInstance();
@@ -96,7 +97,7 @@ public abstract class AbstractManage extends AbstractGUI {
         if (regions.size() < 1)
             return;
 
-        OwnedLand land = regions.get(0);
+        IOwnedLand land = regions.get(0);
 
 
         for (LLFlag iFlag : land.getFlags()) {

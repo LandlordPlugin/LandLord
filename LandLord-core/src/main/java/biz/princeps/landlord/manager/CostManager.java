@@ -32,7 +32,7 @@ public class CostManager {
     }
 
     public double calculateCost(UUID uuid) {
-        return this.calculateCost(plugin.getWgHandler().getRegionCountOfPlayer(uuid));
+        return this.calculateCost(plugin.getWgproxy().getRegionCountOfPlayer(uuid));
     }
 
     /**

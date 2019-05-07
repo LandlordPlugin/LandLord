@@ -1,8 +1,8 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.util.OwnedLand;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Particle;
@@ -36,7 +36,7 @@ public class Borders extends LandlordCommand {
             ComponentBuilder cp = new ComponentBuilder(lm.getString("Commands.Borders.activated")).event(
                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll borders")
             );
-            p.spigot().sendMessage(cp.create());
+            plugin.getUtilsProxy().send_basecomponent(p, cp.create());
 
             this.tasks.put(p, new BukkitRunnable() {
                 int counter = 0;
@@ -44,11 +44,14 @@ public class Borders extends LandlordCommand {
                 @Override
                 public void run() {
                     if (counter <= 360 / plugin.getConfig().getInt("Borders.refreshRate")) {
-                        if (plugin.getConfig().getBoolean("Particles.borders.enabled"))
-                            OwnedLand.highlightLand(p, Particle.valueOf(plugin.getConfig().getString("Particles.borders.particle")));
-                    } else
+                        if (plugin.getConfig().getBoolean("Particles.borders.enabled")) {
+                            IOwnedLand ol = plugin.getWgproxy().getRegion(p.getLocation().getChunk());
+                            ol.highlightLand(p, Particle.valueOf(plugin.getConfig().getString("Particles.borders.particle")));
+                        }
+                    } else {
                         cancel();
-                    counter++;
+                        counter++;
+                    }
                 }
             }.runTaskTimer(plugin.getPluginInstance(), 0, plugin.getConfig().getInt("Borders.refreshRate") * 20));
         } else {

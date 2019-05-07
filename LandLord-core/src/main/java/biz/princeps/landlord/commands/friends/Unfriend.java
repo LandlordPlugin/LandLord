@@ -1,8 +1,8 @@
 package biz.princeps.landlord.commands.friends;
 
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.util.OwnedLand;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -25,11 +25,11 @@ public class Unfriend extends LandlordCommand {
         }
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
-        OwnedLand land = plugin.getWgHandler().getRegion(chunk);
+        IOwnedLand land = plugin.getWgproxy().getRegion(chunk);
         if (land != null) {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
                 lm.sendMessage(player, lm.getString("Commands.Unfriend.notOwn")
-                        .replace("%owner%", land.printOwners()));
+                        .replace("%owner%", land.getOwnersString()));
                 return;
             }
 
@@ -43,7 +43,7 @@ public class Unfriend extends LandlordCommand {
                         // Success
                         land.removeFriend(lPlayer.getUuid());
                         LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                null, "FRIENDS", land.printMembers());
+                                null, "FRIENDS", land.getMembersString());
                         Bukkit.getPluginManager().callEvent(landManageEvent);
 
                         lm.sendMessage(player, lm.getString("Commands.Unfriend.success")

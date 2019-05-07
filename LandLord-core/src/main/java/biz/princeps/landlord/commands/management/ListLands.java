@@ -1,10 +1,10 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGUI;
 import biz.princeps.landlord.guis.ManageGUIAll;
 import biz.princeps.landlord.persistent.LPlayer;
-import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Project: LandLord
@@ -24,7 +25,7 @@ public class ListLands extends LandlordCommand {
 
     public void onListLands(Player sender, LPlayer target, int page) {
 
-        List<OwnedLand> lands = plugin.getWgHandler().getRegionsAsOL(target.getUuid());
+        Set<IOwnedLand> lands = plugin.getWgproxy().getRegions(target.getUuid());
 
         if (lands.size() > 0) {
 
@@ -35,7 +36,7 @@ public class ListLands extends LandlordCommand {
                         plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
                                 .replace("%player%", target.getName()));
 
-                for (OwnedLand land : lands) {
+                for (IOwnedLand land : lands) {
                     List<String> loreRaw = plugin.getLangManager().getStringList("Commands.ListLands.gui.lore");
                     List<String> lore = new ArrayList<>();
 
@@ -43,19 +44,21 @@ public class ListLands extends LandlordCommand {
                         if (s.contains("%flags%")) {
                             String flagFormat = lm.getRawString("Commands.ListLands.gui.flagformat");
                             //       flagformat: '&a%flagname%: &f%flagvalue%'
-                            land.getWGLand().getFlags().forEach((flag, value) -> lore.add(flagFormat.replace("%flagname%", flag.getName())
-                                    .replace("%flagvalue%", value.toString())));
+
+                            // ToDO revamp flags
+                            //land.getWGLand().getFlags().forEach((flag, value) -> lore.add(flagFormat.replace("%flagname%", flag.getName())
+                            //        .replace("%flagvalue%", value.toString())));
 
                         } else {
                             lore.add(s.replace("%name%", land.getName())
                                     .replace("%realx%", String.valueOf(land.getChunk().getX() * 16))
                                     .replace("%realz%", String.valueOf(land.getChunk().getZ() * 16))
-                                    .replace("%members%", land.printMembers())
+                                    .replace("%members%", land.getMembersString())
                             );
                         }
                     }
 
-                    Icon icon = new Icon(new ItemStack(Material.GRASS_BLOCK));
+                    Icon icon = new Icon(new ItemStack(Material.GRASS));
                     icon.setName(lm.getRawString("Commands.ListLands.gui.itemname")
                             .replace("%name%", land.getName()));
                     icon.setLore(lore);
@@ -85,7 +88,7 @@ public class ListLands extends LandlordCommand {
                 String segment = lm.getRawString("Commands.ListLands.chat.segment");
 
                 lands.forEach(land -> formatted.add(segment.replace("%landname%", land.getName())
-                        .replace("%members%", land.printMembers())));
+                        .replace("%members%", land.getMembersString())));
 
                 String prev = lm.getRawString("Commands.ListLands.chat.previous");
                 String next = lm.getRawString("Commands.ListLands.chat.next");
@@ -97,7 +100,7 @@ public class ListLands extends LandlordCommand {
                         plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
                         formatted, prev, next, page);
 
-                sender.spigot().sendMessage(message.create());
+                plugin.getUtilsProxy().send_basecomponent(sender, message.create());
             }
         } else {
             lm.sendMessage(sender, plugin.getLangManager().getString("Commands.ListLands.noLands"));

@@ -17,13 +17,19 @@ import java.util.UUID;
 public interface IOwnedLand {
     String getName();
 
+    String getOwnersString();
+
+    String getMembersString();
+
     boolean isOwner(UUID uuid);
 
     UUID getOwner();
 
-    boolean isMember(UUID uuid);
+    void replaceOwner(UUID uuid);
 
-    Set<UUID> getMembers();
+    boolean isFriend(UUID uuid);
+
+    Set<UUID> getFriends();
 
     void addFriend(UUID uuid);
 
@@ -41,7 +47,20 @@ public interface IOwnedLand {
 
     Location getALocation();
 
-    // Set<IFlag> getFlags();
+    boolean contains(int x, int y, int z);
 
-    // IFlag getFlag(IFlag flag);
+
+    /*
+    Set<IWrapperFlag> getFlags();
+
+    void addFlag(IWrapperFlag flag);
+
+    void addRegionGroupFlag(String name, String state);
+
+    void addWGFlag(String name, String state);
+
+    void removeFlag(IWrapperFlag flag);
+
+    boolean containsFlag(String name);
+    */
 }

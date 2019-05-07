@@ -1,8 +1,8 @@
 package biz.princeps.landlord.commands.homes;
 
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.util.OwnedLand;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
@@ -27,7 +27,7 @@ public class SetHome extends LandlordCommand {
         }
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
-        OwnedLand land = plugin.getWgHandler().getRegion(chunk);
+        IOwnedLand land = plugin.getWgproxy().getRegion(chunk);
 
         if (land == null) {
             lm.sendMessage(player, lm.getString("Commands.SetHome.nullLand"));
@@ -36,7 +36,7 @@ public class SetHome extends LandlordCommand {
 
         if (!land.isOwner(player.getUniqueId())) {
             lm.sendMessage(player, lm.getString("Commands.SetHome.notOwn")
-                    .replace("%owner%", land.printOwners()));
+                    .replace("%owner%", land.getOwnersString()));
             return;
         }
 

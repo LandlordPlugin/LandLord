@@ -1,12 +1,9 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGUI;
-import biz.princeps.landlord.util.OwnedLand;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -28,7 +25,7 @@ public class Manage extends LandlordCommand {
                 && !args[0].equals("setfarewell")
                 && !args[0].equals("setfarewellall"))) {
 
-            OwnedLand land;
+            IOwnedLand land;
             if (args.length == 0) {
                 land = plugin.getWgHandler().getRegion(player.getLocation().getChunk());
             } else {

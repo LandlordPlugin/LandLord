@@ -6,20 +6,23 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 /**
@@ -35,13 +38,25 @@ public class WorldGuardProxy extends AWorldGuardProxy {
     public WorldGuardProxy(WorldGuardPlugin worldGuard) {
         this.wg = WorldGuard.getInstance();
         this.wgPlugin = worldGuard;
+
+        this.initCache();
+    }
+
+    //TODO check performance of sync loading
+    private void initCache() {
+        for (World world : Bukkit.getWorlds()) {
+            RegionManager manager = getRegionManager(world);
+            for (ProtectedRegion value : manager.getRegions().values()) {
+                cache.add(OwnedLand.of(value));
+            }
+        }
     }
 
     /**
      * Claims a chunk for a player in worldguard by selecting the most bottom and the highest point
      */
     @Override
-    public void claim(Chunk chunk, UUID owner) {
+    public IOwnedLand claim(Chunk chunk, UUID owner) {
         Location down = chunk.getBlock(0, 0, 0).getLocation();
         Location upper = chunk.getBlock(15, 255, 15).getLocation();
 
@@ -50,24 +65,21 @@ public class WorldGuardProxy extends AWorldGuardProxy {
 
         ProtectedCuboidRegion pr = new ProtectedCuboidRegion(getLandName(chunk), vec1, vec2);
 
-        DefaultDomain ownerDomain = new DefaultDomain();
-        ownerDomain.addPlayer(owner);
-        pr.setOwners(ownerDomain);
-
-        // flag management
-        setDefaultFlags(pr);
         RegionManager manager = getRegionManager(chunk.getWorld());
-
         if (manager != null) {
             manager.addRegion(pr);
+            OwnedLand land = OwnedLand.of(pr);
+            land.replaceOwner(owner);
+            cache.add(land);
+            return land;
         }
+        return null;
     }
 
     @Override
     public IOwnedLand getRegion(Chunk chunk) {
-        RegionManager manager = getRegionManager(chunk.getWorld());
-        ProtectedRegion pr = manager != null ? manager.getRegion(getLandName(chunk)) : null;
-        return (pr != null ? new OwnedLand(pr) : null);
+        String name = getLandName(chunk);
+        return getRegion(name);
     }
 
     @Override
@@ -87,7 +99,23 @@ public class WorldGuardProxy extends AWorldGuardProxy {
 
     @Override
     public IOwnedLand getRegion(String name) {
-        return null;
+        return cache.getLand(name);
+    }
+
+    @Override
+    public Set<IOwnedLand> getRegions(World world) {
+        return cache.getLands(world);
+    }
+
+    @Override
+    public Set<IOwnedLand> getRegions(UUID id, World world) {
+        Set<IOwnedLand> lands = cache.getLands(id);
+        return lands.stream().filter(l -> l.getWorld().equals(world)).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<IOwnedLand> getRegions(UUID id) {
+        return cache.getLands(id);
     }
 
     /**
@@ -108,81 +136,10 @@ public class WorldGuardProxy extends AWorldGuardProxy {
         };
     }
 
-    @Override
-    public Collection<IOwnedLand> getRegions(World world) {
-        com.sk89q.worldedit.world.World worldByName = wg.getPlatform().getMatcher().getWorldByName(world.getName());
-        RegionManager regionManager = getRegionContainer().get(worldByName);
-        Set<IOwnedLand> set = new HashSet<>();
-
-        if (regionManager != null) {
-            for (ProtectedRegion value : regionManager.getRegions().values()) {
-                set.add(new OwnedLand(value));
-            }
-        }
-        return set;
-    }
 
     @Override
     public void unclaim(World world, String regionname) {
         getRegionManager(world).removeRegion(regionname);
-    }
-
-    private void setDefaultFlags(ProtectedRegion region) {
-        if (region == null) return;
-
-        OwnedLand land = new OwnedLand(region);
-        region.setFlag(Flags.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultFarewell")
-                .replace("%owner%", land.printOwners()));
-
-        region.setFlag(Flags.GREET_MESSAGE, Landlord.getInstance().getLangManager().getRawString("Alerts.defaultGreeting")
-                .replace("%owner%", land.printOwners()));
-
-        List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
-        Set<String> flags = new HashSet<>();
-
-        flaggy.forEach(s -> flags.add(s.split(" ")[0]));
-
-        //Iterate over all existing flags
-        for (Flag<?> flag : wg.getFlagRegistry().getAll()) {
-            if (flag instanceof StateFlag) {
-                boolean failed = false;
-                if (flags.contains(flag.getName())) {
-                    // Filters the config list for the right line and split that line in the mid at :
-                    String[] rules = flaggy.stream().filter(s -> s.startsWith(flag.getName())).findFirst().get().split(":");
-                    if (rules.length == 2) {
-
-                        String[] defSplit = rules[0].split(" ");
-                        if (defSplit.length == 3) {
-                            StateFlag.State state = StateFlag.State.valueOf(defSplit[1].toUpperCase());
-                            if (defSplit[2].equals("nonmembers"))
-                                region.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-
-                            region.setFlag((StateFlag) flag, state);
-                        } else {
-                            failed = true;
-                        }
-                    } else {
-                        failed = true;
-                    }
-                }
-
-                if (failed) {
-                    Bukkit.getLogger().warning("ERROR: Your flag definition is invalid!");
-                    break;
-                }
-            }
-        }
-    }
-
-    @Override
-    public List<IOwnedLand> getRegions(UUID id, World world) {
-        List<IOwnedLand> regions = new ArrayList<>();
-        for (ProtectedRegion protectedRegion : getRegionManager(world).getRegions().values()) {
-            if (protectedRegion.getOwners().getUniqueIds().contains(id)) {
-                regions.add(new OwnedLand(protectedRegion));
-            }
-        }
-        return regions;
     }
 
     /**
@@ -214,29 +171,18 @@ public class WorldGuardProxy extends AWorldGuardProxy {
     }
 
     /**
-     * Produces wrong numbers if a player owns nonllregions in a world
-     * // TODO fix this
-     *
      * @param id the uuid of the player to get the region count for
      * @return the region count
      */
     @Override
-    public int getRegionCountOfPlayer(UUID id) {
-        int count = 0;
-        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-        List<String> worlds = Landlord.getInstance().getConfig().getStringList("disabled-worlds");
-
-        for (World world : Bukkit.getWorlds()) {
-            // Only count enabled worlds
-            if (!worlds.contains(world.getName())) {
-                RegionManager rm = getRegionManager(world);
-                LocalPlayer localPlayer = wgPlugin.wrapOfflinePlayer(op);
-                count += rm.getRegionCountOfPlayer(localPlayer);
-            }
-        }
-        return count;
+    public int getRegionCount(UUID id) {
+        return cache.getLands(id).size();
     }
 
+    @Override
+    public int getRegionCount(World w){
+        return cache.getLands(w).size();
+    }
 
     private RegionContainer getRegionContainer() {
         return wg.getPlatform().getRegionContainer();
@@ -248,11 +194,24 @@ public class WorldGuardProxy extends AWorldGuardProxy {
         return regionContainer.get(worldByName);
     }
 
-    public String getLandName(Chunk chunk) {
-        return chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
-    }
-
-    public BlockVector3 locationToVec(Location loc) {
+    private BlockVector3 locationToVec(Location loc) {
         return BlockVector3.at(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
+
+
+    @Override
+    public boolean isAllowedInOverlap(Player p, Location loc) {
+        LocalPlayer localPlayer = wgPlugin.wrapPlayer(p);
+        ApplicableRegionSet applicableRegions = getRegionManager(loc.getWorld())
+                .getApplicableRegions(localPlayer.getLocation().toVector().toBlockPoint());
+        if (applicableRegions.getRegions().size() > 0) { // check for other lands, that may not be handled by landlord
+            for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) {
+                if (protectedRegion.isMember(localPlayer) || protectedRegion.isOwner(localPlayer)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

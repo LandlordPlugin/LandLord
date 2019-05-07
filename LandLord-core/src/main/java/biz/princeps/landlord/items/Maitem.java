@@ -1,7 +1,7 @@
 package biz.princeps.landlord.items;
 
 import biz.princeps.landlord.Landlord;
-import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.lib.item.AbstractItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -67,7 +67,7 @@ public class Maitem extends AbstractItem {
         if (location == null)
             location = p.getLocation();
 
-        OwnedLand landAtLoc = plugin.getLand(location);
+        IOwnedLand landAtLoc = plugin.getWgproxy().getRegion(location);
         switch (action) {
             case LEFT_CLICK_BLOCK:
 
@@ -119,7 +119,7 @@ public class Maitem extends AbstractItem {
 
     }
 
-    private void checkForLandCondition(ItemClickAction clickAction, Player p, OwnedLand landAtLoc, Location loc) {
+    private void checkForLandCondition(ItemClickAction clickAction, Player p, IOwnedLand landAtLoc, Location loc) {
         switch (clickAction.getCondition()) {
 
             case OWNLAND:

@@ -50,14 +50,14 @@ public class MultiClaim extends LandlordCommand {
                 return;
             }
 
-            int initalRegionCount = plugin.getWgHandler().getRegionCountOfPlayer(player.getPlayer().getUniqueId());
+            int initalRegionCount = plugin.getWgproxy().getRegionCountOfPlayer(player.getPlayer().getUniqueId());
             double cost = 0;
             for (Chunk ignored : toClaim) {
                 cost += plugin.getCostManager().calculateCost(initalRegionCount);
                 initalRegionCount++;
             }
 
-            String formattedCost = (Options.isVaultEnabled() ? plugin.getVault().format(cost) : "");
+            String formattedCost = (Options.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "");
 
             PrincepsLib.getConfirmationManager().draw(player.getPlayer(),
                     lm.getRawString("Commands.MultiClaim.guiMessage")
@@ -94,7 +94,7 @@ public class MultiClaim extends LandlordCommand {
                 for (int x = xCenter - param; x <= xCenter + param; x++) {
                     for (int z = zCenter - param; z <= zCenter + param; z++) {
                         Chunk chunk = center.getWorld().getChunkAt(x, z);
-                        if (plugin.getLand(chunk) == null) {
+                        if (plugin.getWgproxy().getRegion(chunk) == null) {
                             toClaim.add(chunk);
                         }
                     }

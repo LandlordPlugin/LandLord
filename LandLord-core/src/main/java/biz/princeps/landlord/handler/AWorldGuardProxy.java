@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
  */
 public abstract class AWorldGuardProxy implements IWorldGuardProxy {
 
+    protected MultiIndexCache cache = new MultiIndexCache();
+
     @Override
     public World getWorld(String name) {
         String[] splitted = name.split("_");
@@ -35,6 +37,7 @@ public abstract class AWorldGuardProxy implements IWorldGuardProxy {
     /**
      * Returns the x coordinate of a landname
      */
+    @Override
     public int getX(String name) {
         String[] splitted = name.split("_");
 
@@ -52,6 +55,7 @@ public abstract class AWorldGuardProxy implements IWorldGuardProxy {
     /**
      * Returns the z coordinate of a landname
      */
+    @Override
     public int getZ(String name) {
         String[] splitted = name.split("_");
 
@@ -69,6 +73,7 @@ public abstract class AWorldGuardProxy implements IWorldGuardProxy {
     /**
      * Checks if a string is a valid ll region e.g. world_12_34
      */
+    @Override
     public boolean isLLRegion(String name) {
 
         World world = getWorld(name);
@@ -112,5 +117,10 @@ public abstract class AWorldGuardProxy implements IWorldGuardProxy {
             }
         }
         return set;
+    }
+
+    @Override
+    public String getLandName(Chunk chunk) {
+        return chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
     }
 }

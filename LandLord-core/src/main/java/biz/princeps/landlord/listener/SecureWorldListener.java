@@ -1,11 +1,8 @@
 package biz.princeps.landlord.listener;
 
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.PlayerBrokeSecureWorldEvent;
-import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.lib.PrincepsLib;
-import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -19,7 +16,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 3/12/17
- *
+ * <p>
  * Structure wise it goes like this:
  * 1. BlockBreak, BlockPlace, BucketEmpty calls PlayerBrokeSecureWorldEvent
  * 2. PlaceBrokeSecureWorldEvent decides if the intrusion was allowed or not.
@@ -39,7 +36,7 @@ public class SecureWorldListener extends BasicListener {
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
-        OwnedLand land = plugin.getLand(e.getBlock().getLocation());
+        IOwnedLand land = plugin.getWgproxy().getRegion(e.getBlock().getLocation());
 
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlock(), e);
@@ -50,7 +47,7 @@ public class SecureWorldListener extends BasicListener {
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
-        OwnedLand land = plugin.getLand(e.getBlockPlaced().getLocation());
+        IOwnedLand land = plugin.getWgproxy().getRegion(e.getBlock().getLocation());
 
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlockPlaced(), e);
@@ -61,7 +58,7 @@ public class SecureWorldListener extends BasicListener {
     @EventHandler
     public void onBucketEmpty(PlayerBucketEmptyEvent e) {
         Player p = e.getPlayer();
-        OwnedLand land = plugin.getLand(e.getBlockClicked().getLocation());
+        IOwnedLand land = plugin.getWgproxy().getRegion(e.getBlockClicked().getLocation());
 
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlockClicked(), e);
@@ -70,38 +67,25 @@ public class SecureWorldListener extends BasicListener {
     }
 
     @EventHandler
-    public void onThresholdEvent(PlayerBrokeSecureWorldEvent event) {
-        OwnedLand land = plugin.getLand(event.getBlock().getLocation());
-        if (!event.isCancelled()) {
-            handleLand(event.getPlayer(), event.getBlock().getLocation(), land, event.getCancellable());
+    public void onThresholdEvent(PlayerBrokeSecureWorldEvent e) {
+        IOwnedLand land = plugin.getWgproxy().getRegion(e.getBlock().getLocation());
+        if (!e.isCancelled()) {
+            handleLand(e.getPlayer(), e.getBlock().getLocation(), land, e.getCancellable());
         }
     }
 
-    private void handleLand(Player p, Location loc, OwnedLand land, Cancellable e) {
+    private void handleLand(Player p, Location loc, IOwnedLand land, Cancellable e) {
         // is free land
         if (p.isOp() || p.hasPermission("landlord.admin.bypass"))
             return;
 
         if (!plugin.getConfig().getStringList("disabled-worlds").contains(loc.getWorld().getName())) {
 
-            LocalPlayer localPlayer = plugin.getWgHandler().getWGPlugin().wrapPlayer(p);
-            ApplicableRegionSet applicableRegions = plugin.getWgHandler().getRegionManager(
-                    loc.getWorld()).getApplicableRegions(localPlayer.getLocation().toVector().toBlockPoint());
-            if (applicableRegions.getRegions().size() > 0) { // check for other lands, that may not be handled by landlord
-                boolean isAllowed = false;
-                for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) { 
-                    if (protectedRegion.isMember(localPlayer) || protectedRegion.isOwner(localPlayer)) {
-                        isAllowed = true;
-                        break;
-                    }
-                }
-                if (isAllowed) {
-                    return;
-                }
-            }
+
+            if (plugin.getWgproxy().isAllowedInOverlap(p, loc)) return;
 
             if (land == null) {
-                int landcount = plugin.getWgHandler().getRegionCountOfPlayer(p.getUniqueId());
+                int landcount = plugin.getWgproxy().getRegionCountOfPlayer(p.getUniqueId());
 
                 if (landcount < treshold) {
                     String rawString = plugin.getLangManager().getRawString("Alerts.tresholdNotReached")
@@ -112,7 +96,7 @@ public class SecureWorldListener extends BasicListener {
                         plugin.getLangManager().sendMessage(p, plugin.getLangManager().getString("Alerts.tresholdNotReached")
                                 .replace("%x%", treshold + ""));
                     } else if (display == LandAlerter.LandMessageDisplay.Title) {
-                        p.sendTitle(rawString, null, 10, 70, 10);
+                        p.sendTitle(rawString, null);
                     }
 
                     e.setCancelled(true);

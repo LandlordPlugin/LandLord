@@ -48,7 +48,7 @@ public class LandLordLatest extends ALandLord {
             haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to use LandLord");
             return false;
         } else {
-            String v = Bukkit.getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
+            String v = getWorldGuard().getDescription().getVersion();
             boolean flag = false;
             if (!v.contains("beta")) {
                 try {
@@ -82,7 +82,6 @@ public class LandLordLatest extends ALandLord {
                 return false;
             }
 
-
             core.setWgproxy(new WorldGuardProxy(getWorldGuard()));
         }
 
@@ -96,6 +95,4 @@ public class LandLordLatest extends ALandLord {
         }
         return (WorldGuardPlugin) plugin;
     }
-
-
 }

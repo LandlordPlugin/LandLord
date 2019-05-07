@@ -1,6 +1,5 @@
 package biz.princeps.landlord.manager.map;
 
-import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.listener.BasicListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

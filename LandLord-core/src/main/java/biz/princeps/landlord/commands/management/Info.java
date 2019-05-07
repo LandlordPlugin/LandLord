@@ -1,11 +1,11 @@
 package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Offer;
-import biz.princeps.landlord.util.OwnedLand;
 import co.aikar.taskchain.TaskChain;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -77,14 +77,14 @@ public class Info extends LandlordCommand {
         }
 
         Chunk chunk = player.getLocation().getChunk();
-        OwnedLand land = plugin.getWgHandler().getRegion(chunk);
+        IOwnedLand land = plugin.getWgproxy().getRegion(chunk);
 
         TaskChain<?> chain = Landlord.newChain();
         chain.asyncFirst(() -> chain.setTaskData("lp", land != null ? plugin.getPlayerManager().getOfflinePlayerSync(land.getOwner()) : null))
                 .sync(() -> {
                     // claimed
                     if (land != null) {
-                        String lastseen;
+                        String lastseen, owners = land.getOwnersString(), friends = land.getMembersString();
                         LocalDateTime lastSeenDate = null;
                         OfflinePlayer op = Bukkit.getOfflinePlayer(land.getOwner());
                         if (op.isOnline()) {
@@ -100,34 +100,33 @@ public class Info extends LandlordCommand {
                         }
 
                         if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
-                            lm.sendMessage(player, replaceInMessage(inactive, land.getName(), land.printOwners(), land.printMembers(), lastseen,
+                            lm.sendMessage(player, replaceInMessage(inactive, land.getName(), owners, friends, lastseen,
                                     plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
                             if (plugin.getConfig().getBoolean("Particles.info"))
-                                OwnedLand.highlightLand(player,
-                                        Particle.valueOf(plugin.getConfig().getString("Particles.info.inactive").toUpperCase()));
+                                land.highlightLand(player, Particle.valueOf(plugin.getConfig().getString("Particles.info.inactive").toUpperCase()));
                             return;
                         }
 
                         Offer offer = plugin.getOfferManager().getOffer(land.getName());
                         if (offer != null) {
                             // advertised land
-                            lm.sendMessage(player, replaceInMessage(advertised, land.getName(), land.printOwners(), land.printMembers(), lastseen,
+                            lm.sendMessage(player, replaceInMessage(advertised, land.getName(), owners, friends, lastseen,
                                     plugin.getVaultHandler().format(offer.getPrice())));
                         } else {
                             // normal owned land
-                            lm.sendMessage(player, replaceInMessage(owned, land.getName(), land.printOwners(), land.printMembers(), lastseen, ""));
+                            lm.sendMessage(player, replaceInMessage(owned, land.getName(), owners, friends, lastseen, ""));
                         }
                         if (plugin.getConfig().getBoolean("Particles.info"))
-                            OwnedLand.highlightLand(player,
+                            land.highlightLand(player,
                                     Particle.valueOf(plugin.getConfig().getString("Particles.info.claimed").toUpperCase()));
 
                     } else {
                         // unclaimed
-                        lm.sendMessage(player, replaceInMessage(free, OwnedLand.getName(chunk), "", "", "",
+                        lm.sendMessage(player, replaceInMessage(free, plugin.getWgproxy().getLandName(chunk), "", "", "",
                                 (Options.isVaultEnabled() ? plugin.getVaultHandler().format(
                                         plugin.getCostManager().calculateCost(player.getUniqueId())) : "")));
                         if (plugin.getConfig().getBoolean("Particles.info"))
-                            OwnedLand.highlightLand(player,
+                            land.highlightLand(player,
                                     Particle.valueOf(plugin.getConfig().getString("Particles.info.unclaimed").toUpperCase()));
                     }
 

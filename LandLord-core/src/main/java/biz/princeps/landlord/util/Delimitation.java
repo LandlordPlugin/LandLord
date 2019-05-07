@@ -6,7 +6,6 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.WrappedBlockData;
-import com.sk89q.worldedit.math.BlockVector2;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,11 +25,11 @@ import java.util.Map;
 public class Delimitation {
 
     private static Landlord plugin = Landlord.getInstance();
-    private static Map<BlockVector2, Material> PATTERN;
+    private static Map<BlockVector, Material> PATTERN;
 
     /**
      * Returns the delimitation pattern defined in the config in a way, the plugin can work with
-     *   x --------->
+     * x --------->
      * z mmmmmmmmmmmmmmmm
      * | m--------------m
      * | m--------------m
@@ -40,14 +39,14 @@ public class Delimitation {
      *
      * @return a map of a vector and a material
      */
-    public static Map<BlockVector2, Material> getDelimitationPattern() {
+    public static Map<BlockVector, Material> getDelimitationPattern() {
         if (PATTERN != null) {
             return PATTERN;
         }
 
         List<String> cfgString = plugin.getConfig().getStringList("CommandSettings.Claim.delimitation");
         Map<Character, Material> varToMaterial = new HashMap<>();
-        Map<BlockVector2, Material> delimitPattern = new HashMap<>();
+        Map<BlockVector, Material> delimitPattern = new HashMap<>();
 
         int x = 0;
         for (String s : cfgString) {
@@ -66,7 +65,7 @@ public class Delimitation {
                 for (int z = 0; z < 16; z++) {
                     char varString = s.charAt(z);
                     Material material = varToMaterial.get(varString);
-                    delimitPattern.put(BlockVector2.at(x, z), material);
+                    delimitPattern.put(BlockVector.at(x, z), material);
                 }
                 x++;
             } else {
@@ -80,14 +79,14 @@ public class Delimitation {
 
 
     public static void delimit(Player player, Chunk chunk) {
-        Map<BlockVector2, Material> pattern = getDelimitationPattern();
+        Map<BlockVector, Material> pattern = getDelimitationPattern();
         if (pattern == null) {
             plugin.getLogger().warning("Delimitation failed, because there was an error in the config!");
             return;
         }
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                Material mat = pattern.get(BlockVector2.at(x, z));
+                Material mat = pattern.get(BlockVector.at(x, z));
 
                 if (mat != null) {
                     int highestY = chunk.getWorld().getHighestBlockYAt(chunk.getX() * 16 + x, chunk.getZ() * 16 + z);
@@ -116,6 +115,20 @@ public class Delimitation {
             ProtocolLibrary.getProtocolManager().sendServerPacket(p, fakeblock);
         } catch (InvocationTargetException e) {
             throw new RuntimeException("Cannot send packet " + fakeblock, e);
+        }
+    }
+
+    static class BlockVector {
+
+        private int x, z;
+
+        public BlockVector(int x, int z) {
+            this.x = x;
+            this.z = z;
+        }
+
+        public static BlockVector at(int x, int z) {
+            return new BlockVector(x, z);
         }
     }
 }

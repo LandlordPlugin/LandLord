@@ -1,19 +1,7 @@
 package biz.princeps.landlord.commands.admin;
 
-import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.commands.LandlordCommand;
-import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
-import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Project: LandLord
@@ -26,141 +14,87 @@ public class Update extends LandlordCommand {
      * Supposed to add missing flags to existing lands, remove non existing flags
      */
     public void onUpdateLands(CommandSender issuer) {
+        /*
         issuer.sendMessage("Starting to update lands...");
 
-        for (World w : Bukkit.getWorlds()) {
-            for (ProtectedRegion pr : plugin.getWgHandler().getRegionManager(w).getRegions().values()) {
-
-                if (plugin.isLLRegion(pr.getId())) {
-                    List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
-                    Set<String> flags = new HashSet<>();
-
-                    flaggy.forEach(s -> flags.add(s.split(" ")[0]));
-
-                    //Iterate over all existing flags
-                    for (Flag<?> flag : plugin.getWgHandler().getFlags()) {
-                        if (flag instanceof StateFlag) {
-                            boolean failed = false;
-                            if (flags.contains(flag.getName())) {
-                                // Filters the config list for the right line and split that line in the mid at :
-                                String[] rules = flaggy.stream().filter(s -> s.startsWith(flag.getName())).findFirst().get().split(":");
-                                if (rules.length == 2) {
-
-                                    if (!pr.getFlags().containsKey(flag)) {
-                                        String[] defSplit = rules[0].split(" ");
-                                        if (defSplit.length == 3) {
-                                            StateFlag.State state = StateFlag.State.valueOf(defSplit[1].toUpperCase());
-                                            if (defSplit[2].equals("nonmembers"))
-                                                pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-
-                                            pr.setFlag((StateFlag) flag, state);
-                                        } else {
-                                            failed = true;
-                                        }
-                                    }
-                                } else {
-                                    failed = true;
-                                }
-                            } else {
-                                pr.getFlags().remove(flag);
-                            }
-
-                            if (failed) {
-                                Bukkit.getLogger().warning("ERROR: Your flag definition is invalid!");
-                                break;
-                            }
-                        }
-                    }
+        List<String> rawList = Landlord.getInstance().getConfig().getStringList("Flags");
+        Set<String> to_set = new HashSet<>();
+        for (String s : rawList) {
+            try {
+                to_set.add(s.split(" ")[0].toUpperCase());
+            } catch (NumberFormatException ex) {
+                Bukkit.getLogger().warning("ERROR: Your flag definition is invalid!");
+            }
+        }
 
 
-                    String name = Bukkit.getOfflinePlayer(pr.getOwners().getUniqueIds().iterator().next()).getName();
-
-                    String greeting = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", name);
-                    String farewell = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", name);
-
-                    if (!pr.getFlags().containsKey(Flags.GREET_MESSAGE)) {
-                        pr.setFlag(Flags.GREET_MESSAGE, greeting);
-                    }
-                    if (!pr.getFlags().containsKey(Flags.FAREWELL_MESSAGE)) {
-                        pr.setFlag(Flags.FAREWELL_MESSAGE, farewell);
+        for (World world : Bukkit.getWorlds()) {
+            Collection<IOwnedLand> regions = plugin.getWgproxy().getRegions(world);
+            for (IOwnedLand region : regions) {
+                // remove flags, that are no longer required
+                for (IWrapperFlag iWrapperFlag : new HashSet<>(region.getFlags())) {
+                    if (!to_set.contains(iWrapperFlag.getName()) &&
+                            !iWrapperFlag.getName().equals("GREET_MESSAGE") &&
+                            !iWrapperFlag.getName().equals("FAREWELL_MESSAGE")) {
+                        region.removeFlag(iWrapperFlag);
                     }
                 }
 
+                // add missing flags
+                for (String s : rawList) {
+                    String[] s1 = s.split(":")[0].split(" ");
+                    if (!region.containsFlag(s1[0])) {
+                        if (s1[2].equals("nonmembers")) {
+                            region.addRegionGroupFlag(s1[0], s1[1]);
+                        } else {
+                            region.addWGFlag(s1[0], s1[1]);
+                        }
+                    }
+                }
+                String name = Bukkit.getOfflinePlayer(region.getOwner()).getName();
+                // add other flags
+                if (!region.containsFlag("GREET_MESSAGE")) {
+                    region.addWGFlag("GREET_MESSAGE",
+                            lm.getRawString("Alerts.defaultGreeting").replace("%owner%", name));
+                } else if (!region.containsFlag("FAREWELL_MESSAGE")) {
+                    region.addWGFlag("FAREWELL_MESSAGE",
+                            lm.getRawString("Alerts.defaultFarewell").replace("%owner%", name));
+                }
             }
         }
+
         issuer.sendMessage("Finished updating lands!");
+        */
     }
 
     /**
      * Resets all lands to the default flag state
      */
-
     public void onResetLands(CommandSender sender) {
+        /*
         sender.sendMessage("Starting to reset lands...");
+        List<String> rawList = Landlord.getInstance().getConfig().getStringList("Flags");
 
         for (World w : Bukkit.getWorlds()) {
-            for (ProtectedRegion pr : plugin.getWgHandler().getRegionManager(w).getRegions().values()) {
-
-                if (plugin.isLLRegion(pr.getId())) {
-
-                    List<String> flaggy = Landlord.getInstance().getConfig().getStringList("Flags");
-                    Set<String> flags = new HashSet<>();
-
-                    flaggy.forEach(s -> flags.add(s.split(" ")[0]));
-
-                    //Iterate over all existing flags
-                    for (Flag<?> flag : plugin.getWgHandler().getFlags()) {
-                        if (flag instanceof StateFlag) {
-                            boolean failed = false;
-                            if (flags.contains(flag.getName())) {
-                                // Filters the config list for the right line and split that line in the mid at :
-                                String[] rules = flaggy.stream().filter(s -> s.startsWith(flag.getName())).findFirst().get().split(":");
-                                if (rules.length == 2) {
-
-                                    String[] defSplit = rules[0].split(" ");
-                                    if (defSplit.length == 3) {
-                                        StateFlag.State state = StateFlag.State.valueOf(defSplit[1].toUpperCase());
-                                        if (defSplit[2].equals("nonmembers"))
-                                            pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-
-                                        pr.setFlag((StateFlag) flag, state);
-                                    } else {
-                                        failed = true;
-                                    }
-
-                                } else {
-                                    failed = true;
-                                }
+            for (World world : Bukkit.getWorlds()) {
+                Collection<IOwnedLand> regions = plugin.getWgproxy().getRegions(world);
+                for (IOwnedLand region : regions) {
+                    // add missing flags
+                    for (String s : rawList) {
+                        String[] s1 = s.split(":")[0].split(" ");
+                        if (!region.containsFlag(s1[0])) {
+                            if (s1[2].equals("nonmembers")) {
+                                region.addRegionGroupFlag(s1[0], s1[1]);
                             } else {
-                                pr.getFlags().remove(flag);
-                            }
-
-                            if (failed) {
-                                Bukkit.getLogger().warning("ERROR: Your flag definition is invalid!");
-                                break;
+                                region.addWGFlag(s1[0], s1[1]);
                             }
                         }
                     }
-
-
-                    String name = Bukkit.getOfflinePlayer(pr.getOwners().getUniqueIds().iterator().next()).getName();
-
-                    String greeting = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", name);
-                    String farewell = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", name);
-
-                    String actualGreeting = pr.getFlag(Flags.GREET_MESSAGE);
-                    String actualFarewell = pr.getFlag(Flags.FAREWELL_MESSAGE);
-
-                    if (!greeting.equals(actualGreeting)) {
-                        pr.setFlag(Flags.GREET_MESSAGE, greeting);
-                    }
-                    if (!farewell.equals(actualFarewell)) {
-                        pr.setFlag(Flags.FAREWELL_MESSAGE, farewell);
-                    }
                 }
-
             }
         }
         sender.sendMessage("Finished resetting lands!");
+        */
     }
+
 }

@@ -3,12 +3,15 @@ package biz.princeps.landlord.util;
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardProxy;
+import biz.princeps.landlord.api.IWrapperFlag;
 import biz.princeps.lib.PrincepsLib;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Project: LandLord
@@ -16,6 +19,8 @@ import java.util.List;
  * Date: 06-05-19
  */
 public abstract class AOwnedLand implements IOwnedLand {
+
+    protected World world;
 
     public void highlightLand(Chunk chunk, Player p, Particle pa) {
         highlightLand(chunk, p, pa, 5);
@@ -68,6 +73,4 @@ public abstract class AOwnedLand implements IOwnedLand {
         return new Location(world, x * 16, world.getHighestBlockYAt(x * 16, z * 16) + 1, z * 16);
 
     }
-
-
 }

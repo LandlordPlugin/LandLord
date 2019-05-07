@@ -1,8 +1,8 @@
 package biz.princeps.landlord.manager.map;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.manager.LangManager;
-import biz.princeps.landlord.util.OwnedLand;
 import biz.princeps.landlord.util.SimpleScoreboard;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -375,7 +375,7 @@ public class LandMap {
         String[][] mapBoard = getMapDir(p);
         String[] mapRows = new String[mapBoard.length + 3];
 
-        Map<Chunk, OwnedLand> nearby = plugin.getWgHandler().getNearbyLands(p.getLocation(), radius, radius);
+        Map<Chunk, IOwnedLand> nearby = plugin.getWgproxy().getNearbyLands(p.getLocation(), radius, radius);
 
         for (int z = 0; z < mapBoard.length; z++) {
             StringBuilder row = new StringBuilder();
@@ -384,14 +384,14 @@ public class LandMap {
                 int xx = x - radius;
                 int zz = z - radius;
 
-                OwnedLand land = nearby.get(p.getWorld().getChunkAt(xx + p.getLocation().getChunk().getX(), zz + p.getLocation().getChunk().getZ()));
+                IOwnedLand land = nearby.get(p.getWorld().getChunkAt(xx + p.getLocation().getChunk().getX(), zz + p.getLocation().getChunk().getZ()));
 
                 String currSpot = mapBoard[z][x];
 
                 if (land != null) {
                     if (land.getOwner().equals(p.getUniqueId())) {
                         currSpot = ChatColor.GREEN + currSpot;
-                    } else if (land.getMembers().contains(p.getUniqueId())) {
+                    } else if (land.isFriend(p.getUniqueId())) {
                         currSpot = ChatColor.YELLOW + currSpot;
                     } else {
                         currSpot = ChatColor.RED + currSpot;

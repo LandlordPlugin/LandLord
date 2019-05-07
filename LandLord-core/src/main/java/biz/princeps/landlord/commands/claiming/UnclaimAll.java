@@ -1,26 +1,28 @@
 package biz.princeps.landlord.commands.claiming;
 
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 17/07/17
+ *
+ * TODO make this class better without 100000 million messages
  */
 public class UnclaimAll extends LandlordCommand {
 
     public void onUnclaim(Player player) {
 
-        List<ProtectedRegion> landsOfPlayer = new ArrayList<>();
+        Set<IOwnedLand> landsOfPlayer = new HashSet<>();
         for (World w : Bukkit.getWorlds()) {
-            landsOfPlayer.addAll(plugin.getWgHandler().getRegions(player.getUniqueId(), w));
+            landsOfPlayer.addAll(plugin.getWgproxy().getRegions(player.getUniqueId(), w));
         }
 
         if (landsOfPlayer.isEmpty()) {
@@ -29,8 +31,8 @@ public class UnclaimAll extends LandlordCommand {
         }
 
         // Normal unclaim
-        for (ProtectedRegion protectedRegion : landsOfPlayer) {
-            Bukkit.dispatchCommand(player, "ll unclaim " + protectedRegion.getId());
+        for (IOwnedLand ol : landsOfPlayer) {
+            Bukkit.dispatchCommand(player, "ll unclaim " + ol.getName());
         }
 
     }

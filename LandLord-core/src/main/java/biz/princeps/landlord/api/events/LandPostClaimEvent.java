@@ -1,6 +1,6 @@
 package biz.princeps.landlord.api.events;
 
-import biz.princeps.landlord.util.OwnedLand;
+import biz.princeps.landlord.api.IOwnedLand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -17,9 +17,9 @@ public class LandPostClaimEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private Player player;
-    private OwnedLand land;
+    private IOwnedLand land;
 
-    public LandPostClaimEvent(Player player, OwnedLand land) {
+    public LandPostClaimEvent(Player player, IOwnedLand land) {
         this.player = player;
         this.land = land;
     }
@@ -38,7 +38,7 @@ public class LandPostClaimEvent extends Event {
     /**
      * Returns the bought land
      */
-    public OwnedLand getLand() {
+    public IOwnedLand getLand() {
         return land;
     }
 
