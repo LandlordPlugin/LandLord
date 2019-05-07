@@ -6,6 +6,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -49,7 +50,7 @@ public interface IOwnedLand {
 
     boolean contains(int x, int y, int z);
 
-    Set<ILLFlag> getFlags();
+    List<ILLFlag> getFlags();
 
     Object getFlagValue(String flag);
 

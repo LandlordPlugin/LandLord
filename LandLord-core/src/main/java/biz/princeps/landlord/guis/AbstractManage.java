@@ -94,9 +94,7 @@ public abstract class AbstractManage extends AbstractGUI {
 
         IOwnedLand land = regions.get(0);
 
-
         for (ILLFlag iFlag : land.getFlags()) {
-
             // For every IFlag of the land we wanna display an icon in the gui IF the flag is enabled for change
             String flagName = iFlag.getName();
             String title = lm.getRawString("Commands.Manage.Allow" + flagName.substring(0, 1).toUpperCase() + flagName.substring(1) + ".title");
@@ -182,7 +180,7 @@ public abstract class AbstractManage extends AbstractGUI {
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet.enable") &&
                 player.hasPermission("landlord.player.manage.setgreet")) {
-            String currentGreet = (String) land.getFlagValue("GREET_MESSAGE");
+            String currentGreet = (String) land.getFlagValue("greeting");
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setgreet.item")), 1,
                     lm.getRawString("Commands.Manage.SetGreet.title"), formatList(greetDesc, currentGreet)))
                     .addClickAction(((p) -> {
@@ -212,7 +210,7 @@ public abstract class AbstractManage extends AbstractGUI {
 
                         MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
                         };
-/*
+/* TODO reimplement mobs
                         for (Mobs m : Mobs.values()) {
                             // Skip mob if its not in the list, because that means this mob should not be manageable
                             if (!toggleMobs.contains(m.name())) {
@@ -290,7 +288,7 @@ public abstract class AbstractManage extends AbstractGUI {
         // set farewell icon
         if (plugin.getConfig().getBoolean("Manage.setfarewell.enable") &&
                 player.hasPermission("landlord.player.manage.setfarewell")) {
-            String currentFarewell = (String) land.getFlagValue("FAREWELL_MESSAGE");
+            String currentFarewell = (String) land.getFlagValue("farewell");
             this.setIcon(position, new Icon(createItem(Material.valueOf(plugin.getConfig().getString("Manage.setfarewell.item")), 1,
                     lm.getRawString("Commands.Manage.SetFarewell.title"), formatList(farewellDesc, currentFarewell)))
                     .addClickAction(((p) -> {

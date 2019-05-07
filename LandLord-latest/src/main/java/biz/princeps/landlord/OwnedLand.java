@@ -24,6 +24,10 @@ public class OwnedLand extends AOwnedLand {
 
     private ProtectedRegion region;
 
+    public static OwnedLand create(ProtectedRegion pr, UUID owner) {
+        return new OwnedLand(pr, owner);
+    }
+
     public static OwnedLand of(ProtectedRegion pr) {
         return new OwnedLand(pr);
     }
@@ -31,10 +35,14 @@ public class OwnedLand extends AOwnedLand {
     private OwnedLand(ProtectedRegion region) {
         this.region = region;
         this.world = Landlord.getInstance().getWgproxy().getWorld(region.getId());
+    }
+
+    private OwnedLand(ProtectedRegion region, UUID owner) {
+        this(region);
 
         // insert default flags
         if (region.getFlags().size() == 0) {
-            initFlags();
+            initFlags(owner);
         }
     }
 
@@ -132,8 +140,8 @@ public class OwnedLand extends AOwnedLand {
     }
 
     @Override
-    public Set<ILLFlag> getFlags() {
-        Set<ILLFlag> toReturn = new HashSet<>();
+    public List<ILLFlag> getFlags() {
+        List<ILLFlag> toReturn = new ArrayList<>();
         List<String> rawList = Landlord.getInstance().getConfig().getStringList("Flags");
 
         for (String s : rawList) {
@@ -142,8 +150,8 @@ public class OwnedLand extends AOwnedLand {
             Flag flag = Flags.get(toggleleft[0].toUpperCase());
             Material mat = Material.valueOf(Landlord.getInstance().getConfig()
                     .getString("Manage." + toggleleft[0].toLowerCase() + ".item"));
-            StateFlag.State state1 = StateFlag.State.valueOf(toggleleft[1].toLowerCase());
-            StateFlag.State state2 = StateFlag.State.valueOf(toggleRight[0].toLowerCase());
+            StateFlag.State state1 = StateFlag.State.valueOf(toggleleft[1].toUpperCase());
+            StateFlag.State state2 = StateFlag.State.valueOf(toggleRight[0].toUpperCase());
             boolean isGroup1 = toggleleft[2].equalsIgnoreCase("nonmembers");
             boolean isGroup2 = toggleRight[1].equalsIgnoreCase("nonmembers");
             toReturn.add(new LLFlag(region, flag, mat, state1, state2, isGroup1, isGroup2));
@@ -153,12 +161,9 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public Object getFlagValue(String flag) {
-        System.out.println("Flag value for " +flag);
         if (flag == null) return null;
-        Flag wgflag = Flags.get(flag.toUpperCase());
-        System.out.println("wgflag" + wgflag);
+        Flag wgflag = Flags.get(flag.toLowerCase());
         if (wgflag == null) return null;
-        System.out.println(region.getFlags().keySet());
         return region.getFlag(wgflag);
     }
 
@@ -170,7 +175,7 @@ public class OwnedLand extends AOwnedLand {
         region.setFlag(wgflag, value);
     }
 
-    private void initFlags() {
+    private void initFlags(UUID owner) {
         List<String> rawList = Landlord.getInstance().getConfig().getStringList("Flags");
 
         for (String s : rawList) {
@@ -189,7 +194,7 @@ public class OwnedLand extends AOwnedLand {
             region.setFlag(flag, state);
         }
         // add other flags
-        Landlord.getInstance().getPlayerManager().getOfflinePlayerAsync(getOwner(), p -> {
+        Landlord.getInstance().getPlayerManager().getOfflinePlayerAsync(owner, p -> {
             region.setFlag(Flags.GREET_MESSAGE, Landlord.getInstance().getLangManager()
                     .getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
             region.setFlag(Flags.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager()

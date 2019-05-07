@@ -119,7 +119,7 @@ public class LandAlerter extends BasicListener {
                             if (surrounding == null) {
                                 continue;
                             }
-                            String greet = stripColors((String) surrounding.getFlagValue("GREET_MESSAGE"));
+                            String greet = stripColors((String) surrounding.getFlagValue("greeting"));
                             if (msg.equals(greet)) {
                                 goingOn = true;
                                 break;
@@ -128,8 +128,8 @@ public class LandAlerter extends BasicListener {
                         }
 
                         if (regionInsideNow != null) {
-                            String greet = stripColors((String) regionInsideNow.getFlagValue("GREET_MESSAGE"));
-                            String farewell = stripColors((String) regionInsideNow.getFlagValue("FAREWELL_MESSAGE"));
+                            String greet = stripColors((String) regionInsideNow.getFlagValue("greeting"));
+                            String farewell = stripColors((String) regionInsideNow.getFlagValue("farewell"));
                             // System.out.println("RegionInsideNow: " + msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
@@ -138,8 +138,8 @@ public class LandAlerter extends BasicListener {
                         }
 
                         if (before != null) {
-                            String greet = stripColors((String) before.getFlagValue("GREET_MESSAGE"));
-                            String farewell = stripColors((String) before.getFlagValue("FAREWELL_MESSAGE"));
+                            String greet = stripColors((String) before.getFlagValue("greeting"));
+                            String farewell = stripColors((String) before.getFlagValue("farewell"));
                             // System.out.println("before:" + msg + ":" + greet + ":" + farewell);
 
                             if (msg.equals(greet) || msg.equals(farewell)) {
@@ -176,6 +176,7 @@ public class LandAlerter extends BasicListener {
     }
 
     private String stripColors(String input) {
+        if (input == null) return "";
         return ChatColor.stripColor(input).replaceAll("&([a-f]|[0-7]|[k-o]|[r])", "").trim();
     }
 
@@ -230,14 +231,14 @@ public class LandAlerter extends BasicListener {
                 // System.out.println(prev + "  " + curr);
 
                 if (prev == null && curr != null) {
-                    send((String) curr.getFlagValue("GREET_MESSAGE"), p);
+                    send((String) curr.getFlagValue("greeting"), p);
                 }
                 if (prev != null && curr == null) {
-                    send((String) prev.getFlagValue("FAREWELL_MESSAGE"), p);
+                    send((String) prev.getFlagValue("farewell"), p);
                 }
                 if (prev != null && curr != null) {
                     if (!prev.getOwner().equals(curr.getOwner())) {
-                        send((String) curr.getFlagValue("GREET_MESSAGE"), p);
+                        send((String) curr.getFlagValue("greeting"), p);
                     }
                 }
             }
@@ -252,7 +253,7 @@ public class LandAlerter extends BasicListener {
 
         IOwnedLand toLand = wg.getRegion(e.getTo());
         if (toLand != null) {
-            send((String) toLand.getFlagValue("GREET_MESSAGE"), p);
+            send((String) toLand.getFlagValue("greeting"), p);
         }
     }
 

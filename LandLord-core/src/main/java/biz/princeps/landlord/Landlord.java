@@ -128,8 +128,8 @@ public class Landlord implements LandLordAPI {
      * Some strings in Princepslib are translatable. set those here.
      */
     private void postloadPrincepsLib() {
-        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getString("Confirmation.accept"));
-        PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getString("Confirmation.decline"));
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getRawString("Confirmation.accept"));
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getRawString("Confirmation.decline"));
 
         PrincepsLib.getCommandManager().registerCommand(new Landlordbase());
     }

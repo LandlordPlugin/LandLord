@@ -26,6 +26,8 @@ public class LLFlag implements ILLFlag {
         this.state2 = state2;
         this.isGroup1 = g1;
         this.isGroup2 = g2;
+
+        this.curr_status = pr.getFlags().get(flag).toString();
     }
 
     @Override
@@ -59,5 +61,19 @@ public class LLFlag implements ILLFlag {
             pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.ALL);
         pr.setFlag(flag, state);
         this.curr_status = state.name();
+    }
+
+    @Override
+    public String toString() {
+        return "LLFlag{" +
+                "pr=" + pr +
+                ", curr_status='" + curr_status + '\'' +
+                ", flag=" + flag +
+                ", mat=" + mat +
+                ", state1=" + state1 +
+                ", state2=" + state2 +
+                ", isGroup1=" + isGroup1 +
+                ", isGroup2=" + isGroup2 +
+                '}';
     }
 }

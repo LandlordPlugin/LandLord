@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands.claiming;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IWorldGuardProxy;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
@@ -30,9 +31,11 @@ import java.util.List;
 public class Claim extends LandlordCommand {
 
     private boolean overrideConfirmations;
+    private IWorldGuardProxy wg;
 
     public Claim(boolean overrideConfirmations) {
         this.overrideConfirmations = overrideConfirmations;
+        wg = plugin.getWgproxy();
     }
 
     public void onClaim(Player player, Chunk chunk) {
@@ -41,8 +44,8 @@ public class Claim extends LandlordCommand {
             lm.sendMessage(player, lm.getString("Disabled-World"));
             return;
         }
-        IOwnedLand ol = plugin.getWgproxy().getRegion(chunk);
-        String landname = ol.getName();
+        IOwnedLand ol = wg.getRegion(chunk);
+        String landName = wg.getLandName(chunk);
         String confirmcmd = "/" + plugin.getConfig().getString("CommandSettings.Main.name") + " confirm";
 
         TaskChain<?> chain = Landlord.newChain();
@@ -62,8 +65,8 @@ public class Claim extends LandlordCommand {
             int inactiveDays = chain.getTaskData("inactiveDays");
 
             // Check if there is an overlapping wg-region
-            if (!plugin.getWgproxy().canClaim(player, chunk)) {
-                if (ol == null || (plugin.getOfferManager().getOffer(landname) == null && !inactive)) {
+            if (!wg.canClaim(player, chunk)) {
+                if (ol == null || (plugin.getOfferManager().getOffer(landName) == null && !inactive)) {
                     lm.sendMessage(player, lm.getString("Commands.Claim.notAllowed"));
                     return;
                 }
@@ -86,7 +89,7 @@ public class Claim extends LandlordCommand {
                 }
             }
 
-            int regionCount = plugin.getWgproxy().getRegionCount(player.getUniqueId());
+            int regionCount = wg.getRegionCount(player.getUniqueId());
             // Ckeck for hardcap based on permissions
             if (!hasLimitPermissions(player, regionCount)) {
                 return;
@@ -148,7 +151,7 @@ public class Claim extends LandlordCommand {
                         }
                     }
 
-                    Offer offer = plugin.getOfferManager().getOffer(landname);
+                    Offer offer = plugin.getOfferManager().getOffer(landName);
                     if (offer != null && ol != null) {
                         // Player 2 player sale
                         if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {
@@ -201,9 +204,9 @@ public class Claim extends LandlordCommand {
                         // Normal sale
                         double calculatedCost = plugin.getCostManager().calculateCost(player.getUniqueId());
                         if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
-                            String guiDesc = landname + " | " + plugin.getVaultHandler().format(calculatedCost);
+                            String guiDesc = landName + " | " + plugin.getVaultHandler().format(calculatedCost);
                             String chatDesc = lm.getString("Commands.Claim.confirmation")
-                                    .replace("%chunk%", landname)
+                                    .replace("%chunk%", landName)
                                     .replace("%location%", Util.getLocationFormatted(chunk))
                                     .replace("%price%", plugin.getVaultHandler().format(calculatedCost));
 
@@ -214,7 +217,7 @@ public class Claim extends LandlordCommand {
                                             if (calculatedCost > 0)
                                                 lm.sendMessage(player, lm.getString("Commands.Claim.moneyTook")
                                                         .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
-                                                        .replace("%chunk%", ol.getName()));
+                                                        .replace("%chunk%", landName));
                                             performClaim(player, chunk);
                                             p.closeInventory();
                                         },
@@ -227,7 +230,7 @@ public class Claim extends LandlordCommand {
                                 if (calculatedCost > 0)
                                     lm.sendMessage(player, lm.getString("Commands.Claim.moneyTook")
                                             .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
-                                            .replace("%chunk%", ol.getName())
+                                            .replace("%chunk%", landName)
                                             .replace("%location%", Util.getLocationFormatted(chunk))
                                     );
                                 performClaim(player, chunk);
@@ -238,7 +241,7 @@ public class Claim extends LandlordCommand {
                             // NOT ENOUGH MONEY
                             lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
                                     .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
-                                    .replace("%chunk%", ol.getName())
+                                    .replace("%chunk%", landName)
                                     .replace("%location%", Util.getLocationFormatted(chunk))
                             );
                             return;
@@ -268,7 +271,7 @@ public class Claim extends LandlordCommand {
     }
 
     private void performClaim(Player player, Chunk chunk) {
-        IOwnedLand claim = plugin.getWgproxy().claim(chunk, player.getUniqueId());
+        IOwnedLand claim = wg.claim(chunk, player.getUniqueId());
 
         lm.sendMessage(player, lm.getString("Commands.Claim.success")
                 .replace("%chunk%", claim.getName())
@@ -356,7 +359,7 @@ public class Claim extends LandlordCommand {
                 if (!hasNearbyLand) {
                     // no nearby land is already claimed => Display error msg
                     lm.sendMessage(player, lm.getString("Commands.Claim.onlyClaimAdjacentChunks")
-                            .replace("%land%", plugin.getWgproxy().getLandName(chunk)));
+                            .replace("%land%", wg.getLandName(chunk)));
                     return false;
                 }
             }
@@ -367,10 +370,10 @@ public class Claim extends LandlordCommand {
     private IOwnedLand[] getSurroundings(Chunk chunk){
         World world = chunk.getWorld();
         IOwnedLand[] adjLands = new IOwnedLand[4];
-        adjLands[0] = plugin.getWgproxy().getRegion(world.getChunkAt(chunk.getX() + 1, chunk.getZ()));
-        adjLands[1] = plugin.getWgproxy().getRegion(world.getChunkAt(chunk.getX() - 1, chunk.getZ()));
-        adjLands[2] = plugin.getWgproxy().getRegion(world.getChunkAt(chunk.getX(), chunk.getZ() + 1));
-        adjLands[3] = plugin.getWgproxy().getRegion(world.getChunkAt(chunk.getX(), chunk.getZ() - 1));
+        adjLands[0] = wg.getRegion(world.getChunkAt(chunk.getX() + 1, chunk.getZ()));
+        adjLands[1] = wg.getRegion(world.getChunkAt(chunk.getX() - 1, chunk.getZ()));
+        adjLands[2] = wg.getRegion(world.getChunkAt(chunk.getX(), chunk.getZ() + 1));
+        adjLands[3] = wg.getRegion(world.getChunkAt(chunk.getX(), chunk.getZ() - 1));
         return adjLands;
     }
 
@@ -391,7 +394,7 @@ public class Claim extends LandlordCommand {
             if (differentOwner) {
                 // one of the nearby lands is not owned by the player nor its free
                 lm.sendMessage(player, lm.getString("Commands.Claim.needsGap")
-                        .replace("%land%", plugin.getWgproxy().getLandName(chunk)));
+                        .replace("%land%", wg.getLandName(chunk)));
                 return false;
             }
         }

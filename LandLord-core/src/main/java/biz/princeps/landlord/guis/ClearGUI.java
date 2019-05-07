@@ -8,13 +8,13 @@ import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.UUID;
 
 public class ClearGUI extends AbstractGUI {
 
@@ -92,7 +92,6 @@ public class ClearGUI extends AbstractGUI {
             confirm.display();
         });
         this.setIcon(pos++, i3);
-
     }
 
     private void clearLand(IOwnedLand land) {
@@ -113,10 +112,11 @@ public class ClearGUI extends AbstractGUI {
 
     }
 
+    //TODO checkout if this is a memory leak
     private int handleUnclaim(Set<IOwnedLand> regions) {
         int count = regions.size();
 
-        for (IOwnedLand region : regions) {
+        for (IOwnedLand region : Sets.newHashSet(regions)) {
             plugin.getOfferManager().removeOffer(region.getName());
             plugin.getWgproxy().unclaim(region);
         }

@@ -30,6 +30,6 @@ public class MaterialsProxy implements IMaterialsProxy {
 
     @Override
     public Material getFireCharge() {
-        return null;
+        return Material.FIRE_CHARGE;
     }
 }

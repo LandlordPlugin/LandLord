@@ -68,7 +68,7 @@ public class WorldGuardProxy extends AWorldGuardProxy {
         RegionManager manager = getRegionManager(chunk.getWorld());
         if (manager != null) {
             manager.addRegion(pr);
-            OwnedLand land = OwnedLand.of(pr);
+            OwnedLand land = OwnedLand.create(pr, owner);
             land.replaceOwner(owner);
             cache.add(land);
             return land;
@@ -143,6 +143,7 @@ public class WorldGuardProxy extends AWorldGuardProxy {
 
     @Override
     public void unclaim(World world, String regionname) {
+        this.cache.remove(regionname);
         getRegionManager(world).removeRegion(regionname);
     }
 
@@ -180,11 +181,13 @@ public class WorldGuardProxy extends AWorldGuardProxy {
      */
     @Override
     public int getRegionCount(UUID id) {
+        if (cache.getLands(id) == null) return 0;
         return cache.getLands(id).size();
     }
 
     @Override
     public int getRegionCount(World w) {
+        if (cache.getLands(w) == null) return 0;
         return cache.getLands(w).size();
     }
 

@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Project: LandLord
@@ -117,6 +118,28 @@ public class Delimitation {
         public BlockVector(int x, int z) {
             this.x = x;
             this.z = z;
+        }
+
+        @Override
+        public String toString() {
+            return "BlockVector{" +
+                    "x=" + x +
+                    ", z=" + z +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            BlockVector that = (BlockVector) o;
+            return x == that.x &&
+                    z == that.z;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, z);
         }
 
         public static BlockVector at(int x, int z) {

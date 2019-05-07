@@ -12,6 +12,7 @@ public class Update extends LandlordCommand {
 
     /**
      * Supposed to add missing flags to existing lands, remove non existing flags
+     * TODO implement this
      */
     public void onUpdateLands(CommandSender issuer) {
         /*

@@ -27,83 +27,83 @@ public class ListLands extends LandlordCommand {
 
         List<IOwnedLand> lands = new ArrayList<>(plugin.getWgproxy().getRegions(target.getUuid()));
 
-        if (lands.size() > 0) {
+        if (lands.size() == 0) {
+            lm.sendMessage(sender, plugin.getLangManager().getString("Commands.ListLands.noLands"));
+            return;
+        }
 
-            String mode = plugin.getConfig().getString("CommandSettings.ListLands.mode");
+        String mode = plugin.getConfig().getString("CommandSettings.ListLands.mode");
 
-            if (mode.equals("gui")) {
-                MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
-                        plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
-                                .replace("%player%", target.getName()));
+        if (mode.equals("gui")) {
+            MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
+                    plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
+                            .replace("%player%", target.getName()));
 
-                for (IOwnedLand land : lands) {
-                    List<String> loreRaw = plugin.getLangManager().getStringList("Commands.ListLands.gui.lore");
-                    List<String> lore = new ArrayList<>();
+            for (IOwnedLand land : lands) {
+                List<String> loreRaw = plugin.getLangManager().getStringList("Commands.ListLands.gui.lore");
+                List<String> lore = new ArrayList<>();
 
-                    for (String s : loreRaw) {
-                        if (s.contains("%flags%")) {
-                            String flagFormat = lm.getRawString("Commands.ListLands.gui.flagformat");
-                            //       flagformat: '&a%flagname%: &f%flagvalue%'
+                for (String s : loreRaw) {
+                    if (s.contains("%flags%")) {
+                        String flagFormat = lm.getRawString("Commands.ListLands.gui.flagformat");
+                        //       flagformat: '&a%flagname%: &f%flagvalue%'
 
-                            // ToDO revamp flags
-                            //land.getWGLand().getFlags().forEach((flag, value) -> lore.add(flagFormat.replace("%flagname%", flag.getName())
-                            //        .replace("%flagvalue%", value.toString())));
+                        land.getFlags().forEach((flag) -> lore.add(flagFormat
+                                .replace("%flagname%", flag.getName())
+                                .replace("%flagvalue%", flag.getStatus())));
 
-                        } else {
-                            lore.add(s.replace("%name%", land.getName())
-                                    .replace("%realx%", String.valueOf(land.getChunk().getX() * 16))
-                                    .replace("%realz%", String.valueOf(land.getChunk().getZ() * 16))
-                                    .replace("%members%", land.getMembersString())
-                            );
-                        }
+                    } else {
+                        lore.add(s.replace("%name%", land.getName())
+                                .replace("%realx%", String.valueOf(land.getChunk().getX() * 16))
+                                .replace("%realz%", String.valueOf(land.getChunk().getZ() * 16))
+                                .replace("%members%", land.getMembersString())
+                        );
                     }
-
-                    Icon icon = new Icon(new ItemStack(Material.GRASS));
-                    icon.setName(lm.getRawString("Commands.ListLands.gui.itemname")
-                            .replace("%name%", land.getName()));
-                    icon.setLore(lore);
-                    icon.addClickAction((p) -> {
-                        ManageGUI manageGUI = new ManageGUI(sender, landGui, land);
-                        manageGUI.display();
-                    });
-
-
-                    landGui.addIcon(icon);
                 }
 
-                landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
-                        .setName(lm.getRawString("Commands.ListLands.gui.manageAll"))
-                        .addClickAction((p) -> {
-                            ManageGUIAll manageGUIAll = new ManageGUIAll(sender, landGui, lands);
-                            manageGUIAll.display();
-                        }));
-
-                landGui.display();
-
-            } else {
-                // Chat based system
-
-                List<String> formatted = new ArrayList<>();
-
-                String segment = lm.getRawString("Commands.ListLands.chat.segment");
-
-                lands.forEach(land -> formatted.add(segment.replace("%landname%", land.getName())
-                        .replace("%members%", land.getMembersString())));
-
-                String prev = lm.getRawString("Commands.ListLands.chat.previous");
-                String next = lm.getRawString("Commands.ListLands.chat.next");
+                Icon icon = new Icon(new ItemStack(plugin.getMaterialsProxy().getGrass()));
+                icon.setName(lm.getRawString("Commands.ListLands.gui.itemname")
+                        .replace("%name%", land.getName()));
+                icon.setLore(lore);
+                icon.addClickAction((p) -> {
+                    ManageGUI manageGUI = new ManageGUI(sender, landGui, land);
+                    manageGUI.display();
+                });
 
 
-                MultiPagedMessage message = new MultiPagedMessage("/land list",
-                        plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
-                                .replace("%player%", target.getName()),
-                        plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
-                        formatted, prev, next, page);
-
-                plugin.getUtilsProxy().send_basecomponent(sender, message.create());
+                landGui.addIcon(icon);
             }
+
+            landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
+                    .setName(lm.getRawString("Commands.ListLands.gui.manageAll"))
+                    .addClickAction((p) -> {
+                        ManageGUIAll manageGUIAll = new ManageGUIAll(sender, landGui, lands);
+                        manageGUIAll.display();
+                    }));
+
+            landGui.display();
+
         } else {
-            lm.sendMessage(sender, plugin.getLangManager().getString("Commands.ListLands.noLands"));
+            // Chat based system
+
+            List<String> formatted = new ArrayList<>();
+
+            String segment = lm.getRawString("Commands.ListLands.chat.segment");
+
+            lands.forEach(land -> formatted.add(segment.replace("%landname%", land.getName())
+                    .replace("%members%", land.getMembersString())));
+
+            String prev = lm.getRawString("Commands.ListLands.chat.previous");
+            String next = lm.getRawString("Commands.ListLands.chat.next");
+
+
+            MultiPagedMessage message = new MultiPagedMessage("/land list",
+                    plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
+                            .replace("%player%", target.getName()),
+                    plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
+                    formatted, prev, next, page);
+
+            plugin.getUtilsProxy().send_basecomponent(sender, message.create());
         }
     }
 
