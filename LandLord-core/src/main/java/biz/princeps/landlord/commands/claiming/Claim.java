@@ -1,15 +1,11 @@
 package biz.princeps.landlord.commands.claiming;
 
-import biz.princeps.landlord.Landlord;
-import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.IWorldGuardProxy;
-import biz.princeps.landlord.api.Options;
+import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.landlord.util.Delimitation;
-import biz.princeps.landlord.util.Util;
 import biz.princeps.lib.PrincepsLib;
 import co.aikar.taskchain.TaskChain;
 import net.md_5.bungee.api.ChatColor;
@@ -32,10 +28,13 @@ public class Claim extends LandlordCommand {
 
     private boolean overrideConfirmations;
     private IWorldGuardProxy wg;
+    private IVaultManager vault;
 
-    public Claim(boolean overrideConfirmations) {
+    public Claim(ILandLord pl, boolean overrideConfirmations) {
+        super(pl);
         this.overrideConfirmations = overrideConfirmations;
-        wg = plugin.getWgproxy();
+        this.wg = plugin.getWGProxy();
+        this.vault = plugin.getVaultManager();
     }
 
     public void onClaim(Player player, Chunk chunk) {
@@ -48,7 +47,7 @@ public class Claim extends LandlordCommand {
         String landName = wg.getLandName(chunk);
         String confirmcmd = "/" + plugin.getConfig().getString("CommandSettings.Main.name") + " confirm";
 
-        TaskChain<?> chain = Landlord.newChain();
+        TaskChain<?> chain = plugin.newChain();
 
         chain.asyncFirst(() -> {
             if (ol == null) {
@@ -121,10 +120,10 @@ public class Claim extends LandlordCommand {
                         double payBackForInactive = plugin.getCostManager().calculateCost(ol.getOwner());
                         String originalOwner = Bukkit.getOfflinePlayer(ol.getOwner()).getName();
 
-                        if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), costForBuyer)) {
+                        if (vault.hasBalance(player.getUniqueId(), costForBuyer)) {
 
                             if (plugin.getConfig().getBoolean("ConfirmationDialog.onBuyUp")) {
-                                String sellDesc = ol.getName() + " | " + plugin.getVaultHandler().format(costForBuyer);
+                                String sellDesc = ol.getName() + " | " + vault.format(costForBuyer);
                                 String chatDesc = lm.getString("Commands.Claim.confirmation");
 
                                 PrincepsLib.getConfirmationManager().draw(player, sellDesc, chatDesc,
@@ -143,9 +142,9 @@ public class Claim extends LandlordCommand {
                         } else {
                             // Not enough money
                             lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
-                                    .replace("%money%", plugin.getVaultHandler().format(costForBuyer))
+                                    .replace("%money%", vault.format(costForBuyer))
                                     .replace("%chunk%", ol.getName())
-                                    .replace("%location%", Util.getLocationFormatted(chunk))
+                                    .replace("%location%", wg.formatLocation(chunk))
                             );
                             return;
                         }
@@ -154,14 +153,14 @@ public class Claim extends LandlordCommand {
                     Offer offer = plugin.getOfferManager().getOffer(landName);
                     if (offer != null && ol != null) {
                         // Player 2 player sale
-                        if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), offer.getPrice())) {
+                        if (vault.hasBalance(player.getUniqueId(), offer.getPrice())) {
 
-                            String sellDesc = ol.getName() + " | " + plugin.getVaultHandler().format(offer.getPrice());
+                            String sellDesc = ol.getName() + " | " + vault.format(offer.getPrice());
                             String chatDesc = lm.getString("Commands.Claim.confirmation");
 
                             PrincepsLib.getConfirmationManager().draw(player, sellDesc, chatDesc, (p) -> {
-                                plugin.getVaultHandler().take(player.getUniqueId(), offer.getPrice());
-                                plugin.getVaultHandler().give(offer.getSeller(), offer.getPrice());
+                                vault.take(player.getUniqueId(), offer.getPrice());
+                                vault.give(offer.getSeller(), offer.getPrice());
 
                                 plugin.getOfferManager().removeOffer(offer.getLandname());
 
@@ -169,7 +168,7 @@ public class Claim extends LandlordCommand {
 
                                 lm.sendMessage(player, lm.getString("Commands.Claim.success")
                                         .replace("%chunk%", ol.getName())
-                                        .replace("%location%", Util.getLocationFormatted(chunk))
+                                        .replace("%location%", wg.formatLocation(chunk))
                                         .replace("%world%", chunk.getWorld().getName()));
 
                                 Player pp = Bukkit.getPlayer(offer.getSeller());
@@ -177,9 +176,9 @@ public class Claim extends LandlordCommand {
                                     lm.sendMessage(pp, lm.getString("Commands.Claim.p2pSuccess")
                                             .replace("%player%", p.getName())
                                             .replace("%chunk%", ol.getName())
-                                            .replace("%location%", Util.getLocationFormatted(chunk))
+                                            .replace("%location%", wg.formatLocation(chunk))
                                             .replace("%world%", chunk.getWorld().getName())
-                                            .replace("%price%", plugin.getVaultHandler().format(offer.getPrice())));
+                                            .replace("%price%", vault.format(offer.getPrice())));
                                 }
 
                                 ol.highlightLand(player, Particle.VILLAGER_HAPPY);
@@ -194,29 +193,29 @@ public class Claim extends LandlordCommand {
                         } else {
                             // Not enough money
                             lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
-                                    .replace("%money%", plugin.getVaultHandler().format(offer.getPrice()))
+                                    .replace("%money%", vault.format(offer.getPrice()))
                                     .replace("%chunk%", ol.getName())
-                                    .replace("%location%", Util.getLocationFormatted(chunk))
+                                    .replace("%location%", wg.formatLocation(chunk))
                             );
                             return;
                         }
                     } else {
                         // Normal sale
                         double calculatedCost = plugin.getCostManager().calculateCost(player.getUniqueId());
-                        if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), calculatedCost)) {
-                            String guiDesc = landName + " | " + plugin.getVaultHandler().format(calculatedCost);
+                        if (vault.hasBalance(player.getUniqueId(), calculatedCost)) {
+                            String guiDesc = landName + " | " + vault.format(calculatedCost);
                             String chatDesc = lm.getString("Commands.Claim.confirmation")
                                     .replace("%chunk%", landName)
-                                    .replace("%location%", Util.getLocationFormatted(chunk))
-                                    .replace("%price%", plugin.getVaultHandler().format(calculatedCost));
+                                    .replace("%location%", wg.formatLocation(chunk))
+                                    .replace("%price%", vault.format(calculatedCost));
 
                             if (plugin.getConfig().getBoolean("ConfirmationDialog.onNormalClaim") && !overrideConfirmations) {
                                 PrincepsLib.getConfirmationManager().draw(player, guiDesc, chatDesc,
                                         (p) -> {
-                                            plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
+                                            vault.take(player.getUniqueId(), calculatedCost);
                                             if (calculatedCost > 0)
                                                 lm.sendMessage(player, lm.getString("Commands.Claim.moneyTook")
-                                                        .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                                                        .replace("%money%", vault.format(calculatedCost))
                                                         .replace("%chunk%", landName));
                                             performClaim(player, chunk);
                                             p.closeInventory();
@@ -226,12 +225,12 @@ public class Claim extends LandlordCommand {
                                             p.closeInventory();
                                         }, confirmcmd);
                             } else {
-                                plugin.getVaultHandler().take(player.getUniqueId(), calculatedCost);
+                                vault.take(player.getUniqueId(), calculatedCost);
                                 if (calculatedCost > 0)
                                     lm.sendMessage(player, lm.getString("Commands.Claim.moneyTook")
-                                            .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                                            .replace("%money%", vault.format(calculatedCost))
                                             .replace("%chunk%", landName)
-                                            .replace("%location%", Util.getLocationFormatted(chunk))
+                                            .replace("%location%", wg.formatLocation(chunk))
                                     );
                                 performClaim(player, chunk);
                             }
@@ -240,9 +239,9 @@ public class Claim extends LandlordCommand {
                         } else {
                             // NOT ENOUGH MONEY
                             lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
-                                    .replace("%money%", plugin.getVaultHandler().format(calculatedCost))
+                                    .replace("%money%", vault.format(calculatedCost))
                                     .replace("%chunk%", landName)
-                                    .replace("%location%", Util.getLocationFormatted(chunk))
+                                    .replace("%location%", plugin.getWGProxy().formatLocation(chunk))
                             );
                             return;
                         }
@@ -255,15 +254,15 @@ public class Claim extends LandlordCommand {
 
     private void handleInactiveSell(Player player, IOwnedLand ol, double costForBuyer, double payBackForInactive,
                                     String originalOwner, Chunk chunk){
-        plugin.getVaultHandler().take(player.getUniqueId(), costForBuyer);
-        plugin.getVaultHandler().give(ol.getOwner(), payBackForInactive);
+        vault.take(player.getUniqueId(), costForBuyer);
+        vault.give(ol.getOwner(), payBackForInactive);
 
         ol.replaceOwner(player.getUniqueId());
         lm.sendMessage(player, lm.getString("Commands.Claim.boughtUp")
                 .replace("%player%", originalOwner)
-                .replace("%price%", plugin.getVaultHandler().format(costForBuyer))
+                .replace("%price%", vault.format(costForBuyer))
                 .replace("%chunk%", ol.getName())
-                .replace("%location%", Util.getLocationFormatted(chunk))
+                .replace("%location%", plugin.getWGProxy().formatLocation(chunk))
         );
 
         ol.highlightLand(player, Particle.VILLAGER_HAPPY);
@@ -275,7 +274,7 @@ public class Claim extends LandlordCommand {
 
         lm.sendMessage(player, lm.getString("Commands.Claim.success")
                 .replace("%chunk%", claim.getName())
-                .replace("%location%", Util.getLocationFormatted(chunk))
+                .replace("%location%", plugin.getWGProxy().formatLocation(chunk))
                 .replace("%world%", chunk.getWorld().getName()));
 
         if (plugin.getConfig().getBoolean("Particles.claim.enabled"))

@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import org.bukkit.entity.Player;
@@ -11,6 +12,9 @@ import org.bukkit.entity.Player;
  */
 public class LandMap extends LandlordCommand {
 
+    public LandMap(ILandLord plugin) {
+        super(plugin);
+    }
 
     public void onToggleLandMap(Player player) {
 
@@ -40,7 +44,7 @@ public class LandMap extends LandlordCommand {
         if (state.equals("on")) {
             plugin.getMapManager().addMap(player);
         } else {
-            plugin.getMapManager().remMap(player);
+            plugin.getMapManager().removeMap(player);
         }
     }
 }

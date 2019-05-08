@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.friends;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -15,6 +16,10 @@ import java.util.Collections;
  * Date: 17/7/17
  */
 public class UnfriendAll extends LandlordCommand {
+
+    public UnfriendAll(ILandLord plugin) {
+        super(plugin);
+    }
 
     public void onUnfriendall(Player player, String name) {
 
@@ -33,7 +38,7 @@ public class UnfriendAll extends LandlordCommand {
             } else {
                 // Success
                 int count = 0;
-                for (IOwnedLand ol : plugin.getWgproxy().getRegions(player.getUniqueId())) {
+                for (IOwnedLand ol : plugin.getWGProxy().getRegions(player.getUniqueId())) {
                     if (ol.isFriend(lPlayer.getUuid())) {
                         ol.removeFriend(lPlayer.getUuid());
                         count++;
@@ -53,7 +58,7 @@ public class UnfriendAll extends LandlordCommand {
                         public void run() {
                             plugin.getMapManager().updateAll();
                         }
-                    }.runTask(plugin.getPluginInstance());
+                    }.runTask(plugin.getPlugin());
                 } else {
                     lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noFriend")
                             .replace("%player%", name));

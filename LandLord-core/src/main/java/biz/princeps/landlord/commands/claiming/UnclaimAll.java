@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.claiming;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
 import org.bukkit.Bukkit;
@@ -18,11 +19,15 @@ import java.util.Set;
  */
 public class UnclaimAll extends LandlordCommand {
 
+    public UnclaimAll(ILandLord plugin) {
+        super(plugin);
+    }
+
     public void onUnclaim(Player player) {
 
         Set<IOwnedLand> landsOfPlayer = new HashSet<>();
         for (World w : Bukkit.getWorlds()) {
-            landsOfPlayer.addAll(plugin.getWgproxy().getRegions(player.getUniqueId(), w));
+            landsOfPlayer.addAll(plugin.getWGProxy().getRegions(player.getUniqueId(), w));
         }
 
         if (landsOfPlayer.isEmpty()) {

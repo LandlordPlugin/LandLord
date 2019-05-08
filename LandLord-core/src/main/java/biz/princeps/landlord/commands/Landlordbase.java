@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.admin.AdminTeleport;
@@ -14,7 +15,6 @@ import biz.princeps.landlord.commands.friends.*;
 import biz.princeps.landlord.commands.homes.Home;
 import biz.princeps.landlord.commands.homes.SetHome;
 import biz.princeps.landlord.commands.management.*;
-import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.chat.MultiPagedMessage;
@@ -53,19 +53,20 @@ import java.util.logging.Logger;
  */
 public class Landlordbase extends MainCommand {
 
-    private static Landlord pl = Landlord.getInstance();
+    private ILandLord pl;
     // Subcommands map, has nothing to do with the Command system provided by princeps lib. See the comment at reloadCommands()
     private Map<String, LandlordCommand> subcommands;
 
-    public Landlordbase() {
+    public Landlordbase(ILandLord pl) {
         super(pl.getConfig().getString("CommandSettings.Main.name"),
                 pl.getConfig().getString("CommandSettings.Main.description"),
                 pl.getConfig().getString("CommandSettings.Main.usage"),
                 new HashSet<>(pl.getConfig().getStringList("CommandSettings.Main.permissions")),
                 pl.getConfig().getStringList("CommandSettings.Main.aliases").toArray(new String[]{}));
 
-        subcommands = new HashMap<>();
-        reloadCommands();
+        this.pl = pl;
+        this.subcommands = new HashMap<>();
+        this.reloadCommands();
     }
 
     /**
@@ -78,32 +79,32 @@ public class Landlordbase extends MainCommand {
      */
     public void reloadCommands() {
         subcommands.clear();
-        subcommands.put("claim", new Claim(false));
-        subcommands.put("info", new Info());
-        subcommands.put("unclaim", new Unclaim());
-        subcommands.put("unclaimall", new UnclaimAll());
-        subcommands.put("addfriend", new Addfriend());
-        subcommands.put("unfriend", new Unfriend());
-        subcommands.put("addfriendall", new AddfriendAll());
-        subcommands.put("unfriendall", new UnfriendAll());
-        subcommands.put("listlands", new ListLands());
-        subcommands.put("landmap", new LandMap());
-        subcommands.put("clearworld", new Clear());
-        subcommands.put("manage", new Manage());
-        subcommands.put("manageall", new ManageAll());
-        subcommands.put("shop", new Shop());
-        subcommands.put("claims", new Claims());
-        subcommands.put("sethome", new SetHome());
-        subcommands.put("home", new Home());
-        subcommands.put("giveclaims", new GiveClaims());
-        subcommands.put("update", new Update());
-        subcommands.put("advertise", new Advertise());
-        subcommands.put("remadvertise", new RemoveAdvertise());
-        subcommands.put("borders", new Borders());
-        subcommands.put("admintp", new AdminTeleport());
-        subcommands.put("item", new LLItem());
-        subcommands.put("listfriends", new ListFriends());
-        subcommands.put("multiclaim", new MultiClaim());
+        subcommands.put("claim", new Claim(pl, false));
+        subcommands.put("info", new Info(pl));
+        subcommands.put("unclaim", new Unclaim(pl));
+        subcommands.put("unclaimall", new UnclaimAll(pl));
+        subcommands.put("addfriend", new Addfriend(pl));
+        subcommands.put("unfriend", new Unfriend(pl));
+        subcommands.put("addfriendall", new AddfriendAll(pl));
+        subcommands.put("unfriendall", new UnfriendAll(pl));
+        subcommands.put("listlands", new ListLands(pl));
+        subcommands.put("landmap", new LandMap(pl));
+        subcommands.put("clearworld", new Clear(pl));
+        subcommands.put("manage", new Manage(pl));
+        subcommands.put("manageall", new ManageAll(pl));
+        subcommands.put("shop", new Shop(pl));
+        subcommands.put("claims", new Claims(pl));
+        subcommands.put("sethome", new SetHome(pl));
+        subcommands.put("home", new Home(pl));
+        subcommands.put("giveclaims", new GiveClaims(pl));
+        subcommands.put("update", new Update(pl));
+        subcommands.put("advertise", new Advertise(pl));
+        subcommands.put("remadvertise", new RemoveAdvertise(pl));
+        subcommands.put("borders", new Borders(pl));
+        subcommands.put("admintp", new AdminTeleport(pl));
+        subcommands.put("item", new LLItem(pl));
+        subcommands.put("listfriends", new ListFriends(pl));
+        subcommands.put("multiclaim", new MultiClaim(pl));
     }
 
     @Override
@@ -185,11 +186,11 @@ public class Landlordbase extends MainCommand {
 
         if (properties.isConsole()) return;
 
-        LangManager lm = Landlord.getInstance().getLangManager();
+        ILangManager lm = pl.getLangManager();
         List<String> playersList = lm.getStringList("Commands.Help.players");
         List<String> adminList = lm.getStringList("Commands.Help.admins");
 
-        int perSite = Landlord.getInstance().getConfig().getInt("HelpCommandPerSite");
+        int perSite = pl.getConfig().getInt("HelpCommandPerSite");
 
         String[] argsN = new String[1];
         if (arguments.get().length == 1) {
@@ -233,7 +234,7 @@ public class Landlordbase extends MainCommand {
                     objs.add(new DataObject(owner, world, x, z));
                 }
             } catch (SQLException e) {
-                Landlord.getInstance().getLogger().warning("There was an error while trying to fetching original data: " + e);
+                pl.getLogger().warning("There was an error while trying to fetching original data: " + e);
             }
         });
         db.getLogger().info("Finished fetching data from old database. Size: " + objs.size() + " lands");
@@ -253,14 +254,14 @@ public class Landlordbase extends MainCommand {
                 World world1 = Bukkit.getWorld(next.world);
                 if (world1 != null) {
                     Chunk chunk = world1.getChunkAt(next.x, next.z);
-                    Landlord.getInstance().getWgproxy().claim(chunk, next.owner);
+                    pl.getWGProxy().claim(chunk, next.owner);
                 }
                 counter++;
 
                 if (counter % 600 == 0)
                     db.getLogger().info("Processed " + counter + " lands already. " + (objs.size() - counter) / 20 / 60 + " minutes remaining!");
             }
-        }.runTaskTimer(pl.getPluginInstance(), 0, 1);
+        }.runTaskTimer(pl.getPlugin(), 0, 1);
     }
 
     /**
@@ -359,7 +360,7 @@ public class Landlordbase extends MainCommand {
                 try {
                     landname = arguments.get(0);
                 } catch (ArgumentsOutOfBoundsException e) {
-                    IOwnedLand region = pl.getWgproxy().getRegion(properties.getPlayer().getLocation());
+                    IOwnedLand region = pl.getWGProxy().getRegion(properties.getPlayer().getLocation());
                     if (region != null) {
                         landname = region.getName();
                     } else {
@@ -491,8 +492,7 @@ public class Landlordbase extends MainCommand {
                     pl.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
                         if (lPlayer == null) {
                             // Failure
-                            properties.getPlayer().sendMessage(Landlord.getInstance().getLangManager()
-                                    .getString("Commands.ListLands.noPlayer").replace("%player%", finalTarget));
+                            properties.getPlayer().sendMessage(pl.getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", finalTarget));
                         } else {
                             // Success
                             ((ListLands) subcommands.get("listlands")).onListLands(properties.getPlayer(), (LPlayer) lPlayer, finalPage);
@@ -638,10 +638,10 @@ public class Landlordbase extends MainCommand {
             issuer.sendMessage(ChatColor.RED + "Reloading is not recommended! Before reporting any bugs, please restart your server.");
 
             pl.getLangManager().reload();
-            pl.getPluginInstance().reloadConfig();
+            pl.getPlugin().reloadConfig();
             pl.setupPrincepsLib();
 
-            String msg = Landlord.getInstance().getLangManager().getString("Commands.Reload.success");
+            String msg = pl.getLangManager().getString("Commands.Reload.success");
             issuer.sendMessage(msg);
         }
     }
@@ -878,7 +878,7 @@ public class Landlordbase extends MainCommand {
         @Override
         public void onCommand(Properties properties, Arguments arguments) {
             String msg = pl.getLangManager().getTag() + " &aLandLord version: &7%version%"
-                    .replace("%version%", pl.getPluginInstance().getDescription().getVersion());
+                    .replace("%version%", pl.getPlugin().getDescription().getVersion());
             properties.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
         }
     }
@@ -896,14 +896,14 @@ public class Landlordbase extends MainCommand {
         @Override
         public void onCommand(Properties properties, Arguments args) {
             if (properties.getCommandSender().hasPermission("landlord.admin.manage")) {
-                Logger logger = Landlord.getInstance().getLogger();
+                Logger logger = pl.getLogger();
 
                 if (args.size() > 0) {
 
                     if (args.get()[0].equals("v1")) {
                         // SQLite based migration
 
-                        SQLite sqLite = new SQLite(logger, Landlord.getInstance().getDataFolder() + "/Landlord.db") {
+                        SQLite sqLite = new SQLite(logger, pl.getPlugin().getDataFolder() + "/Landlord.db") {
                         };
 
                         logger.info("Starting to migrate from v1 Ebean Database...");
@@ -913,7 +913,7 @@ public class Landlordbase extends MainCommand {
                         if (args.size() == 2) {
                             if (args.get()[1].equals("sqlite")) {
                                 // SQLite based migration
-                                SQLite sqLite = new SQLite(logger, Landlord.getInstance().getDataFolder() + "/database.db") {
+                                SQLite sqLite = new SQLite(logger, pl.getPlugin().getDataFolder() + "/database.db") {
                                 };
 
                                 logger.info("Starting to migrate from v2-SQLite Database...");
@@ -924,7 +924,7 @@ public class Landlordbase extends MainCommand {
 
                                 logger.info("In your plugin folder a file called MySQL.yml has been generated. You need to enter the credentials of your former landlord database.");
                                 FileConfiguration mysqlConfig = PrincepsLib.prepareDatabaseFile();
-                                MySQL mySQL = new MySQL(Landlord.getInstance().getLogger(), mysqlConfig.getString("MySQL.Hostname"),
+                                MySQL mySQL = new MySQL(logger, mysqlConfig.getString("MySQL.Hostname"),
                                         mysqlConfig.getInt("MySQL.Port"),
                                         mysqlConfig.getString("MySQL.Database"),
                                         mysqlConfig.getString("MySQL.User"),

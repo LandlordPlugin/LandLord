@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.claiming.adv;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.Offer;
@@ -12,6 +13,10 @@ import org.bukkit.entity.Player;
  */
 public class RemoveAdvertise extends LandlordCommand {
 
+    public RemoveAdvertise(ILandLord plugin) {
+        super(plugin);
+    }
+
     public void onRemoveAdvertise(Player player, String landname) {
 
         if (this.worldDisabled(player)) {
@@ -20,9 +25,9 @@ public class RemoveAdvertise extends LandlordCommand {
         }
         IOwnedLand ownedLand;
         if (landname.equals("this")) {
-            ownedLand = plugin.getWgproxy().getRegion(player.getLocation().getChunk());
+            ownedLand = plugin.getWGProxy().getRegion(player.getLocation().getChunk());
         } else {
-            ownedLand = plugin.getWgproxy().getRegion(landname);
+            ownedLand = plugin.getWGProxy().getRegion(landname);
         }
 
         if (ownedLand == null) {

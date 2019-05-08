@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.admin;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.gui.MultiPagedGUI;
@@ -19,6 +20,10 @@ import java.util.Set;
  */
 public class AdminTeleport extends LandlordCommand {
 
+    public AdminTeleport(ILandLord plugin) {
+        super(plugin);
+    }
+
     public void onAdminTeleport(Player sender, String target) {
 
         plugin.getPlayerManager().getOfflinePlayerAsync(target, lplayer -> {
@@ -28,12 +33,12 @@ public class AdminTeleport extends LandlordCommand {
                 lm.sendMessage(sender, lm.getString("Commands.AdminTp.noPlayer").replace("%player%", target));
             } else {
                 // Success
-                Set<IOwnedLand> lands = plugin.getWgproxy().getRegions(lplayer.getUuid());
+                Set<IOwnedLand> lands = plugin.getWGProxy().getRegions(lplayer.getUuid());
                 if (lands.size() > 0) {
                     MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
                             lm.getRawString("Commands.AdminTp.guiHeader").replace("%player%", target));
 
-                    lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(plugin.getMaterialsProxy().getGrass()))
+                    lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(plugin.getMatProxy().getGrass()))
                             .setName(land.getName())
                             .addClickAction((p) -> {
                                         Location toTp = land.getALocation();

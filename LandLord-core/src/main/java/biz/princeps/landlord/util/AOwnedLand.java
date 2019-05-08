@@ -1,17 +1,13 @@
 package biz.princeps.landlord.util;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardProxy;
-import biz.princeps.lib.PrincepsLib;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Project: LandLord
@@ -21,6 +17,12 @@ import java.util.List;
 public abstract class AOwnedLand implements IOwnedLand {
 
     protected World world;
+    protected ILandLord pl;
+
+    public AOwnedLand(World world, ILandLord pl) {
+        this.world = world;
+        this.pl = pl;
+    }
 
     public void highlightLand(Chunk chunk, Player p, Particle pa) {
         highlightLand(chunk, p, pa, 5);
@@ -38,23 +40,7 @@ public abstract class AOwnedLand implements IOwnedLand {
 
     // TODO optimize this shit.
     public void highlightLand(Chunk chunk, Player p, Particle e, int amt) {
-        if (!Landlord.getInstance().getConfig().getBoolean("options.particleEffects", true)) {
-            return;
-        }
-        List<Location> edgeBlocks = new ArrayList<>();
-        for (int i = 0; i < 16; i++) {
-            for (int ii = -1; ii <= 10; ii++) {
-                edgeBlocks.add(chunk.getBlock(i, (int) (p.getLocation().getY()) + ii, 15).getLocation());
-                edgeBlocks.add(chunk.getBlock(i, (int) (p.getLocation().getY()) + ii, 0).getLocation());
-                edgeBlocks.add(chunk.getBlock(0, (int) (p.getLocation().getY()) + ii, i).getLocation());
-                edgeBlocks.add(chunk.getBlock(15, (int) (p.getLocation().getY()) + ii, i).getLocation());
-            }
-        }
-        for (Location edgeBlock : edgeBlocks) {
-            edgeBlock.setZ(edgeBlock.getBlockZ() + .5);
-            edgeBlock.setX(edgeBlock.getBlockX() + .5);
-            PrincepsLib.getStuffManager().spawnParticle(edgeBlock, e, amt);
-        }
+        this.pl.getWGProxy().highlightLand(chunk, p, e, amt);
     }
 
     /**
@@ -63,7 +49,7 @@ public abstract class AOwnedLand implements IOwnedLand {
      * @return returns a location on top of the chunk
      */
     public Location getALocation() {
-        IWorldGuardProxy wg = Landlord.getInstance().getWgproxy();
+        IWorldGuardProxy wg = pl.getWGProxy();
         World world = wg.getWorld(getName());
         if (world == null)
             return null;

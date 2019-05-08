@@ -1,6 +1,7 @@
 package biz.princeps.landlord.manager;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.ALandLord;
+import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.util.ConfigUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -18,13 +19,13 @@ import java.util.List;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 17/7/17
  */
-public class LangManager {
+public class LangManager implements ILangManager {
 
-    private Landlord pl;
+    private ALandLord pl;
     private String filename;
     private FileConfiguration msg;
 
-    public LangManager(Landlord pl, String lang) {
+    public LangManager(ALandLord pl, String lang) {
         this.pl = pl;
         filename = "messages/" + lang + ".yml";
         reload();
@@ -32,6 +33,7 @@ public class LangManager {
         reload();
     }
 
+    @Override
     public void reload() {
         File f = new File(pl.getDataFolder(), filename);
         this.msg = new YamlConfiguration();
@@ -41,7 +43,7 @@ public class LangManager {
                 folder.mkdir();
 
             if (!f.exists())
-                pl.getPluginInstance().saveResource(filename, false);
+                pl.saveResource(filename, false);
 
             this.msg.load(f);
         } catch (IOException | InvalidConfigurationException e) {
@@ -49,6 +51,7 @@ public class LangManager {
         }
     }
 
+    @Override
     public String getString(String path) {
         String message = msg.getString(path);
         if (message == null) {
@@ -60,10 +63,12 @@ public class LangManager {
     }
 
 
+    @Override
     public String getTag() {
         return ChatColor.translateAlternateColorCodes('&', msg.getString("Tag"));
     }
 
+    @Override
     public List<String> getStringList(String path) {
         List<String> message = msg.getStringList(path);
         List<String> finishedFormatting = new ArrayList<>();
@@ -73,6 +78,7 @@ public class LangManager {
         return finishedFormatting;
     }
 
+    @Override
     public String getRawString(String path) {
         String message = msg.getString(path);
         if (message == null) {
@@ -83,6 +89,7 @@ public class LangManager {
         }
     }
 
+    @Override
     public void sendMessage(Player player, String msg) {
         if (msg.equals("MISSING STRING") &&
                 pl.getConfig().getBoolean("CommandSettings.Main.enableMissingStringWarning")) {

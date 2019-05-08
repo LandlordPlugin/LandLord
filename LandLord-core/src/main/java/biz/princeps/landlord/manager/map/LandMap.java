@@ -1,8 +1,8 @@
 package biz.princeps.landlord.manager.map;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.manager.LangManager;
+import biz.princeps.landlord.api.IWorldGuardProxy;
 import biz.princeps.landlord.util.SimpleScoreboard;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -11,175 +11,35 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Map;
 
+import static biz.princeps.landlord.util.MapConstants.*;
+
 /**
  * File created by jcdesimp on 3/1/14. updated on 23/09/17 by SpatiumPrinceps
  */
 public class LandMap {
 
-    private static final String b1 = Landlord.getInstance().getConfig().getString("CommandSettings.Map.symbols.background1");
-    private static final String b2 = Landlord.getInstance().getConfig().getString("CommandSettings.Map.symbols.background2");
-    private static final String ar = Landlord.getInstance().getConfig().getString("CommandSettings.Map.symbols.arrow");
-    private static final String mi = Landlord.getInstance().getConfig().getString("CommandSettings.Map.symbols.middle");
-    private static final String yours = Landlord.getInstance().getLangManager().getRawString("Commands.LandMap.yours");
-    private static final String friends = Landlord.getInstance().getLangManager().getRawString("Commands.LandMap.friends");
-    private static final String others = Landlord.getInstance().getLangManager().getRawString("Commands.LandMap.others");
-
-    private static final String[][] s = new String[][]{
-            {b1, b2, b2, b2, b2, b2, b1},
-            {b2, b1, b2, b1, b2, b1, b2},
-            {b2, b2, b1, b2, b1, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, b2, ar, b2, b1, b1},
-            {b1, b2, b1, ar, b1, b2, b1},
-            {b2, b1, b1, ar, b1, b1, b2}
-    };
-
-    private static final String[][] ssw = new String[][]{
-            {b1, b2, b2, b2, b2, b2, b1},
-            {b2, b1, b2, b1, b2, b1, b2},
-            {b2, b2, b1, b2, b1, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, ar, b2, b2, b1, b1},
-            {b1, b2, ar, b1, b1, b2, b1},
-            {b2, ar, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] sw = new String[][]{
-            {b1, b2, b2, b2, b2, b2, b1},
-            {b2, b1, b2, b1, b2, b1, b2},
-            {b2, b2, b1, b2, b1, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, ar, b2, b2, b1, b1},
-            {b1, ar, b1, b1, b1, b2, b1},
-            {ar, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] wsw = new String[][]{
-            {b1, b2, b2, b2, b2, b2, b1},
-            {b2, b1, b2, b1, b2, b1, b2},
-            {b2, b2, b1, b2, b1, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, ar, ar, b2, b2, b1, b1},
-            {ar, b2, b1, b1, b1, b2, b1},
-            {b2, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] w = new String[][]{
-            {b1, b2, b2, b2, b2, b2, b1},
-            {b2, b1, b2, b1, b2, b1, b2},
-            {b2, b2, b1, b2, b1, b2, b2},
-            {ar, ar, ar, mi, b2, b1, b2},
-            {b1, b1, b2, b2, b2, b1, b1},
-            {b1, b2, b1, b1, b1, b2, b1},
-            {b2, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] wnw = new String[][]{
-            {b1, b2, b2, b2, b2, b2, b1},
-            {ar, b1, b2, b1, b2, b1, b2},
-            {b2, ar, ar, b2, b1, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, b2, b2, b2, b1, b1},
-            {b1, b2, b1, b1, b1, b2, b1},
-            {b2, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] nw = new String[][]{
-            {ar, b2, b2, b2, b2, b2, b1},
-            {b2, ar, b2, b1, b2, b1, b2},
-            {b2, b2, ar, b2, b1, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, b2, b2, b2, b1, b1},
-            {b1, b2, b1, b1, b1, b2, b1},
-            {b2, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] nnw = new String[][]{
-            {b1, ar, b2, b2, b2, b2, b1},
-            {b2, b1, ar, b1, b2, b1, b2},
-            {b2, b2, ar, b2, b1, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, b2, b2, b2, b1, b1},
-            {b1, b2, b1, b1, b1, b2, b1},
-            {b2, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] n = new String[][]{
-            {b1, b2, b2, ar, b2, b2, b1},
-            {b2, b1, b2, ar, b2, b1, b2},
-            {b2, b2, b1, ar, b1, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, b2, b2, b2, b1, b1},
-            {b1, b2, b1, b1, b1, b2, b1},
-            {b2, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] nne = new String[][]{
-            {b1, b2, b2, b2, b2, ar, b1},
-            {b2, b1, b2, b1, ar, b1, b2},
-            {b2, b2, b1, b2, ar, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, b2, b2, b2, b1, b1},
-            {b1, b2, b1, b1, b1, b2, b1},
-            {b2, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] ne = new String[][]{
-            {b1, b2, b2, b2, b2, b2, ar},
-            {b2, b1, b2, b1, b2, ar, b2},
-            {b2, b2, b1, b2, ar, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, b2, b2, b2, b1, b1},
-            {b1, b2, b1, b1, b1, b2, b1},
-            {b2, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] ene = new String[][]{
-            {b1, b2, b2, b2, b2, b2, b1},
-            {b2, b1, b2, b1, b2, b1, ar},
-            {b2, b2, b1, b2, ar, ar, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, b2, b2, b2, b1, b1},
-            {b1, b2, b1, b1, b1, b2, b1},
-            {b2, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] e = new String[][]{
-            {b1, b2, b2, b2, b2, b2, b1},
-            {b2, b1, b2, b1, b2, b1, b2},
-            {b2, b2, b1, b2, b1, b2, b2},
-            {b1, b2, b1, mi, ar, ar, ar},
-            {b1, b1, b2, b2, b2, b1, b1},
-            {b1, b2, b1, b1, b1, b2, b1},
-            {b2, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] ese = new String[][]{
-            {b1, b2, b2, b2, b2, b2, b1},
-            {b2, b1, b2, b1, b2, b1, b2},
-            {b2, b2, b1, b2, b1, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, b2, b2, ar, ar, b1},
-            {b1, b2, b1, b1, b1, b2, ar},
-            {b2, b1, b1, b1, b1, b1, b2}
-    };
-    private static final String[][] se = new String[][]{
-            {b1, b2, b2, b2, b2, b2, b1},
-            {b2, b1, b2, b1, b2, b1, b2},
-            {b2, b2, b1, b2, b1, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, b2, b2, ar, b1, b1},
-            {b1, b2, b1, b1, b1, ar, b1},
-            {b2, b1, b1, b1, b1, b1, ar}
-    };
-    private static final String[][] sse = new String[][]{
-            {b1, b2, b2, b2, b2, b2, b1},
-            {b2, b1, b2, b1, b2, b1, b2},
-            {b2, b2, b1, b2, b1, b2, b2},
-            {b1, b2, b1, mi, b2, b1, b2},
-            {b1, b1, b2, b2, ar, b1, b1},
-            {b1, b2, b1, b1, ar, b2, b1},
-            {b2, b1, b1, b1, b1, ar, b2}
-    };
+    private IWorldGuardProxy wg;
+    private long refreshRate;
+    private String friendsSymbol, ownSymbol, foreignSymbol, header, yours, friends, others;
 
     private Player mapViewer;
     private SimpleScoreboard scoreboard;
     private Chunk currChunk;
     private String currDir;
-    //private String currDir;
-    private Landlord plugin;
     private boolean update;
 
-    public LandMap(Player p, Landlord plugin) {
-        this.plugin = plugin;
+    public LandMap(Player p, ILandLord plugin) {
+        this.wg = plugin.getWGProxy();
+        this.ownSymbol = plugin.getConfig().getString("CommandSettings.Map.symbols.yours");
+        this.friendsSymbol = plugin.getConfig().getString("CommandSettings.Map.symbols.friends");
+        this.foreignSymbol = plugin.getConfig().getString("CommandSettings.Map.symbols.others");
+        this.refreshRate = plugin.getConfig().getLong("Map.refreshRate", 10);
+        this.header = plugin.getLangManager().getRawString("Commands.LandMap.header");
+        this.yours = plugin.getLangManager().getRawString("Commands.LandMap.yours");
+        this.friends = plugin.getLangManager().getRawString("Commands.LandMap.friends");
+        this.others = plugin.getLangManager().getRawString("Commands.LandMap.others");
+
+
         this.mapViewer = p;
         this.currChunk = p.getLocation().getChunk();
         this.currDir = getPlayerDirection(p);
@@ -280,7 +140,7 @@ public class LandMap {
         return mapViewer;
     }
 
-    public void removeMap() {
+    void removeMap() {
         scoreboard.deactivate();
     }
 
@@ -291,9 +151,7 @@ public class LandMap {
      * @return a reference to the scoreboard
      */
     private SimpleScoreboard displayMap(Player p) {
-        LangManager messages = plugin.getLangManager();
-
-        scoreboard = new SimpleScoreboard(messages.getRawString("Commands.LandMap.header"), p);
+        scoreboard = new SimpleScoreboard(header, p);
 
         scoreboard.scheduleUpdate(new Runnable() {
             List<String> prev;
@@ -314,50 +172,9 @@ public class LandMap {
                 }
                 scoreboard.send();
             }
-        }, 0, plugin.getConfig().getLong("Map.refreshRate", 10));
+        }, 0, refreshRate);
 
         return scoreboard;
-
-        /*
-        Scoreboard board = ScoreboardLib.createScoreboard(p).setHandler(new ScoreboardHandler() {
-            LangManager messages = plugin.getLangManager();
-            List<Entry> prev;
-
-            @Override
-            public String getTitle(Player p) {
-                return messages.getRawString("Commands.LandMap.header");
-            }
-
-            @Override
-            public List<Entry> getEntries(Player player) {
-                if (!update) {
-                    if (prev != null && currChunk.equals(mapViewer.getLocation().getChunk()) && currDir.equals(getPlayerDirection(mapViewer))) {
-                        return prev;
-                    }
-                }
-                update = false;
-                updateMap();
-                String[] mapData = buildMap(p);
-                EntryBuilder eb = new EntryBuilder();
-                for (String aMapData : mapData) {
-                    // Not sure what this part does. It works without lol
-                    /*if (mapData[i].length() < 21) {
-                        for (int f = 0; f < (21 - mapData[i].length()); f++) {
-                            mapData[i] += ChatColor.RESET;
-                        }
-                    }
-                    eb.next(aMapData);
-                }
-                prev = eb.build();
-                return prev;
-            }
-        }).setUpdateInterval(plugin.getConfig().getLong("Map.refreshRate", 10));
-
-        SimpleScoreboard simpleScoreboard = (SimpleScoreboard) board;
-        simpleScoreboard.activate();
-        this.scoreboard = simpleScoreboard;
-        return simpleScoreboard;
-        */
     }
 
     private void updateMap() {
@@ -375,7 +192,7 @@ public class LandMap {
         String[][] mapBoard = getMapDir(p);
         String[] mapRows = new String[mapBoard.length + 3];
 
-        Map<Chunk, IOwnedLand> nearby = plugin.getWgproxy().getNearbyLands(p.getLocation(), radius, radius);
+        Map<Chunk, IOwnedLand> nearby = wg.getNearbyLands(p.getLocation(), radius, radius);
 
         for (int z = 0; z < mapBoard.length; z++) {
             StringBuilder row = new StringBuilder();
@@ -410,21 +227,21 @@ public class LandMap {
         }
 
         if (yours.length() <= 25) {
-            mapRows[mapRows.length - 3] = ChatColor.GREEN + "" + plugin.getConfig().get("CommandSettings.Map.symbols.yours") + "- " + yours;
+            mapRows[mapRows.length - 3] = ChatColor.GREEN + ownSymbol + "- " + yours;
         } else {
-            mapRows[mapRows.length - 3] = ChatColor.GREEN + "" + plugin.getConfig().get("CommandSettings.Map.symbols.yours") + "- " + yours.substring(0, 25);
+            mapRows[mapRows.length - 3] = ChatColor.GREEN + ownSymbol + "- " + yours.substring(0, 25);
         }
 
         if (friends.length() <= 25) {
-            mapRows[mapRows.length - 2] = ChatColor.YELLOW + "" + plugin.getConfig().get("CommandSettings.Map.symbols.friends") + "- " + friends;
+            mapRows[mapRows.length - 2] = ChatColor.YELLOW + friendsSymbol + "- " + friends;
         } else {
-            mapRows[mapRows.length - 2] = ChatColor.YELLOW + "" + plugin.getConfig().get("CommandSettings.Map.symbols.friends") + "- " + friends.substring(0, 25);
+            mapRows[mapRows.length - 2] = ChatColor.YELLOW + friendsSymbol + "- " + friends.substring(0, 25);
         }
 
         if (others.length() <= 25) {
-            mapRows[mapRows.length - 1] = ChatColor.RED + "" + plugin.getConfig().get("CommandSettings.Map.symbols.others") + "- " + others;
+            mapRows[mapRows.length - 1] = ChatColor.RED + foreignSymbol + "- " + others;
         } else {
-            mapRows[mapRows.length - 1] = ChatColor.RED + "" + plugin.getConfig().get("CommandSettings.Map.symbols.others") + "- " + others.substring(0, 25);
+            mapRows[mapRows.length - 1] = ChatColor.RED + foreignSymbol + "- " + others.substring(0, 25);
         }
 
         return mapRows;

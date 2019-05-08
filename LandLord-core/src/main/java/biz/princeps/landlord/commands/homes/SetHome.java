@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.homes;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -12,6 +13,10 @@ import org.bukkit.entity.Player;
  * Date: 29/07/17
  */
 public class SetHome extends LandlordCommand {
+
+    public SetHome(ILandLord plugin) {
+        super(plugin);
+    }
 
     // requires permission landlord.player.home
     public void onSetHome(Player player) {
@@ -27,7 +32,7 @@ public class SetHome extends LandlordCommand {
         }
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
-        IOwnedLand land = plugin.getWgproxy().getRegion(chunk);
+        IOwnedLand land = plugin.getWGProxy().getRegion(chunk);
 
         if (land == null) {
             lm.sendMessage(player, lm.getString("Commands.SetHome.nullLand"));

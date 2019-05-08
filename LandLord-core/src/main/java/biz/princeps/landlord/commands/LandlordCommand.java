@@ -1,7 +1,7 @@
 package biz.princeps.landlord.commands;
 
-import biz.princeps.landlord.Landlord;
-import biz.princeps.landlord.manager.LangManager;
+import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.ILangManager;
 import org.bukkit.entity.Player;
 
 /**
@@ -17,8 +17,13 @@ import org.bukkit.entity.Player;
  */
 public abstract class LandlordCommand {
 
-    protected Landlord plugin = Landlord.getInstance();
-    protected LangManager lm = plugin.getLangManager();
+    protected ILandLord plugin;
+    protected ILangManager lm;
+
+    public LandlordCommand(ILandLord plugin) {
+        this.plugin = plugin;
+        this.lm = plugin.getLangManager();
+    }
 
     public boolean worldDisabled(Player player) {
         return plugin.getConfig().getStringList("disabled-worlds").contains(player.getWorld().getName());

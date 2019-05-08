@@ -1,6 +1,6 @@
 package biz.princeps.landlord.placeholderapi;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.persistent.LPlayer;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
@@ -13,10 +13,10 @@ import org.bukkit.entity.Player;
  */
 public class LandLordPlacehodlers extends EZPlaceholderHook {
 
-    private Landlord pl;
+    private ILandLord pl;
 
-    public LandLordPlacehodlers(Landlord plugin) {
-        super(plugin.getPluginInstance(), "ll");
+    public LandLordPlacehodlers(ILandLord plugin) {
+        super(plugin.getPlugin(), "ll");
         this.pl = plugin;
     }
 
@@ -31,7 +31,7 @@ public class LandLordPlacehodlers extends EZPlaceholderHook {
         switch (s) {
 
             case "ownedlands":
-                int landcount = pl.getWgproxy().getRegionCount(player.getUniqueId());
+                int landcount = pl.getWGProxy().getRegionCount(player.getUniqueId());
                 return String.valueOf(landcount);
 
             case "claims":
@@ -43,19 +43,19 @@ public class LandLordPlacehodlers extends EZPlaceholderHook {
                 return String.valueOf(player1.getClaims());
 
             case "currentLandOwner":
-                IOwnedLand region = pl.getWgproxy().getRegion(player.getLocation());
+                IOwnedLand region = pl.getWGProxy().getRegion(player.getLocation());
                 if (region != null) {
                     return region.getOwnersString();
                 }
 
             case "currentLandName":
-                return pl.getWgproxy().getLandName(player.getLocation().getChunk());
+                return pl.getWGProxy().getLandName(player.getLocation().getChunk());
 
             case "nextLandPrice":
                 return String.valueOf(pl.getCostManager().calculateCost(player.getUniqueId()));
 
             case "currentLandRefund":
-                int regionCount = pl.getWgproxy().getRegionCount(player.getUniqueId());
+                int regionCount = pl.getWGProxy().getRegionCount(player.getUniqueId());
                 return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble("Payback"));
 
         }

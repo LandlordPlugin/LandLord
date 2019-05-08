@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.claiming;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.commands.LandlordCommand;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -14,11 +15,15 @@ import org.bukkit.entity.Player;
 public class Claims extends LandlordCommand {
 
 
+    public Claims(ILandLord plugin) {
+        super(plugin);
+    }
+
     public void onClaims(Player player) {
 
         if (plugin.getConfig().getBoolean("Shop.enable")) {
             int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
-            int regionCount = plugin.getWgproxy().getRegionCount(player.getUniqueId());
+            int regionCount = plugin.getWGProxy().getRegionCount(player.getUniqueId());
             String message = lm.getString("Commands.Claims.message");
             String noClaims = lm.getString("Commands.Claims.noClaims");
 

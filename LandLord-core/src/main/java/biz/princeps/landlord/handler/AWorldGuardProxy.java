@@ -1,9 +1,11 @@
 package biz.princeps.landlord.handler;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardProxy;
+import biz.princeps.lib.PrincepsLib;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,6 +18,11 @@ import java.util.stream.Collectors;
 public abstract class AWorldGuardProxy implements IWorldGuardProxy {
 
     protected MultiIndexCache cache = new MultiIndexCache();
+    protected ILandLord pl;
+
+    public AWorldGuardProxy(ILandLord pl) {
+        this.pl = pl;
+    }
 
     @Override
     public World getWorld(String name) {
@@ -106,7 +113,7 @@ public abstract class AWorldGuardProxy implements IWorldGuardProxy {
         Set<IOwnedLand> set = new HashSet<>();
         OfflinePlayer op = Bukkit.getOfflinePlayer(id);
         if (op != null) {
-            List<String> worlds = Landlord.getInstance().getConfig().getStringList("disabled-worlds");
+            List<String> worlds = pl.getConfig().getStringList("disabled-worlds");
             for (World world : Bukkit.getWorlds()) {
                 // Only count enabled worlds
                 if (!worlds.contains(world.getName())) {
@@ -122,5 +129,41 @@ public abstract class AWorldGuardProxy implements IWorldGuardProxy {
     @Override
     public String getLandName(Chunk chunk) {
         return chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
+    }
+
+    @Override
+    public String formatLocation(Chunk chunk) {
+        String configString = pl.getConfig().getString("locationFormat");
+
+        int x, z, chunkX = chunk.getX() * 16, chunkZ = chunk.getZ() * 16;
+        x = chunkX + 8;
+        z = chunkZ + 8;
+
+        configString = configString.replace("%world%", chunk.getWorld().getName());
+        configString = configString.replace("%x%", x + "");
+        configString = configString.replace("%z%", z + "");
+
+        return ChatColor.translateAlternateColorCodes('&', configString);
+    }
+
+    @Override
+    public void highlightLand(Chunk chunk, Player p, Particle particle, int amount) {
+        if (!pl.getConfig().getBoolean("options.particleEffects", true)) {
+            return;
+        }
+        List<Location> edgeBlocks = new ArrayList<>();
+        for (int i = 0; i < 16; i++) {
+            for (int ii = -1; ii <= 10; ii++) {
+                edgeBlocks.add(chunk.getBlock(i, (int) (p.getLocation().getY()) + ii, 15).getLocation());
+                edgeBlocks.add(chunk.getBlock(i, (int) (p.getLocation().getY()) + ii, 0).getLocation());
+                edgeBlocks.add(chunk.getBlock(0, (int) (p.getLocation().getY()) + ii, i).getLocation());
+                edgeBlocks.add(chunk.getBlock(15, (int) (p.getLocation().getY()) + ii, i).getLocation());
+            }
+        }
+        for (Location edgeBlock : edgeBlocks) {
+            edgeBlock.setZ(edgeBlock.getBlockZ() + .5);
+            edgeBlock.setX(edgeBlock.getBlockX() + .5);
+            PrincepsLib.getStuffManager().spawnParticle(edgeBlock, particle, amount);
+        }
     }
 }

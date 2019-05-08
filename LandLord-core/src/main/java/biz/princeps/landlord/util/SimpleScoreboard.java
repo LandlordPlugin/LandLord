@@ -1,9 +1,9 @@
 package biz.princeps.landlord.util;
 
-import biz.princeps.landlord.Landlord;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -77,14 +77,15 @@ public class SimpleScoreboard {
         player.setScoreboard(scoreboard);
     }
 
-    public void scheduleUpdate(Runnable run, long delay, long timer) {
+    public void scheduleUpdate(JavaPlugin pl, Runnable run, long delay, long timer) {
+
         this.runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 run.run();
             }
         };
-        this.runnable.runTaskTimer(Landlord.getInstance().getPluginInstance(), delay, timer);
+        this.runnable.runTaskTimer(pl, delay, timer);
     }
 
     //TODO here may be some logic to restore the old scoreboard for featherboard. But i dunno, never got to check this out

@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -21,7 +22,8 @@ public class Borders extends LandlordCommand {
 
     private HashMap<Player, BukkitTask> tasks;
 
-    public Borders() {
+    public Borders(ILandLord pl) {
+        super(pl);
         tasks = new HashMap<>();
     }
 
@@ -45,7 +47,7 @@ public class Borders extends LandlordCommand {
                 public void run() {
                     if (counter <= 360 / plugin.getConfig().getInt("Borders.refreshRate")) {
                         if (plugin.getConfig().getBoolean("Particles.borders.enabled")) {
-                            IOwnedLand ol = plugin.getWgproxy().getRegion(p.getLocation().getChunk());
+                            IOwnedLand ol = plugin.getWGProxy().getRegion(p.getLocation().getChunk());
                             ol.highlightLand(p, Particle.valueOf(plugin.getConfig().getString("Particles.borders.particle")));
                         }
                     } else {
@@ -53,7 +55,7 @@ public class Borders extends LandlordCommand {
                         counter++;
                     }
                 }
-            }.runTaskTimer(plugin.getPluginInstance(), 0, plugin.getConfig().getInt("Borders.refreshRate") * 20));
+            }.runTaskTimer(plugin.getPlugin(), 0, plugin.getConfig().getInt("Borders.refreshRate") * 20));
         } else {
             lm.sendMessage(p, lm.getString("Commands.Borders.deactivated"));
             tasks.get(p).cancel();

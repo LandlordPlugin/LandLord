@@ -1,6 +1,6 @@
 package biz.princeps.landlord.items;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.lib.item.AbstractItem;
 import org.bukkit.Bukkit;
@@ -24,13 +24,15 @@ public class Maitem extends AbstractItem {
     // 19-05-02 I must have been on drugs when I wrote that comment lmao.
 
     public static final String NAME = "maitem";
-    private static final ItemStack STACK = new ItemStack(Material.valueOf(Landlord.getInstance().getConfig().getString("MaItem.item")));
+    private ItemStack STACK;
     private ArrayList<ItemClickAction> clickActions = new ArrayList<>();
 
-    private Landlord plugin = Landlord.getInstance();
+    private ILandLord plugin;
 
-    public Maitem() {
-        super(NAME, STACK, true, false);
+    public Maitem(ILandLord pl) {
+        super(NAME, new ItemStack(Material.valueOf(pl.getConfig().getString("MaItem.item"))), true, false);
+        this.plugin = pl;
+        this.STACK = new ItemStack(Material.valueOf(pl.getConfig().getString("MaItem.item")));
         initClickActions();
         setItemAppearance();
     }
@@ -67,7 +69,7 @@ public class Maitem extends AbstractItem {
         if (location == null)
             location = p.getLocation();
 
-        IOwnedLand landAtLoc = plugin.getWgproxy().getRegion(location);
+        IOwnedLand landAtLoc = plugin.getWGProxy().getRegion(location);
         switch (action) {
             case LEFT_CLICK_BLOCK:
 

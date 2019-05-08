@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.friends;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -13,6 +14,10 @@ import org.bukkit.scheduler.BukkitRunnable;
  * Date: 17/7/17
  */
 public class AddfriendAll extends LandlordCommand {
+
+    public AddfriendAll(ILandLord plugin) {
+        super(plugin);
+    }
 
     public void onAddfriend(Player player, String name) {
         if (name == null || name.isEmpty()) {
@@ -28,7 +33,7 @@ public class AddfriendAll extends LandlordCommand {
                         .replace("%player%", name));
             } else {
                 int count = 0;
-                for (IOwnedLand ol : plugin.getWgproxy().getRegions(player.getUniqueId())) {
+                for (IOwnedLand ol : plugin.getWGProxy().getRegions(player.getUniqueId())) {
                     if (!ol.isFriend(lPlayer.getUuid())) {
                         ol.addFriend(lPlayer.getUuid());
                         count++;
@@ -48,7 +53,7 @@ public class AddfriendAll extends LandlordCommand {
                     public void run() {
                         plugin.getMapManager().updateAll();
                     }
-                }.runTask(plugin.getPluginInstance());
+                }.runTask(plugin.getPlugin());
             }
         });
     }

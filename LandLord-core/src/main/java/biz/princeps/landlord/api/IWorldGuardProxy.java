@@ -2,6 +2,7 @@ package biz.princeps.landlord.api;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -53,5 +54,9 @@ public interface IWorldGuardProxy {
     String getLandName(Chunk chunk);
 
     boolean isAllowedInOverlap(Player p, Location loc);
+
+    void highlightLand(Chunk chunk, Player p, Particle particle, int amount);
+
+    String formatLocation(Chunk chunk);
 
 }

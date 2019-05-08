@@ -1,6 +1,6 @@
 package biz.princeps.landlord.manager;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.IPlayerManager;
 import biz.princeps.landlord.api.Options;
@@ -9,6 +9,7 @@ import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.LPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -28,46 +29,60 @@ public class LPlayerManager implements IPlayerManager {
     private Map<UUID, LPlayer> players;
 
     private Database db;
-    private Landlord plugin;
+    private ILandLord plugin;
+    private BukkitScheduler scheduler;
 
-    public LPlayerManager(Database db) {
+
+    public LPlayerManager(Database db, ILandLord pl) {
         this.players = new HashMap<>();
-        this.plugin = Landlord.getInstance();
+        this.plugin = pl;
         this.db = db;
+        this.scheduler = plugin.getPlugin().getServer().getScheduler();
     }
 
+    @Override
     public void add(LPlayer lPlayer) {
         this.players.put(lPlayer.getUuid(), lPlayer);
     }
 
+    @Override
     public void saveAsync(LPlayer lp) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin.getPluginInstance(), () -> saveSync(lp));
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin.getPlugin(), () -> saveSync(lp));
     }
 
+    @Override
     public void saveSync(LPlayer lp) {
         db.save(lp);
     }
 
+    @Override
     public void remove(UUID id) {
         players.remove(id);
     }
 
+    @Override
     public void getOfflinePlayerAsync(UUID uuid, Consumer<IPlayer> consumer) {
-        plugin.getExecutorService().execute(() -> consumer.accept(db.getPlayer(uuid, Database.Mode.UUID)));
+        scheduler.runTaskAsynchronously(plugin.getPlugin(),
+                () -> consumer.accept(db.getPlayer(uuid, Database.Mode.UUID)));
     }
 
+    @Override
     public void getOfflinePlayerAsync(String name, Consumer<IPlayer> consumer) {
-        plugin.getExecutorService().execute(() -> consumer.accept(db.getPlayer(name, Database.Mode.NAME)));
+        scheduler.runTaskAsynchronously(plugin.getPlugin(),
+                () -> consumer.accept(db.getPlayer(name, Database.Mode.NAME)));
     }
 
+    @Override
     public IPlayer getOfflinePlayerSync(UUID uuid) {
         return db.getPlayer(uuid, Database.Mode.UUID);
     }
 
+    @Override
     public IPlayer getOfflinePlayerSync(String name) {
         return db.getPlayer(name, Database.Mode.NAME);
     }
 
+    @Override
     public boolean contains(String name) {
         for (LPlayer lPlayer : this.players.values()) {
             if (lPlayer.getName() != null && lPlayer.getName().equals(name)) {
@@ -77,6 +92,7 @@ public class LPlayerManager implements IPlayerManager {
         return false;
     }
 
+    @Override
     public LPlayer get(String name) {
         for (LPlayer lPlayer : this.players.values()) {
             if (lPlayer.getName() != null && lPlayer.getName().equals(name)) {
@@ -86,6 +102,7 @@ public class LPlayerManager implements IPlayerManager {
         return null;
     }
 
+    @Override
     public LPlayer get(UUID id) {
         return this.players.get(id);
     }
@@ -97,6 +114,7 @@ public class LPlayerManager implements IPlayerManager {
      * @param lastSeenDate the date the player was last seen
      * @return if the player is inactive or not
      */
+    @Override
     public boolean isInactive(LocalDateTime lastSeenDate) {
         if (!Options.enabled_inactiveBuyUp()) return false;
 
@@ -110,8 +128,9 @@ public class LPlayerManager implements IPlayerManager {
         return lastSeenDate.plusDays(days).isBefore(LocalDateTime.now());
     }
 
+    @Override
     public void isInactive(UUID id, Consumer<Boolean> consumer) {
-        plugin.getExecutorService().execute(() -> consumer.accept(isInactive(id)));
+        scheduler.runTaskAsynchronously(plugin.getPlugin(), () -> consumer.accept(isInactive(id)));
     }
 
     /**
@@ -120,6 +139,7 @@ public class LPlayerManager implements IPlayerManager {
      * @param id the uuid which should be checked
      * @return if the given id is marked as inactive
      */
+    @Override
     public Boolean isInactive(UUID id) {
         LPlayer lPlayer = (LPlayer) db.getPlayer(id, Database.Mode.UUID);
         if (lPlayer != null) {
@@ -128,8 +148,9 @@ public class LPlayerManager implements IPlayerManager {
         return false;
     }
 
+    @Override
     public void getInactiveRemainingDays(UUID owner, Consumer<Integer> consumer) {
-        plugin.getExecutorService().execute(() -> consumer.accept(getInactiveRemainingDays(owner)));
+        scheduler.runTaskAsynchronously(plugin.getPlugin(), () -> consumer.accept(getInactiveRemainingDays(owner)));
     }
 
     /**
@@ -138,6 +159,7 @@ public class LPlayerManager implements IPlayerManager {
      * @param owner the uuid which should be checked
      * @return the amount of days, which are missing until the player become inactive
      */
+    @Override
     public int getInactiveRemainingDays(UUID owner) {
 
         long days = plugin.getConfig().getInt("BuyUpInactive.timegate");
@@ -147,9 +169,6 @@ public class LPlayerManager implements IPlayerManager {
         }
         return -1;
     }
-
-
-    // API METHODS
 
     /**
      * @param id

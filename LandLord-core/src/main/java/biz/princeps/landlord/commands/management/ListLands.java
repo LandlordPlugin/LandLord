@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGUI;
@@ -23,9 +24,13 @@ import java.util.Set;
  */
 public class ListLands extends LandlordCommand {
 
+    public ListLands(ILandLord plugin) {
+        super(plugin);
+    }
+
     public void onListLands(Player sender, LPlayer target, int page) {
 
-        List<IOwnedLand> lands = new ArrayList<>(plugin.getWgproxy().getRegions(target.getUuid()));
+        List<IOwnedLand> lands = new ArrayList<>(plugin.getWGProxy().getRegions(target.getUuid()));
 
         if (lands.size() == 0) {
             lm.sendMessage(sender, plugin.getLangManager().getString("Commands.ListLands.noLands"));
@@ -61,7 +66,7 @@ public class ListLands extends LandlordCommand {
                     }
                 }
 
-                Icon icon = new Icon(new ItemStack(plugin.getMaterialsProxy().getGrass()));
+                Icon icon = new Icon(new ItemStack(plugin.getMatProxy().getGrass()));
                 icon.setName(lm.getRawString("Commands.ListLands.gui.itemname")
                         .replace("%name%", land.getName()));
                 icon.setLore(lore);

@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.admin;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ClearGUI;
 import org.bukkit.entity.Player;
@@ -10,6 +11,10 @@ import org.bukkit.entity.Player;
  * Date: 19/07/17
  */
 public class Clear extends LandlordCommand {
+
+    public Clear(ILandLord plugin) {
+        super(plugin);
+    }
 
     public void onClearWorld(Player player) {
         if (this.worldDisabled(player)) {

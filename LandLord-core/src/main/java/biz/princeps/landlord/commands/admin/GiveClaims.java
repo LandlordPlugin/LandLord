@@ -1,5 +1,7 @@
 package biz.princeps.landlord.commands.admin;
 
+import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IVaultManager;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.command.Arguments;
@@ -17,6 +19,12 @@ import java.util.List;
  * Date: Unknown
  */
 public class GiveClaims extends LandlordCommand {
+
+    private IVaultManager vault = plugin.getVaultManager();
+
+    public GiveClaims(ILandLord plugin) {
+        super(plugin);
+    }
 
     public void onGiveClaims(Properties issuer, Arguments args) {
         String target;
@@ -39,17 +47,17 @@ public class GiveClaims extends LandlordCommand {
                 Player player = Bukkit.getPlayer(target);
                 if (player != null) {
                     if (checkPermission(player, amount)) {
-                        if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
-                            plugin.getVaultHandler().take(player.getUniqueId(), cost);
+                        if (vault.hasBalance(player.getUniqueId(), cost)) {
+                            vault.take(player.getUniqueId(), cost);
                             lm.sendMessage(player, plugin.getLangManager().getString("Shop.success")
                                     .replace("%number%", amount + "")
-                                    .replace("%cost%", plugin.getVaultHandler().format(cost)));
+                                    .replace("%cost%", vault.format(cost)));
                             player.closeInventory();
                             addClaims(issuer, target, amount);
                         } else {
                             lm.sendMessage(player, plugin.getLangManager().getString("Shop.notEnoughMoney")
                                     .replace("%number%", amount + "")
-                                    .replace("%cost%", plugin.getVaultHandler().format(cost)));
+                                    .replace("%cost%", vault.format(cost)));
                             player.closeInventory();
                             return;
                         }

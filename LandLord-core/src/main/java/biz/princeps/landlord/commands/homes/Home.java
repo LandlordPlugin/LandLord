@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.homes;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Properties;
@@ -18,7 +19,8 @@ import org.bukkit.entity.Player;
  */
 public class Home extends LandlordCommand {
 
-    public Home() {
+    public Home(ILandLord pl) {
+        super(pl);
         CommandDelayManager delayManager = new CommandDelayManager(lm.getString("Commands.Home.dontMove"),
                 lm.getString("Commands.Home.youMoved"),
                 lm.getRawString("Commands.Home.countdown"),
@@ -60,7 +62,7 @@ public class Home extends LandlordCommand {
                     }
 
                     // do the actual teleport sync again
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPluginInstance(), () -> teleport(home, player, targetPlayer));
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> teleport(home, player, targetPlayer));
                 }
             });
         }
@@ -70,8 +72,8 @@ public class Home extends LandlordCommand {
     private void teleport(Location toGo, Player player, String playerHome) {
         double cost = plugin.getConfig().getDouble("Homes.teleportCost");
         if (Options.isVaultEnabled()) {
-            if (!plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
-                lm.sendMessage(player, lm.getString("Commands.Home.notEnoughMoney").replace("%cost%", plugin.getVaultHandler().format(cost)));
+            if (!plugin.getVaultManager().hasBalance(player.getUniqueId(), cost)) {
+                lm.sendMessage(player, lm.getString("Commands.Home.notEnoughMoney").replace("%cost%", plugin.getVaultManager().format(cost)));
                 return;
             }
         }
@@ -84,9 +86,9 @@ public class Home extends LandlordCommand {
         }
 
         if (cost > 0 && Options.isVaultEnabled()) {
-            plugin.getVaultHandler().take(player.getUniqueId(), cost);
+            plugin.getVaultManager().take(player.getUniqueId(), cost);
             lm.sendMessage(player, lm.getString("Commands.Home.costing")
-                    .replace("%cost%", plugin.getVaultHandler().format(cost)));
+                    .replace("%cost%", plugin.getVaultManager().format(cost)));
         }
         player.teleport(toGo);
         lm.sendMessage(player, lm.getString("Commands.Home.welcomeHome").replace("%player%", playerHome));

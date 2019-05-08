@@ -1,6 +1,6 @@
 package biz.princeps.landlord.listener;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import org.bukkit.event.Listener;
 
 /**
@@ -12,10 +12,10 @@ import org.bukkit.event.Listener;
  */
 public abstract class BasicListener implements Listener {
 
-    protected Landlord plugin;
+    protected ILandLord plugin;
 
-    public BasicListener() {
-        this.plugin = Landlord.getInstance();
-        this.plugin.getServer().getPluginManager().registerEvents(this, plugin.getPluginInstance());
+    public BasicListener(ILandLord plugin) {
+        this.plugin = plugin;
+        this.plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
     }
 }

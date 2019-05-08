@@ -1,6 +1,6 @@
 package biz.princeps.landlord.guis;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import org.bukkit.Bukkit;
@@ -20,13 +20,15 @@ import java.util.List;
  */
 public class ShopGUI extends AbstractGUI {
 
-    private Landlord pl = Landlord.getInstance();
-    private List<String> rawList = pl.getConfig().getStringList("Shop.extras");
+    private ILandLord pl;
+    private List<String> rawList;
     private List<Buyable> claims;
 
-    public ShopGUI(Player player, String title) {
+    public ShopGUI(ILandLord pl, Player player, String title) {
         super(player, 18, title);
-        claims = new ArrayList<>();
+        this.pl = pl;
+        this.rawList = pl.getConfig().getStringList("Shop.extras");
+        this.claims = new ArrayList<>();
 
         for (String s : rawList) {
             String[] splitted = s.split(":");

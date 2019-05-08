@@ -1,6 +1,6 @@
 package biz.princeps.landlord.commands.management;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -27,7 +27,8 @@ public class Info extends LandlordCommand {
 
     private String free, owned, advertised, inactive;
 
-    public Info() {
+    public Info(ILandLord pl) {
+        super(pl);
         List<String> ownedList = plugin.getLangManager().getStringList("Commands.Info.owned");
         StringBuilder sb = new StringBuilder();
         Iterator<String> it = ownedList.iterator();
@@ -77,9 +78,9 @@ public class Info extends LandlordCommand {
         }
 
         Chunk chunk = player.getLocation().getChunk();
-        IOwnedLand land = plugin.getWgproxy().getRegion(chunk);
+        IOwnedLand land = plugin.getWGProxy().getRegion(chunk);
 
-        TaskChain<?> chain = Landlord.newChain();
+        TaskChain<?> chain = plugin.newChain();
         chain.asyncFirst(() -> chain.setTaskData("lp", land != null ? plugin.getPlayerManager().getOfflinePlayerSync(land.getOwner()) : null))
                 .sync(() -> {
                     // claimed
@@ -101,7 +102,7 @@ public class Info extends LandlordCommand {
 
                         if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
                             lm.sendMessage(player, replaceInMessage(inactive, land.getName(), owners, friends, lastseen,
-                                    plugin.getVaultHandler().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
+                                    plugin.getVaultManager().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
                             if (plugin.getConfig().getBoolean("Particles.info"))
                                 land.highlightLand(player, Particle.valueOf(plugin.getConfig().getString("Particles.info.inactive").toUpperCase()));
                             return;
@@ -111,7 +112,7 @@ public class Info extends LandlordCommand {
                         if (offer != null) {
                             // advertised land
                             lm.sendMessage(player, replaceInMessage(advertised, land.getName(), owners, friends, lastseen,
-                                    plugin.getVaultHandler().format(offer.getPrice())));
+                                    plugin.getVaultManager().format(offer.getPrice())));
                         } else {
                             // normal owned land
                             lm.sendMessage(player, replaceInMessage(owned, land.getName(), owners, friends, lastseen, ""));
@@ -122,12 +123,12 @@ public class Info extends LandlordCommand {
 
                     } else {
                         // unclaimed
-                        lm.sendMessage(player, replaceInMessage(free, plugin.getWgproxy().getLandName(chunk), "", "", "",
-                                (Options.isVaultEnabled() ? plugin.getVaultHandler().format(
+                        lm.sendMessage(player, replaceInMessage(free, plugin.getWGProxy().getLandName(chunk), "", "", "",
+                                (Options.isVaultEnabled() ? plugin.getVaultManager().format(
                                         plugin.getCostManager().calculateCost(player.getUniqueId())) : "")));
                         if (plugin.getConfig().getBoolean("Particles.info"))
-                            land.highlightLand(player,
-                                    Particle.valueOf(plugin.getConfig().getString("Particles.info.unclaimed").toUpperCase()));
+                            plugin.getWGProxy().highlightLand(chunk, player,
+                                    Particle.valueOf(plugin.getConfig().getString("Particles.info.unclaimed").toUpperCase()), 4);
                     }
 
 

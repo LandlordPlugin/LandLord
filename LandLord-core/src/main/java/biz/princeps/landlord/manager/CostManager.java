@@ -1,6 +1,7 @@
 package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ICostManager;
 
 import java.util.UUID;
 
@@ -8,8 +9,9 @@ import java.util.UUID;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 4/7/18
+ * TODO implement strategy pattern in cost manager
  */
-public class CostManager {
+public class CostManager implements ICostManager {
 
     private Landlord plugin;
     private COST_FUNCTION selectedFunction;
@@ -27,10 +29,12 @@ public class CostManager {
         }
     }
 
+    @Override
     public COST_FUNCTION getSelectedFunction() {
         return selectedFunction;
     }
 
+    @Override
     public double calculateCost(UUID uuid) {
         return this.calculateCost(plugin.getWgproxy().getRegionCount(uuid));
     }
@@ -92,7 +96,7 @@ public class CostManager {
         return -1;
     }
 
-    enum COST_FUNCTION {
+    public enum COST_FUNCTION {
         LIMITED,
         LINEAR,
         EXPONENTIAL,

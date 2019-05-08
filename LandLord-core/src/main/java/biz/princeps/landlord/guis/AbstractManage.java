@@ -1,11 +1,7 @@
 package biz.princeps.landlord.guis;
 
-import biz.princeps.landlord.Landlord;
-import biz.princeps.landlord.api.ILLFlag;
-import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.Options;
+import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandManageEvent;
-import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
@@ -37,40 +33,23 @@ import java.util.*;
  */
 public abstract class AbstractManage extends AbstractGUI {
 
-    private static int SIZE;
-    private static Set<String> toggleMobs = new HashSet<>();
 
-    static {
-        ConfigurationSection section = Landlord.getInstance().getConfig().getConfigurationSection("Manage");
-
-        Set<String> keys = section.getKeys(true);
-
-        int trues = 0;
-        for (String key : keys) {
-            if (section.getBoolean(key))
-                trues++;
-        }
-
-        SIZE = (trues / 9 + (trues % 9 == 0 ? 0 : 1)) * 9;
-
-        toggleMobs.addAll(Landlord.getInstance().getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
-    }
 
     private List<IOwnedLand> regions;
-    private LangManager lm;
-    private Landlord plugin;
+    private ILangManager lm;
+    private ILandLord plugin;
 
-    public AbstractManage(Player player, String header, List<IOwnedLand> land) {
-        super(player, SIZE, header);
+    public AbstractManage(ILandLord pl, Player player, String header, List<IOwnedLand> land) {
+        super(player, Options.getManageSize(), header);
+        this.plugin = pl;
         this.regions = land;
-        this.plugin = Landlord.getInstance();
         this.lm = plugin.getLangManager();
     }
 
-    public AbstractManage(Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land) {
-        super(player, SIZE + 9, header, landGui);
+    public AbstractManage(ILandLord pl, Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land) {
+        super(player, Options.getManageSize() + 9, header, landGui);
         this.regions = land;
-        this.plugin = Landlord.getInstance();
+        this.plugin = pl;
         this.lm = plugin.getLangManager();
     }
 
@@ -132,20 +111,20 @@ public abstract class AbstractManage extends AbstractGUI {
                 player.hasPermission("landlord.player.manage.regenerate")) {
             double cost = plugin.getConfig().getDouble("ResetCost");
             this.setIcon(position, new Icon(createItem(Material.BARRIER, 1,
-                    lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, (Options.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1"))))
+                    lm.getRawString("Commands.Manage.Regenerate.title"), formatList(regenerateDesc, (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "-1"))))
                     .addClickAction((p) -> {
                         if (land.isOwner(player.getUniqueId())) {
                             ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
-                                    .replace("%cost%", (Options.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "-1")),
+                                    .replace("%cost%", (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "-1")),
                                     (p1) -> {
                                         boolean flag = false;
                                         if (Options.isVaultEnabled())
-                                            if (plugin.getVaultHandler().hasBalance(player.getUniqueId(), cost)) {
-                                                plugin.getVaultHandler().take(player.getUniqueId(), cost);
+                                            if (plugin.getVaultManager().hasBalance(player.getUniqueId(), cost)) {
+                                                plugin.getVaultManager().take(player.getUniqueId(), cost);
                                                 flag = true;
                                             } else {
                                                 lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
-                                                        .replace("%cost%", plugin.getVaultHandler().format(cost))
+                                                        .replace("%cost%", plugin.getVaultManager().format(cost))
                                                         .replace("%name%", land.getName()));
                                             }
                                         else {
@@ -375,7 +354,7 @@ public abstract class AbstractManage extends AbstractGUI {
         OfflinePlayer op = Bukkit.getOfflinePlayer(id);
         Vector<String> vec = new Vector<>();
 
-        TaskChain<?> chain = Landlord.newChain();
+        TaskChain<?> chain = plugin.newChain();
         chain.asyncFirst(() -> chain.setTaskData("lp", plugin.getPlayerManager().getOfflinePlayerSync(id)))
                 .sync(() -> {
                     List<String> stringList = lm.getStringList("Commands.Manage.ManageFriends.friendSegment");
@@ -419,7 +398,7 @@ public abstract class AbstractManage extends AbstractGUI {
     }
 
     private ItemStack createSkull(String owner, String displayname, List<String> lore) {
-        ItemStack skull = new ItemStack(plugin.getMaterialsProxy().getSkull(), 1, (short) 3);
+        ItemStack skull = new ItemStack(plugin.getMatProxy().getSkull(), 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(owner);
         skullMeta.setDisplayName(displayname);

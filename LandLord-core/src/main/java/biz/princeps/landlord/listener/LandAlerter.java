@@ -1,6 +1,6 @@
 package biz.princeps.landlord.listener;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardProxy;
 import biz.princeps.lib.PrincepsLib;
@@ -36,8 +36,8 @@ import java.util.UUID;
  */
 public class LandAlerter extends BasicListener {
 
-    private Landlord pl = Landlord.getInstance();
-    private IWorldGuardProxy wg = pl.getWgproxy();
+    private ILandLord pl;
+    private IWorldGuardProxy wg;
     private HashMap<UUID, ChunkCoords> currentLands;
     private HashMap<UUID, ChunkCoords> previousLands;
     // We need to update the player position separately bc spigot or worldguard sends the greeting message before actually
@@ -50,13 +50,15 @@ public class LandAlerter extends BasicListener {
      * message me somehow so that I can figure it out. This is a very weird combination of async chat events and moveevent.
      * I feel like there are a hundred things that can go wrong here.
      */
-    public LandAlerter() {
+    public LandAlerter(ILandLord pl) {
+        super(pl);
+        this.wg = pl.getWGProxy();
         currentLands = new HashMap<>();
         previousLands = new HashMap<>();
 
         type = LandMessageDisplay.valueOf(pl.getConfig().getString("LandMessage"));
 
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(pl.getPluginInstance(), PacketType.Play.Server.CHAT) {
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(pl.getPlugin(), PacketType.Play.Server.CHAT) {
             private JSONParser parser = new JSONParser();
 
             @Override

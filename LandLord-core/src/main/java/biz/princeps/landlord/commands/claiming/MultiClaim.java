@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.claiming;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.PrincepsLib;
@@ -14,7 +15,11 @@ import java.util.Set;
 
 public class MultiClaim extends LandlordCommand {
 
-    private Claim claim = new Claim(true);
+    private Claim claim = new Claim(plugin, true);
+
+    public MultiClaim(ILandLord plugin) {
+        super(plugin);
+    }
 
     /**
      * Executed when a player enters /land multiclaim
@@ -50,14 +55,14 @@ public class MultiClaim extends LandlordCommand {
                 return;
             }
 
-            int initalRegionCount = plugin.getWgproxy().getRegionCount(player.getPlayer().getUniqueId());
+            int initalRegionCount = plugin.getWGProxy().getRegionCount(player.getPlayer().getUniqueId());
             double cost = 0;
             for (Chunk ignored : toClaim) {
                 cost += plugin.getCostManager().calculateCost(initalRegionCount);
                 initalRegionCount++;
             }
 
-            String formattedCost = (Options.isVaultEnabled() ? plugin.getVaultHandler().format(cost) : "");
+            String formattedCost = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "");
 
             PrincepsLib.getConfirmationManager().draw(player.getPlayer(),
                     lm.getRawString("Commands.MultiClaim.guiMessage")
@@ -94,7 +99,7 @@ public class MultiClaim extends LandlordCommand {
                 for (int x = xCenter - param; x <= xCenter + param; x++) {
                     for (int z = zCenter - param; z <= zCenter + param; z++) {
                         Chunk chunk = center.getWorld().getChunkAt(x, z);
-                        if (plugin.getWgproxy().getRegion(chunk) == null) {
+                        if (plugin.getWGProxy().getRegion(chunk) == null) {
                             toClaim.add(chunk);
                         }
                     }

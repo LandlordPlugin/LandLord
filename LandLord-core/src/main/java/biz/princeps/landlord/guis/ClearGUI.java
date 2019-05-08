@@ -2,7 +2,7 @@ package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.manager.LangManager;
+import biz.princeps.landlord.api.LangManager;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;

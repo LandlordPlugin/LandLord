@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.friends;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -17,11 +18,15 @@ import java.util.Arrays;
  */
 public class Addfriend extends LandlordCommand {
 
+    public Addfriend(ILandLord plugin) {
+        super(plugin);
+    }
+
     public void onAddfriend(Player player, String[] names) {
 
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
-        IOwnedLand land = plugin.getWgproxy().getRegion(chunk);
+        IOwnedLand land = plugin.getWGProxy().getRegion(chunk);
         if (land != null) {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
                 lm.sendMessage(player, lm.getString("Commands.Addfriend.notOwn")
@@ -64,7 +69,7 @@ public class Addfriend extends LandlordCommand {
                     public void run() {
                         plugin.getMapManager().updateAll();
                     }
-                }.runTaskLater(plugin.getPluginInstance(), 60L);
+                }.runTaskLater(plugin.getPlugin(), 60L);
             }
         }
     }

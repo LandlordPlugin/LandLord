@@ -1,6 +1,10 @@
 package biz.princeps.landlord.api;
 
-import biz.princeps.landlord.Landlord;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Project: LandLord
@@ -8,34 +12,62 @@ import biz.princeps.landlord.Landlord;
  * Date: 4/6/18
  * <p>
  * Options class, which pulls some stuff out of the config.
- * Should be removed probably.
  */
 public class Options {
 
-    private static Landlord plugin = Landlord.getInstance();
+    private static FileConfiguration cfg;
+    private static int MANAGE_SIZE;
+    private static Set<String> toggleMobs;
 
     public static boolean enabled_inactiveBuyUp() {
-        return plugin.getConfig().getBoolean("BuyUpInactive.enable");
+        return cfg.getBoolean("BuyUpInactive.enable");
     }
 
     public static boolean isVaultEnabled() {
-        return plugin.getConfig().getBoolean("Economy.enable") && plugin.getVaultHandler() != null;
+        return cfg.getBoolean("Economy.enable");
     }
 
     public static boolean enabled_borders() {
-        return plugin.getConfig().getBoolean("Borders.enable");
+        return cfg.getBoolean("Borders.enable");
     }
 
     public static boolean enabled_map() {
-        return plugin.getConfig().getBoolean("Map.enable");
+        return cfg.getBoolean("Map.enable");
     }
 
     public static boolean enabled_shop() {
-        return plugin.getConfig().getBoolean("Shop.enable");
+        return cfg.getBoolean("Shop.enable");
     }
 
     public static boolean enabled_homes() {
-        return plugin.getConfig().getBoolean("Homes.enable");
+        return cfg.getBoolean("Homes.enable");
     }
 
+    public static int getManageSize(){
+        if(MANAGE_SIZE == -1){
+            ConfigurationSection section = cfg.getConfigurationSection("Manage");
+
+            Set<String> keys = section.getKeys(true);
+
+            int trues = 0;
+            for (
+                    String key : keys) {
+                if (section.getBoolean(key))
+                    trues++;
+            }
+            MANAGE_SIZE = (trues / 9 + (trues % 9 == 0 ? 0 : 1)) * 9;
+        }
+        return MANAGE_SIZE;
+    }
+
+    public static Set<String> getToggleMobs() {
+        if (toggleMobs == null){
+           toggleMobs = new HashSet<>(cfg.getStringList("Manage.mob-spawning.toggleableMobs"));
+        }
+        return toggleMobs;
+    }
+
+    public static void setConfig(FileConfiguration config) {
+        cfg = config;
+    }
 }

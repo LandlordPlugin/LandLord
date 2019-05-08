@@ -1,6 +1,6 @@
 package biz.princeps.landlord.listener;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.events.FinishedLoadingPlayerEvent;
 import biz.princeps.landlord.persistent.LPlayer;
 import co.aikar.taskchain.TaskChain;
@@ -20,11 +20,15 @@ import java.time.LocalDateTime;
  */
 public class JoinListener extends BasicListener {
 
+    public JoinListener(ILandLord plugin) {
+        super(plugin);
+    }
+
     @EventHandler
     public void onJoin(PlayerLoginEvent event) {
         Player p = event.getPlayer();
 
-        TaskChain<Object> chain = Landlord.newChain();
+        TaskChain<Object> chain = plugin.newChain();
         chain.asyncFirst(() -> plugin.getPlayerManager().getOfflinePlayerSync(p.getUniqueId()))
                 .storeAsData("lp")
                 .sync(() -> {

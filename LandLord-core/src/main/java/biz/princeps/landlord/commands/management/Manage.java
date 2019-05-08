@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -16,6 +17,10 @@ import org.bukkit.entity.Player;
  */
 public class Manage extends LandlordCommand {
 
+    public Manage(ILandLord plugin) {
+        super(plugin);
+    }
+
     // TODO Clean this mess up
     public void onManage(Player player, String[] args) {
 
@@ -27,10 +32,10 @@ public class Manage extends LandlordCommand {
 
             IOwnedLand land;
             if (args.length == 0) {
-                land = plugin.getWgproxy().getRegion(player.getLocation().getChunk());
+                land = plugin.getWGProxy().getRegion(player.getLocation().getChunk());
             } else {
                 // land manage <landid>
-                land = plugin.getWgproxy().getRegion(args[0]);
+                land = plugin.getWGProxy().getRegion(args[0]);
             }
 
             if (land == null) {
@@ -60,7 +65,7 @@ public class Manage extends LandlordCommand {
                         newmsg1 = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", player.getName());
                     }
 
-                    for (IOwnedLand region : plugin.getWgproxy().getRegions(player.getUniqueId())) {
+                    for (IOwnedLand region : plugin.getWGProxy().getRegions(player.getUniqueId())) {
                         LandManageEvent landManageEvent = new LandManageEvent(player, region,
                                 "GREET_MESSAGE", region.getFlagValue("GREET_MESSAGE"), newmsg1);
                         Bukkit.getPluginManager().callEvent(landManageEvent);
@@ -81,7 +86,7 @@ public class Manage extends LandlordCommand {
                     if (newmsg.isEmpty()) {
                         newmsg = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", player.getName());
                     }
-                    for (IOwnedLand region : plugin.getWgproxy().getRegions(player.getUniqueId())) {
+                    for (IOwnedLand region : plugin.getWGProxy().getRegions(player.getUniqueId())) {
                         LandManageEvent landManageEvent = new LandManageEvent(player, region,
                                 "FAREWELL_MESSAGE", region.getFlagValue("FAREWELL_MESSAGE"), newmsg);
                         Bukkit.getPluginManager().callEvent(landManageEvent);
@@ -95,15 +100,15 @@ public class Manage extends LandlordCommand {
                     break;
                 case "setgreet":
                     //System.out.println("greet " + Arrays.toString(args));
-                    setGreet(player, args, plugin.getWgproxy().getRegion(player.getLocation()), 1);
+                    setGreet(player, args, plugin.getWGProxy().getRegion(player.getLocation()), 1);
 
                     break;
                 case "setfarewell":
-                    setFarewell(player, args, plugin.getWgproxy().getRegion(player.getLocation()), 1);
+                    setFarewell(player, args, plugin.getWGProxy().getRegion(player.getLocation()), 1);
                     break;
                 default:
                     try {
-                        IOwnedLand target = plugin.getWgproxy().getRegion(args[0]);
+                        IOwnedLand target = plugin.getWGProxy().getRegion(args[0]);
 
                         switch (args[1]) {
                             case "setgreet":

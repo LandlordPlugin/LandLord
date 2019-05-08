@@ -168,12 +168,38 @@ public class OwnedLand extends AOwnedLand {
     }
 
     @Override
+    public void setGroupFlag(String flag) {
+        if (flag == null) return;
+        Flag wgflag = Flags.get(flag.toLowerCase());
+        if (wgflag == null) return;
+        region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+
+    }
+
+    @Override
     public void setFlagValue(String flag, Object value) {
         if (flag == null) return;
         Flag wgflag = Flags.get(flag.toUpperCase());
         if (wgflag == null) return;
         region.setFlag(wgflag, value);
     }
+
+    @Override
+    public void removeFlag(String flag) {
+        if (flag == null) return;
+        Flag wgflag = Flags.get(flag.toUpperCase());
+        if (wgflag == null) return;
+        region.getFlags().remove(wgflag);
+    }
+
+    @Override
+    public boolean containsFlag(String flag) {
+        if (flag == null) return false;
+        Flag wgflag = Flags.get(flag.toUpperCase());
+        if (wgflag == null) return false;
+        return region.getFlags().containsKey(wgflag);
+    }
+
 
     private void initFlags(UUID owner) {
         List<String> rawList = Landlord.getInstance().getConfig().getStringList("Flags");

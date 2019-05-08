@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands.friends;
 
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
 import org.bukkit.entity.Player;
@@ -11,6 +12,10 @@ import org.bukkit.entity.Player;
  * Date: 18/07/18
  */
 public class ListFriends extends LandlordCommand {
+
+    public ListFriends(ILandLord plugin) {
+        super(plugin);
+    }
 
     public void onListFriends(Player player, String landname) {
 
@@ -24,13 +29,13 @@ public class ListFriends extends LandlordCommand {
             return;
         }
 
-        if (plugin.getWgproxy().isLLRegion(landname)) {
+        if (plugin.getWGProxy().isLLRegion(landname)) {
             lm.sendMessage(player, lm.getString("Commands.Listfriends.invalidGeneral"));
             return;
         }
 
         try {
-            IOwnedLand land = plugin.getWgproxy().getRegion(landname);
+            IOwnedLand land = plugin.getWGProxy().getRegion(landname);
 
             if (land == null) {
                 lm.sendMessage(player, lm.getString("Commands.Listfriends.freeLand"));

@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.items.Maitem;
 import org.bukkit.Bukkit;
@@ -13,6 +14,10 @@ import org.bukkit.entity.Player;
  * Date: 11/7/17 10:45 AM
  */
 public class LLItem extends LandlordCommand {
+
+    public LLItem(ILandLord plugin) {
+        super(plugin);
+    }
 
     public void onItem(CommandSender player, String target) {
         Player targetingPlayer = null;

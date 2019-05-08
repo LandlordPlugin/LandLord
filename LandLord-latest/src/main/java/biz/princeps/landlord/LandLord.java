@@ -9,20 +9,31 @@ import org.bukkit.plugin.Plugin;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 06-05-19
  */
-public class LandLordLatest extends ALandLord {
+public class LandLord extends ALandLord {
 
     @Override
-    public void onEnable() {
-        core = new Landlord();
-        core.onEnable(this);
-        ((WorldGuardProxy) core.getWgproxy()).initCache();
-        core.setUtilsProxy(new UtilsProxy());
-        core.setMaterialsProxy(new MaterialsProxy());
+    void onPreEnable() {
+        this.wgproxy = new WorldGuardProxy(getWorldGuard());
+        this.utilsProxy = new UtilsProxy();
+        this.materialsProxy = new MaterialsProxy();
+
+        ((WorldGuardProxy) wgproxy).initCache();
     }
 
     @Override
+    void onPostEnable() {
+
+    }
+
+    @Override
+    public void onEnable() {
+
+    }
+
+
+    @Override
     public void onDisable() {
-        core.onDisable();
+
     }
 
     /**
@@ -46,6 +57,12 @@ public class LandLordLatest extends ALandLord {
         if (!super.checkDependencies()) return false;
 
         // Dependency stuff
+        if (!Bukkit.getVersion().contains("1.13.2")) {
+            haltPlugin("Invalid spigot version detected! LandLord requires 1.13.2");
+            return false;
+        }
+
+
         if (getWorldGuard() == null) {
             haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to use LandLord");
             return false;
@@ -83,10 +100,7 @@ public class LandLordLatest extends ALandLord {
                 haltPlugin("Invalid WorldEdit Version found. LandLord requires WE 3937+");
                 return false;
             }
-
-            core.setWgproxy(new WorldGuardProxy(getWorldGuard()));
         }
-
         return true;
     }
 

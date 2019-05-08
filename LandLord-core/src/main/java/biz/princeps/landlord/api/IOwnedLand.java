@@ -55,4 +55,8 @@ public interface IOwnedLand {
     Object getFlagValue(String flag);
 
     void setFlagValue(String flag, Object value);
+
+    void removeFlag(String flag);
+
+    boolean containsFlag(String flag);
 }
