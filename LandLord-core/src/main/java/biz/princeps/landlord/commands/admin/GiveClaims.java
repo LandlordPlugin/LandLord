@@ -7,6 +7,7 @@ import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -22,11 +23,15 @@ public class GiveClaims extends LandlordCommand {
 
     private IVaultManager vault = plugin.getVaultManager();
 
-    public GiveClaims(ILandLord plugin) {
-        super(plugin);
+    public GiveClaims(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.GiveClaims.name"),
+                pl.getConfig().getString("CommandSettings.GiveClaims.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.GiveClaims.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.GiveClaims.aliases")));
     }
 
-    public void onGiveClaims(Properties issuer, Arguments args) {
+    @Override
+    public void onCommand(Properties issuer, Arguments args) {
         String target;
         int amount;
         double cost;

@@ -3,8 +3,11 @@ package biz.princeps.landlord.commands.homes;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
+import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.util.CommandDelayManager;
+import com.google.common.collect.Sets;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
@@ -20,12 +23,15 @@ import org.bukkit.entity.Player;
 public class Home extends LandlordCommand {
 
     public Home(ILandLord pl) {
-        super(pl);
+        super(pl, pl.getConfig().getString("CommandSettings.Home.name"),
+                pl.getConfig().getString("CommandSettings.Home.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Home.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Home.aliases")));
+
         CommandDelayManager delayManager = new CommandDelayManager(lm.getString("Commands.Home.dontMove"),
                 lm.getString("Commands.Home.youMoved"),
                 lm.getRawString("Commands.Home.countdown"),
                 plugin.getConfig().getBoolean("Homes.spawnParticles"));
-
 
         for (String mainAlias : plugin.getConfig().getStringList("CommandSettings.Main.aliases")) {
             for (String homeAlias : plugin.getConfig().getStringList("CommandSettings.Home.aliases")) {
@@ -34,8 +40,22 @@ public class Home extends LandlordCommand {
         }
     }
 
+
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isPlayer()) {
+            String target;
+            try {
+                target = arguments.get(0);
+            } catch (ArgumentsOutOfBoundsException e) {
+                target = "own";
+            }
+            onHome(properties, target);
+        }
+    }
+
     // requires permission landlord.player.home, if target equals own, else requires .homeother
-    public void onHome(Properties props, String targetPlayer) {
+    private void onHome(Properties props, String targetPlayer) {
         Player player = props.getPlayer();
         if (!Options.enabled_homes()) {
             lm.sendMessage(player, lm.getString("Commands.SetHome.disabled"));
@@ -81,7 +101,7 @@ public class Home extends LandlordCommand {
         if (toGo == null) {
             ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Home.noHome"));
             builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll sethome"));
-            plugin.getUtilsProxy().send_basecomponent(player,builder.create());
+            plugin.getUtilsProxy().send_basecomponent(player, builder.create());
             return;
         }
 

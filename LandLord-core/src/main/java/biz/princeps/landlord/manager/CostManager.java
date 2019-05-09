@@ -1,7 +1,7 @@
 package biz.princeps.landlord.manager;
 
-import biz.princeps.landlord.Landlord;
 import biz.princeps.landlord.api.ICostManager;
+import biz.princeps.landlord.api.ILandLord;
 
 import java.util.UUID;
 
@@ -13,11 +13,11 @@ import java.util.UUID;
  */
 public class CostManager implements ICostManager {
 
-    private Landlord plugin;
+    private ILandLord plugin;
     private COST_FUNCTION selectedFunction;
 
-    public CostManager() {
-        this.plugin = Landlord.getInstance();
+    public CostManager(ILandLord plugin) {
+        this.plugin = plugin;
 
         String func = plugin.getConfig().getString("Growth.function");
         try {
@@ -36,7 +36,7 @@ public class CostManager implements ICostManager {
 
     @Override
     public double calculateCost(UUID uuid) {
-        return this.calculateCost(plugin.getWgproxy().getRegionCount(uuid));
+        return this.calculateCost(plugin.getWGProxy().getRegionCount(uuid));
     }
 
     /**

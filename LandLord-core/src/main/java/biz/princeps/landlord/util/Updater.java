@@ -16,6 +16,7 @@ public class Updater {
     private SpigetUpdate updater;
 
     public Updater(ILandLord pl) {
+        this.pl = pl;
         if (pl.getConfig().getBoolean("checkUpdatesPeriodically", true)) {
             Bukkit.getScheduler().scheduleAsyncRepeatingTask(pl.getPlugin(), this::checkForUpdate, 0, 20 * 60 * 60 * 24);
         } else {

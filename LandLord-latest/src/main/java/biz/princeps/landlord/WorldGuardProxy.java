@@ -1,5 +1,6 @@
 package biz.princeps.landlord;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.handler.AWorldGuardProxy;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -35,7 +36,8 @@ public class WorldGuardProxy extends AWorldGuardProxy {
     private WorldGuardPlugin wgPlugin;
     private WorldGuard wg;
 
-    public WorldGuardProxy(WorldGuardPlugin worldGuard) {
+    public WorldGuardProxy(ILandLord pl, WorldGuardPlugin worldGuard) {
+        super(pl);
         this.wg = WorldGuard.getInstance();
         this.wgPlugin = worldGuard;
     }
@@ -46,7 +48,7 @@ public class WorldGuardProxy extends AWorldGuardProxy {
             RegionManager manager = getRegionManager(world);
             for (ProtectedRegion value : manager.getRegions().values()) {
                 if (isLLRegion(value.getId())) {
-                    cache.add(OwnedLand.of(value));
+                    cache.add(OwnedLand.of(pl, value));
                 }
             }
         }
@@ -68,7 +70,7 @@ public class WorldGuardProxy extends AWorldGuardProxy {
         RegionManager manager = getRegionManager(chunk.getWorld());
         if (manager != null) {
             manager.addRegion(pr);
-            OwnedLand land = OwnedLand.create(pr, owner);
+            OwnedLand land = OwnedLand.create(pl, pr, owner);
             land.replaceOwner(owner);
             cache.add(land);
             return land;

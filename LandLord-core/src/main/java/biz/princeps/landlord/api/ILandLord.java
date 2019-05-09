@@ -42,5 +42,7 @@ public interface ILandLord {
 
     IVaultManager getVaultManager();
 
+    IDelimitationManager getDelimitationManager();
+
     void setupPrincepsLib();
 }

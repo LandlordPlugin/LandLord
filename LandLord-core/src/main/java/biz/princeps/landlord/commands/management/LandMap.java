@@ -3,6 +3,9 @@ package biz.princeps.landlord.commands.management;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import com.google.common.collect.Sets;
 import org.bukkit.entity.Player;
 
 /**
@@ -12,16 +15,33 @@ import org.bukkit.entity.Player;
  */
 public class LandMap extends LandlordCommand {
 
-    public LandMap(ILandLord plugin) {
-        super(plugin);
+    public LandMap(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.Map.name"),
+                pl.getConfig().getString("CommandSettings.Map.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Map.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Map.aliases")));
     }
 
-    public void onToggleLandMap(Player player) {
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
 
-        if (this.worldDisabled(player)) {
-            lm.sendMessage(player, lm.getString("Disabled-World"));
-            return;
+        if (arguments.size() == 0) {
+            // toggle
+            if (properties.isPlayer()) {
+                onToggleLandMap(properties.getPlayer());
+            }
+        } else if (arguments.size() == 1) {
+            // on/off
+            String arg = arguments.get()[0];
+            if (arg.toLowerCase().equals("on") || arg.toLowerCase().equals("off")) {
+                onToggleLandMap(properties.getPlayer(), arg.toLowerCase());
+            }
         }
+    }
+
+    private void onToggleLandMap(Player player) {
+
+        if (isDisabledWorld(player)) return;
 
         if (Options.enabled_map())
             plugin.getMapManager().toggleMap(player);
@@ -31,11 +51,8 @@ public class LandMap extends LandlordCommand {
 
     }
 
-    public void onToggleLandMap(Player player, String state) {
-        if (this.worldDisabled(player)) {
-            lm.sendMessage(player, lm.getString("Disabled-World"));
-            return;
-        }
+    private void onToggleLandMap(Player player, String state) {
+        if (isDisabledWorld(player)) return;
 
         if (!Options.enabled_map()) {
             lm.sendMessage(player, lm.getString("Commands.LandMap.disabled"));

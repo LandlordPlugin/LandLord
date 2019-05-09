@@ -3,8 +3,10 @@ package biz.princeps.landlord.commands.management;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.items.Maitem;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -15,32 +17,46 @@ import org.bukkit.entity.Player;
  */
 public class LLItem extends LandlordCommand {
 
-    public LLItem(ILandLord plugin) {
-        super(plugin);
+    public LLItem(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.MAItem.name"),
+                pl.getConfig().getString("CommandSettings.MAItem.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MAItem.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MAItem.aliases")));
     }
 
-    public void onItem(CommandSender player, String target) {
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        String target = "self";
+
+        if (arguments.size() > 0) {
+            target = arguments.get()[0];
+        } else {
+            if (properties.isPlayer()) {
+                target = properties.getPlayer().getDisplayName();
+            }
+        }
+
         Player targetingPlayer = null;
 
         if (target == null) {
-            if (player instanceof Player) {
-                targetingPlayer = (Player) player;
+            if (properties.isPlayer()) {
+                targetingPlayer = properties.getPlayer();
             }
         } else {
             targetingPlayer = Bukkit.getPlayer(target);
         }
 
         if (targetingPlayer == null) {
-            if (player instanceof Player) {
-                lm.sendMessage((Player) player, lm.getString("Commands.Item.noPlayer").replace("%player%", target));
+            if (properties.isPlayer()) {
+                lm.sendMessage(properties.getPlayer(), lm.getString("Commands.Item.noPlayer").replace("%player%", target));
             } else {
-                player.sendMessage(lm.getString("Commands.Item.noPlayer").replace("%player%", target));
+                properties.sendMessage(lm.getString("Commands.Item.noPlayer").replace("%player%", target));
             }
             return;
         }
 
         // now we got our player for sure, lets give him the item
-        Maitem item = new Maitem();
+        Maitem item = new Maitem(plugin);
         item.give(targetingPlayer);
     }
 }

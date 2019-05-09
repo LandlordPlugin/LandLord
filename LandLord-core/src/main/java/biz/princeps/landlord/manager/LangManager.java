@@ -1,6 +1,6 @@
 package biz.princeps.landlord.manager;
 
-import biz.princeps.landlord.ALandLord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.util.ConfigUtil;
 import net.md_5.bungee.api.ChatColor;
@@ -21,29 +21,29 @@ import java.util.List;
  */
 public class LangManager implements ILangManager {
 
-    private ALandLord pl;
+    private ILandLord pl;
     private String filename;
     private FileConfiguration msg;
 
-    public LangManager(ALandLord pl, String lang) {
+    public LangManager(ILandLord pl, String lang) {
         this.pl = pl;
         filename = "messages/" + lang + ".yml";
         reload();
-        ConfigUtil.handleConfigUpdate(pl.getDataFolder() + "/" + filename, "/" + filename);
+        new ConfigUtil(pl).handleConfigUpdate(pl.getPlugin().getDataFolder() + "/" + filename, "/" + filename);
         reload();
     }
 
     @Override
     public void reload() {
-        File f = new File(pl.getDataFolder(), filename);
+        File f = new File(pl.getPlugin().getDataFolder(), filename);
         this.msg = new YamlConfiguration();
         try {
-            File folder = new File(pl.getDataFolder(), "messages");
+            File folder = new File(pl.getPlugin().getDataFolder(), "messages");
             if (!folder.exists())
                 folder.mkdir();
 
             if (!f.exists())
-                pl.saveResource(filename, false);
+                pl.getPlugin().saveResource(filename, false);
 
             this.msg.load(f);
         } catch (IOException | InvalidConfigurationException e) {

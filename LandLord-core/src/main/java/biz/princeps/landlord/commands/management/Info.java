@@ -6,7 +6,10 @@ import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Offer;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
 import co.aikar.taskchain.TaskChain;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
@@ -28,7 +31,11 @@ public class Info extends LandlordCommand {
     private String free, owned, advertised, inactive;
 
     public Info(ILandLord pl) {
-        super(pl);
+        super(pl, pl.getConfig().getString("CommandSettings.Info.name"),
+                pl.getConfig().getString("CommandSettings.Info.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Info.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Info.aliases")));
+
         List<String> ownedList = plugin.getLangManager().getStringList("Commands.Info.owned");
         StringBuilder sb = new StringBuilder();
         Iterator<String> it = ownedList.iterator();
@@ -70,12 +77,23 @@ public class Info extends LandlordCommand {
         inactive = sb.toString();
     }
 
-    public void onInfo(Player player) {
 
-        if (worldDisabled(player)) {
-            lm.sendMessage(player, lm.getString("Disabled-World"));
+    private String replaceInMessage(String original, String landID, String owner, String member, String lastseen, String price) {
+        return original.replace("%landid%", landID)
+                .replace("%owner%", owner)
+                .replace("%member%", member.isEmpty() ? "-" : member)
+                .replace("%lastseen%", lastseen)
+                .replace("%price%", price);
+    }
+
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isConsole()) {
             return;
         }
+
+        Player player = properties.getPlayer();
+        if (isDisabledWorld(player)) return;
 
         Chunk chunk = player.getLocation().getChunk();
         IOwnedLand land = plugin.getWGProxy().getRegion(chunk);
@@ -134,13 +152,6 @@ public class Info extends LandlordCommand {
 
                 });
         chain.execute();
-    }
 
-    private String replaceInMessage(String original, String landID, String owner, String member, String lastseen, String price) {
-        return original.replace("%landid%", landID)
-                .replace("%owner%", owner)
-                .replace("%member%", member.isEmpty() ? "-" : member)
-                .replace("%lastseen%", lastseen)
-                .replace("%price%", price);
     }
 }

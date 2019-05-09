@@ -19,7 +19,7 @@ public abstract class AOwnedLand implements IOwnedLand {
     protected World world;
     protected ILandLord pl;
 
-    public AOwnedLand(World world, ILandLord pl) {
+    public AOwnedLand(ILandLord pl, World world) {
         this.world = world;
         this.pl = pl;
     }

@@ -4,6 +4,9 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import com.google.common.collect.Sets;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Particle;
@@ -23,15 +26,25 @@ public class Borders extends LandlordCommand {
     private HashMap<Player, BukkitTask> tasks;
 
     public Borders(ILandLord pl) {
-        super(pl);
+        super(pl, pl.getConfig().getString("CommandSettings.Borders.name"),
+                pl.getConfig().getString("CommandSettings.Borders.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Borders.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Borders.aliases")));
         tasks = new HashMap<>();
     }
 
-    public void onToggleBorder(Player p) {
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+
+        if (properties.isConsole()) {
+            return;
+        }
 
         if (!Options.enabled_borders()) {
             return;
         }
+
+        Player p = properties.getPlayer();
 
         if (tasks.get(p) == null) {
 

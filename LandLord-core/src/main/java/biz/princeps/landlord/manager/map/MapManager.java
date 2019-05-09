@@ -2,6 +2,7 @@ package biz.princeps.landlord.manager.map;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMapManager;
+import biz.princeps.landlord.util.MapConstants;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -13,11 +14,13 @@ public class MapManager implements IMapManager {
 
     private HashMap<String, LandMap> mapList;
     private ILandLord pl;
+    private MapConstants constants;
 
     public MapManager(ILandLord pl) {
         super();
         this.pl = pl;
         this.mapList = new HashMap<>();
+        this.constants = new MapConstants(pl.getConfig());
     }
 
     @Override
@@ -32,7 +35,7 @@ public class MapManager implements IMapManager {
     @Override
     public void addMap(Player player) {
         if (!mapList.containsKey(player.getName())) {
-            mapList.put(player.getName(), new LandMap(player, pl));
+            mapList.put(player.getName(), new LandMap(player, pl, constants));
         }
     }
 

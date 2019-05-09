@@ -7,8 +7,10 @@ import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
+import com.google.common.collect.Sets;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,8 +19,11 @@ public class MultiClaim extends LandlordCommand {
 
     private Claim claim = new Claim(plugin, true);
 
-    public MultiClaim(ILandLord plugin) {
-        super(plugin);
+    public MultiClaim(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.MultiClaim.name"),
+                pl.getConfig().getString("CommandSettings.MultiClaim.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiClaim.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiClaim.aliases")));
     }
 
     /**
@@ -29,33 +34,35 @@ public class MultiClaim extends LandlordCommand {
      * <p>
      * All the individual claims are redirected to the function that handles /land claim
      *
-     * @param player    the player who wants to claim
-     * @param arguments option
+     * @param properties the player who wants to claim
+     * @param arguments  option
      */
-    public void onMultiClaim(Properties player, Arguments arguments) {
-        if (player.isConsole()) {
-            player.sendMessage("Player command only!");
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isConsole()) {
+            properties.sendMessage("Player command only!");
             return;
         }
         if (arguments.size() != 2) {
-            player.sendUsage();
+            properties.sendUsage();
             return;
         }
 
+        Player player = properties.getPlayer();
         String confirmcmd = "/" + plugin.getConfig().getString("CommandSettings.Main.name") + " confirm";
 
         try {
             MultiClaimMode mode = MultiClaimMode.valueOf(arguments.get()[0].toUpperCase());
             int param = arguments.getInt(1);
 
-            Set<Chunk> toClaim = getToClaimChunks(mode, param, player.getPlayer().getLocation());
+            Set<Chunk> toClaim = getToClaimChunks(mode, param, player.getLocation());
 
             if (toClaim.size() == 0) {
-                lm.sendMessage(player.getPlayer(), lm.getString("Commands.MultiClaim.noLands"));
+                lm.sendMessage(player, lm.getString("Commands.MultiClaim.noLands"));
                 return;
             }
 
-            int initalRegionCount = plugin.getWGProxy().getRegionCount(player.getPlayer().getUniqueId());
+            int initalRegionCount = plugin.getWGProxy().getRegionCount(player.getUniqueId());
             double cost = 0;
             for (Chunk ignored : toClaim) {
                 cost += plugin.getCostManager().calculateCost(initalRegionCount);
@@ -64,7 +71,7 @@ public class MultiClaim extends LandlordCommand {
 
             String formattedCost = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "");
 
-            PrincepsLib.getConfirmationManager().draw(player.getPlayer(),
+            PrincepsLib.getConfirmationManager().draw(player,
                     lm.getRawString("Commands.MultiClaim.guiMessage")
                             .replace("%amount%", toClaim.size() + "")
                             .replace("%cost%", formattedCost),
@@ -73,7 +80,7 @@ public class MultiClaim extends LandlordCommand {
                             .replace("%cost%", formattedCost),
                     (p) -> {
                         // on accept
-                        toClaim.forEach(cl -> claim.onClaim(player.getPlayer(), cl));
+                        toClaim.forEach(cl -> claim.onClaim(player, cl));
                         p.closeInventory();
                     },
                     (p) -> {
@@ -83,7 +90,7 @@ public class MultiClaim extends LandlordCommand {
                         p.closeInventory();
                     }, confirmcmd);
         } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ex) {
-            player.sendUsage();
+            properties.sendUsage();
         }
     }
 

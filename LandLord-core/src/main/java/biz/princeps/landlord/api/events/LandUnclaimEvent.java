@@ -10,7 +10,7 @@ import org.bukkit.event.HandlerList;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: Unknown
- *
+ * <p>
  * This event is called when a land is unclaimed
  */
 public class LandUnclaimEvent extends Event implements Cancellable {

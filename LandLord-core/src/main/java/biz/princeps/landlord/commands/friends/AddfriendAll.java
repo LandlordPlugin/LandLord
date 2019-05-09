@@ -4,6 +4,10 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -15,11 +19,26 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class AddfriendAll extends LandlordCommand {
 
-    public AddfriendAll(ILandLord plugin) {
-        super(plugin);
+    public AddfriendAll(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.AddfriendAll.name"),
+                pl.getConfig().getString("CommandSettings.AddfriendAll.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AddfriendAll.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AddfriendAll.aliases")));
     }
 
-    public void onAddfriend(Player player, String name) {
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isPlayer()) {
+            try {
+                onAddfriend(properties.getPlayer(), arguments.get(0));
+            } catch (ArgumentsOutOfBoundsException e) {
+                properties.sendMessage(plugin.getLangManager().getString("Commands.AddfriendAll.noPlayer")
+                        .replace("%player%", "[]"));
+            }
+        }
+    }
+
+    private void onAddfriend(Player player, String name) {
         if (name == null || name.isEmpty()) {
             lm.sendMessage(player, lm.getString("Commands.AddfriendAll.noPlayer")
                     .replace("%player%", name == null ? "[]" : name));

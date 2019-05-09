@@ -1,6 +1,7 @@
 package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.ILLFlag;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IWorldGuardProxy;
 import biz.princeps.landlord.util.AOwnedLand;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -24,21 +25,22 @@ public class OwnedLand extends AOwnedLand {
 
     private ProtectedRegion region;
 
-    public static OwnedLand create(ProtectedRegion pr, UUID owner) {
-        return new OwnedLand(pr, owner);
+    public static OwnedLand create(ILandLord pl, ProtectedRegion pr, UUID owner) {
+        return new OwnedLand(pl, pr, owner);
     }
 
-    public static OwnedLand of(ProtectedRegion pr) {
-        return new OwnedLand(pr);
+    public static OwnedLand of(ILandLord pl, ProtectedRegion pr) {
+        return new OwnedLand(pl, pr);
     }
 
-    private OwnedLand(ProtectedRegion region) {
+    private OwnedLand(ILandLord pl, ProtectedRegion region) {
+        super(pl, pl.getWGProxy().getWorld(region.getId()));
         this.region = region;
-        this.world = Landlord.getInstance().getWgproxy().getWorld(region.getId());
+        this.world = pl.getWGProxy().getWorld(region.getId());
     }
 
-    private OwnedLand(ProtectedRegion region, UUID owner) {
-        this(region);
+    private OwnedLand(ILandLord pl, ProtectedRegion region, UUID owner) {
+        this(pl, region);
 
         // insert default flags
         if (region.getFlags().size() == 0) {
@@ -116,7 +118,7 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public Chunk getChunk() {
-        IWorldGuardProxy wg = Landlord.getInstance().getWgproxy();
+        IWorldGuardProxy wg = pl.getWGProxy();
         World w = wg.getWorld(region.getId());
         int x = wg.getX(region.getId());
         int z = wg.getZ(region.getId());
@@ -142,13 +144,13 @@ public class OwnedLand extends AOwnedLand {
     @Override
     public List<ILLFlag> getFlags() {
         List<ILLFlag> toReturn = new ArrayList<>();
-        List<String> rawList = Landlord.getInstance().getConfig().getStringList("Flags");
+        List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
             String[] toggleleft = s.split(":")[0].split(" ");
             String[] toggleRight = s.split(":")[1].split(" ");
             Flag flag = Flags.get(toggleleft[0].toUpperCase());
-            Material mat = Material.valueOf(Landlord.getInstance().getConfig()
+            Material mat = Material.valueOf(pl.getConfig()
                     .getString("Manage." + toggleleft[0].toLowerCase() + ".item"));
             StateFlag.State state1 = StateFlag.State.valueOf(toggleleft[1].toUpperCase());
             StateFlag.State state2 = StateFlag.State.valueOf(toggleRight[0].toUpperCase());
@@ -167,7 +169,6 @@ public class OwnedLand extends AOwnedLand {
         return region.getFlag(wgflag);
     }
 
-    @Override
     public void setGroupFlag(String flag) {
         if (flag == null) return;
         Flag wgflag = Flags.get(flag.toLowerCase());
@@ -202,7 +203,7 @@ public class OwnedLand extends AOwnedLand {
 
 
     private void initFlags(UUID owner) {
-        List<String> rawList = Landlord.getInstance().getConfig().getStringList("Flags");
+        List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
             String[] s1 = s.split(":")[0].split(" ");
@@ -220,10 +221,10 @@ public class OwnedLand extends AOwnedLand {
             region.setFlag(flag, state);
         }
         // add other flags
-        Landlord.getInstance().getPlayerManager().getOfflinePlayerAsync(owner, p -> {
-            region.setFlag(Flags.GREET_MESSAGE, Landlord.getInstance().getLangManager()
+        pl.getPlayerManager().getOfflinePlayerAsync(owner, p -> {
+            region.setFlag(Flags.GREET_MESSAGE, pl.getLangManager()
                     .getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
-            region.setFlag(Flags.FAREWELL_MESSAGE, Landlord.getInstance().getLangManager()
+            region.setFlag(Flags.FAREWELL_MESSAGE, pl.getLangManager()
                     .getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
         });
     }

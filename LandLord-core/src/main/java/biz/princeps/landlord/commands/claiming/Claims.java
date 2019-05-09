@@ -2,6 +2,9 @@ package biz.princeps.landlord.commands.claiming;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import com.google.common.collect.Sets;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -15,11 +18,21 @@ import org.bukkit.entity.Player;
 public class Claims extends LandlordCommand {
 
 
-    public Claims(ILandLord plugin) {
-        super(plugin);
+    public Claims(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.Claims.name"),
+                pl.getConfig().getString("CommandSettings.Claims.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claims.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claims.aliases")));
     }
 
-    public void onClaims(Player player) {
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+
+        if (properties.isConsole()) {
+            return;
+        }
+
+        Player player = properties.getPlayer();
 
         if (plugin.getConfig().getBoolean("Shop.enable")) {
             int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
@@ -36,12 +49,10 @@ public class Claims extends LandlordCommand {
                 for (BaseComponent baseComponent : text) {
                     baseComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
                 }
-                plugin.getUtilsProxy().send_basecomponent(player , text);
+                plugin.getUtilsProxy().send_basecomponent(player, text);
             }
         } else {
             lm.sendMessage(player, lm.getString("Commands.Claims.disabled"));
         }
     }
-
-
 }

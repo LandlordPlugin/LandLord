@@ -7,15 +7,18 @@ import biz.princeps.landlord.guis.ManageGUI;
 import biz.princeps.landlord.guis.ManageGUIAll;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.chat.MultiPagedMessage;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
+import com.google.common.collect.Sets;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Project: LandLord
@@ -24,11 +27,57 @@ import java.util.Set;
  */
 public class ListLands extends LandlordCommand {
 
-    public ListLands(ILandLord plugin) {
-        super(plugin);
+    public ListLands(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.ListLands.name"),
+                pl.getConfig().getString("CommandSettings.ListLands.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ListLands.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ListLands.aliases")));
     }
 
-    public void onListLands(Player sender, LPlayer target, int page) {
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isPlayer()) {
+            String target = null;
+            int page = 0;
+            try {
+                // check arguments for different sub sub commands like /ll list <name> <pagenr>
+                switch (arguments.size()) {
+                    case 2:
+                        target = arguments.get(0);
+                        page = arguments.getInt(1);
+                        break;
+                    case 1:
+                        target = arguments.get(0);
+                        break;
+                    case 0:
+                        break;
+                }
+
+            } catch (ArgumentsOutOfBoundsException ignored) {
+                properties.sendUsage();
+            }
+
+            // Want to know own lands
+            if (target == null) {
+                onListLands(properties.getPlayer(), plugin.getPlayerManager().get(properties.getPlayer().getUniqueId()), page);
+            } else if (properties.getPlayer().hasPermission("landlord.admin.list")) {
+                // Admin, Other lands, need to lookup their names
+                int finalPage = page;
+                String finalTarget = target;
+                plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
+                    if (lPlayer == null) {
+                        // Failure
+                        properties.getPlayer().sendMessage(lm.getString("Commands.ListLands.noPlayer").replace("%player%", finalTarget));
+                    } else {
+                        // Success
+                        onListLands(properties.getPlayer(), (LPlayer) lPlayer, finalPage);
+                    }
+                });
+            }
+        }
+    }
+
+    private void onListLands(Player sender, LPlayer target, int page) {
 
         List<IOwnedLand> lands = new ArrayList<>(plugin.getWGProxy().getRegions(target.getUuid()));
 
@@ -71,7 +120,7 @@ public class ListLands extends LandlordCommand {
                         .replace("%name%", land.getName()));
                 icon.setLore(lore);
                 icon.addClickAction((p) -> {
-                    ManageGUI manageGUI = new ManageGUI(sender, landGui, land);
+                    ManageGUI manageGUI = new ManageGUI(plugin, sender, landGui, land);
                     manageGUI.display();
                 });
 
@@ -82,7 +131,7 @@ public class ListLands extends LandlordCommand {
             landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
                     .setName(lm.getRawString("Commands.ListLands.gui.manageAll"))
                     .addClickAction((p) -> {
-                        ManageGUIAll manageGUIAll = new ManageGUIAll(sender, landGui, lands);
+                        ManageGUIAll manageGUIAll = new ManageGUIAll(plugin, sender, landGui, lands);
                         manageGUIAll.display();
                     }));
 

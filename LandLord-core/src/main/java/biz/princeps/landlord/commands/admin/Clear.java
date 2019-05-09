@@ -3,6 +3,9 @@ package biz.princeps.landlord.commands.admin;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ClearGUI;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import com.google.common.collect.Sets;
 import org.bukkit.entity.Player;
 
 /**
@@ -12,22 +15,30 @@ import org.bukkit.entity.Player;
  */
 public class Clear extends LandlordCommand {
 
-    public Clear(ILandLord plugin) {
-        super(plugin);
+    public Clear(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.Clear.name"),
+                pl.getConfig().getString("CommandSettings.Clear.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Clear.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Clear.aliases")));
     }
 
-    public void onClearWorld(Player player) {
-        if (this.worldDisabled(player)) {
-            lm.sendMessage(player, lm.getString("Disabled-World"));
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isConsole()) {
             return;
         }
+
+        Player player = properties.getPlayer();
+
+        if (isDisabledWorld(player)) return;
+
         /*
          * Clear Options:
          * 1. Clear all for player x        (target==x || player stands inside x claim)
          * 2. Clear only specific claim     (target==null)
          * 3. Clear entire world            (target==null)
          */
-        ClearGUI clearGUI = new ClearGUI(player);
+        ClearGUI clearGUI = new ClearGUI(plugin, player);
         clearGUI.display();
     }
 }

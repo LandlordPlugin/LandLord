@@ -1,18 +1,13 @@
 package biz.princeps.landlord.util;
 
-import biz.princeps.landlord.Landlord;
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.BlockPosition;
-import com.comphenix.protocol.wrappers.WrappedBlockData;
+import biz.princeps.landlord.api.IDelimitationManager;
+import biz.princeps.landlord.api.ILandLord;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +18,15 @@ import java.util.Objects;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 18/11/18
  */
-public class Delimitation {
+public class DelimitationManager implements IDelimitationManager {
 
-    private static Landlord plugin = Landlord.getInstance();
-    private static Map<BlockVector, Material> PATTERN;
+    private ILandLord plugin;
+    private Map<BlockVector, Material> pattern;
+
+    public DelimitationManager(ILandLord plugin) {
+        this.plugin = plugin;
+        pattern = getPattern();
+    }
 
     /**
      * Returns the delimitation pattern defined in the config in a way, the plugin can work with
@@ -40,9 +40,10 @@ public class Delimitation {
      *
      * @return a map of a vector and a material
      */
-    public static Map<BlockVector, Material> getDelimitationPattern() {
-        if (PATTERN != null) {
-            return PATTERN;
+    @Override
+    public Map<BlockVector, Material> getPattern() {
+        if (pattern != null) {
+            return pattern;
         }
 
         List<String> cfgString = plugin.getConfig().getStringList("CommandSettings.Claim.delimitation");
@@ -66,7 +67,7 @@ public class Delimitation {
                 for (int z = 0; z < 16; z++) {
                     char varString = s.charAt(z);
                     Material material = varToMaterial.get(varString);
-                    delimitPattern.put(BlockVector.at(x, z), material);
+                    delimitPattern.put(new BlockVector(x, z), material);
                 }
                 x++;
             } else {
@@ -74,20 +75,20 @@ public class Delimitation {
                 return null;
             }
         }
-        PATTERN = delimitPattern;
         return delimitPattern;
     }
 
 
-    public static void delimit(Player player, Chunk chunk) {
-        Map<BlockVector, Material> pattern = getDelimitationPattern();
+    @Override
+    public void delimit(Player player, Chunk chunk) {
+        Map<BlockVector, Material> pattern = this.pattern;
         if (pattern == null) {
             plugin.getLogger().warning("Delimitation failed, because there was an error in the config!");
             return;
         }
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                Material mat = pattern.get(BlockVector.at(x, z));
+                Material mat = pattern.get(new BlockVector(x, z));
 
                 if (mat != null) {
                     int highestY = chunk.getWorld().getHighestBlockYAt(chunk.getX() * 16 + x, chunk.getZ() * 16 + z);
@@ -107,11 +108,11 @@ public class Delimitation {
         }
     }
 
-    private static void sendBlockChangePacket(Player p, Location loc, Material mat) {
+    private void sendBlockChangePacket(Player p, Location loc, Material mat) {
         plugin.getUtilsProxy().send_fake_block_packet(p, loc, mat);
     }
 
-    static class BlockVector {
+    public class BlockVector {
 
         private int x, z;
 
@@ -140,10 +141,6 @@ public class Delimitation {
         @Override
         public int hashCode() {
             return Objects.hash(x, z);
-        }
-
-        public static BlockVector at(int x, int z) {
-            return new BlockVector(x, z);
         }
     }
 }

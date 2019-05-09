@@ -43,8 +43,8 @@ public class Options {
         return cfg.getBoolean("Homes.enable");
     }
 
-    public static int getManageSize(){
-        if(MANAGE_SIZE == -1){
+    public static int getManageSize() {
+        if (MANAGE_SIZE == -1) {
             ConfigurationSection section = cfg.getConfigurationSection("Manage");
 
             Set<String> keys = section.getKeys(true);
@@ -61,8 +61,8 @@ public class Options {
     }
 
     public static Set<String> getToggleMobs() {
-        if (toggleMobs == null){
-           toggleMobs = new HashSet<>(cfg.getStringList("Manage.mob-spawning.toggleableMobs"));
+        if (toggleMobs == null) {
+            toggleMobs = new HashSet<>(cfg.getStringList("Manage.mob-spawning.toggleableMobs"));
         }
         return toggleMobs;
     }

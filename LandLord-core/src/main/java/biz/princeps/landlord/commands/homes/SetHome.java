@@ -4,6 +4,9 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import com.google.common.collect.Sets;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
@@ -14,22 +17,29 @@ import org.bukkit.entity.Player;
  */
 public class SetHome extends LandlordCommand {
 
-    public SetHome(ILandLord plugin) {
-        super(plugin);
+    public SetHome(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.Sethome.name"),
+                pl.getConfig().getString("CommandSettings.Sethome.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Sethome.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Sethome.aliases")));
     }
 
     // requires permission landlord.player.home
-    public void onSetHome(Player player) {
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isConsole()) {
+            return;
+        }
+
+        Player player = properties.getPlayer();
 
         if (!Options.enabled_homes()) {
             lm.sendMessage(player, lm.getString("Commands.SetHome.disabled"));
             return;
         }
 
-        if (this.worldDisabled(player)) {
-            lm.sendMessage(player, lm.getString("Disabled-World"));
-            return;
-        }
+        if (isDisabledWorld(player)) return;
+
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
         IOwnedLand land = plugin.getWGProxy().getRegion(chunk);

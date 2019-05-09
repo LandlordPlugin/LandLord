@@ -4,7 +4,10 @@ import biz.princeps.landlord.api.IOwnedLand;
 import com.google.common.collect.Sets;
 import org.bukkit.World;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class MultiIndexCache {
 
@@ -40,7 +43,7 @@ public class MultiIndexCache {
         return indexPlayer.get(uuid);
     }
 
-    public Set<IOwnedLand> getLands(World w){
+    public Set<IOwnedLand> getLands(World w) {
         return indexWorld.get(w);
     }
 

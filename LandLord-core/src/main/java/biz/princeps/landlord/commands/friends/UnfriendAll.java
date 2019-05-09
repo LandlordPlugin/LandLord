@@ -4,6 +4,10 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,11 +21,27 @@ import java.util.Collections;
  */
 public class UnfriendAll extends LandlordCommand {
 
-    public UnfriendAll(ILandLord plugin) {
-        super(plugin);
+    public UnfriendAll(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.RemovefriendAll.name"),
+                pl.getConfig().getString("CommandSettings.RemovefriendAll.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemovefriendAll.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemovefriendAll.aliases")));
     }
 
-    public void onUnfriendall(Player player, String name) {
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isConsole()) {
+            return;
+        }
+        try {
+            onUnfriendall(properties.getPlayer(), arguments.get(0));
+        } catch (ArgumentsOutOfBoundsException e) {
+            properties.sendUsage();
+        }
+
+    }
+
+    private void onUnfriendall(Player player, String name) {
 
         if (name == null || name.isEmpty()) {
             lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")

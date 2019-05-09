@@ -2,7 +2,6 @@ package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
-import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.admin.AdminTeleport;
 import biz.princeps.landlord.commands.admin.Clear;
@@ -15,17 +14,16 @@ import biz.princeps.landlord.commands.friends.*;
 import biz.princeps.landlord.commands.homes.Home;
 import biz.princeps.landlord.commands.homes.SetHome;
 import biz.princeps.landlord.commands.management.*;
-import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.MainCommand;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.command.SubCommand;
-import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.storage_old.AbstractDatabase;
 import biz.princeps.lib.storage_old.MySQL;
 import biz.princeps.lib.storage_old.SQLite;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -35,7 +33,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -47,64 +48,60 @@ import java.util.logging.Logger;
  * Basically a single command is created by extending MainCommand. For example you would do:
  * class HealCommand extends MainCommand {...} // introduces a heal command
  * Landlordbase describes the base command ./landlord
- * Subcommands are created by creating a subclass in the main command class, that extends SubCommand.
+ * Subcommands are created by creating a class, that extends SubCommand. Add that one as subcmd.
  * Always call super(cmdname, description, usage, permissions, aliases) to initialize the (sub)command with everything
  * it needs to work.
  */
 public class Landlordbase extends MainCommand {
 
     private ILandLord pl;
-    // Subcommands map, has nothing to do with the Command system provided by princeps lib. See the comment at reloadCommands()
-    private Map<String, LandlordCommand> subcommands;
 
     public Landlordbase(ILandLord pl) {
         super(pl.getConfig().getString("CommandSettings.Main.name"),
                 pl.getConfig().getString("CommandSettings.Main.description"),
                 pl.getConfig().getString("CommandSettings.Main.usage"),
-                new HashSet<>(pl.getConfig().getStringList("CommandSettings.Main.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Main.permissions")),
                 pl.getConfig().getStringList("CommandSettings.Main.aliases").toArray(new String[]{}));
 
         this.pl = pl;
-        this.subcommands = new HashMap<>();
-        this.reloadCommands();
+        reloadCommands();
     }
 
     /**
-     * Reloads all commands.
-     * Currently any subcommand is at first handled here in the corresponding class extending SubCommand, then its
-     * redirected to the correct class, that can be found in the hashmap subcommands, which is generated in this method.
-     * <p>
-     * Thats properly not optimal. Im totally not happy with this system, but it works for now. I think the problem
-     * with an annotation based system was, that I couldnt put stuff from configs there :shrug:
+     * Reloads all commands. Reinitialisation, to pick up changed config variables
      */
-    public void reloadCommands() {
-        subcommands.clear();
-        subcommands.put("claim", new Claim(pl, false));
-        subcommands.put("info", new Info(pl));
-        subcommands.put("unclaim", new Unclaim(pl));
-        subcommands.put("unclaimall", new UnclaimAll(pl));
-        subcommands.put("addfriend", new Addfriend(pl));
-        subcommands.put("unfriend", new Unfriend(pl));
-        subcommands.put("addfriendall", new AddfriendAll(pl));
-        subcommands.put("unfriendall", new UnfriendAll(pl));
-        subcommands.put("listlands", new ListLands(pl));
-        subcommands.put("landmap", new LandMap(pl));
-        subcommands.put("clearworld", new Clear(pl));
-        subcommands.put("manage", new Manage(pl));
-        subcommands.put("manageall", new ManageAll(pl));
-        subcommands.put("shop", new Shop(pl));
-        subcommands.put("claims", new Claims(pl));
-        subcommands.put("sethome", new SetHome(pl));
-        subcommands.put("home", new Home(pl));
-        subcommands.put("giveclaims", new GiveClaims(pl));
-        subcommands.put("update", new Update(pl));
-        subcommands.put("advertise", new Advertise(pl));
-        subcommands.put("remadvertise", new RemoveAdvertise(pl));
-        subcommands.put("borders", new Borders(pl));
-        subcommands.put("admintp", new AdminTeleport(pl));
-        subcommands.put("item", new LLItem(pl));
-        subcommands.put("listfriends", new ListFriends(pl));
-        subcommands.put("multiclaim", new MultiClaim(pl));
+    private void reloadCommands() {
+        this.clearSubcommands();
+        this.addSubcommand(new Version());
+        this.addSubcommand(new Migrate());
+        this.addSubcommand(new Confirm());
+
+        this.addSubcommand(new Info(pl));
+        this.addSubcommand(new Claim(pl, false));
+        this.addSubcommand(new Unclaim(pl));
+        this.addSubcommand(new UnclaimAll(pl));
+        this.addSubcommand(new Addfriend(pl));
+        this.addSubcommand(new AddfriendAll(pl));
+        this.addSubcommand(new Unfriend(pl));
+        this.addSubcommand(new UnfriendAll(pl));
+        this.addSubcommand(new Advertise(pl));
+        this.addSubcommand(new RemoveAdvertise(pl));
+        this.addSubcommand(new ListFriends(pl));
+        this.addSubcommand(new ListLands(pl));
+        this.addSubcommand(new Claims(pl));
+        this.addSubcommand(new Shop(pl));
+        this.addSubcommand(new GiveClaims(pl));
+        this.addSubcommand(new Update(pl));
+        this.addSubcommand(new AdminTeleport(pl));
+        this.addSubcommand(new MultiClaim(pl));
+        this.addSubcommand(new LLItem(pl));
+        this.addSubcommand(new Borders(pl));
+        this.addSubcommand(new Home(pl));
+        this.addSubcommand(new SetHome(pl));
+        this.addSubcommand(new Manage(pl));
+        this.addSubcommand(new ManageAll(pl));
+        this.addSubcommand(new Clear(pl));
+        this.addSubcommand(new LandMap(pl));
     }
 
     @Override
@@ -116,19 +113,19 @@ public class Landlordbase extends MainCommand {
             for (SubCommand subCommand : this.subCommandMap.values()) {
                 if (subCommand.hasPermission(sender)) {
 
-                    if (subCommand instanceof BordersCMD) {
+                    if (subCommand instanceof Borders) {
                         if (Options.enabled_borders()) {
                             tabReturn.add(subCommand.getName());
                         }
-                    } else if (subCommand instanceof MapCMD) {
+                    } else if (subCommand instanceof LandMap) {
                         if (Options.enabled_map()) {
                             tabReturn.add(subCommand.getName());
                         }
-                    } else if (subCommand instanceof ShopCMD || subCommand instanceof ClaimsCMD) {
+                    } else if (subCommand instanceof Shop || subCommand instanceof Claims) {
                         if (Options.enabled_shop()) {
                             tabReturn.add(subCommand.getName());
                         }
-                    } else if (subCommand instanceof HomeCMD || subCommand instanceof SetHomeCMD) {
+                    } else if (subCommand instanceof Home || subCommand instanceof SetHome) {
                         if (Options.enabled_homes()) {
                             tabReturn.add(subCommand.getName());
                         }
@@ -145,13 +142,13 @@ public class Landlordbase extends MainCommand {
             for (SubCommand subcmd : subCommandMap.values()) {
                 if (subcmd.matches(args[0])) {
 
-                    if (subcmd instanceof MapCMD) {
+                    if (subcmd instanceof LandMap) {
                         tabReturn.add("on");
                         tabReturn.add("off");
                     }
 
-                    if (subcmd instanceof AddfriendCMD || subcmd instanceof AddFriendAllCMD ||
-                            subcmd instanceof RemoveFriendCMD || subcmd instanceof RemoveFriendAllCMD) {
+                    if (subcmd instanceof Addfriend || subcmd instanceof AddfriendAll ||
+                            subcmd instanceof Unfriend || subcmd instanceof UnfriendAll) {
 
                         if (args[1].isEmpty()) {
                             Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
@@ -160,7 +157,7 @@ public class Landlordbase extends MainCommand {
                                     .filter(p -> p.getName().startsWith(args[1])).forEach(p -> tabReturn.add(p.getName()));
                         }
                         return tabReturn;
-                    } else if (subcmd instanceof MultiClaimCMD) {
+                    } else if (subcmd instanceof MultiClaim) {
                         for (MultiClaim.MultiClaimMode value : MultiClaim.MultiClaimMode.values()) {
                             tabReturn.add(value.name());
                         }
@@ -219,7 +216,7 @@ public class Landlordbase extends MainCommand {
      * There used to be a different database scheme a very long time ago. Or maybe there wasnt. I don't really remember.
      * Anyways, this function can be used to migrate this old database to the new one. Maybe.
      */
-    void migrate(AbstractDatabase db, String tablename, String ownerColumn, String worldColumn, String xColumn, String zColumn) {
+    private void migrate(AbstractDatabase db, String tablename, String ownerColumn, String worldColumn, String xColumn, String zColumn) {
         List<DataObject> objs = new ArrayList<>();
 
         db.executeQuery("SELECT * FROM " + tablename, res -> {
@@ -264,603 +261,13 @@ public class Landlordbase extends MainCommand {
         }.runTaskTimer(pl.getPlugin(), 0, 1);
     }
 
-    /**
-     * I'll skip documentation at this point, since its quiet self explanatory. Most of the work is happening in the
-     * separate classes anyway (YISS this is shit design)
-     */
-    class ClaimCMD extends SubCommand {
-
-        public ClaimCMD() {
-            super(pl.getConfig().getString("CommandSettings.Claim.name"),
-                    pl.getConfig().getString("CommandSettings.Claim.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Claim.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Claim.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                Chunk chunk = properties.getPlayer().getWorld().getChunkAt(properties.getPlayer().getLocation());
-                ((Claim) subcommands.get("claim")).onClaim(properties.getPlayer(), chunk);
-            }
-        }
-    }
-
-    class InfoCMD extends SubCommand {
-
-        public InfoCMD() {
-            super(pl.getConfig().getString("CommandSettings.Info.name"),
-                    pl.getConfig().getString("CommandSettings.Info.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Info.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Info.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((Info) subcommands.get("info")).onInfo(properties.getPlayer());
-            }
-        }
-    }
-
-    class UnclaimCMD extends SubCommand {
-
-        public UnclaimCMD() {
-            super(pl.getConfig().getString("CommandSettings.Unclaim.name"),
-                    pl.getConfig().getString("CommandSettings.Unclaim.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Unclaim.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Unclaim.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                String landname;
-                try {
-                    landname = arguments.get(0);
-                } catch (ArgumentsOutOfBoundsException e) {
-                    landname = "null";
-                }
-                ((Unclaim) subcommands.get("unclaim")).onUnclaim(properties.getPlayer(), landname);
-            }
-        }
-    }
-
-    class UnclaimAllCMD extends SubCommand {
-
-        public UnclaimAllCMD() {
-            super(pl.getConfig().getString("CommandSettings.UnclaimAll.name"),
-                    pl.getConfig().getString("CommandSettings.UnclaimAll.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.UnclaimAll.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.UnclaimAll.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((UnclaimAll) subcommands.get("unclaimall")).onUnclaim(properties.getPlayer());
-            }
-        }
-    }
-
-    class ListfriendsCMD extends SubCommand {
-
-        public ListfriendsCMD() {
-            super(pl.getConfig().getString("CommandSettings.Listfriends.name"),
-                    pl.getConfig().getString("CommandSettings.Listfriends.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Listfriends.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Listfriends.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-
-                String landname;
-                try {
-                    landname = arguments.get(0);
-                } catch (ArgumentsOutOfBoundsException e) {
-                    IOwnedLand region = pl.getWGProxy().getRegion(properties.getPlayer().getLocation());
-                    if (region != null) {
-                        landname = region.getName();
-                    } else {
-                        landname = null;
-                    }
-                }
-
-                ((ListFriends) subcommands.get("listfriends")).onListFriends(properties.getPlayer(), landname);
-            }
-        }
-    }
-
-    class AddfriendCMD extends SubCommand {
-
-        public AddfriendCMD() {
-            super(pl.getConfig().getString("CommandSettings.Addfriend.name"),
-                    pl.getConfig().getString("CommandSettings.Addfriend.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Addfriend.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Addfriend.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((Addfriend) subcommands.get("addfriend")).onAddfriend(properties.getPlayer(), arguments.get());
-            }
-        }
-    }
-
-    class RemoveFriendCMD extends SubCommand {
-
-        public RemoveFriendCMD() {
-            super(pl.getConfig().getString("CommandSettings.RemoveFriend.name"),
-                    pl.getConfig().getString("CommandSettings.RemoveFriend.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.RemoveFriend.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.RemoveFriend.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((Unfriend) subcommands.get("unfriend")).onUnfriend(properties.getPlayer(), arguments.get());
-            }
-        }
-    }
-
-    class AddFriendAllCMD extends SubCommand {
-
-        public AddFriendAllCMD() {
-            super(pl.getConfig().getString("CommandSettings.AddfriendAll.name"),
-                    pl.getConfig().getString("CommandSettings.AddfriendAll.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.AddfriendAll.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.AddfriendAll.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                try {
-                    ((AddfriendAll) subcommands.get("addfriendall")).onAddfriend(properties.getPlayer(), arguments.get(0));
-                } catch (ArgumentsOutOfBoundsException e) {
-                    properties.sendMessage(pl.getLangManager().getString("Commands.AddfriendAll.noPlayer")
-                            .replace("%player%", "[]"));
-                }
-            }
-        }
-    }
-
-    class RemoveFriendAllCMD extends SubCommand {
-
-        public RemoveFriendAllCMD() {
-            super(pl.getConfig().getString("CommandSettings.RemovefriendAll.name"),
-                    pl.getConfig().getString("CommandSettings.RemovefriendAll.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.RemovefriendAll.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.RemovefriendAll.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                try {
-                    ((UnfriendAll) subcommands.get("unfriendall")).onUnfriendall(properties.getPlayer(), arguments.get(0));
-                } catch (ArgumentsOutOfBoundsException e) {
-                    properties.sendUsage();
-                }
-            }
-        }
-    }
-
-    class ListLandsCMD extends SubCommand {
-
-        public ListLandsCMD() {
-            super(pl.getConfig().getString("CommandSettings.ListLands.name"),
-                    pl.getConfig().getString("CommandSettings.ListLands.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.ListLands.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.ListLands.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                String target = null;
-                int page = 0;
-                try {
-                    // check arguments for different sub sub commands like /ll list <name> <pagenr>
-                    switch (arguments.size()) {
-                        case 2:
-                            target = arguments.get(0);
-                            page = arguments.getInt(1);
-                            break;
-                        case 1:
-                            target = arguments.get(0);
-                            break;
-                        case 0:
-                            break;
-                    }
-
-                } catch (ArgumentsOutOfBoundsException ignored) {
-                    properties.sendUsage();
-                }
-
-                // Want to know own lands
-                if (target == null) {
-                    ((ListLands) subcommands.get("listlands")).onListLands(properties.getPlayer(), pl.getPlayerManager().get(properties.getPlayer().getUniqueId()), page);
-                } else if (properties.getPlayer().hasPermission("landlord.admin.list")) {
-                    // Admin, Other lands, need to lookup their names
-                    int finalPage = page;
-                    String finalTarget = target;
-                    pl.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
-                        if (lPlayer == null) {
-                            // Failure
-                            properties.getPlayer().sendMessage(pl.getLangManager().getString("Commands.ListLands.noPlayer").replace("%player%", finalTarget));
-                        } else {
-                            // Success
-                            ((ListLands) subcommands.get("listlands")).onListLands(properties.getPlayer(), (LPlayer) lPlayer, finalPage);
-                        }
-                    });
-                }
-            }
-        }
-    }
-
-    class MapCMD extends SubCommand {
-        public MapCMD() {
-            super(pl.getConfig().getString("CommandSettings.Map.name"),
-                    pl.getConfig().getString("CommandSettings.Map.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Map.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Map.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-
-            if (arguments.size() == 0) {
-                // toggle
-                if (properties.isPlayer()) {
-                    ((LandMap) subcommands.get("landmap")).onToggleLandMap(properties.getPlayer());
-                }
-            } else if (arguments.size() == 1) {
-                // on/off
-                String arg = arguments.get()[0];
-                if (arg.toLowerCase().equals("on") || arg.toLowerCase().equals("off")) {
-                    ((LandMap) subcommands.get("landmap")).onToggleLandMap(properties.getPlayer(), arg.toLowerCase());
-                }
-            }
-        }
-    }
-
-    class ClearWorldCMD extends SubCommand {
-
-        public ClearWorldCMD() {
-            super(pl.getConfig().getString("CommandSettings.Clear.name"),
-                    pl.getConfig().getString("CommandSettings.Clear.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Clear.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Clear.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((Clear) subcommands.get("clearworld")).onClearWorld(properties.getPlayer());
-            }
-        }
-    }
-
-    class ManageCMD extends SubCommand {
-
-        public ManageCMD() {
-            super(pl.getConfig().getString("CommandSettings.Manage.name"),
-                    pl.getConfig().getString("CommandSettings.Manage.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Manage.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Manage.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((Manage) subcommands.get("manage")).onManage(properties.getPlayer(), arguments.get());
-            }
-        }
-    }
-
-    class ManageAllCMD extends SubCommand {
-
-        public ManageAllCMD() {
-            super(pl.getConfig().getString("CommandSettings.ManageAll.name"),
-                    pl.getConfig().getString("CommandSettings.ManageAll.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.ManageAll.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.ManageAll.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((ManageAll) subcommands.get("manageall")).onManageAll(properties.getPlayer());
-            }
-        }
-    }
-
-    class UpdateCMD extends SubCommand {
-
-        public UpdateCMD() {
-            super(pl.getConfig().getString("CommandSettings.Update.name"),
-                    pl.getConfig().getString("CommandSettings.Update.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Update.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Update.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            try {
-                if (arguments.get(0).equals("-r")) {
-                    ((Update) subcommands.get("update")).onResetLands(properties.getCommandSender());
-                }
-            } catch (ArgumentsOutOfBoundsException e) {
-                ((Update) subcommands.get("update")).onUpdateLands(properties.getCommandSender());
-            }
-        }
-    }
-
-    class ShopCMD extends SubCommand {
-
-        public ShopCMD() {
-            super(pl.getConfig().getString("CommandSettings.Shop.name"),
-                    pl.getConfig().getString("CommandSettings.Shop.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Shop.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Shop.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((Shop) subcommands.get("shop")).onShop(properties.getPlayer());
-            }
-        }
-    }
-
-    /**
-     * This is shit.
-     * I hate reloading. Just makes stuff complicate. Tbh i have no idea how well this works
-     */
-    class ReloadCMD extends SubCommand {
-
-        public ReloadCMD() {
-            super(pl.getConfig().getString("CommandSettings.Reload.name"),
-                    pl.getConfig().getString("CommandSettings.Reload.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Reload.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Reload.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            CommandSender issuer = properties.getCommandSender();
-
-            issuer.sendMessage(ChatColor.RED + "Reloading is not recommended! Before reporting any bugs, please restart your server.");
-
-            pl.getLangManager().reload();
-            pl.getPlugin().reloadConfig();
-            pl.setupPrincepsLib();
-
-            String msg = pl.getLangManager().getString("Commands.Reload.success");
-            issuer.sendMessage(msg);
-        }
-    }
-
-    class ClaimsCMD extends SubCommand {
-
-        public ClaimsCMD() {
-            super(pl.getConfig().getString("CommandSettings.Claims.name"),
-                    pl.getConfig().getString("CommandSettings.Claims.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Claims.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Claims.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((Claims) subcommands.get("claims")).onClaims(properties.getPlayer());
-            }
-        }
-    }
-
-    class SetHomeCMD extends SubCommand {
-
-        public SetHomeCMD() {
-            super(pl.getConfig().getString("CommandSettings.Sethome.name"),
-                    pl.getConfig().getString("CommandSettings.Sethome.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Sethome.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Sethome.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((SetHome) subcommands.get("sethome")).onSetHome(properties.getPlayer());
-            }
-        }
-    }
-
-    class HomeCMD extends SubCommand {
-
-        public HomeCMD() {
-            super(pl.getConfig().getString("CommandSettings.Home.name"),
-                    pl.getConfig().getString("CommandSettings.Home.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Home.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Home.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                String target;
-                try {
-                    target = arguments.get(0);
-                } catch (ArgumentsOutOfBoundsException e) {
-                    target = "own";
-                }
-                ((Home) subcommands.get("home")).onHome(properties, target);
-            }
-        }
-    }
-
-    class GiveClaimsCMD extends SubCommand {
-
-        public GiveClaimsCMD() {
-            super(pl.getConfig().getString("CommandSettings.GiveClaims.name"),
-                    pl.getConfig().getString("CommandSettings.GiveClaims.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.GiveClaims.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.GiveClaims.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            ((GiveClaims) subcommands.get("giveclaims")).onGiveClaims(properties, arguments);
-        }
-    }
-
-    class AdvertiseCMD extends SubCommand {
-
-        public AdvertiseCMD() {
-            super(pl.getConfig().getString("CommandSettings.Advertise.name"),
-                    pl.getConfig().getString("CommandSettings.Advertise.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Advertise.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Advertise.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                if (Options.isVaultEnabled()) {
-                    try {
-                        String landname = "this";
-                        double price;
-                        if (arguments.size() > 1) {
-                            landname = arguments.get(0);
-                            price = arguments.getDouble(1);
-                        } else {
-                            price = arguments.getDouble(0);
-                        }
-
-                        ((Advertise) subcommands.get("advertise")).onAdvertise(properties.getPlayer(), landname, price);
-                    } catch (ArgumentsOutOfBoundsException e) {
-                        properties.sendUsage();
-                    }
-                }
-            }
-        }
-    }
-
-
-    class RemoveAdvertiseCMD extends SubCommand {
-
-        public RemoveAdvertiseCMD() {
-            super(pl.getConfig().getString("CommandSettings.RemoveAdvertise.name"),
-                    pl.getConfig().getString("CommandSettings.RemoveAdvertise.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.RemoveAdvertise.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.RemoveAdvertise.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                if (Options.isVaultEnabled()) {
-                    try {
-                        String landname = "this";
-                        if (arguments.size() == 1) {
-                            landname = arguments.get(0);
-                        }
-                        ((RemoveAdvertise) subcommands.get("remadvertise")).onRemoveAdvertise(properties.getPlayer(), landname);
-                    } catch (ArgumentsOutOfBoundsException e) {
-                        properties.sendUsage();
-                    }
-                }
-            }
-        }
-    }
-
-    class BordersCMD extends SubCommand {
-
-        public BordersCMD() {
-            super(pl.getConfig().getString("CommandSettings.Borders.name"),
-                    pl.getConfig().getString("CommandSettings.Borders.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.Borders.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.Borders.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                ((Borders) subcommands.get("borders")).onToggleBorder(properties.getPlayer());
-            }
-        }
-    }
-
-    class MultiClaimCMD extends SubCommand {
-
-        public MultiClaimCMD() {
-            super(pl.getConfig().getString("CommandSettings.MultiClaim.name"),
-                    pl.getConfig().getString("CommandSettings.MultiClaim.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.MultiClaim.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.MultiClaim.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            ((MultiClaim) subcommands.get("multiclaim")).onMultiClaim(properties, arguments);
-        }
-    }
-
-    class AdminTPCMD extends SubCommand {
-
-        public AdminTPCMD() {
-            super(pl.getConfig().getString("CommandSettings.AdminTP.name"),
-                    pl.getConfig().getString("CommandSettings.AdminTP.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.AdminTP.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.AdminTP.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            if (properties.isPlayer()) {
-                String target;
-                try {
-                    target = arguments.get(0);
-                } catch (ArgumentsOutOfBoundsException e) {
-                    properties.sendUsage();
-                    return;
-                }
-                ((AdminTeleport) subcommands.get("admintp")).onAdminTeleport(properties.getPlayer(), target);
-            }
-        }
-    }
-
-    /**
-     * Lmao, didnt even realize I had the Managementitem disabled
-     */
-    class MAItemCMD extends SubCommand {
-
-        public MAItemCMD() {
-            super(pl.getConfig().getString("CommandSettings.MAItem.name"),
-                    pl.getConfig().getString("CommandSettings.MAItem.usage"),
-                    new HashSet<>(pl.getConfig().getStringList("CommandSettings.MAItem.permissions")),
-                    pl.getConfig().getStringList("CommandSettings.MAItem.aliases").toArray(new String[]{}));
-        }
-
-        @Override
-        public void onCommand(Properties properties, Arguments arguments) {
-            String target = null;
-
-            if (arguments.size() > 0) {
-                target = arguments.get()[0];
-            }
-            ((LLItem) subcommands.get("item")).onItem(properties.getCommandSender(), target);
-        }
-    }
-
-    class ConfirmCMD extends SubCommand {
-
-        public ConfirmCMD() {
-            super("confirm", "/lldm help", new HashSet<>(Collections.singleton("landlord.use")));
+    public class Confirm extends SubCommand {
+
+        public Confirm() {
+            super("confirm",
+                    "/lldm help",
+                    Sets.newHashSet(Collections.singleton("landlord.use")),
+                    Sets.newHashSet());
         }
 
         @Override
@@ -869,10 +276,13 @@ public class Landlordbase extends MainCommand {
         }
     }
 
-    class VersionCMD extends SubCommand {
+    public class Version extends SubCommand {
 
-        public VersionCMD() {
-            super("version", "/ll version", new HashSet<>(Collections.singleton("landlord.admin")));
+        public Version() {
+            super("version",
+                    "/ll version",
+                    Sets.newHashSet(Collections.singleton("landlord.admin")),
+                    Sets.newHashSet());
         }
 
         @Override
@@ -886,11 +296,13 @@ public class Landlordbase extends MainCommand {
     /**
      * Do not touch! Black magic!
      */
-    class MigrateCMD extends SubCommand {
+    public class Migrate extends SubCommand {
 
-        public MigrateCMD() {
-            super("migrate", "/ll migrate <v1|v2> (v1 the original landlord, v2 Princeps upgraded version)",
-                    new HashSet<>(Collections.singletonList("landlord.admin.migrate")));
+        public Migrate() {
+            super("migrate",
+                    "/ll migrate <v1|v2> (v1 the original landlord, v2 Princeps upgraded version)",
+                    Sets.newHashSet(Collections.singletonList("landlord.admin.migrate")),
+                    Sets.newHashSet());
         }
 
         @Override

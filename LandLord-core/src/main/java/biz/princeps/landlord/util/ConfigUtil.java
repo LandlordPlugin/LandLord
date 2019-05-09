@@ -1,6 +1,6 @@
 package biz.princeps.landlord.util;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,12 +14,18 @@ import java.io.*;
  */
 public class ConfigUtil {
 
+    private ILandLord pl;
+
+    public ConfigUtil(ILandLord pl) {
+        this.pl = pl;
+    }
+
     /**
      * In case you upgraded the config version (adding a field...) you have to increment the variable "version" in the
      * config.yml. This will cause the old config to be backuped and the new (changed) config to be copied in the
      * right place.
      */
-    public static void handleConfigUpdate(String pathToExisting, String pathInJar) {
+    public void handleConfigUpdate(String pathToExisting, String pathInJar) {
 
         if (pathInJar == null || pathToExisting == null)
             return;
@@ -34,12 +40,12 @@ public class ConfigUtil {
 
         int version = config.getInt("version");
 
-        InputStream resourceAsStream = Landlord.getInstance().getClass().getResourceAsStream(pathInJar);
+        InputStream resourceAsStream = pl.getClass().getResourceAsStream(pathInJar);
         BufferedReader reader;
         if (resourceAsStream != null)
             reader = new BufferedReader(new InputStreamReader(resourceAsStream));
         else {
-            Landlord.getInstance().getLogger().warning("You are using an unknown translation.\n" +
+            pl.getLogger().warning("You are using an unknown translation.\n" +
                     "Please be aware, that LandLord will not add any new strings to your translation.\n" +
                     "If you would like to see your translation inside the plugin, please contact the author!");
             return;
@@ -54,7 +60,7 @@ public class ConfigUtil {
                     }
 
                 } catch (NumberFormatException e) {
-                    Landlord.getInstance().getLogger().warning("Invalid version in file " + pathInJar);
+                    pl.getLogger().warning("Invalid version in file " + pathInJar);
                 }
             }
         });

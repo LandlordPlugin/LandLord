@@ -5,6 +5,9 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGUI;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -17,12 +20,21 @@ import org.bukkit.entity.Player;
  */
 public class Manage extends LandlordCommand {
 
-    public Manage(ILandLord plugin) {
-        super(plugin);
+    public Manage(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.Manage.name"),
+                pl.getConfig().getString("CommandSettings.Manage.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Manage.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Manage.aliases")));
     }
 
     // TODO Clean this mess up
-    public void onManage(Player player, String[] args) {
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isConsole()) {
+            return;
+        }
+        String[] args = arguments.get();
+        Player player = properties.getPlayer();
 
         // land manage
         if (args.length == 0 || (args.length == 1 && !args[0].equals("setgreet")
@@ -49,7 +61,7 @@ public class Manage extends LandlordCommand {
                 return;
             }
 
-            ManageGUI gui = new ManageGUI(player, land);
+            ManageGUI gui = new ManageGUI(plugin, player, land);
             gui.display();
 
         } else {

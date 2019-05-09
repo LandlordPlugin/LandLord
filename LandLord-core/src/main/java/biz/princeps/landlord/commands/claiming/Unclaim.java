@@ -6,6 +6,10 @@ import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -19,8 +23,25 @@ import org.bukkit.entity.Player;
  */
 public class Unclaim extends LandlordCommand {
 
-    public Unclaim(ILandLord plugin) {
-        super(plugin);
+    public Unclaim(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.Unclaim.name"),
+                pl.getConfig().getString("CommandSettings.Unclaim.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Unclaim.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Unclaim.aliases")));
+
+    }
+
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isPlayer()) {
+            String landname;
+            try {
+                landname = arguments.get(0);
+            } catch (ArgumentsOutOfBoundsException e) {
+                landname = "null";
+            }
+            onUnclaim(properties.getPlayer(), landname);
+        }
     }
 
     public void onUnclaim(Player player, String chunkname) {
@@ -29,6 +50,7 @@ public class Unclaim extends LandlordCommand {
         if (chunkname.equals("null")) {
             Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
             ol = plugin.getWGProxy().getRegion(chunk);
+            chunkname = ol.getName();
         } else {
             if (!plugin.getWGProxy().isLLRegion(chunkname)) {
                 Bukkit.dispatchCommand(player, "/ll help");
@@ -38,10 +60,7 @@ public class Unclaim extends LandlordCommand {
             ol = plugin.getWGProxy().getRegion(chunkname);
         }
 
-        if (plugin.getConfig().getStringList("disabled-worlds").contains(chunkname.split("_")[0])) {
-            lm.sendMessage(player, lm.getString("Disabled-World"));
-            return;
-        }
+        if (isDisabledWorld(player, plugin.getWGProxy().getWorld(chunkname))) return;
 
         if (ol == null) {
             lm.sendMessage(player, lm.getString("Commands.Unclaim.notOwnFreeLand"));
@@ -112,7 +131,5 @@ public class Unclaim extends LandlordCommand {
 
             plugin.getMapManager().updateAll();
         }
-
     }
-
 }

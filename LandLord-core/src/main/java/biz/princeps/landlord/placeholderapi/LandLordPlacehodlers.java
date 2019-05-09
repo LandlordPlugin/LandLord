@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
  * Date: Unknown
+ * <p>
+ * HODL
  */
 public class LandLordPlacehodlers extends EZPlaceholderHook {
 

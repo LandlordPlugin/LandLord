@@ -4,6 +4,9 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -18,16 +21,24 @@ import java.util.Arrays;
  */
 public class Unfriend extends LandlordCommand {
 
-    public Unfriend(ILandLord plugin) {
-        super(plugin);
+    public Unfriend(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.RemoveFriend.name"),
+                pl.getConfig().getString("CommandSettings.RemoveFriend.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveFriend.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveFriend.aliases")));
     }
 
-    public void onUnfriend(Player player, String[] names) {
-
-        if (this.worldDisabled(player)) {
-            lm.sendMessage(player, lm.getString("Disabled-World"));
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isConsole()) {
             return;
         }
+
+        Player player = properties.getPlayer();
+        String[] names = arguments.get();
+
+        if (isDisabledWorld(player)) return;
+
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
         IOwnedLand land = plugin.getWGProxy().getRegion(chunk);

@@ -2,20 +2,17 @@ package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.commands.Landlordbase;
-import biz.princeps.landlord.manager.VaultManager;
 import biz.princeps.landlord.items.Maitem;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
 import biz.princeps.landlord.listener.SecureWorldListener;
-import biz.princeps.landlord.manager.CostManager;
-import biz.princeps.landlord.manager.LPlayerManager;
-import biz.princeps.landlord.manager.LangManager;
-import biz.princeps.landlord.manager.OfferManager;
+import biz.princeps.landlord.manager.*;
 import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.placeholderapi.LandLordPlacehodlers;
 import biz.princeps.landlord.util.ConfigUtil;
+import biz.princeps.landlord.util.DelimitationManager;
 import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
@@ -49,6 +46,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     protected IMapManager mapManager;
     protected ICostManager costManager;
     protected IOfferManager offerManager;
+    protected IDelimitationManager delimitationManager;
 
     private static TaskChainFactory taskChainFactory;
 
@@ -122,7 +120,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      */
     private void setupConfig() {
         this.saveDefaultConfig();
-        ConfigUtil.handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
+        new ConfigUtil(this).handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
         this.saveDefaultConfig();
     }
 
@@ -193,14 +191,12 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      */
     private void setupManagers() {
         this.langManager = new LangManager(this, getConfig().getString("language", "en"));
-
         this.lPlayerManager = new LPlayerManager(db, this);
-        this.offerManager = new OfferManager(db);
-
+        this.offerManager = new OfferManager(this, db);
         this.mapManager = new MapManager(this);
-        this.costManager = new CostManager();
-
+        this.costManager = new CostManager(this);
         this.vaultHandler = new VaultManager(getVault());
+        this.delimitationManager = new DelimitationManager(this);
     }
 
     /**
@@ -234,14 +230,14 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      * The LandAlerter is a special listener, since it listens on packets.
      */
     private void setupListeners() {
-        new JoinListener();
+        new JoinListener(this);
         new MapManager(this);
 
         if (getConfig().getBoolean("SecureWorld.enable")) {
-            new SecureWorldListener();
+            new SecureWorldListener(this);
         }
         if (getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
-            new LandAlerter();
+            new LandAlerter(this);
         } else {
             getLogger().warning("ProtocolLib has not been found. LandAlerts wont function properly");
         }
@@ -258,7 +254,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     }
 
 
-    public Economy getVault() {
+    private Economy getVault() {
         Plugin plugin = getServer().getPluginManager().getPlugin("Vault");
         if (plugin == null) {
             return null;
@@ -320,5 +316,10 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     @Override
     public IVaultManager getVaultManager() {
         return vaultHandler;
+    }
+
+    @Override
+    public IDelimitationManager getDelimitationManager() {
+        return delimitationManager;
     }
 }

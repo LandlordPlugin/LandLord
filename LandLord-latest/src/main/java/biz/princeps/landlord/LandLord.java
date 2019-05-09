@@ -13,7 +13,7 @@ public class LandLord extends ALandLord {
 
     @Override
     void onPreEnable() {
-        this.wgproxy = new WorldGuardProxy(getWorldGuard());
+        this.wgproxy = new WorldGuardProxy(this, getWorldGuard());
         this.utilsProxy = new UtilsProxy();
         this.materialsProxy = new MaterialsProxy();
 
@@ -27,13 +27,13 @@ public class LandLord extends ALandLord {
 
     @Override
     public void onEnable() {
-
+        super.onEnable();
     }
 
 
     @Override
     public void onDisable() {
-
+        super.onDisable();
     }
 
     /**

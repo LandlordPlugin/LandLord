@@ -5,9 +5,11 @@ import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.Offer;
-import biz.princeps.landlord.util.Delimitation;
 import biz.princeps.lib.PrincepsLib;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
 import co.aikar.taskchain.TaskChain;
+import com.google.common.collect.Sets;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -31,18 +33,27 @@ public class Claim extends LandlordCommand {
     private IVaultManager vault;
 
     public Claim(ILandLord pl, boolean overrideConfirmations) {
-        super(pl);
+        super(pl, pl.getConfig().getString("CommandSettings.Claim.name"),
+                pl.getConfig().getString("CommandSettings.Claim.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claim.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claim.aliases")));
+
         this.overrideConfirmations = overrideConfirmations;
         this.wg = plugin.getWGProxy();
         this.vault = plugin.getVaultManager();
     }
 
-    public void onClaim(Player player, Chunk chunk) {
-
-        if (this.worldDisabled(player)) {
-            lm.sendMessage(player, lm.getString("Disabled-World"));
-            return;
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isPlayer()) {
+            Chunk chunk = properties.getPlayer().getWorld().getChunkAt(properties.getPlayer().getLocation());
+            onClaim(properties.getPlayer(), chunk);
         }
+    }
+
+    public void onClaim(Player player, Chunk chunk) {
+        if (isDisabledWorld(player)) return;
+
         IOwnedLand ol = wg.getRegion(chunk);
         String landName = wg.getLandName(chunk);
         String confirmcmd = "/" + plugin.getConfig().getString("CommandSettings.Main.name") + " confirm";
@@ -253,7 +264,7 @@ public class Claim extends LandlordCommand {
     }
 
     private void handleInactiveSell(Player player, IOwnedLand ol, double costForBuyer, double payBackForInactive,
-                                    String originalOwner, Chunk chunk){
+                                    String originalOwner, Chunk chunk) {
         vault.take(player.getUniqueId(), costForBuyer);
         vault.give(ol.getOwner(), payBackForInactive);
 
@@ -288,7 +299,7 @@ public class Claim extends LandlordCommand {
         }
 
         if (plugin.getConfig().getBoolean("CommandSettings.Claim.enableDelimit")) {
-            Delimitation.delimit(player, chunk);
+            plugin.getDelimitationManager().delimit(player, chunk);
         }
 
         plugin.getMapManager().updateAll();
@@ -331,7 +342,7 @@ public class Claim extends LandlordCommand {
                         .color(ChatColor.YELLOW)
                         .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
 
-                plugin.getUtilsProxy().send_basecomponent(player , builder.create());
+                plugin.getUtilsProxy().send_basecomponent(player, builder.create());
                 return false;
             }
             return true;
@@ -366,7 +377,7 @@ public class Claim extends LandlordCommand {
         return true;
     }
 
-    private IOwnedLand[] getSurroundings(Chunk chunk){
+    private IOwnedLand[] getSurroundings(Chunk chunk) {
         World world = chunk.getWorld();
         IOwnedLand[] adjLands = new IOwnedLand[4];
         adjLands[0] = wg.getRegion(world.getChunkAt(chunk.getX() + 1, chunk.getZ()));

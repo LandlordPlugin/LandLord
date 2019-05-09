@@ -1,6 +1,6 @@
 package biz.princeps.landlord.manager;
 
-import biz.princeps.landlord.Landlord;
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOfferManager;
 import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.Offer;
@@ -11,13 +11,13 @@ import java.util.Map;
 public class OfferManager implements IOfferManager {
 
     private Database db;
-    private Landlord plugin;
+    private ILandLord plugin;
 
     private Map<String, Offer> offers;
 
-    public OfferManager(Database db) {
+    public OfferManager(ILandLord plugin, Database db) {
         this.db = db;
-        this.plugin = Landlord.getInstance();
+        this.plugin = plugin;
         this.offers = db.fetchOffers();
     }
 
@@ -27,13 +27,13 @@ public class OfferManager implements IOfferManager {
 
     public void addOffer(Offer offer) {
         offers.put(offer.getLandname(), offer);
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin.getPluginInstance(), () -> db.save(offer));
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin.getPlugin(), () -> db.save(offer));
     }
 
     public void removeOffer(String landname) {
         if (getOffer(landname) != null) {
             offers.remove(landname);
-            Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin.getPluginInstance(), () -> db.remove(landname));
+            Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin.getPlugin(), () -> db.remove(landname));
         }
     }
 

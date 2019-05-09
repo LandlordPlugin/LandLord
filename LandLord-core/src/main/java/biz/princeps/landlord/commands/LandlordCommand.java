@@ -2,7 +2,11 @@ package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
+import biz.princeps.lib.command.SubCommand;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 /**
  * Project: LandLord
@@ -15,18 +19,31 @@ import org.bukkit.entity.Player;
  * <p>
  * Major command logic is done in Landlordbase
  */
-public abstract class LandlordCommand {
+public abstract class LandlordCommand extends SubCommand {
 
     protected ILandLord plugin;
     protected ILangManager lm;
 
-    public LandlordCommand(ILandLord plugin) {
+    public LandlordCommand(ILandLord plugin, String name, String usage, Set<String> permissions, Set<String> aliases) {
+        super(name, usage, permissions, aliases);
         this.plugin = plugin;
         this.lm = plugin.getLangManager();
     }
 
-    public boolean worldDisabled(Player player) {
-        return plugin.getConfig().getStringList("disabled-worlds").contains(player.getWorld().getName());
+    public boolean isDisabledWorld(Player player) {
+        if (plugin.getConfig().getStringList("disabled-worlds").contains(player.getWorld().getName())) {
+            lm.sendMessage(player, lm.getString("Disabled-World"));
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isDisabledWorld(Player player, World world) {
+        if (plugin.getConfig().getStringList("disabled-worlds").contains(world.getName())) {
+            lm.sendMessage(player, lm.getString("Disabled-World"));
+            return true;
+        }
+        return false;
     }
 
 

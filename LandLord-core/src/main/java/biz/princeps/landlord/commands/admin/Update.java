@@ -4,6 +4,10 @@ import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -20,15 +24,29 @@ import java.util.Set;
  */
 public class Update extends LandlordCommand {
 
-    public Update(ILandLord plugin) {
-        super(plugin);
+    public Update(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.Update.name"),
+                pl.getConfig().getString("CommandSettings.Update.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Update.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Update.aliases")));
+    }
+
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        try {
+            if (arguments.get(0).equals("-r")) {
+                onResetLands(properties.getCommandSender());
+            }
+        } catch (ArgumentsOutOfBoundsException e) {
+            onUpdateLands(properties.getCommandSender());
+        }
     }
 
     /**
      * Supposed to add missing flags to existing lands, remove non existing flags
      * TODO implement this
      */
-    public void onUpdateLands(CommandSender issuer) {
+    private void onUpdateLands(CommandSender issuer) {
 
         issuer.sendMessage("Starting to update lands...");
 
@@ -86,7 +104,7 @@ public class Update extends LandlordCommand {
     /**
      * Resets all lands to the default flag state
      */
-    public void onResetLands(CommandSender sender) {
+    private void onResetLands(CommandSender sender) {
         /*
         sender.sendMessage("Starting to reset lands...");
         List<String> rawList = Landlord.getInstance().getConfig().getStringList("Flags");

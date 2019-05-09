@@ -1,6 +1,6 @@
 name: Landlord
-version: 3.138
-main: biz.princeps.landlord.LandLordLatest
+version: 4.0
+main: biz.princeps.landlord.LandLord
 author: SpatiumPrinceps
 website: https://www.spigotmc.org/resources/beta-landlord-2.44398/
 depend: [WorldGuard, ProtocolLib]

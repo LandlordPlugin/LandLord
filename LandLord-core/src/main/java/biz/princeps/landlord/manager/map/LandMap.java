@@ -3,6 +3,7 @@ package biz.princeps.landlord.manager.map;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardProxy;
+import biz.princeps.landlord.util.MapConstants;
 import biz.princeps.landlord.util.SimpleScoreboard;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -11,14 +12,14 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Map;
 
-import static biz.princeps.landlord.util.MapConstants.*;
-
 /**
  * File created by jcdesimp on 3/1/14. updated on 23/09/17 by SpatiumPrinceps
  */
 public class LandMap {
 
+    private ILandLord plugin;
     private IWorldGuardProxy wg;
+    private MapConstants cons;
     private long refreshRate;
     private String friendsSymbol, ownSymbol, foreignSymbol, header, yours, friends, others;
 
@@ -28,7 +29,8 @@ public class LandMap {
     private String currDir;
     private boolean update;
 
-    public LandMap(Player p, ILandLord plugin) {
+    LandMap(Player p, ILandLord plugin, MapConstants cons) {
+        this.plugin = plugin;
         this.wg = plugin.getWGProxy();
         this.ownSymbol = plugin.getConfig().getString("CommandSettings.Map.symbols.yours");
         this.friendsSymbol = plugin.getConfig().getString("CommandSettings.Map.symbols.friends");
@@ -39,7 +41,7 @@ public class LandMap {
         this.friends = plugin.getLangManager().getRawString("Commands.LandMap.friends");
         this.others = plugin.getLangManager().getRawString("Commands.LandMap.others");
 
-
+        this.cons = cons;
         this.mapViewer = p;
         this.currChunk = p.getLocation().getChunk();
         this.currDir = getPlayerDirection(p);
@@ -92,7 +94,7 @@ public class LandMap {
         return dir;
     }
 
-    private static String[][] getMapDir(Player p) {
+    private String[][] getMapDir(Player p) {
         float y = p.getLocation().getYaw();
         if (y < 0) {
             y += 360;
@@ -100,39 +102,39 @@ public class LandMap {
         y %= 360;
         int i = (int) ((y + 8) / 22.5);
         if (i == 0) {
-            return s;
+            return cons.getS();
         } else if (i == 1) {
-            return ssw;
+            return cons.getSsw();
         } else if (i == 2) {
-            return sw;
+            return cons.getSw();
         } else if (i == 3) {
-            return wsw;
+            return cons.getWsw();
         } else if (i == 4) {
-            return w;
+            return cons.getW();
         } else if (i == 5) {
-            return wnw;
+            return cons.getWnw();
         } else if (i == 6) {
-            return nw;
+            return cons.getNw();
         } else if (i == 7) {
-            return nnw;
+            return cons.getNnw();
         } else if (i == 8) {
-            return n;
+            return cons.getN();
         } else if (i == 9) {
-            return nne;
+            return cons.getNne();
         } else if (i == 10) {
-            return ne;
+            return cons.getNe();
         } else if (i == 11) {
-            return ene;
+            return cons.getEne();
         } else if (i == 12) {
-            return e;
+            return cons.getE();
         } else if (i == 13) {
-            return ese;
+            return cons.getEse();
         } else if (i == 14) {
-            return se;
+            return cons.getSe();
         } else if (i == 15) {
-            return sse;
+            return cons.getSse();
         } else {
-            return s;
+            return cons.getS();
         }
     }
 
@@ -153,7 +155,7 @@ public class LandMap {
     private SimpleScoreboard displayMap(Player p) {
         scoreboard = new SimpleScoreboard(header, p);
 
-        scoreboard.scheduleUpdate(new Runnable() {
+        scoreboard.scheduleUpdate(plugin.getPlugin(), new Runnable() {
             List<String> prev;
 
             @Override
@@ -214,7 +216,7 @@ public class LandMap {
                         currSpot = ChatColor.RED + currSpot;
                     }
                 } else {
-                    if (currSpot.equals(ar) || currSpot.equals(mi)) {
+                    if (currSpot.equals(cons.getAr()) || currSpot.equals(cons.getMi())) {
                         currSpot = ChatColor.RESET + currSpot;
                     } else {
                         currSpot = ChatColor.GRAY + currSpot;

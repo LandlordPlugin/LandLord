@@ -4,6 +4,9 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.command.Arguments;
+import biz.princeps.lib.command.Properties;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -18,11 +21,21 @@ import java.util.Arrays;
  */
 public class Addfriend extends LandlordCommand {
 
-    public Addfriend(ILandLord plugin) {
-        super(plugin);
+    public Addfriend(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.Addfriend.name"),
+                pl.getConfig().getString("CommandSettings.Addfriend.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Addfriend.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Addfriend.aliases")));
     }
 
-    public void onAddfriend(Player player, String[] names) {
+    @Override
+    public void onCommand(Properties properties, Arguments arguments) {
+        if (properties.isConsole()) {
+            return;
+        }
+
+        Player player = properties.getPlayer();
+        String[] names = arguments.get();
 
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 

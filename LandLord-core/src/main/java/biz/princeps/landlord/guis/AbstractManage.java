@@ -13,7 +13,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,7 +31,6 @@ import java.util.*;
  * Internally there's a lot of stuff happening, but for landlord only one method, the create() on is interesting.
  */
 public abstract class AbstractManage extends AbstractGUI {
-
 
 
     private List<IOwnedLand> regions;
