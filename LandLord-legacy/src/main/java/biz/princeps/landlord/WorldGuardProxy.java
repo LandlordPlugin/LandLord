@@ -3,15 +3,16 @@ package biz.princeps.landlord;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.handler.AWorldGuardProxy;
-import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -34,11 +35,9 @@ import java.util.stream.Collectors;
 public class WorldGuardProxy extends AWorldGuardProxy {
 
     private WorldGuardPlugin wgPlugin;
-    private WorldGuard wg;
 
     public WorldGuardProxy(ILandLord pl, WorldGuardPlugin worldGuard) {
         super(pl);
-        this.wg = WorldGuard.getInstance();
         this.wgPlugin = worldGuard;
     }
 
@@ -62,8 +61,8 @@ public class WorldGuardProxy extends AWorldGuardProxy {
         Location down = chunk.getBlock(0, 0, 0).getLocation();
         Location upper = chunk.getBlock(15, 255, 15).getLocation();
 
-        BlockVector3 vec1 = locationToVec(down);
-        BlockVector3 vec2 = locationToVec(upper);
+        BlockVector vec1 = locationToVec(down);
+        BlockVector vec2 = locationToVec(upper);
 
         ProtectedCuboidRegion pr = new ProtectedCuboidRegion(getLandName(chunk), vec1, vec2);
 
@@ -77,6 +76,7 @@ public class WorldGuardProxy extends AWorldGuardProxy {
         }
         return null;
     }
+
 
     @Override
     public IOwnedLand getRegion(String name) {
@@ -99,6 +99,7 @@ public class WorldGuardProxy extends AWorldGuardProxy {
         return cache.getLands(id);
     }
 
+
     @Override
     public void unclaim(IOwnedLand land) {
         unclaim(land.getWorld(), land.getName());
@@ -119,12 +120,12 @@ public class WorldGuardProxy extends AWorldGuardProxy {
     public boolean canClaim(Player player, Chunk currChunk) {
         RegionManager regionManager = getRegionManager(player.getWorld());
         if (regionManager != null) {
-            org.bukkit.util.Vector v1 = currChunk.getBlock(0, 0, 0).getLocation().toVector();
+            Vector v1 = currChunk.getBlock(0, 0, 0).getLocation().toVector();
             Vector v2 = currChunk.getBlock(15, 127, 15).getLocation().toVector();
 
             ProtectedRegion check = new ProtectedCuboidRegion("check",
-                    BlockVector3.at(v1.getX(), v1.getY(), v1.getZ()),
-                    BlockVector3.at(v2.getX(), v2.getY(), v2.getZ()));
+                    new BlockVector(v1.getX(), v1.getY(), v1.getZ()),
+                    new BlockVector(v2.getX(), v2.getY(), v2.getZ()));
             List<ProtectedRegion> intersects = check
                     .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
             for (ProtectedRegion intersect : intersects) {
@@ -155,17 +156,16 @@ public class WorldGuardProxy extends AWorldGuardProxy {
     }
 
     private RegionContainer getRegionContainer() {
-        return wg.getPlatform().getRegionContainer();
+        return wgPlugin.getRegionContainer();
     }
 
     private RegionManager getRegionManager(World world) {
-        com.sk89q.worldedit.world.World worldByName = wg.getPlatform().getMatcher().getWorldByName(world.getName());
         RegionContainer regionContainer = getRegionContainer();
-        return regionContainer.get(worldByName);
+        return regionContainer.get(world);
     }
 
-    private BlockVector3 locationToVec(Location loc) {
-        return BlockVector3.at(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    private BlockVector locationToVec(Location loc) {
+        return new BlockVector(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
 
@@ -173,7 +173,7 @@ public class WorldGuardProxy extends AWorldGuardProxy {
     public boolean isAllowedInOverlap(Player p, Location loc) {
         LocalPlayer localPlayer = wgPlugin.wrapPlayer(p);
         ApplicableRegionSet applicableRegions = getRegionManager(loc.getWorld())
-                .getApplicableRegions(localPlayer.getLocation().toVector().toBlockPoint());
+                .getApplicableRegions(localPlayer.getPosition().toBlockPoint());
         if (applicableRegions.getRegions().size() > 0) { // check for other lands, that may not be handled by landlord
             for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) {
                 if (protectedRegion.isMember(localPlayer) || protectedRegion.isOwner(localPlayer)) {
@@ -183,5 +183,10 @@ public class WorldGuardProxy extends AWorldGuardProxy {
         }
         return false;
     }
+
+    public Flag<?> getFlag(String flag) {
+        return wgPlugin.getFlagRegistry().get(flag);
+    }
+
 
 }

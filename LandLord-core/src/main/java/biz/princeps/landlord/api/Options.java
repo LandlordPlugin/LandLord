@@ -16,6 +16,7 @@ import java.util.Set;
 public class Options {
 
     private static FileConfiguration cfg;
+    private static boolean hasVault;
     private static int MANAGE_SIZE;
     private static Set<String> toggleMobs;
 
@@ -24,7 +25,7 @@ public class Options {
     }
 
     public static boolean isVaultEnabled() {
-        return cfg.getBoolean("Economy.enable");
+        return cfg.getBoolean("Economy.enable") && hasVault ;
     }
 
     public static boolean enabled_borders() {
@@ -67,7 +68,8 @@ public class Options {
         return toggleMobs;
     }
 
-    public static void setConfig(FileConfiguration config) {
+    public static void setConfig(FileConfiguration config, boolean hasVault) {
         cfg = config;
+        Options.hasVault = hasVault;
     }
 }

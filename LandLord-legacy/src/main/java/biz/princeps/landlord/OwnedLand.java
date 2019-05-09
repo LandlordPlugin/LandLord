@@ -2,13 +2,14 @@ package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IWorldGuardProxy;
+import biz.princeps.landlord.handler.AWorldGuardProxy;
 import biz.princeps.landlord.util.AOwnedLand;
-import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.*;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 
@@ -134,7 +135,8 @@ public class OwnedLand extends AOwnedLand {
         for (String s : rawList) {
             String[] toggleleft = s.split(":")[0].split(" ");
             String[] toggleRight = s.split(":")[1].split(" ");
-            Flag flag = Flags.get(toggleleft[0].toLowerCase());
+
+            Flag flag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(toggleleft[0].toLowerCase());
             Material mat = Material.valueOf(pl.getConfig()
                     .getString("Manage." + toggleleft[0].toLowerCase() + ".item"));
             StateFlag.State state1 = StateFlag.State.valueOf(toggleleft[1].toUpperCase());
@@ -149,14 +151,14 @@ public class OwnedLand extends AOwnedLand {
     @Override
     public Object getFlagValue(String flag) {
         if (flag == null) return null;
-        Flag wgflag = Flags.get(flag.toLowerCase());
+        Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
         if (wgflag == null) return null;
         return region.getFlag(wgflag);
     }
 
     public void setGroupFlag(String flag) {
         if (flag == null) return;
-        Flag wgflag = Flags.get(flag.toLowerCase());
+        Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
         if (wgflag == null) return;
         region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
 
@@ -165,7 +167,7 @@ public class OwnedLand extends AOwnedLand {
     @Override
     public void setFlagValue(String flag, Object value) {
         if (flag == null) return;
-        Flag wgflag = Flags.get(flag.toLowerCase());
+        Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
         if (wgflag == null) return;
         region.setFlag(wgflag, value);
     }
@@ -173,7 +175,7 @@ public class OwnedLand extends AOwnedLand {
     @Override
     public void removeFlag(String flag) {
         if (flag == null) return;
-        Flag wgflag = Flags.get(flag.toLowerCase());
+        Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
         if (wgflag == null) return;
         region.getFlags().remove(wgflag);
     }
@@ -181,7 +183,7 @@ public class OwnedLand extends AOwnedLand {
     @Override
     public boolean containsFlag(String flag) {
         if (flag == null) return false;
-        Flag wgflag = Flags.get(flag.toLowerCase());
+        Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
         if (wgflag == null) return false;
         return region.getFlags().containsKey(wgflag);
     }
@@ -193,7 +195,7 @@ public class OwnedLand extends AOwnedLand {
         for (String s : rawList) {
             String[] s1 = s.split(":")[0].split(" ");
 
-            Flag flag = Flags.get(s1[0].toLowerCase());
+            Flag flag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(s1[0].toLowerCase());
             if (!(flag instanceof StateFlag)) {
                 Bukkit.getLogger().warning("Only stateflags are supported!");
                 return;
@@ -207,9 +209,9 @@ public class OwnedLand extends AOwnedLand {
         }
         // add other flags
         pl.getPlayerManager().getOfflinePlayerAsync(owner, p -> {
-            region.setFlag(Flags.GREET_MESSAGE, pl.getLangManager()
+            region.setFlag(DefaultFlag.GREET_MESSAGE, pl.getLangManager()
                     .getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
-            region.setFlag(Flags.FAREWELL_MESSAGE, pl.getLangManager()
+            region.setFlag(DefaultFlag.FAREWELL_MESSAGE, pl.getLangManager()
                     .getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
         });
     }

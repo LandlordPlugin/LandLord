@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IVaultManager;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.command.Arguments;
@@ -35,6 +36,10 @@ public class GiveClaims extends LandlordCommand {
         String target;
         int amount;
         double cost;
+
+        if (!Options.isVaultEnabled()) {
+            return;
+        }
 
         switch (args.size()) {
             case 3:

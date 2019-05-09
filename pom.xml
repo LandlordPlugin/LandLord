@@ -12,6 +12,7 @@
     <modules>
         <module>LandLord-latest</module>
         <module>LandLord-core</module>
+        <module>LandLord-legacy</module>
     </modules>
 
     <distributionManagement>

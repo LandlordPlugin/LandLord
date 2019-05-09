@@ -87,7 +87,7 @@ if [ "$#" -ne 1 ]; then
     exit
 fi
 
-#install_buildtools $1
-download_deps $1
+install_buildtools $1
+#download_deps $1
 #install_run_script $1
-accept_eula $1
+#accept_eula $1

@@ -59,4 +59,18 @@ public abstract class AOwnedLand implements IOwnedLand {
         return new Location(world, x * 16, world.getHighestBlockYAt(x * 16, z * 16) + 1, z * 16);
 
     }
+
+    @Override
+    public Chunk getChunk() {
+        IWorldGuardProxy wg = pl.getWGProxy();
+        World w = wg.getWorld(getName());
+        int x = wg.getX(getName());
+        int z = wg.getZ(getName());
+
+        if (w != null && x != Integer.MIN_VALUE && z != Integer.MIN_VALUE) {
+            return w.getChunkAt(x, z);
+        }
+        return null;
+    }
+
 }

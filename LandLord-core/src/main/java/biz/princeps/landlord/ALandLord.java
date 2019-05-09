@@ -62,7 +62,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
 
         onPreEnable();
 
-        Options.setConfig(this.getConfig());
+        Options.setConfig(this.getConfig(), getVault() != null);
         taskChainFactory = BukkitTaskChainFactory.create(this);
         setupPrincepsLib();
 
@@ -252,7 +252,6 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
             //TODO maybe add some interesting statistics
         }
     }
-
 
     private Economy getVault() {
         Plugin plugin = getServer().getPluginManager().getPlugin("Vault");

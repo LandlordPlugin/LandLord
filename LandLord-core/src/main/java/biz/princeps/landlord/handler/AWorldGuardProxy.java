@@ -166,4 +166,45 @@ public abstract class AWorldGuardProxy implements IWorldGuardProxy {
             PrincepsLib.getStuffManager().spawnParticle(edgeBlock, particle, amount);
         }
     }
+
+    /**
+     * Return the surrounding protected regions of a location.
+     *
+     * @param ploc the location
+     * @return an array of size 5 containing the region of the location itsself and all the surrounding regions
+     */
+    @Override
+    public IOwnedLand[] getSurroundings(Location ploc) {
+        if (ploc == null) return new IOwnedLand[0];
+        return new IOwnedLand[]{
+                getRegion(ploc),
+                getRegion(ploc.clone().add(16, 0, 0)),
+                getRegion(ploc.clone().subtract(16, 0, 0)),
+                getRegion(ploc.clone().add(0, 0, 16)),
+                getRegion(ploc.clone().subtract(0, 0, 16)),
+        };
+    }
+
+    @Override
+    public IOwnedLand getRegion(Chunk chunk) {
+        String name = getLandName(chunk);
+        return getRegion(name);
+    }
+
+    @Override
+    public IOwnedLand getRegion(Location loc) {
+        String name = loc.getWorld().getName().replace(" ", "_");
+        name += "_";
+
+        // x coord
+        int x = (int) Math.floor(loc.getX() / 16);
+        name += x;
+        name += "_";
+        // z coord
+        int z = (int) Math.floor(loc.getZ() / 16);
+        name += z;
+        return getRegion(name);
+    }
+
+
 }
