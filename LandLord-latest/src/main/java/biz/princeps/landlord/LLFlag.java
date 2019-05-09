@@ -38,9 +38,9 @@ public class LLFlag implements ILLFlag {
     @Override
     public void toggle() {
         if (curr_status.equalsIgnoreCase(state1.name())) {
-            handleToggle(isGroup1, state2);
+            handleToggle(isGroup2, state2);
         } else {
-            handleToggle(isGroup2, state1);
+            handleToggle(isGroup1, state1);
         }
     }
 

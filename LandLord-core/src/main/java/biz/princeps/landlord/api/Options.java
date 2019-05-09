@@ -25,7 +25,7 @@ public class Options {
     }
 
     public static boolean isVaultEnabled() {
-        return cfg.getBoolean("Economy.enable") && hasVault ;
+        return cfg.getBoolean("Economy.enable") && hasVault;
     }
 
     public static boolean enabled_borders() {
@@ -45,7 +45,7 @@ public class Options {
     }
 
     public static int getManageSize() {
-        if (MANAGE_SIZE == -1) {
+        if (MANAGE_SIZE < 1) {
             ConfigurationSection section = cfg.getConfigurationSection("Manage");
 
             Set<String> keys = section.getKeys(true);

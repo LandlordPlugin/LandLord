@@ -37,14 +37,14 @@ public abstract class AbstractManage extends AbstractGUI {
     private ILangManager lm;
     private ILandLord plugin;
 
-    public AbstractManage(ILandLord pl, Player player, String header, List<IOwnedLand> land) {
+    AbstractManage(ILandLord pl, Player player, String header, List<IOwnedLand> land) {
         super(player, Options.getManageSize(), header);
         this.plugin = pl;
         this.regions = land;
         this.lm = plugin.getLangManager();
     }
 
-    public AbstractManage(ILandLord pl, Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land) {
+    AbstractManage(ILandLord pl, Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land) {
         super(player, Options.getManageSize() + 9, header, landGui);
         this.regions = land;
         this.plugin = pl;
@@ -85,17 +85,17 @@ public abstract class AbstractManage extends AbstractGUI {
                         title, formatList(description, iFlag.getStatus())))
                         .addClickAction((p) -> {
                             // Switch flag for every region in the regions list
+                            //TODO right now it toggles the flag for every land instead of setting the same value for all
                             for (IOwnedLand region : regions) {
-                                for (ILLFlag llFlag : region.getFlags()) {
-                                    if (llFlag.getName().equalsIgnoreCase(iFlag.getName())) {
-                                        String oldstatus = iFlag.getStatus();
-                                        iFlag.toggle();
-                                        LandManageEvent landManageEvent = new LandManageEvent(player, region,
-                                                iFlag.getName(), oldstatus, iFlag.getStatus());
-                                        Bukkit.getPluginManager().callEvent(landManageEvent);
-                                        break;
-                                    }
-                                }
+                                region.getFlags().stream()
+                                        .filter(f -> f.getName().equalsIgnoreCase(iFlag.getName()))
+                                        .forEach(f -> {
+                                            String oldstatus = f.getStatus();
+                                            f.toggle();
+                                            LandManageEvent landManageEvent = new LandManageEvent(player, region,
+                                                    f.getName(), oldstatus, f.getStatus());
+                                            Bukkit.getPluginManager().callEvent(landManageEvent);
+                                        });
                             }
                             updateLore(finalPosition, formatList(description, iFlag.getStatus()));
                         })
@@ -105,6 +105,7 @@ public abstract class AbstractManage extends AbstractGUI {
         }
 
         // Reminder: Regenerate is not implemented in Manageall, cos it might cos some trouble. Calculating costs might be a bit tedious
+        //TODO fix
         if (plugin.getConfig().getBoolean("Manage.regenerate.enable") && regions.size() == 1 &&
                 player.hasPermission("landlord.player.manage.regenerate")) {
             double cost = plugin.getConfig().getDouble("ResetCost");
@@ -187,7 +188,7 @@ public abstract class AbstractManage extends AbstractGUI {
 
                         MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
                         };
-/* TODO reimplement mobs
+                        /* TODO reimplement mobs
                         for (Mobs m : Mobs.values()) {
                             // Skip mob if its not in the list, because that means this mob should not be manageable
                             if (!toggleMobs.contains(m.name())) {
