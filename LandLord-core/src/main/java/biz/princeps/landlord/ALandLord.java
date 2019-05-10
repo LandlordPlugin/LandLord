@@ -5,7 +5,6 @@ import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.items.Maitem;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
-import biz.princeps.landlord.listener.PistonOverwriter;
 import biz.princeps.landlord.listener.SecureWorldListener;
 import biz.princeps.landlord.manager.*;
 import biz.princeps.landlord.manager.map.MapManager;
@@ -234,7 +233,6 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     private void setupListeners() {
         new JoinListener(this);
         new MapManager(this);
-        new PistonOverwriter();
 
         if (getConfig().getBoolean("SecureWorld.enable")) {
             new SecureWorldListener(this);
