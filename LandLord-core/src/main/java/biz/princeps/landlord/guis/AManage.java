@@ -1,15 +1,22 @@
 package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.api.*;
+import biz.princeps.landlord.api.events.LandManageEvent;
+import biz.princeps.landlord.persistent.LPlayer;
+import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
+import co.aikar.taskchain.TaskChain;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class AManage extends AbstractGUI {
 
@@ -18,18 +25,22 @@ public class AManage extends AbstractGUI {
     private ILandLord plugin;
     private int flagPage = 0;
 
+    private Set<String> toggleMobs;
+
     AManage(ILandLord pl, Player player, String header, List<IOwnedLand> land) {
-        super(player, 54, header);
+        super(player, 45, header);
         this.plugin = pl;
         this.regions = land;
         this.lm = plugin.getLangManager();
+        this.toggleMobs = new HashSet<>(pl.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
     }
 
     AManage(ILandLord pl, Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land) {
-        super(player, Options.getManageSize() + 9, header, landGui);
+        super(player, 54, header, landGui);
         this.regions = land;
         this.plugin = pl;
         this.lm = plugin.getLangManager();
+        this.toggleMobs = new HashSet<>(pl.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
     }
 
     @Override
@@ -56,6 +67,12 @@ public class AManage extends AbstractGUI {
         everyone.setName(lm.getRawString("Commands.Manage.everyone.title"));
         everyone.setLore(lm.getStringList("Commands.Manage.everyone.description"));
         this.setIcon(18, everyone);
+
+        for (int i = 27; i < 45; i++) {
+            Icon placehodler = new Icon(plugin.getMatProxy().getGreyStainedGlass());
+            placehodler.setName("");
+            this.setIcon(i, placehodler);
+        }
     }
 
     private void createWGFlags() {
@@ -85,6 +102,7 @@ public class AManage extends AbstractGUI {
         if (flags.size() > 8) {
             // add navigation items
             Icon prev = new Icon(new ItemStack(Material.ARROW));
+            prev.setName(lm.getRawString("Commands.Manage.prevArrow"));
             prev.addClickAction((p) -> {
                 if (flagPage > 0) {
                     flagPage--;
@@ -93,8 +111,9 @@ public class AManage extends AbstractGUI {
             });
             setIcon(34, prev);
             Icon next = new Icon(new ItemStack(Material.ARROW));
+            next.setName(lm.getRawString("Commands.Manage.nextArrow"));
             next.addClickAction((p) -> {
-                if (flagPage * 8 < flags.size()) {
+                if ((flagPage + 1) * 8 < flags.size()) {
                     flagPage++;
                     refresh();
                 }
@@ -139,7 +158,226 @@ public class AManage extends AbstractGUI {
     }
 
     private void createGeneralOptions() {
+        int position = 36;
+        IOwnedLand land = regions.get(0);
 
+
+        // Reminder: Regenerate is not implemented in Manageall, cos it might cos some trouble. Calculating costs might be a bit tedious
+        if (plugin.getConfig().getBoolean("Manage.regenerate.enable") && regions.size() == 1 &&
+                player.hasPermission("landlord.player.manage.regenerate")) {
+            List<String> regenerateDesc = lm.getStringList("Commands.Manage.Regenerate.description");
+            double cost = plugin.getConfig().getDouble("ResetCost");
+            String costString = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "-1");
+
+            Icon icon = new Icon(new ItemStack(Material.BARRIER));
+            icon.setLore(formatList(regenerateDesc, "%var", costString));
+            icon.setName(lm.getRawString("Commands.Manage.Regenerate.title"));
+            icon.addClickAction((p) -> {
+                if (!land.isOwner(player.getUniqueId())) {
+                    return;
+                }
+                ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
+                        .replace("%cost%", costString),
+                        (p1) -> {
+                            boolean flag = true;
+                            if (Options.isVaultEnabled()) {
+                                if (plugin.getVaultManager().hasBalance(player.getUniqueId(), cost)) {
+                                    plugin.getVaultManager().take(player.getUniqueId(), cost);
+                                } else {
+                                    lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
+                                            .replace("%cost%", costString)
+                                            .replace("%name%", land.getName()));
+                                    flag = false;
+                                }
+                            }
+                            if (flag) {
+                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                        null, "REGENERATE", "REGENERATE");
+                                Bukkit.getPluginManager().callEvent(landManageEvent);
+                                player.getWorld().regenerateChunk(land.getChunk().getX(), land.getChunk().getZ());
+                                lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.success")
+                                        .replace("%land%", land.getName()));
+                                display();
+                            }
+
+                        }, (p2) -> {
+                    lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.abort")
+                            .replace("%land%", land.getName()));
+                    display();
+                }, this);
+
+                confi.setConfirm(lm.getRawString("Confirmation.accept"));
+                confi.setDecline(lm.getRawString("Confirmation.decline"));
+
+                confi.display();
+
+            });
+            this.setIcon(position++, icon);
+        }
+
+        // Set greet icon
+        if (plugin.getConfig().getBoolean("Manage.setgreet.enable") &&
+                player.hasPermission("landlord.player.manage.setgreet")) {
+            String currentGreet = land.getGreetMessage();
+            List<String> greetDesc = lm.getStringList("Commands.Manage.SetGreet.description");
+
+            Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.setgreet.item"))));
+            icon.setName(lm.getRawString("Commands.Manage.SetGreet.title"));
+            icon.setLore(formatList(greetDesc, "%var%", currentGreet));
+            icon.addClickAction(((p) -> {
+                p.closeInventory();
+                ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetGreet.clickMsg"));
+                if (regions.size() > 1)
+                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreetall "));
+                else
+                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreet "));
+
+                plugin.getUtilsProxy().send_basecomponent(p, builder.create());
+            }));
+            this.setIcon(position++, icon);
+        }
+
+        // set farewell icon
+        if (plugin.getConfig().getBoolean("Manage.setfarewell.enable") &&
+                player.hasPermission("landlord.player.manage.setfarewell")) {
+            List<String> farewellDesc = lm.getStringList("Commands.Manage.SetFarewell.description");
+            String currentFarewell = land.getFarewellMessage();
+
+            Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.setfarewell.item"))));
+            icon.setName(lm.getRawString("Commands.Manage.SetFarewell.title"));
+            icon.setLore(formatList(farewellDesc, "%var%", currentFarewell));
+            icon.addClickAction(((p) -> {
+                p.closeInventory();
+                ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetFarewell.clickMsg"));
+                if (regions.size() > 1) {
+                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewellall "));
+                } else {
+                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewell "));
+                }
+                plugin.getUtilsProxy().send_basecomponent(p, builder.create());
+            }));
+            this.setIcon(position++, icon);
+        }
+
+        // set friends icon
+        if (plugin.getConfig().getBoolean("Manage.friends.enable") &&
+                player.hasPermission("landlord.player.manage.friends")) {
+            Icon icon = new Icon(plugin.getMatProxy().getPlayerHead(player.getUniqueId()));
+            icon.setName(lm.getRawString("Commands.Manage.ManageFriends.title"));
+            icon.setLore(lm.getStringList("Commands.Manage.ManageFriends.description"));
+
+            Set<UUID> friends = land.getFriends();
+            MultiPagedGUI friendsGui = new MultiPagedGUI(player, (int) Math.ceil((double) friends.size() / 9.0),
+                    lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
+            };
+
+            friends.forEach(id -> {
+                OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+                Icon friend = new Icon(plugin.getMatProxy().getPlayerHead(id));
+                friend.setName(op.getName());
+                friend.setLore(formatFriendsSegment(id));
+                friend.addClickAction((player) -> {
+                    ConfirmationGUI confirmationGUI = new ConfirmationGUI(player, lm.getRawString("Commands.Manage.ManageFriends.unfriend")
+                            .replace("%player%", op.getName()),
+                            (p) -> {
+                                friendsGui.removeIcon(friendsGui.filter(op.getName()).get(0));
+                                for (IOwnedLand region : regions) {
+                                    Bukkit.dispatchCommand(player, "land unfriend " + region.getName() + " " + op.getName());
+                                }
+                                player.closeInventory();
+                                friendsGui.display();
+                            },
+                            (p) -> {
+                                player.closeInventory();
+                                friendsGui.display();
+                            }, friendsGui);
+                    confirmationGUI.setConfirm(lm.getRawString("Confirmation.accept"));
+                    confirmationGUI.setDecline(lm.getRawString("Confirmation.decline"));
+                    confirmationGUI.display();
+                    friendsGui.addIcon(friend);
+                });
+            });
+
+            icon.addClickAction((p) -> friendsGui.display());
+
+            this.setIcon(position++, icon);
+        }
+
+
+        // unclaim
+        if (plugin.getConfig().getBoolean("Manage.unclaim.enable") &&
+                player.hasPermission("landlord.player.manage.unclaim")) {
+            Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.unclaim.item"))));
+            icon.setName(lm.getRawString("Commands.Manage.Unclaim.title"));
+            icon.setLore(lm.getStringList("Commands.Manage.Unclaim.description"));
+            icon.addClickAction(((p) -> {
+                ConfirmationGUI gui = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Unclaim.confirmationTitle").replace("%land%", land.getName()),
+                        (p1) -> {
+                            if (regions.size() > 1) {
+                                Bukkit.dispatchCommand(p, "ll unclaimall");
+                            } else {
+                                Bukkit.dispatchCommand(p, "ll unclaim " + land.getName());
+                            }
+                            p.closeInventory();
+                        },
+                        (p1) -> {
+                            p.closeInventory();
+                            display();
+                        }, this);
+                gui.setConfirm(lm.getRawString("Confirmation.accept"));
+                gui.setDecline(lm.getRawString("Confirmation.decline"));
+                gui.display();
+            }));
+            this.setIcon(position++, icon);
+        }
+
+        // spawn management
+        if (plugin.getConfig().getBoolean("Manage.mob-spawning.enable") &&
+                player.hasPermission("landlord.player.manage.mobspawn")) {
+            String title = lm.getRawString("Commands.Manage.AllowMob-spawning.title");
+            Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.mob-spawning.item"))));
+            icon.setName(title);
+            icon.setLore(lm.getStringList("Commands.Manage.AllowMob-spawning.description"));
+
+            icon.addClickAction((p) -> {
+                List<Icon> icons = new ArrayList<>();
+                List<String> lore = lm.getStringList("Commands.Manage.AllowMob-spawning.toggleItem.description");
+
+                MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
+                };
+                String titleMob = lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title");
+                for (IMob m : plugin.getMobProxy().values()) {
+                    // Skip mob if its not in the list, because that means this mob should not be manageable
+                    if (!toggleMobs.contains(m.getName())) {
+                        continue;
+                    }
+
+                    Icon mob = new Icon(m.getEgg());
+                    mob.setName(titleMob.replace("%mob%", m.getNiceName()));
+                    mob.setLore(formatList(formatList(lore, "%value%", formatMobState(land.isMobDenied(m))),
+                            "%mob%", m.getNiceName()));
+                    gui.addIcon(mob);
+
+                    mob.addClickAction((p1) -> {
+                        regions.forEach(l -> l.toggleMob(m));
+                        mob.setLore(formatList(formatList(lore, "%value%", formatMobState(land.isMobDenied(m))),
+                                "%mob%", m.getNiceName()));
+                        gui.refresh();
+                    });
+                }
+                gui.display();
+            });
+
+            this.setIcon(position++, icon);
+        }
+    }
+
+    private String formatMobState(boolean bool) {
+        if (bool) {
+            return lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.deny");
+        } else {
+            return lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.allow");
+        }
     }
 
     private List<String> formatList(List<String> list, String toReplace, String newValue) {
@@ -147,6 +385,34 @@ public class AManage extends AbstractGUI {
         list.forEach(s -> newList.add(s.replace(toReplace, newValue)));
         return newList;
     }
+
+    private List<String> formatFriendsSegment(UUID id) {
+        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+        Vector<String> vec = new Vector<>();
+
+        TaskChain<?> chain = plugin.newChain();
+        chain.asyncFirst(() -> chain.setTaskData("lp", plugin.getPlayerManager().getOfflinePlayerSync(id)))
+                .sync(() -> {
+                    List<String> stringList = lm.getStringList("Commands.Manage.ManageFriends.friendSegment");
+                    String lastseen;
+                    if (op.isOnline()) {
+                        lastseen = lm.getRawString("Commands.Info.online");
+                    } else {
+                        LPlayer lp = chain.getTaskData("lp");
+                        if (lp != null)
+                            lastseen = lp.getLastSeenAsString();
+                        else
+                            lastseen = "NaN";
+                    }
+                    stringList.forEach(s -> {
+                        String ss = s.replace("%seen%", lastseen);
+                        vec.add(ss);
+                    });
+                });
+
+        return new ArrayList<>(vec);
+    }
+
 
 }
 

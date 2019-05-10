@@ -19,4 +19,6 @@ public interface IMaterialsProxy {
 
     Material getFireCharge();
 
+    ItemStack getGreyStainedGlass();
+
 }

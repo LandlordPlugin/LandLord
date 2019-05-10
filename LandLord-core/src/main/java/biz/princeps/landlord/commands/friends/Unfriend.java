@@ -35,13 +35,19 @@ public class Unfriend extends LandlordCommand {
         }
 
         Player player = properties.getPlayer();
-        String[] names = arguments.get();
+        String[] names;
 
         if (isDisabledWorld(player)) return;
 
-        Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
+        IOwnedLand land;
+        if (arguments.size() > 1) {
+            land = plugin.getWGProxy().getRegion(arguments.get(0));
+            names = Arrays.copyOfRange(arguments.get(), 1, arguments.size());
+        } else {
+            land = plugin.getWGProxy().getRegion(player.getLocation());
+            names = arguments.get();
+        }
 
-        IOwnedLand land = plugin.getWGProxy().getRegion(chunk);
         if (land != null) {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
                 lm.sendMessage(player, lm.getString("Commands.Unfriend.notOwn")

@@ -79,10 +79,10 @@ public class Manage extends LandlordCommand {
 
                     for (IOwnedLand region : plugin.getWGProxy().getRegions(player.getUniqueId())) {
                         LandManageEvent landManageEvent = new LandManageEvent(player, region,
-                                "GREET_MESSAGE", region.getFlagValue("GREET_MESSAGE"), newmsg1);
+                                "GREET_MESSAGE", region.getGreetMessage(), newmsg1);
                         Bukkit.getPluginManager().callEvent(landManageEvent);
 
-                        region.setFlagValue("GREET_MESSAGE", null, newmsg1);
+                        region.setGreetMessage(newmsg1);
                     }
 
                     lm.sendMessage(player, lm.getString("Commands.Manage.SetGreet.successful")
@@ -100,10 +100,10 @@ public class Manage extends LandlordCommand {
                     }
                     for (IOwnedLand region : plugin.getWGProxy().getRegions(player.getUniqueId())) {
                         LandManageEvent landManageEvent = new LandManageEvent(player, region,
-                                "FAREWELL_MESSAGE", region.getFlagValue("FAREWELL_MESSAGE"), newmsg);
+                                "FAREWELL_MESSAGE", region.getFarewellMessage(), newmsg);
                         Bukkit.getPluginManager().callEvent(landManageEvent);
 
-                        region.setFlagValue("FAREWELL_MESSAGE", null, newmsg);
+                        region.setFarewellMessage(newmsg);
                     }
 
                     lm.sendMessage(player, lm.getString("Commands.Manage.SetFarewell.successful")
@@ -153,10 +153,10 @@ public class Manage extends LandlordCommand {
         }
 
         LandManageEvent landManageEvent = new LandManageEvent(player, target,
-                "GREET_MESSAGE", target.getFlagValue("GREET_MESSAGE"), newmsg);
+                "GREET_MESSAGE", target.getGreetMessage(), newmsg);
         Bukkit.getPluginManager().callEvent(landManageEvent);
 
-        target.setFlagValue("GREET_MESSAGE", null, newmsg);
+        target.setGreetMessage(newmsg);
 
         lm.sendMessage(player, lm.getString("Commands.Manage.SetGreet.successful")
                 .replace("%msg%", newmsg));
@@ -173,10 +173,10 @@ public class Manage extends LandlordCommand {
         }
 
         LandManageEvent landManageEvent = new LandManageEvent(player, target,
-                "FAREWELL_MESSAGE", target.getFlagValue("FAREWELL_MESSAGE"), newmsg);
+                "FAREWELL_MESSAGE", target.getFarewellMessage(), newmsg);
         Bukkit.getPluginManager().callEvent(landManageEvent);
 
-        target.setFlagValue("FAREWELL_MESSAGE", null, newmsg);
+        target.setFarewellMessage(newmsg);
         lm.sendMessage(player, lm.getString("Commands.Manage.SetFarewell.successful")
                 .replace("%msg%", newmsg));
     }

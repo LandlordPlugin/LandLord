@@ -52,11 +52,23 @@ public interface IOwnedLand {
 
     List<ILLFlag> getFlags();
 
-    Object getFlagValue(String flag);
+    String getGreetMessage();
 
-    void setFlagValue(String flag, String grp, Object value);
+    void setGreetMessage(String newmsg);
 
-    void removeFlag(String flag);
+    String getFarewellMessage();
 
-    boolean containsFlag(String flag);
+    void setFarewellMessage(String newmsg);
+
+    void toggleMob(IMob mob);
+
+    boolean isMobDenied(IMob mob);
+
+    // Object getFlagValue(String flag);
+
+    //void setFlagValue(String flag, String grp, Object value);
+
+    //void removeFlag(String flag);
+
+    //boolean containsFlag(String flag);
 }

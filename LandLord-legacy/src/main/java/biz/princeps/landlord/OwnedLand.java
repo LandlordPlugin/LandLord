@@ -2,9 +2,11 @@ package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IMob;
 import biz.princeps.landlord.api.IWorldGuardProxy;
 import biz.princeps.landlord.handler.AWorldGuardProxy;
 import biz.princeps.landlord.util.AOwnedLand;
+import com.google.common.collect.Sets;
 import com.sk89q.worldguard.protection.flags.*;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -12,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.EntityType;
 
 import java.util.*;
 
@@ -147,6 +150,50 @@ public class OwnedLand extends AOwnedLand {
     }
 
     @Override
+    public String getGreetMessage() {
+        return region.getFlag(DefaultFlag.GREET_MESSAGE);
+    }
+
+    @Override
+    public void setGreetMessage(String newmsg) {
+        region.setFlag(DefaultFlag.GREET_MESSAGE, newmsg);
+    }
+
+    @Override
+    public String getFarewellMessage() {
+        return region.getFlag(DefaultFlag.FAREWELL_MESSAGE);
+    }
+
+    @Override
+    public void setFarewellMessage(String newmsg) {
+        region.setFlag(DefaultFlag.FAREWELL_MESSAGE, newmsg);
+    }
+
+    @Override
+    public void toggleMob(IMob mob) {
+        Set<EntityType> flag = region.getFlag(DefaultFlag.DENY_SPAWN);
+
+        if (flag == null) {
+            HashSet<EntityType> entityTypes = Sets.newHashSet(mob.getType());
+            region.setFlag(DefaultFlag.DENY_SPAWN, entityTypes);
+            return;
+        }
+
+        if (flag.contains(mob.getType())) {
+            flag.remove(mob.getType());
+        } else {
+            flag.add(mob.getType());
+        }
+    }
+
+    @Override
+    public boolean isMobDenied(IMob mob) {
+        Set<EntityType> flag = region.getFlag(DefaultFlag.DENY_SPAWN);
+        if (flag == null) return false;
+        else return flag.contains(mob.getType());
+    }
+
+    //@Override
     public Object getFlagValue(String flag) {
         if (flag == null) return null;
         Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
@@ -154,7 +201,7 @@ public class OwnedLand extends AOwnedLand {
         return region.getFlag(wgflag);
     }
 
-    @Override
+    //@Override
     public void setFlagValue(String flag, String grp, Object value) {
         if (flag == null) return;
         Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
@@ -165,7 +212,7 @@ public class OwnedLand extends AOwnedLand {
             region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.valueOf(grp.toUpperCase()));
     }
 
-    @Override
+    //@Override
     public void removeFlag(String flag) {
         if (flag == null) return;
         Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
@@ -174,7 +221,7 @@ public class OwnedLand extends AOwnedLand {
         region.getFlags().remove(wgflag.getRegionGroupFlag());
     }
 
-    @Override
+    //@Override
     public boolean containsFlag(String flag) {
         if (flag == null) return false;
         Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());

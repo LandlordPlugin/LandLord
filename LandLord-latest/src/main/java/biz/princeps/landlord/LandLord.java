@@ -16,6 +16,7 @@ public class LandLord extends ALandLord {
         this.wgproxy = new WorldGuardProxy(this, getWorldGuard());
         this.utilsProxy = new UtilsProxy();
         this.materialsProxy = new MaterialsProxy();
+        this.mobProxy = new MobsProxy();
 
         ((WorldGuardProxy) wgproxy).initCache();
     }

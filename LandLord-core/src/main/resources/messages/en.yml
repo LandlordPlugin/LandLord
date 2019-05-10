@@ -139,7 +139,8 @@ Commands:
         - 'Click in this row to manage the permission for everyone'
     allow: '&aAllow'
     deny: '&cDeny'
-
+    prevArrow: '&aPrevious page'
+    nextArrow: '&aNext page'
     all:
       header: '&7Managing&8 &call lands'
     notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
@@ -210,6 +211,8 @@ Commands:
         title: 'Spawn %mob%'
         description:
           - 'Spawning of %mob%: %value%'
+        deny: 'Deny'
+        allow: 'allow'
     Regenerate:
       title: '&cRegneration'
       description:

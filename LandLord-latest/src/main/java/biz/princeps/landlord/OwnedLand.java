@@ -2,7 +2,10 @@ package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IMob;
 import biz.princeps.landlord.util.AOwnedLand;
+import com.google.common.collect.Sets;
+import com.sk89q.worldedit.world.entity.EntityType;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
@@ -144,6 +147,48 @@ public class OwnedLand extends AOwnedLand {
     }
 
     @Override
+    public String getGreetMessage() {
+        return region.getFlag(Flags.GREET_MESSAGE);
+    }
+
+    @Override
+    public void setGreetMessage(String newmsg) {
+        region.setFlag(Flags.GREET_MESSAGE, newmsg);
+    }
+
+    @Override
+    public String getFarewellMessage() {
+        return region.getFlag(Flags.FAREWELL_MESSAGE);
+    }
+
+    @Override
+    public void setFarewellMessage(String newmsg) {
+        region.setFlag(Flags.FAREWELL_MESSAGE, newmsg);
+    }
+
+    @Override
+    public void toggleMob(IMob mob) {
+        Set<EntityType> flag = region.getFlag(Flags.DENY_SPAWN);
+
+        if (flag == null) {
+            HashSet<EntityType> entityTypes = Sets.newHashSet(EntityType.REGISTRY.get(mob.getName()));
+            region.setFlag(Flags.DENY_SPAWN, entityTypes);
+            return;
+        }
+
+        if (flag.contains(EntityType.REGISTRY.get(mob.getName()))) {
+            flag.remove(EntityType.REGISTRY.get(mob.getName()));
+        } else {
+            flag.add(EntityType.REGISTRY.get(mob.getName()));
+        }
+    }
+
+    @Override
+    public boolean isMobDenied(IMob mob) {
+        return Objects.requireNonNull(region.getFlag(Flags.DENY_SPAWN)).contains(EntityType.REGISTRY.get(mob.getName()));
+    }
+
+    //@Override
     public Object getFlagValue(String flag) {
         if (flag == null) return null;
         Flag wgflag = Flags.get(flag.toLowerCase());
@@ -159,7 +204,7 @@ public class OwnedLand extends AOwnedLand {
 
     }
 
-    @Override
+    //@Override
     public void setFlagValue(String flag, String grp, Object value) {
         if (flag == null) return;
         Flag wgflag = Flags.get(flag.toLowerCase());
@@ -169,7 +214,7 @@ public class OwnedLand extends AOwnedLand {
             region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.valueOf(grp.toUpperCase()));
     }
 
-    @Override
+    //@Override
     public void removeFlag(String flag) {
         if (flag == null) return;
         Flag wgflag = Flags.get(flag.toLowerCase());
@@ -177,7 +222,7 @@ public class OwnedLand extends AOwnedLand {
         region.getFlags().remove(wgflag);
     }
 
-    @Override
+    //@Override
     public boolean containsFlag(String flag) {
         if (flag == null) return false;
         Flag wgflag = Flags.get(flag.toLowerCase());

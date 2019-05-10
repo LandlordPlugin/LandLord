@@ -42,4 +42,9 @@ public class MaterialsProxy implements IMaterialsProxy {
     public Material getFireCharge() {
         return Material.FIRE_CHARGE;
     }
+
+    @Override
+    public ItemStack getGreyStainedGlass() {
+        return new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+    }
 }

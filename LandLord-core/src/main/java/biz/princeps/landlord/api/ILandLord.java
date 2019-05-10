@@ -46,4 +46,6 @@ public interface ILandLord {
     IDelimitationManager getDelimitationManager();
 
     void setupPrincepsLib();
+
+    IMobProxy getMobProxy();
 }

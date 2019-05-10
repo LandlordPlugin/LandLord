@@ -43,5 +43,10 @@ public class MaterialsProxy implements IMaterialsProxy {
         return Material.FIREBALL;
     }
 
+    @Override
+    public ItemStack getGreyStainedGlass() {
+        return new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7);
+    }
+
 
 }

@@ -452,8 +452,6 @@ Flags:
   - 'build'
   - 'damage-animals'
   - 'ride'
-  - 'frosted-ice-form'
-  - 'block-trampling'
   - 'potion-splash'
   - 'pistons'
 

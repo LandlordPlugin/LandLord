@@ -47,6 +47,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     protected ICostManager costManager;
     protected IOfferManager offerManager;
     protected IDelimitationManager delimitationManager;
+    protected IMobProxy mobProxy;
 
     private static TaskChainFactory taskChainFactory;
 
@@ -320,5 +321,10 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     @Override
     public IDelimitationManager getDelimitationManager() {
         return delimitationManager;
+    }
+
+    @Override
+    public IMobProxy getMobProxy() {
+        return mobProxy;
     }
 }

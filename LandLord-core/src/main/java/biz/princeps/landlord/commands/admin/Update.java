@@ -1,21 +1,12 @@
 package biz.princeps.landlord.commands.admin;
 
-import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Project: LandLord
@@ -46,7 +37,7 @@ public class Update extends LandlordCommand {
      * Supposed to add missing flags to existing lands, remove non existing flags
      */
     private void onUpdateLands(CommandSender issuer) {
-
+        /*
         issuer.sendMessage("Starting to update lands...");
 
         List<String> rawList = plugin.getConfig().getStringList("Flags");
@@ -91,7 +82,7 @@ public class Update extends LandlordCommand {
                         lm.getRawString("Alerts.defaultFarewell").replace("%owner%", name));
             }
         }
-
+*/
         issuer.sendMessage("Finished updating lands!");
     }
 
@@ -99,7 +90,7 @@ public class Update extends LandlordCommand {
      * Resets all lands to the default flag state
      */
     private void onResetLands(CommandSender sender) {
-
+/*
         sender.sendMessage("Starting to reset lands...");
         List<String> rawList = plugin.getConfig().getStringList("Flags");
 
@@ -115,7 +106,7 @@ public class Update extends LandlordCommand {
         }
 
         sender.sendMessage("Finished resetting lands!");
-
+*/
     }
 
 }

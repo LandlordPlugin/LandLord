@@ -450,6 +450,13 @@ Flags:
   - 'creeper-explosion'
   - 'pvp'
   - 'build'
+  - 'damage-animals'
+  - 'ride'
+  - 'frosted-ice-form'
+  - 'block-trampling'
+  - 'potion-splash'
+  - 'pistons'
+
 
 MaItem:
   enabled: true
@@ -483,6 +490,24 @@ Manage:
   setfarewell:
     enable: true
     item: CARROT_ON_A_STICK
+  damage-animals:
+    enable: true
+    item: RAW_FISH
+  ride:
+    enable: true
+    item: SADDLE
+  frosted-ice-form:
+    enable: true
+    item: FROSTED_ICE
+  block-trampling:
+    enable: true
+    item: DIAMOND_HOE
+  potion-splash:
+    enable: true
+    item: SPLASH_POTION
+  pistons:
+    enable: true
+    item: PISTON_STICKY_BASE
   unclaim:
     enable: true
     item: BLAZE_POWDER

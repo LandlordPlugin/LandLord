@@ -32,17 +32,17 @@ public class LLFlag implements ILLFlag {
         if (grp == RegionGroup.MEMBERS && state == StateFlag.State.ALLOW) {
             friendStatus = true;
             allStatus = false;
-            System.out.println("10");
+            // System.out.println("10");
         }
         if (grp == RegionGroup.ALL && state == StateFlag.State.ALLOW) {
             friendStatus = true;
             allStatus = true;
-            System.out.println("11");
+            // System.out.println("11");
         }
         if (grp == RegionGroup.NON_OWNERS && state == StateFlag.State.DENY) {
             friendStatus = false;
             allStatus = false;
-            System.out.println("00");
+            // System.out.println("00");
         }
     }
 
