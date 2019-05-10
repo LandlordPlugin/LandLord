@@ -1,0 +1,358 @@
+Tag: '&8[&c&l!&8]'
+Disabled-World: '&7Land-claiming is disabled in this world'
+noPermissions: '&7No permission'
+Commands:
+  Claim:
+    success: '&bYou successfully claimed chunk %chunk% in world %world%'
+    p2pSuccess: '&bThe player %player% bought your chunk %chunk% in world %world% for %price%!'
+    notEnoughMoney: '&eYou dont have enough money (%money%) to claim this chunk (%chunk%)'
+    moneyTook: '&4You have been charged %money% for the land %chunk%'
+    alreadyClaimed: '&eThis chunk is already claimed by %owner%'
+    limit: '&eYou need to buy more claims first (%regions%/%claims%)! Click to buy more!'
+    hardcap: '&eYou cant claim more lands than %regions%!!'
+    notAllowed: '&eYou are not allowed to claim this land!'
+    aborted: '&eAborted claim!'
+    onlyClaimAdjacentChunks: '&cYou are not allowed to claim the chunk %land%, because you do not own an adjacent one!'
+    needsGap: '&cYou are not allowed to claim the chunk %land%, because there must be a gap between your land and the land of other people!'
+    boughtUp: '&bYou successfully bought up the chunk %chunk% from %player% for %price%'
+    notYetInactive: '&c%owner% is not yet inactive :) You will need to wait at least %days% more days'
+    confirmation: '&aAre you sure you want to claim the chunk %chunk% for %price%? Click here to confirm'
+  Info:
+    online: '&bONLINE'
+    noLastSeen: '&c-'
+    owned:
+      - '&f&lLand&c&lLord &a- Owned Land'
+      - '&7Landname&8: &c%landid%'
+      - '&7Owner&8: &c%owner%   &7Last seen: &c%lastseen%'
+      - '&7Member&8: &c%member%'
+    advertised:
+      - '&f&lLand&c&lLord &a- Advertised Land'
+      - '&7Landname&8: &c%landid%'
+      - '&7Owner&8: &c%owner%   &7Last seen: &c%lastseen%'
+      - '&7Member&8: &c%member%'
+      - '&7Price&8: &c&o%price%'
+    inactive:
+      - '&f&lLand&c&lLord &a- Inactive Land'
+      - '&7Landname&8: &c%landid%'
+      - '&7Owner&8: &c%owner%   &7Last seen: &c%lastseen%'
+      - '&7Member&8: &c%member%'
+      - '&7Price&8: &c&o%price%'
+    free:
+      - '&f&lLand&c&lLord &a- Free Land'
+      - '&7Landname&8: &c%landid%'
+      - '&7&oPrice: &c&o%price%'
+  MultiClaim:
+    guiMessage: 'Claim %amount% lands (%cost%)'
+    chatMessage: '&aClick to confirm the purchase of %amount% lands! This will cost %cost%!'
+    noLands: '&cThere are no claimable lands in your selected radius!'
+    abort: '&cYou aborted the claim of %amount% lands!'
+  Unclaim:
+    notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
+    notOwnFreeLand: '&7You do not own this chunk'
+    success: '&7You successfully unclaimed chunk &c%chunk% &7in world &c%world% &7and got &c%money% &7back'
+  Listfriends:
+    invalidWorld: '&cThe entered world does not exist!'
+    invalidGeneral: '&cThe entered coordinates are invalid!'
+    freeLand: '&cAn unclaimed chunk doesnt have friends!'
+    friends: '&aFriends: %friends%'
+    noFriends: '&cThis land doesnt have any friends'
+  Addfriend:
+    notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
+    noPlayer: '&7Could not find following players&8: &c%players%'
+    success: '&7Successfully added &c%players% &7to this land'
+    alreadyOwn: '&7You cannot add the owner as a member'
+  Unfriend:
+    notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
+    noPlayer: '&7Could not find following players&8: &c%players%'
+    success: '&7Successfully removed &c%players% &7from this land'
+  AddfriendAll:
+    noPlayer: '&7Could not find the player &8: &c%player%'
+    success: '&7Successfully added &c%player% &7to all &c%count% &7lands you own'
+    alreadyOwn: '&7You cannot add the owner as a member'
+  UnfriendAll:
+    noPlayer: '&7Could not find following players&8: &c%players%'
+    success: '&7Successfully removed &c%players% &7from all &c%count% &7lands you own'
+    noFriend: '&c%player% &7is not a friend on any of your lands'
+  ListLands:
+    noLands: '&7You do not own any land'
+    gui:
+      header: '&2%player%s lands'
+      itemname: '&d%name%'
+      lore:
+        - '&aName: &f%name%'
+        - ''
+        - '&aReal Coords: &f%realx%&c/&f%realz%'
+        - ''
+        - '&aMembers: &f%members%'
+        - ''
+        - '%flags%'
+      flagformat: '&a%flagname%: &f%flagvalue%'
+      manageAll: '&7Manage all lands'
+    chat:
+      header: '&2%player%s lands'
+      previous: '&8[&7Previous&8]'
+      next: '&8[&7Next&8]'
+      segment: '&eName: &c%landname% &eMembers: &c%members%'
+    noPlayer: '&7Could not find following player&8: &c%player%'
+  LandMap:
+    disabled: '&7Land map is &cdisabled'
+    header: '&e&m==&r&6&c&lLand&r&e&m=='
+    yours: 'Yours'
+    friends: 'Friends'
+    others: 'Others'
+  ClearWorld:
+    noPlayer: '&7Could not find following players&8: &c%players%'
+    gui:
+      title: "Clear menu"
+      clearcurrentland:
+        name: "Clear current land"
+        desc: "Only clears the current land|you are standing inside"
+        confirm: "Unclaim this land?"
+        abort: "&cUnclaim action aborted!"
+        success: "&7Unclaimed %land% successfully"
+      clearplayer:
+        name: "Clear player"
+        desc: "Clears all lands of the player,|who owns the land|you are currently|standing in"
+        confirm: "Unclaim player?"
+        abort: "&cUnclaim action aborted!"
+        success: '&7Successfully cleared &c%count% &7lands from player &c%player%'
+      clearworld:
+        name: "Clear the entire world"
+        desc: "Clears all lands in the world|you are currently in!||BE CAREFUL!"
+        confirm: "Unclaim all lands in %world%?"
+        abort: "&cUnclaim action aborted!"
+        success: '&7Successfully cleared &c%count% &7lands in world &c%world%'
+  Item:
+    noPlayer: '&7Could not find following players&8: &c%players%'
+  Manage:
+    info:
+      title: '&aInformation'
+      description:
+        - 'Land: %land%'
+    friends:
+      title: '&aFriends'
+      description:
+        - 'Click in this row to manage the permission of friends'
+    everyone:
+      title: '&aEveryone'
+      description:
+        - 'Click in this row to manage the permission for everyone'
+    allow: '&aAllow'
+    deny: '&cDeny'
+    prevArrow: '&aPrevious page'
+    nextArrow: '&aNext page'
+    all:
+      header: '&7Managing&8 &call lands'
+    notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
+    notOwnFreeLand: '&7You do not own this chunk'
+    header: '&c%info%'
+    invalidArguments: '&7Invalid arguments'
+    AllowDamage-animals:
+      title: '&cAllow damaging animals'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7hit mobs in this chunk'
+    AllowRide:
+      title: '&cAllow riding mobs'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7ride entities in this chunk'
+    AllowFrosted-ice-form:
+      title: '&cAllow ice boots'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7to use ice boots in this chunk'
+    AllowBlock-trampling:
+      title: '&cAllow trampling blocks'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7trample farmland in this chunk'
+    AllowPotion-splash:
+      title: '&cAllow splashing potions'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7throw splash potions in this chunk'
+    AllowPistons:
+      title: '&cAllow pistons'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7use pistons in this chunk'
+    AllowBuild:
+      title: '&cAllow Building'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7build in this chunk'
+    AllowInteract:
+      title: '&cAllow interaction'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7interact with objects (e.g. redstone contraptions)'
+    AllowChest-access:
+      title: '&cAllow Chest Access'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7access all kinds of containers'
+    AllowCreeper-explosion:
+      title: '&cAllow Creeper explosions'
+      description:
+        - ' &7Toggle the ability for creepers to'
+        - ' &7destroy blocks'
+    AllowPvp:
+      title: '&cAllow pvp'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7hit other players'
+    AllowMob-spawning:
+      title: '&cManage MobSpawning'
+      description:
+        - ' &7Toggle the ability for mobs to'
+        - ' &7spawn inside your lands'
+      toggleItem:
+        title: 'Spawn %mob%'
+        description:
+          - 'Spawning of %mob%: %value%'
+        deny: 'Deny'
+        allow: 'allow'
+    Regenerate:
+      title: '&cRegneration'
+      description:
+        - ' &7Regenerate your land'
+        - ' &7Cost&8: &c%var%'
+      confirmation: '&7Regeneration cost &c%cost%'
+      success: '&7Regenerating land &c%land% &7successful'
+      abort: '&7Aborted regeneration for land &c%land%'
+      notEnoughMoney: '&7You dont have enough money to regenerate the land &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
+    SetGreet:
+      title: '&cGreeting Message'
+      description:
+        - ' &7Set a greeting message for this chunk'
+        - ' &7Message&8: &c%var%'
+      clickMsg: '&7Click to set a new greeting message'
+      successful: '&7Greeting message has been set to %msg%'
+    SetFarewell:
+      title: '&cFarewell Message'
+      description:
+        - ' &7Set a farewell message for this chunk'
+        - ' &7Message&8: &c%var%'
+      clickMsg: '&7Click to set a new farewell message'
+      successful: '&7Farewell message has been set to %msg%'
+    ManageFriends:
+      title: '&cManage Friends'
+      description:
+        - ' &7Manage your friends on this chunk'
+      friendSegment:
+        - ' &7Last seen&8: &c%seen%'
+        - ' &7&oClick to remove'
+      unfriend: '&7Unfriending player &c%player%'
+    Unclaim:
+      title: '&cUnclaim'
+      description:
+        - '&7Click here to unclaim this chunk!'
+      confirmationTitle: '&aUnclaiming %land%'
+  Help:
+    header: '&f&lLand&c&lLord'
+    admins:
+      - '&c/land clear &8- &7Opens the clear dialog'
+      - '&c/land admintp &8- &7Opens the admin tp dialog'
+      - '&c/land update &8- &7Updates lands with new flags'
+      - '&c/land giveclaims &8- &7Give claims to users'
+    players:
+      - '&c/land &8- &7View the commands'
+      - '&c/land claim &8- &7Claim the chunk you are standing in'
+      - '&c/land multiclaim &8- &7Claims multiple chunks at once'
+      - '&c/land unclaim &8- &7Unclaim the chunk you are standing in'
+      - '&c/land addfriend <player> &8- &7Add a player as a friend on your land'
+      - '&c/land unfriend <player> &8- &7Remove a player as a friend on your land'
+      - '&c/land friendall <player> &8- &7Add a player as a friend to all of your currently owned land'
+      - '&c/land unfriendall <player> &8- &7Remove a player as a friend to all of your currently owned land'
+      - '&c/land friends &8- &7View the friends of the land you are currently standing in'
+      - '&c/land manage &8- &7Manage the chunk you are standing in'
+      - '&c/land list &8- &7List your owned land'
+      - '&c/land info &8- &7View general info about the land you are standing in'
+      - '&c/land map &8- &7Toggle the land map'
+      - '&c/land shop &8- &7Opens the claim shop'
+      - '&c/land sethome &8- &7Places your home into one of your lands'
+      - '&c/land home &8- &7Teleports you to your home'
+      - '&c/land borders &8- &7Toggles the border display'
+      - '&c/land item &8- &7Gives you the magic management item (nobody uses it tho)'
+      - '&c/land advertise &8- &7Advertise your land for sale'
+      - '&c/land removeadvertise &8- &7Remove your land from advertisement'
+    previous: '&8[&7Previous&8]'
+    next: '&8[&7Next&8]'
+  Reload:
+    success: '&aSuccessfully reloaded landlord'
+  Claims:
+    message: '&aClaims: %regions%/%claims%'
+    noClaims: '&eYou need to buy claims first. Click here to open the shop'
+    disabled: '&eThis feature is currently disabled'
+  SetHome:
+    notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
+    success: '&aSuccessfully set your home to your current location'
+    disabled: '&eThis feature is currently disabled'
+    removed: '&eYour home was removed, because you unclaimed the corresponding chunk'
+    nullLand: '&eYou need to claim this land first'
+  Home:
+    noHome: '&4You do not have a home yet. Click to set a home on your current location'
+    dontMove: '&cThis command will be executed in %time% seconds. Dont move!'
+    youMoved: '&cYou moved! Teleportation aborted'
+    countdown: '&bDont move! &6-- &4&l%countdown% &6-- &bDont move!'
+    notEnoughMoney: '&7You dont have enough money to teleport! (Cost&8&o: &c&o%cost%&7&o)'
+    costing: '&aYou were charged %cost% for teleporting home'
+    welcomeHome: '&aWelcome at %player%s home!'
+    disabled: '&eThis feature is currently disabled'
+    otherNoHome: '&4The player %player% does not have a home yet!'
+  GiveClaims:
+    noPlayer: '&eThere is no player with this name'
+    success: '&aYou received %amount% claims!'
+  Advertise:
+    notOwnFreeLand: '&7You do not own this chunk'
+    notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
+    success: '&eYou are now offering %landname% for %price%'
+  RemoveAdvertise:
+    success: '&aSuccessfully removed advertise from land %landname%'
+    noAdvertise: '%eThere is no advertise on land %landname%'
+  Borders:
+    activated: '&aSuccessfully activated border view! Click to disable'
+    deactivated: '&eDisabled border display'
+  AdminTp:
+    noPlayer: '&eCould not find player %player%'
+    noLands: '&eThe player %player% does not own any lands!'
+    guiHeader: 'Lands of %player%'
+Alerts:
+  defaultGreeting: '&7Now entering claimed land of %owner%'
+  defaultFarewell: '&7Leaving claimed land of %owner%'
+  tresholdNotReached: '&cYou are not allowed to build here. You must own %x% lands!'
+Confirmation:
+  accept: '&bAccept!'
+  decline: '&eDecline!'
+Shop:
+  title: 'Claims Shop. Your claims (%regions%/%claims%)'
+  notEnoughMoney: '&7You dont have enough money buy %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
+  success: '&aYou successfully bought %number% claims for %cost%'
+  notAllowed: '&eYou are not allowed to buy more claims'
+  item:
+    header: '%number% extra claims'
+    lore:
+      - 'Click here to buy %number%'
+      - 'claims. You will be able to purchase'
+      - '%number% more claims than before'
+      - 'Cost: %cost%'
+MaItem:
+  itemname: 'LL Maimaitem of doomness'
+  lore:
+    - ''
+    - '&l&fModes:'
+    - ''
+    - '&l&bon buyable lands'
+    - '&crightclick: &7show info'
+    - '&cleftclick: &7buy'
+    - ''
+    - '&l&bon own lands'
+    - '&crightclick: &7show info'
+    - '&cshift + rightclick: &7manage'
+    - '&cshift + leftclick: &7manageall'
+    - ''
+    - '&l&bin the air:'
+    - '&crightclick: &7toggle map'
+    - '&cleftclick: &7toggle borders'
+version: 21

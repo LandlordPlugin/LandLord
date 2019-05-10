@@ -1,0 +1,144 @@
+name: Landlord
+version: 4.0
+main: biz.princeps.landlord.LandLord
+author: SpatiumPrinceps
+website: https://www.spigotmc.org/resources/beta-landlord-2.44398/
+depend: [WorldGuard, ProtocolLib]
+softdepend: [Vault, PlaceholderAPI]
+api-version: 1.13
+
+permissions:
+  landlord.*:
+    description: Gives access to all landlord commands
+    children:
+      landlord.player.*: true
+      landlord.admin.*: true
+
+  landlord.player.*:
+    description: Gives access to default player commands.
+    children:
+      landlord.player.own: true
+      landlord.player.unclaim: true
+      landlord.player.map: true
+      landlord.player.borders: true
+      landlord.player.info: true
+      landlord.player.shop: true
+      landlord.player.home: true
+      landlord.player.advertise: true
+      landlord.player.manage: true
+      landlord.player.manage.*: true
+
+
+  landlord.admin.*:
+    description: Gives access to admin commands.
+    children:
+      landlord.admin.unclaim: true
+      landlord.admin.list: true
+      landlord.admin.manage: true
+      landlord.admin.clearworld: true
+      landlord.admin.bypass: true
+      landlord.admin.reload: true
+      landlord.admin.modifyfriends: true
+      landlord.admin.giveclaims: true
+      landlord.admin.update: true
+      landlord.admin.admintp: true
+
+  landlord.use:
+    description: required to use any Landlord commands
+    default: true
+
+  landlord.player.own:
+    description: permission for plot ownership (claim, manage, friends, etc.)
+    default: true
+
+  landlord.player.unclaim:
+    description: permission to unclaim lands
+    default: true
+
+  landlord.player.map:
+    description: permission to use the land map
+    default: true
+
+  landlord.player.borders:
+    description: permission to use the ll border cmd
+    default: true
+
+  landlord.player.info:
+    description: Permission to use land info
+    default: true
+
+  landlord.player.manage:
+    description: Permission to manage own lands
+    default: true
+
+  landlord.player.shop:
+    description: Permission to use the shop
+    default: true
+
+  landlord.player.home:
+    description: Permission to set home and teleport back
+    default: true
+
+  landlord.player.advertise:
+    description: Permission to advertise a land
+    default: true
+
+  landlord.player.multiclaim:
+    description: Permission to claim multiple lands at once
+    default: true
+
+  landlord.player.homeother:
+    description: Permission to teleport to other homes
+    default: false
+
+  landlord.limit.10:
+    description: Allows a user to claim up to 10 lands
+    default: true
+
+  landlord.limit.override:
+    description: allows unlimited land ownership
+    default: false
+
+  landlord.admin.help:
+    description: will have an advanced ll help menu
+    default: op
+
+  landlord.admin.unclaim:
+    description: Unclaim anyone's land
+    default: op
+
+  landlord.admin.list:
+    description: list all land owned by a user
+    default: op
+
+  landlord.admin.manage:
+    description: manage anyone's land
+    default: op
+
+  landlord.admin.clearworld:
+    description: clear a player's land in a world or all land in a world
+    default: op
+
+  landlord.admin.bypass:
+    description: bypass land protections
+    default: op
+
+  landlord.admin.reload:
+    description: reload plugin configuration
+    default: op
+
+  landlord.admin.modifyfriends:
+    description: add/remove friends of any land
+    default: op
+
+  landlord.admin.giveclaims:
+    description: give someone claims
+    default: op
+
+  landlord.admin.update:
+    description: Update existing claims
+    default: op
+
+  landlord.admin.admintp:
+    description: Opens a gui with all available lands of a player to tp to
+    default: op
