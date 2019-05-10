@@ -108,7 +108,7 @@
         <dependency>
             <groupId>biz.princeps</groupId>
             <artifactId>LandLord-core</artifactId>
-            <version>3.136</version>
+            <version>4.0</version>
             <scope>compile</scope>
         </dependency>
 
