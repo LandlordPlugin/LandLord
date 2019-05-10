@@ -44,7 +44,6 @@ public class Update extends LandlordCommand {
 
     /**
      * Supposed to add missing flags to existing lands, remove non existing flags
-     * TODO implement this
      */
     private void onUpdateLands(CommandSender issuer) {
 
@@ -60,41 +59,36 @@ public class Update extends LandlordCommand {
             }
         }
 
+        Collection<IOwnedLand> regions = new HashSet<>();
+        Bukkit.getWorlds().forEach(w -> regions.addAll(plugin.getWGProxy().getRegions(w)));
 
-        for (World world : Bukkit.getWorlds()) {
-            Collection<IOwnedLand> regions = plugin.getWGProxy().getRegions(world);
-            for (IOwnedLand region : regions) {
-                // remove flags, that are no longer required
-                for (ILLFlag iWrapperFlag : region.getFlags()) {
-                    String flagname = iWrapperFlag.getName().toLowerCase();
-                    if (!to_set.contains(flagname) &&
-                            !flagname.equals("greeting") &&
-                            !flagname.equals("farewell")) {
+        for (IOwnedLand region : regions) {
+            // remove flags, that are no longer required
+            for (ILLFlag iWrapperFlag : region.getFlags()) {
+                String flagname = iWrapperFlag.getName().toLowerCase();
+                if (!to_set.contains(flagname) &&
+                        !flagname.equals("greeting") &&
+                        !flagname.equals("farewell")) {
 
-                        region.removeFlag(flagname);
-                    }
+                    region.removeFlag(flagname);
                 }
+            }
 
-                // add missing flags
-                for (String s : rawList) {
-                    String[] s1 = s.split(":")[0].split(" ");
-                    if (!region.containsFlag(s1[0].toLowerCase())) {
-                        if (s1[2].equals("nonmembers")) {
-                            //region.2(s1[0], s1[1]);
-                        } else {
-                            // region.addWGFlag(s1[0], s1[1]);
-                        }
-                    }
+            // add missing flags
+            for (String s : rawList) {
+                String[] s1 = s.split(":")[0].split(" ");
+                if (!region.containsFlag(s1[0].toLowerCase())) {
+                    region.setFlagValue(s1[0].toLowerCase(), s1[2], s1[1]);
                 }
-                String name = Bukkit.getOfflinePlayer(region.getOwner()).getName();
-                // add other flags
-                if (!region.containsFlag("greeting")) {
-                    region.setFlagValue("greeting",
-                            lm.getRawString("Alerts.defaultGreeting").replace("%owner%", name));
-                } else if (!region.containsFlag("farewell")) {
-                    region.setFlagValue("farewell",
-                            lm.getRawString("Alerts.defaultFarewell").replace("%owner%", name));
-                }
+            }
+            String name = Bukkit.getOfflinePlayer(region.getOwner()).getName();
+            // add other flags
+            if (!region.containsFlag("greeting")) {
+                region.setFlagValue("greeting", null,
+                        lm.getRawString("Alerts.defaultGreeting").replace("%owner%", name));
+            } else if (!region.containsFlag("farewell")) {
+                region.setFlagValue("farewell", null,
+                        lm.getRawString("Alerts.defaultFarewell").replace("%owner%", name));
             }
         }
 
@@ -105,30 +99,23 @@ public class Update extends LandlordCommand {
      * Resets all lands to the default flag state
      */
     private void onResetLands(CommandSender sender) {
-        /*
-        sender.sendMessage("Starting to reset lands...");
-        List<String> rawList = Landlord.getInstance().getConfig().getStringList("Flags");
 
-        for (World w : Bukkit.getWorlds()) {
-            for (World world : Bukkit.getWorlds()) {
-                Collection<IOwnedLand> regions = plugin.getWgproxy().getRegions(world);
-                for (IOwnedLand region : regions) {
-                    // add missing flags
-                    for (String s : rawList) {
-                        String[] s1 = s.split(":")[0].split(" ");
-                        if (!region.containsFlag(s1[0])) {
-                            if (s1[2].equals("nonmembers")) {
-                                region.addRegionGroupFlag(s1[0], s1[1]);
-                            } else {
-                                region.addWGFlag(s1[0], s1[1]);
-                            }
-                        }
-                    }
-                }
+        sender.sendMessage("Starting to reset lands...");
+        List<String> rawList = plugin.getConfig().getStringList("Flags");
+
+        Collection<IOwnedLand> regions = new HashSet<>();
+        Bukkit.getWorlds().forEach(w -> regions.addAll(plugin.getWGProxy().getRegions(w)));
+
+        for (IOwnedLand region : regions) {
+            // add missing flags
+            for (String s : rawList) {
+                String[] toSet = s.split(":")[0].split(" ");
+                region.setFlagValue(toSet[0], toSet[2], toSet[1]);
             }
         }
+
         sender.sendMessage("Finished resetting lands!");
-        */
+
     }
 
 }

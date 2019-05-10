@@ -2,7 +2,6 @@ package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.guis.ManageGUIAll;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Lists;
@@ -33,8 +32,8 @@ public class ManageAll extends LandlordCommand {
 
         Player player = properties.getPlayer();
 
-        ManageGUIAll gui = new ManageGUIAll(
-                plugin, player, Lists.newArrayList(plugin.getWGProxy().getRegions(player.getUniqueId())));
-        gui.display();
+        //ManageGUIAll gui = new ManageGUIAll(
+         //       plugin, player, Lists.newArrayList(plugin.getWGProxy().getRegions(player.getUniqueId())));
+        //gui.display();
     }
 }

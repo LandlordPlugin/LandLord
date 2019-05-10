@@ -6,9 +6,13 @@ public interface ILLFlag {
 
     String getName();
 
-    void toggle();
+    boolean toggleFriends();
+
+    boolean toggleAll();
+
+    boolean getFriendStatus();
+
+    boolean getAllStatus();
 
     Material getMaterial();
-
-    String getStatus();
 }

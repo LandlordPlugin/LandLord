@@ -11,23 +11,37 @@ public class LLFlag implements ILLFlag {
 
     private ProtectedRegion pr;
 
-    private String curr_status;
+    private boolean friendStatus, allStatus;
     private Flag flag;
     private Material mat;
 
-    private StateFlag.State state1, state2;
-    private boolean isGroup1, isGroup2;
 
-    public LLFlag(ProtectedRegion pr, Flag flag, Material mat, StateFlag.State state1, StateFlag.State state2, boolean g1, boolean g2) {
+    public LLFlag(ProtectedRegion pr, Flag flag, Material mat) {
         this.pr = pr;
         this.flag = flag;
         this.mat = mat;
-        this.state1 = state1;
-        this.state2 = state2;
-        this.isGroup1 = g1;
-        this.isGroup2 = g2;
 
-        this.curr_status = pr.getFlags().get(flag).toString();
+        RegionGroup regionGroupFlag = (RegionGroup) pr.getFlags().get(flag.getRegionGroupFlag());
+        StateFlag.State value = (StateFlag.State) pr.getFlags().get(flag);
+        setStatus(regionGroupFlag, value);
+    }
+
+    void setStatus(RegionGroup grp, Object state) {
+        if (grp == RegionGroup.MEMBERS && state == StateFlag.State.ALLOW) {
+            friendStatus = true;
+            allStatus = false;
+            System.out.println("10");
+        }
+        if (grp == RegionGroup.ALL && state == StateFlag.State.ALLOW) {
+            friendStatus = true;
+            allStatus = true;
+            System.out.println("11");
+        }
+        if (grp == RegionGroup.NON_OWNERS && state == StateFlag.State.DENY) {
+            friendStatus = false;
+            allStatus = false;
+            System.out.println("00");
+        }
     }
 
     @Override
@@ -36,11 +50,61 @@ public class LLFlag implements ILLFlag {
     }
 
     @Override
-    public void toggle() {
-        if (curr_status.equalsIgnoreCase(state1.name())) {
-            handleToggle(isGroup1, state2);
+    public boolean toggleFriends() {
+        if (friendStatus) {
+            this.friendStatus = false;
+            // deny everyone
+            if (allStatus) {
+                return false;
+            } else {
+                pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_OWNERS);
+                pr.setFlag(flag, StateFlag.State.DENY);
+                return true;
+            }
+
         } else {
-            handleToggle(isGroup2, state1);
+            // allow friends now
+            if (allStatus) {
+                // now: 11
+                this.friendStatus = true;
+                pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.ALL);
+                pr.setFlag(flag, StateFlag.State.ALLOW);
+                return true;
+            } else {
+                // now 10
+                this.friendStatus = true;
+                pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
+                pr.setFlag(flag, StateFlag.State.ALLOW);
+                return true;
+            }
+        }
+    }
+
+    @Override
+    public boolean toggleAll() {
+        if (allStatus) {
+            // deny nonmbers now
+            this.allStatus = false;
+            if (friendStatus) {
+                // still allow friends
+                pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
+                pr.setFlag(flag, StateFlag.State.ALLOW);
+                return true;
+            } else {
+                // deny everyone
+                pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_OWNERS);
+                pr.setFlag(flag, StateFlag.State.DENY);
+                return true;
+            }
+        } else {
+            if (friendStatus) {
+                this.allStatus = true;
+                pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.ALL);
+                pr.setFlag(flag, StateFlag.State.ALLOW);
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -50,30 +114,12 @@ public class LLFlag implements ILLFlag {
     }
 
     @Override
-    public String getStatus() {
-        return curr_status;
-    }
-
-    private void handleToggle(boolean g, StateFlag.State state) {
-        if (g)
-            pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-        else
-            pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.ALL);
-        pr.setFlag(flag, state);
-        this.curr_status = state.name();
+    public boolean getFriendStatus() {
+        return friendStatus;
     }
 
     @Override
-    public String toString() {
-        return "LLFlag{" +
-                "pr=" + pr +
-                ", curr_status='" + curr_status + '\'' +
-                ", flag=" + flag +
-                ", mat=" + mat +
-                ", state1=" + state1 +
-                ", state2=" + state2 +
-                ", isGroup1=" + isGroup1 +
-                ", isGroup2=" + isGroup2 +
-                '}';
+    public boolean getAllStatus() {
+        return allStatus;
     }
 }

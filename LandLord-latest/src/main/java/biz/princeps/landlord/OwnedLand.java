@@ -116,7 +116,7 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public boolean contains(int x, int y, int z) {
-        return false;
+        return region.contains(x, y, z);
     }
 
     @Override
@@ -132,16 +132,13 @@ public class OwnedLand extends AOwnedLand {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            String[] toggleleft = s.split(":")[0].split(" ");
-            String[] toggleRight = s.split(":")[1].split(" ");
-            Flag flag = Flags.get(toggleleft[0].toLowerCase());
+            Flag flag = Flags.get(s.toLowerCase());
+            System.out.println(s + ": " + flag + ":" + pl.getConfig()
+                    .getString("Manage." + s.toLowerCase() + ".item"));
             Material mat = Material.valueOf(pl.getConfig()
-                    .getString("Manage." + toggleleft[0].toLowerCase() + ".item"));
-            StateFlag.State state1 = StateFlag.State.valueOf(toggleleft[1].toUpperCase());
-            StateFlag.State state2 = StateFlag.State.valueOf(toggleRight[0].toUpperCase());
-            boolean isGroup1 = toggleleft[2].equalsIgnoreCase("nonmembers");
-            boolean isGroup2 = toggleRight[1].equalsIgnoreCase("nonmembers");
-            toReturn.add(new LLFlag(region, flag, mat, state1, state2, isGroup1, isGroup2));
+                    .getString("Manage." + s.toLowerCase() + ".item"));
+            if (region.getFlags().containsKey(flag))
+                toReturn.add(new LLFlag(region, flag, mat));
         }
         return toReturn;
     }
@@ -163,11 +160,13 @@ public class OwnedLand extends AOwnedLand {
     }
 
     @Override
-    public void setFlagValue(String flag, Object value) {
+    public void setFlagValue(String flag, String grp, Object value) {
         if (flag == null) return;
         Flag wgflag = Flags.get(flag.toLowerCase());
         if (wgflag == null) return;
         region.setFlag(wgflag, value);
+        if (grp != null)
+            region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.valueOf(grp.toUpperCase()));
     }
 
     @Override
@@ -202,6 +201,8 @@ public class OwnedLand extends AOwnedLand {
 
             if (s1[2].equalsIgnoreCase("nonmembers")) {
                 region.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+            } else {
+                region.setFlag(flag.getRegionGroupFlag(), RegionGroup.ALL);
             }
             region.setFlag(flag, state);
         }

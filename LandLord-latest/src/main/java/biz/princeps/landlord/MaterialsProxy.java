@@ -29,6 +29,16 @@ public class MaterialsProxy implements IMaterialsProxy {
     }
 
     @Override
+    public ItemStack getLimeWool() {
+        return new ItemStack(Material.LIME_WOOL);
+    }
+
+    @Override
+    public ItemStack getRedWool() {
+        return new ItemStack(Material.RED_WOOL);
+    }
+
+    @Override
     public Material getFireCharge() {
         return Material.FIRE_CHARGE;
     }

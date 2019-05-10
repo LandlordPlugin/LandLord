@@ -125,42 +125,82 @@ Commands:
   Item:
     noPlayer: '&7Could not find following players&8: &c%players%'
   Manage:
+    info:
+      title: '&aInformation'
+      description:
+        - 'Land: %land%'
+    friends:
+      title: '&aFriends'
+      description:
+        - 'Click in this row to manage the permission of friends'
+    everyone:
+      title: '&aEveryone'
+      description:
+        - 'Click in this row to manage the permission for everyone'
+    allow: '&aAllow'
+    deny: '&cDeny'
+
     all:
       header: '&7Managing&8 &call lands'
     notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
     notOwnFreeLand: '&7You do not own this chunk'
-    header: '&7Managing&8: &c%info%'
+    header: '&c%info%'
     invalidArguments: '&7Invalid arguments'
+    AllowDamage-animals:
+      title: '&cAllow damaging animals'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7hit mobs in this chunk'
+    AllowRide:
+      title: '&cAllow riding mobs'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7ride entities in this chunk'
+    AllowFrosted-ice-form:
+      title: '&cAllow ice boots'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7to use ice boots in this chunk'
+    AllowBlock-trampling:
+      title: '&cAllow trampling blocks'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7trample farmland in this chunk'
+    AllowPotion-splash:
+      title: '&cAllow splashing potions'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7throw splash potions in this chunk'
+    AllowPistons:
+      title: '&cAllow pistons'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7use pistons in this chunk'
     AllowBuild:
       title: '&cAllow Building'
       description:
         - ' &7Toggle the ability for players to'
         - ' &7build in this chunk'
-        - ' &7Status&8: &c%var%'
     AllowInteract:
       title: '&cAllow interaction'
       description:
         - ' &7Toggle the ability for players to'
         - ' &7interact with objects (e.g. redstone contraptions)'
-        - ' &7Status&8: &c%var%'
     AllowChest-access:
       title: '&cAllow Chest Access'
       description:
         - ' &7Toggle the ability for players to'
         - ' &7access all kinds of containers'
-        - ' &7Status&8: &c%var%'
     AllowCreeper-explosion:
       title: '&cAllow Creeper explosions'
       description:
         - ' &7Toggle the ability for creepers to'
         - ' &7destroy blocks'
-        - ' &7Status&8: &c%var%'
     AllowPvp:
       title: '&cAllow pvp'
       description:
         - ' &7Toggle the ability for players to'
         - ' &7hit other players'
-        - ' &7Status&8: &c%var%'
     AllowMob-spawning:
       title: '&cManage MobSpawning'
       description:

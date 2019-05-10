@@ -117,7 +117,7 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public boolean contains(int x, int y, int z) {
-        return false;
+        return region.contains(x, y, z);
     }
 
     @Override
@@ -133,17 +133,15 @@ public class OwnedLand extends AOwnedLand {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            String[] toggleleft = s.split(":")[0].split(" ");
-            String[] toggleRight = s.split(":")[1].split(" ");
-
-            Flag flag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(toggleleft[0].toLowerCase());
+            Flag flag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(s.toLowerCase());
+            if (flag == null) {
+                pl.getLogger().warning("Invalid worldguard flag found: " + s);
+                continue;
+            }
             Material mat = Material.valueOf(pl.getConfig()
-                    .getString("Manage." + toggleleft[0].toLowerCase() + ".item"));
-            StateFlag.State state1 = StateFlag.State.valueOf(toggleleft[1].toUpperCase());
-            StateFlag.State state2 = StateFlag.State.valueOf(toggleRight[0].toUpperCase());
-            boolean isGroup1 = toggleleft[2].equalsIgnoreCase("nonmembers");
-            boolean isGroup2 = toggleRight[1].equalsIgnoreCase("nonmembers");
-            toReturn.add(new LLFlag(region, flag, mat, state1, state2, isGroup1, isGroup2));
+                    .getString("Manage." + s.toLowerCase() + ".item"));
+
+            toReturn.add(new LLFlag(region, flag, mat));
         }
         return toReturn;
     }
@@ -156,20 +154,15 @@ public class OwnedLand extends AOwnedLand {
         return region.getFlag(wgflag);
     }
 
-    public void setGroupFlag(String flag) {
-        if (flag == null) return;
-        Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
-        if (wgflag == null) return;
-        region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-
-    }
-
     @Override
-    public void setFlagValue(String flag, Object value) {
+    public void setFlagValue(String flag, String grp, Object value) {
         if (flag == null) return;
         Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
         if (wgflag == null) return;
         region.setFlag(wgflag, value);
+
+        if (grp != null)
+            region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.valueOf(grp.toUpperCase()));
     }
 
     @Override
@@ -178,6 +171,7 @@ public class OwnedLand extends AOwnedLand {
         Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
         if (wgflag == null) return;
         region.getFlags().remove(wgflag);
+        region.getFlags().remove(wgflag.getRegionGroupFlag());
     }
 
     @Override
@@ -193,19 +187,13 @@ public class OwnedLand extends AOwnedLand {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            String[] s1 = s.split(":")[0].split(" ");
-
-            Flag flag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(s1[0].toLowerCase());
+            Flag flag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(s.toLowerCase());
             if (!(flag instanceof StateFlag)) {
                 Bukkit.getLogger().warning("Only stateflags are supported!");
                 return;
             }
-            StateFlag.State state = StateFlag.State.valueOf(s1[1].toUpperCase());
-
-            if (s1[2].equalsIgnoreCase("nonmembers")) {
-                region.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-            }
-            region.setFlag(flag, state);
+            region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
+            region.setFlag(flag, StateFlag.State.ALLOW);
         }
         // add other flags
         pl.getPlayerManager().getOfflinePlayerAsync(owner, p -> {

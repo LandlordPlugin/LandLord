@@ -441,15 +441,15 @@ CommandSettings:
 # define your default flags here. Every flag will be manageable in ll manage
 # Construction of a new Flag:
 # flag defaultState:toggleableState
-# You can also set specific groups: e.g. interact allow all:deny nonmembers
+# You can also set specific groups: e.g. interact allow all:deny non_members
 # this allows toggling the flagstate between allowing interaction for everyone and just allow oweners and members
 # if you are adding a new flag, you must implement the necessary strings in the language file! Just copy paste it from an existing flag.
 Flags:
-  - 'interact allow all:deny nonmembers'
-  - 'chest-access deny nonmembers:allow all'
-  - 'creeper-explosion deny all:allow all'
-  - 'pvp deny all:allow all'
-  - 'build deny nonmembers:allow all'
+  - 'interact'
+  - 'chest-access'
+  - 'creeper-explosion'
+  - 'pvp'
+  - 'build'
 
 MaItem:
   enabled: true

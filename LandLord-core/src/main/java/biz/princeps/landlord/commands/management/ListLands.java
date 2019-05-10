@@ -3,8 +3,7 @@ package biz.princeps.landlord.commands.management;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.guis.ManageGUI;
-import biz.princeps.landlord.guis.ManageGUIAll;
+import biz.princeps.landlord.guis.ManageGui;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
@@ -103,8 +102,8 @@ public class ListLands extends LandlordCommand {
                         //       flagformat: '&a%flagname%: &f%flagvalue%'
 
                         land.getFlags().forEach((flag) -> lore.add(flagFormat
-                                .replace("%flagname%", flag.getName())
-                                .replace("%flagvalue%", flag.getStatus())));
+                                .replace("%flagname%", flag.getName())));
+                             //   .replace("%flagvalue%", flag.get())));
 
                     } else {
                         lore.add(s.replace("%name%", land.getName())
@@ -120,7 +119,7 @@ public class ListLands extends LandlordCommand {
                         .replace("%name%", land.getName()));
                 icon.setLore(lore);
                 icon.addClickAction((p) -> {
-                    ManageGUI manageGUI = new ManageGUI(plugin, sender, landGui, land);
+                    ManageGui manageGUI = new ManageGui(plugin, sender, landGui, land);
                     manageGUI.display();
                 });
 
@@ -131,8 +130,8 @@ public class ListLands extends LandlordCommand {
             landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
                     .setName(lm.getRawString("Commands.ListLands.gui.manageAll"))
                     .addClickAction((p) -> {
-                        ManageGUIAll manageGUIAll = new ManageGUIAll(plugin, sender, landGui, lands);
-                        manageGUIAll.display();
+                        //ManageGUIAll manageGUIAll = new ManageGUIAll(plugin, sender, landGui, lands);
+                        //manageGUIAll.display();
                     }));
 
             landGui.display();

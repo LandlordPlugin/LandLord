@@ -66,6 +66,10 @@ public class PistonOverwriter extends BasicListener {
             return false;
         }
 
+        if (plugin.getWGProxy().getRegion(origin.getChunk()) == null){
+            return false;
+        }
+
         Set<IOwnedLand> lands = new HashSet<>();
         blocks.forEach(b -> lands.add(plugin.getWGProxy().getRegion(b.getChunk())));
 
