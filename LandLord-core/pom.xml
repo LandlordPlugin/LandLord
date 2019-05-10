@@ -5,7 +5,7 @@
     <parent>
         <artifactId>LandLord</artifactId>
         <groupId>biz.princeps</groupId>
-        <version>3.136</version>
+        <version>4.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,6 +26,10 @@
     </build>
 
     <repositories>
+        <repository>
+            <id>princepsrepo</id>
+            <url>http://princeps.biz:8081/nexus/content/repositories/princepsrepo/</url>
+        </repository>
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
