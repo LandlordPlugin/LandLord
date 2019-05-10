@@ -586,4 +586,4 @@ Manage:
 EnableMetrics: true
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 23
+version: 24

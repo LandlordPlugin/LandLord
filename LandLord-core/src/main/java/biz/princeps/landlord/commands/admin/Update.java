@@ -83,13 +83,15 @@ public class Update extends LandlordCommand {
             }
         }
 */
-        issuer.sendMessage("Finished updating lands!");
+        issuer.sendMessage("Currently not implemented");
     }
 
     /**
      * Resets all lands to the default flag state
      */
     private void onResetLands(CommandSender sender) {
+        sender.sendMessage("Currently not implemented");
+
 /*
         sender.sendMessage("Starting to reset lands...");
         List<String> rawList = plugin.getConfig().getStringList("Flags");

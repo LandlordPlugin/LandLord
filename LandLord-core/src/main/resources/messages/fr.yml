@@ -124,12 +124,58 @@ Commands:
   Item:
     noPlayer: '&7Les joueurs suivants n''ont pas été trouvés&8: &c%players%'
   Manage:
+    info:
+    title: '&aInformation'
+    description:
+      - 'Land: %land%'
+    friends:
+      title: '&aFriends'
+      description:
+        - 'Click in this row to manage the permission of friends'
+    everyone:
+      title: '&aEveryone'
+      description:
+        - 'Click in this row to manage the permission for everyone'
+    allow: '&aAllow'
+    deny: '&cDeny'
+    prevArrow: '&aPrevious page'
+    nextArrow: '&aNext page'
     all:
       header: '&7Gestion de&8 &ctous les claims'
     notOwn: '&7Vous ne possédez pas ce chunk. Il appartient à &c%owner%'
     notOwnFreeLand: '&7Vous ne possédez pas ce chunk'
     header: '&7Gestion&8: &c%info%'
     invalidArguments: '&7arguments invalides'
+    AllowDamage-animals:
+      title: '&cAllow damaging animals'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7hit mobs in this chunk'
+    AllowRide:
+      title: '&cAllow riding mobs'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7ride entities in this chunk'
+    AllowFrosted-ice-form:
+      title: '&cAllow ice boots'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7to use ice boots in this chunk'
+    AllowBlock-trampling:
+      title: '&cAllow trampling blocks'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7trample farmland in this chunk'
+    AllowPotion-splash:
+      title: '&cAllow splashing potions'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7throw splash potions in this chunk'
+    AllowPistons:
+      title: '&cAllow pistons'
+      description:
+        - ' &7Toggle the ability for players to'
+        - ' &7use pistons in this chunk'
     AllowBuild:
       title: '&cConstruction'
       description:
@@ -301,4 +347,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 19
+version: 21

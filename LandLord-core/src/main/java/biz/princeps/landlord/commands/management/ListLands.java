@@ -4,6 +4,7 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGui;
+import biz.princeps.landlord.guis.ManageGuiAll;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
@@ -130,8 +131,8 @@ public class ListLands extends LandlordCommand {
             landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
                     .setName(lm.getRawString("Commands.ListLands.gui.manageAll"))
                     .addClickAction((p) -> {
-                        //ManageGUIAll manageGUIAll = new ManageGUIAll(plugin, sender, landGui, lands);
-                        //manageGUIAll.display();
+                        ManageGuiAll manageGUIAll = new ManageGuiAll(plugin, sender, landGui, lands);
+                        manageGUIAll.display();
                     }));
 
             landGui.display();

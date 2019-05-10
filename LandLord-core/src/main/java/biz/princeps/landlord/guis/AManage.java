@@ -51,6 +51,12 @@ public class AManage extends AbstractGUI {
     }
 
     private void createFrame() {
+        for (int i = 0; i < this.getSize(); i++) {
+            Icon placehodler = new Icon(plugin.getMatProxy().getGreyStainedGlass());
+            placehodler.setName(" ");
+            this.setIcon(i, placehodler);
+        }
+
         List<String> strings = formatList(lm.getStringList("Commands.Manage.info.description"),
                 "%land%", regions.get(0).getName());
         Icon info = new Icon(new ItemStack(Material.ITEM_FRAME));
@@ -67,12 +73,6 @@ public class AManage extends AbstractGUI {
         everyone.setName(lm.getRawString("Commands.Manage.everyone.title"));
         everyone.setLore(lm.getStringList("Commands.Manage.everyone.description"));
         this.setIcon(18, everyone);
-
-        for (int i = 27; i < 45; i++) {
-            Icon placehodler = new Icon(plugin.getMatProxy().getGreyStainedGlass());
-            placehodler.setName("");
-            this.setIcon(i, placehodler);
-        }
     }
 
     private void createWGFlags() {
@@ -343,7 +343,7 @@ public class AManage extends AbstractGUI {
                 List<Icon> icons = new ArrayList<>();
                 List<String> lore = lm.getStringList("Commands.Manage.AllowMob-spawning.toggleItem.description");
 
-                MultiPagedGUI gui = new MultiPagedGUI(p, 4, title, icons, this) {
+                MultiPagedGUI gui = new MultiPagedGUI(p, 5, title, icons, this) {
                 };
                 String titleMob = lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title");
                 for (IMob m : plugin.getMobProxy().values()) {
