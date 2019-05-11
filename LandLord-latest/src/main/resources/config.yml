@@ -498,7 +498,7 @@ Manage:
     item: SADDLE
   frosted-ice-form:
     enable: true
-    item: FROSTED_ICE
+    item: ICE
   block-trampling:
     enable: true
     item: DIAMOND_HOE

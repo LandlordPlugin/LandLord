@@ -59,7 +59,8 @@ public class ListLands extends LandlordCommand {
 
             // Want to know own lands
             if (target == null) {
-                onListLands(properties.getPlayer(), plugin.getPlayerManager().get(properties.getPlayer().getUniqueId()), page);
+                onListLands(properties.getPlayer(),
+                        plugin.getPlayerManager().get(properties.getPlayer().getUniqueId()), page);
             } else if (properties.getPlayer().hasPermission("landlord.admin.list")) {
                 // Admin, Other lands, need to lookup their names
                 int finalPage = page;
@@ -67,7 +68,8 @@ public class ListLands extends LandlordCommand {
                 plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
                     if (lPlayer == null) {
                         // Failure
-                        properties.getPlayer().sendMessage(lm.getString("Commands.ListLands.noPlayer").replace("%player%", finalTarget));
+                        properties.getPlayer().sendMessage(lm.getString("Commands.ListLands.noPlayer")
+                                .replace("%player%", finalTarget));
                     } else {
                         // Success
                         onListLands(properties.getPlayer(), (LPlayer) lPlayer, finalPage);
@@ -103,9 +105,9 @@ public class ListLands extends LandlordCommand {
                         //       flagformat: '&a%flagname%: &f%flagvalue%'
 
                         land.getFlags().forEach((flag) -> lore.add(flagFormat
-                                .replace("%flagname%", flag.getName())));
-                             //   .replace("%flagvalue%", flag.get())));
-
+                                .replace("%flagname%", flag.getName())
+                                .replace("%friend%", this.formatState(flag.getFriendStatus()))
+                                .replace("%all%", this.formatState(flag.getAllStatus()))));
                     } else {
                         lore.add(s.replace("%name%", land.getName())
                                 .replace("%realx%", String.valueOf(land.getChunk().getX() * 16))
@@ -161,5 +163,11 @@ public class ListLands extends LandlordCommand {
         }
     }
 
-
+    private String formatState(boolean bool) {
+        if (bool) {
+            return lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.deny");
+        } else {
+            return lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.allow");
+        }
+    }
 }

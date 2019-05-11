@@ -82,7 +82,6 @@ public class SecureWorldListener extends BasicListener {
 
         if (!plugin.getConfig().getStringList("disabled-worlds").contains(loc.getWorld().getName())) {
 
-
             if (plugin.getWGProxy().isAllowedInOverlap(p, loc)) return;
 
             if (land == null) {

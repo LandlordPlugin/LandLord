@@ -28,7 +28,6 @@ permissions:
       landlord.player.manage: true
       landlord.player.manage.*: true
 
-
   landlord.admin.*:
     description: Gives access to admin commands.
     children:
@@ -42,6 +41,27 @@ permissions:
       landlord.admin.giveclaims: true
       landlord.admin.update: true
       landlord.admin.admintp: true
+
+  landlord.player.manage.*:
+    description: required to manage all the stuff in ll manage
+    children:
+      landlord.player.manage.friends: true
+      landlord.player.manage.regenerate: true
+      landlord.player.manage.setgreet: true
+      landlord.player.manage.setfarewell: true
+      landlord.player.manage.unclaim: true
+      landlord.player.manage.mob-spawning: true
+      landlord.player.manage.damage-animals: true
+      landlord.player.manage.ride: true
+      landlord.player.manage.frosted-ice-form: true
+      landlord.player.manage.block-trampling: true
+      landlord.player.manage.potion-splash: true
+      landlord.player.manage.pistons: true
+      landlord.player.manage.build: true
+      landlord.player.manage.interact: true
+      landlord.player.manage.chest-access: true
+      landlord.player.manage.creeper-explosion: true
+      landlord.player.manage.pvp: true
 
   landlord.use:
     description: required to use any Landlord commands
@@ -142,3 +162,71 @@ permissions:
   landlord.admin.admintp:
     description: Opens a gui with all available lands of a player to tp to
     default: op
+
+  landlord.player.manage.friends:
+    description: manage friends
+    default: true
+
+  landlord.player.manage.regenerate:
+    description: manage regenerate
+    default: true
+
+  landlord.player.manage.setgreet:
+    description: manage setgreet
+    default: true
+
+  landlord.player.manage.setfarewell:
+    description: manage setfarewell
+    default: true
+
+  landlord.player.manage.unclaim:
+    description: manage unclaim
+    default: true
+
+  landlord.player.manage.mob-spawning:
+    description: manage mobspawn
+    default: true
+
+  landlord.player.manage.damage-animals:
+    description: manage damage animals
+    default: true
+
+  landlord.player.manage.ride:
+    description: manage riding
+    default: true
+
+  landlord.player.manage.frosted-ice-form:
+    description: manage frosted ice form boots
+    default: true
+
+  landlord.player.manage.block-trampling:
+    description: manage block trampling
+    default: true
+
+  landlord.player.manage.potion-splash:
+    description: manage potion splash
+    default: true
+
+  landlord.player.manage.pistons:
+    description: manage pistons
+    default: true
+
+  landlord.player.manage.build:
+    description: manage build
+    default: true
+
+  landlord.player.manage.interact:
+    description: manage interact
+    default: true
+
+  landlord.player.manage.chest-access:
+    description: manage chest access
+    default: true
+
+  landlord.player.manage.creeper-explosion:
+    description: manage creeper explosions
+    default: true
+
+  landlord.player.manage.pvp:
+    description: manage pvp
+    default: true

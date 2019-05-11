@@ -86,7 +86,7 @@ Commands:
         - '&aMembers: &f%members%'
         - ''
         - '%flags%'
-      flagformat: '&a%flagname%: &f%flagvalue%'
+      flagformat: '&a%flagname%: &8(&fFriends: &a%friend% &fAll: &a%all%&8)'
       manageAll: '&7Manage all lands'
     chat:
       header: '&2%player%s lands'

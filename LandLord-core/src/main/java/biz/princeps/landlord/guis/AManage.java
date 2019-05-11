@@ -126,8 +126,10 @@ public class AManage extends AbstractGUI {
     private Icon[] getIcons(ILLFlag flag) {
         Icon[] icons = new Icon[3];
         String flagname = flag.getName();
-        String title = lm.getRawString("Commands.Manage.Allow" + flagname.substring(0, 1).toUpperCase() + flagname.substring(1) + ".title");
-        List<String> description = lm.getStringList("Commands.Manage.Allow" + flagname.substring(0, 1).toUpperCase() + flagname.substring(1) + ".description");
+        String title =
+                lm.getRawString("Commands.Manage.Allow" + flagname.substring(0, 1).toUpperCase() + flagname.substring(1) + ".title");
+        List<String> description =
+                lm.getStringList("Commands.Manage.Allow" + flagname.substring(0, 1).toUpperCase() + flagname.substring(1) + ".description");
 
         Icon item = new Icon(new ItemStack(flag.getMaterial()));
         item.setLore(description);
@@ -162,7 +164,8 @@ public class AManage extends AbstractGUI {
         IOwnedLand land = regions.get(0);
 
 
-        // Reminder: Regenerate is not implemented in Manageall, cos it might cos some trouble. Calculating costs might be a bit tedious
+        // Reminder: Regenerate is not implemented in Manageall, cos it might cos some trouble. Calculating costs
+        // might be a bit tedious
         if (plugin.getConfig().getBoolean("Manage.regenerate.enable") && regions.size() == 1 &&
                 player.hasPermission("landlord.player.manage.regenerate")) {
             List<String> regenerateDesc = lm.getStringList("Commands.Manage.Regenerate.description");
@@ -176,7 +179,8 @@ public class AManage extends AbstractGUI {
                 if (!land.isOwner(player.getUniqueId())) {
                     return;
                 }
-                ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate.confirmation")
+                ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate" +
+                        ".confirmation")
                         .replace("%cost%", costString),
                         (p1) -> {
                             boolean flag = true;
@@ -213,6 +217,8 @@ public class AManage extends AbstractGUI {
 
             });
             this.setIcon(position++, icon);
+        } else {
+            System.out.println("no perms");
         }
 
         // Set greet icon
@@ -243,7 +249,8 @@ public class AManage extends AbstractGUI {
             List<String> farewellDesc = lm.getStringList("Commands.Manage.SetFarewell.description");
             String currentFarewell = land.getFarewellMessage();
 
-            Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.setfarewell.item"))));
+            Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.setfarewell" +
+                    ".item"))));
             icon.setName(lm.getRawString("Commands.Manage.SetFarewell.title"));
             icon.setLore(formatList(farewellDesc, "%var%", currentFarewell));
             icon.addClickAction(((p) -> {
@@ -277,12 +284,14 @@ public class AManage extends AbstractGUI {
                 friend.setName(op.getName());
                 friend.setLore(formatFriendsSegment(id));
                 friend.addClickAction((player) -> {
-                    ConfirmationGUI confirmationGUI = new ConfirmationGUI(player, lm.getRawString("Commands.Manage.ManageFriends.unfriend")
+                    ConfirmationGUI confirmationGUI = new ConfirmationGUI(player, lm.getRawString("Commands.Manage" +
+                            ".ManageFriends.unfriend")
                             .replace("%player%", op.getName()),
                             (p) -> {
                                 friendsGui.removeIcon(friendsGui.filter(op.getName()).get(0));
                                 for (IOwnedLand region : regions) {
-                                    Bukkit.dispatchCommand(player, "land unfriend " + region.getName() + " " + op.getName());
+                                    Bukkit.dispatchCommand(player,
+                                            "land unfriend " + region.getName() + " " + op.getName());
                                 }
                                 player.closeInventory();
                                 friendsGui.display();
@@ -311,7 +320,8 @@ public class AManage extends AbstractGUI {
             icon.setName(lm.getRawString("Commands.Manage.Unclaim.title"));
             icon.setLore(lm.getStringList("Commands.Manage.Unclaim.description"));
             icon.addClickAction(((p) -> {
-                ConfirmationGUI gui = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Unclaim.confirmationTitle").replace("%land%", land.getName()),
+                ConfirmationGUI gui = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Unclaim" +
+                        ".confirmationTitle").replace("%land%", land.getName()),
                         (p1) -> {
                             if (regions.size() > 1) {
                                 Bukkit.dispatchCommand(p, "ll unclaimall");
@@ -335,7 +345,8 @@ public class AManage extends AbstractGUI {
         if (plugin.getConfig().getBoolean("Manage.mob-spawning.enable") &&
                 player.hasPermission("landlord.player.manage.mobspawn")) {
             String title = lm.getRawString("Commands.Manage.AllowMob-spawning.title");
-            Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.mob-spawning.item"))));
+            Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.mob-spawning" +
+                    ".item"))));
             icon.setName(title);
             icon.setLore(lm.getStringList("Commands.Manage.AllowMob-spawning.description"));
 

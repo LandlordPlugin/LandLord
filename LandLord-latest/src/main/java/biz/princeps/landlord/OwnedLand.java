@@ -239,21 +239,13 @@ public class OwnedLand extends AOwnedLand {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            String[] s1 = s.split(":")[0].split(" ");
-
-            Flag flag = Flags.get(s1[0].toLowerCase());
+            Flag flag = Flags.get(s.toUpperCase());
             if (!(flag instanceof StateFlag)) {
                 Bukkit.getLogger().warning("Only stateflags are supported!");
                 return;
             }
-            StateFlag.State state = StateFlag.State.valueOf(s1[1].toUpperCase());
-
-            if (s1[2].equalsIgnoreCase("nonmembers")) {
-                region.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-            } else {
-                region.setFlag(flag.getRegionGroupFlag(), RegionGroup.ALL);
-            }
-            region.setFlag(flag, state);
+            region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
+            region.setFlag(flag, StateFlag.State.ALLOW);
         }
         // add other flags
         pl.getPlayerManager().getOfflinePlayerAsync(owner, p -> {
