@@ -13,6 +13,8 @@ public interface IMaterialsProxy {
 
     ItemStack getPlayerHead(UUID owner);
 
+    ItemStack getWitherSkull();
+
     ItemStack getLimeWool();
 
     ItemStack getRedWool();

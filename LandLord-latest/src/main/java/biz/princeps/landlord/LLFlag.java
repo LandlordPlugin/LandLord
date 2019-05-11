@@ -22,9 +22,7 @@ public class LLFlag implements ILLFlag {
         this.mat = mat;
 
         RegionGroup regionGroupFlag = (RegionGroup) pr.getFlags().get(flag.getRegionGroupFlag());
-        System.out.println(regionGroupFlag);
         StateFlag.State value = (StateFlag.State) pr.getFlags().get(flag);
-        System.out.println(value);
         setStatus(regionGroupFlag, value);
     }
 

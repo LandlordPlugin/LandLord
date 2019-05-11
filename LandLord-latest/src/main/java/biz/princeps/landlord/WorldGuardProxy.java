@@ -119,8 +119,8 @@ public class WorldGuardProxy extends AWorldGuardProxy {
     public boolean canClaim(Player player, Chunk currChunk) {
         RegionManager regionManager = getRegionManager(player.getWorld());
         if (regionManager != null) {
-            org.bukkit.util.Vector v1 = currChunk.getBlock(0, 0, 0).getLocation().toVector();
-            Vector v2 = currChunk.getBlock(15, 127, 15).getLocation().toVector();
+            Vector v1 = currChunk.getBlock(0, 0, 0).getLocation().toVector();
+            Vector v2 = currChunk.getBlock(15, 255, 15).getLocation().toVector();
 
             ProtectedRegion check = new ProtectedCuboidRegion("check",
                     BlockVector3.at(v1.getX(), v1.getY(), v1.getZ()),

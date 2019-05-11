@@ -136,12 +136,14 @@ public class OwnedLand extends AOwnedLand {
 
         for (String s : rawList) {
             Flag flag = Flags.get(s.toLowerCase());
-            System.out.println(s + ": " + flag + ":" + pl.getConfig()
-                    .getString("Manage." + s.toLowerCase() + ".item"));
+            if (flag == null) {
+                pl.getLogger().warning("Invalid worldguard flag found: " + s);
+                continue;
+            }
             Material mat = Material.valueOf(pl.getConfig()
                     .getString("Manage." + s.toLowerCase() + ".item"));
-            if (region.getFlags().containsKey(flag))
-                toReturn.add(new LLFlag(region, flag, mat));
+
+            toReturn.add(new LLFlag(region, flag, mat));
         }
         return toReturn;
     }
@@ -171,21 +173,23 @@ public class OwnedLand extends AOwnedLand {
         Set<EntityType> flag = region.getFlag(Flags.DENY_SPAWN);
 
         if (flag == null) {
-            HashSet<EntityType> entityTypes = Sets.newHashSet(EntityType.REGISTRY.get(mob.getName()));
+            HashSet<EntityType> entityTypes = Sets.newHashSet(EntityType.REGISTRY.get(mob.getName().toLowerCase()));
             region.setFlag(Flags.DENY_SPAWN, entityTypes);
             return;
         }
 
-        if (flag.contains(EntityType.REGISTRY.get(mob.getName()))) {
-            flag.remove(EntityType.REGISTRY.get(mob.getName()));
+        if (flag.contains(EntityType.REGISTRY.get(mob.getName().toLowerCase()))) {
+            flag.remove(EntityType.REGISTRY.get(mob.getName().toLowerCase()));
         } else {
-            flag.add(EntityType.REGISTRY.get(mob.getName()));
+            flag.add(EntityType.REGISTRY.get(mob.getName().toLowerCase()));
         }
     }
 
     @Override
     public boolean isMobDenied(IMob mob) {
-        return Objects.requireNonNull(region.getFlag(Flags.DENY_SPAWN)).contains(EntityType.REGISTRY.get(mob.getName()));
+        Set<EntityType> flag = region.getFlag(Flags.DENY_SPAWN);
+        if (flag == null) return false;
+        else return flag.contains(EntityType.REGISTRY.get(mob.getName().toLowerCase()));
     }
 
     //@Override

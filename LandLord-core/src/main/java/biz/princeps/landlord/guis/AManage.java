@@ -69,7 +69,7 @@ public class AManage extends AbstractGUI {
         friends.setLore(lm.getStringList("Commands.Manage.friends.description"));
         this.setIcon(9, friends);
 
-        Icon everyone = new Icon(new ItemStack(Material.SKULL_ITEM, 1, (short) 1));
+        Icon everyone = new Icon(plugin.getMatProxy().getWitherSkull());
         everyone.setName(lm.getRawString("Commands.Manage.everyone.title"));
         everyone.setLore(lm.getStringList("Commands.Manage.everyone.description"));
         this.setIcon(18, everyone);

@@ -492,7 +492,7 @@ Manage:
     item: CARROT_ON_A_STICK
   damage-animals:
     enable: true
-    item: RAW_FISH
+    item: LEGACY_RAW_FISH
   ride:
     enable: true
     item: SADDLE
@@ -507,7 +507,7 @@ Manage:
     item: SPLASH_POTION
   pistons:
     enable: true
-    item: PISTON_STICKY_BASE
+    item: STICKY_PISTON
   unclaim:
     enable: true
     item: BLAZE_POWDER
