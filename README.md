@@ -21,18 +21,18 @@ Replace the version with the current version number!
 </dependency>
 ```
 
+Wiki
+====
+There is a very in depth documentation about nearly everything in the
+[wiki](https://gitlab.com/princeps/LandLord/wikis/home).
 
 Compilation
 ================
 
 LandLord uses maven as dependency resolver. Execute the maven goal "package" to get a jar, that contains all dependencies.
-In case you want to dive deeper into LandLord development, you can change the output path of the shade plugin directly into your server plugins folder (like I did).
-The setup.sh script will install a testserver in the target folder.
+The jars will be located in target folder of their respect version (1.13.2+ in latest, 1.12.2 in legacy). 
+Execute setup.sh to install the testservers with all dependencies and runfiles for IntelliJ!
 
-Contributing
+Contribution
 ============
-1. Clone the repository 
-2. Execute setup.sh for installing the testserver with all dependencies
-3. Testserver is available in the target folder (excluded from git)
-3. Change code
-4. Submit a pull-request
+[link](https://gitlab.com/princeps/LandLord/blob/master/CONTRIBUTING.md)

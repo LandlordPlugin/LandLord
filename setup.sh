@@ -1,13 +1,13 @@
 #!/bin/bash
 
-function install_run_script {
+function install_run_scripts {
 	mkdir -p .idea/runConfigurations
 
-	cat > .idea/runConfigurations/Server_$1.xml << EOF
+	cat > .idea/runConfigurations/Server_1.13.2.xml << EOF
 <component name="ProjectRunConfigurationManager">
-  <configuration name="Server ${1}" type="JarApplication" factoryName="JAR Application">
-    <option name="JAR_PATH" value="\$PROJECT_DIR$/BuildTools/spigot-${1}.jar" />
-    <option name="WORKING_DIRECTORY" value="\$PROJECT_DIR$/target/Testserver_${1}" />
+  <configuration name="Server 1.13.2" type="JarApplication" factoryName="JAR Application">
+    <option name="JAR_PATH" value="\$PROJECT_DIR$/BuildTools/spigot-1.13.2.jar" />
+    <option name="WORKING_DIRECTORY" value="\$PROJECT_DIR$/LandLord-latest/target/Testserver_1.13.2" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <method v="2">
       <option name="Maven.BeforeRunTask" enabled="true" file="\$PROJECT_DIR$/pom.xml" goal="package" />
@@ -15,25 +15,54 @@ function install_run_script {
   </configuration>
 </component>
 EOF
-
+cat > .idea/runConfigurations/Server_1.12.2.xml << EOF
+<component name="ProjectRunConfigurationManager">
+  <configuration name="Server 1.12.2" type="JarApplication" factoryName="JAR Application">
+    <option name="JAR_PATH" value="\$PROJECT_DIR$/BuildTools/spigot-1.12.2.jar" />
+    <option name="WORKING_DIRECTORY" value="\$PROJECT_DIR$/LandLord-legacy/target/Testserver_1.12.2" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2">
+      <option name="Maven.BeforeRunTask" enabled="true" file="\$PROJECT_DIR$/pom.xml" goal="package" />
+    </method>
+  </configuration>
+</component>
+EOF
 	echo "Installed run script. Please reopen the project!"
 }
 
-function download_deps {
-	mkdir -p target/Testserver_$1/plugins
 
-	cd target/Testserver_$1/plugins
+function download_deps_1_13 {
+	mkdir -p LandLord-latest/target/Testserver_1.13.2/plugins
+
+	cd LandLord-latest/target/Testserver_1.13.2/plugins
 	# download dependency plugins into right folder
-	cd target/Testserver_$1/plugins
-	curl -o wg.jar http://builds.enginehub.org/job/worldguard/11039/download/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar
-	curl -o we.jar http://builds.enginehub.org/job/worldedit/11047/download/worldedit-bukkit-7.0.0-SNAPSHOT-dist.jar
+	curl -o wg.jar http://builds.enginehub.org/job/worldguard/11622/download/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar
+	curl -o we.jar http://builds.enginehub.org/job/worldedit/11635/download/worldedit-bukkit-7.0.0-SNAPSHOT-dist.jar
 	wget -O vault.jar https://dev.bukkit.org/projects/vault/files/latest
 	wget -O protocollib.jar https://dev.bukkit.org/projects/protocollib/files/latest
-	wget -O eco.jar https://github.com/HimaJyun/Jecon/releases/download/2.0.1/Jecon-2.0.1.jar
+	wget -O eco.jar https://github.com/HimaJyun/Jecon/releases/download/2.0.2/Jecon-2.0.2.jar
 	cd ..
 	cd ..
 	cd ..
-	echo "Downloaded all dependencies"
+	cd ..
+	echo "Downloaded all dependencies for 1.13.2"
+}
+
+function download_deps_1_12 {
+	mkdir -p LandLord-legacy/target/Testserver_1.12.2/plugins
+
+	cd LandLord-legacy/target/Testserver_1.12.2/plugins
+	# download dependency plugins into right folder
+	wget -O wg.jar https://dev.bukkit.org/projects/worldguard/files/2610618/download
+	wget -O we.jar https://dev.bukkit.org/projects/worldedit/files/2597538/download
+	wget -O vault.jar https://dev.bukkit.org/projects/vault/files/latest
+	wget -O protocollib.jar https://dev.bukkit.org/projects/protocollib/files/latest
+	wget -O eco.jar https://github.com/HimaJyun/Jecon/releases/download/2.0.2/Jecon-2.0.2.jar
+	cd ..
+	cd ..
+	cd ..
+	cd ..
+	echo "Downloaded all dependencies for 1.12.2"
 }
 
 function install_buildtools {
@@ -54,40 +83,20 @@ function install_buildtools {
 	cd ..
 }
 
-function accept_eula {
-	echo "eula=true" > target/Testserver_$1/eula.txt
+function accept_eulas {
+	echo "eula=true" > LandLord-legacy/target/Testserver_1.12.2/eula.txt
+	echo "eula=true" > LandLord-latest/target/Testserver_1.13.2/eula.txt
 	echo "Accepted eula!"
 }
 
-# pass the version via paramater like ./setup.sh 1.13.2
 
-# updates spigot only
-if [ "$1" = "spigot" ]; then
-	if [ "$#" -ne 2 ]; then
-	    echo "Please add the version as second parameter!"
-	    exit
-	fi
+versions=(1.13.2)
 
-	install_buildtools $2
-fi
+for version in ${versions}; do
+    install_buildtools ${version}
+done
 
-# updates dependencies only
-if [ "$1" = "deps" ]; then
-        if [ "$#" -ne 2 ]; then
-            echo "Please add the version as second parameter!"
-            exit
-        fi
-
-        download_deps $2
-fi
-
-
-if [ "$#" -ne 1 ]; then
-    echo "Please add the version as parameter!"
-    exit
-fi
-
-install_buildtools $1
-download_deps $1
-install_run_script $1
-accept_eula $1
+download_deps_1_12
+download_deps_1_13
+install_run_scripts
+accept_eulas

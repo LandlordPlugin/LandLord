@@ -138,6 +138,7 @@
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
             <version>1806</version>
+            <classifier>dist</classifier>
             <scope>provided</scope>
         </dependency>
 
@@ -145,7 +146,7 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib-API</artifactId>
             <version>4.4.0</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
