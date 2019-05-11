@@ -138,8 +138,7 @@
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
             <version>1806</version>
-            <scope>system</scope>
-            <systemPath>/home/alex/Downloads/worldguard-legacy-7.0.0-SNAPSHOT-dist(1).jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
