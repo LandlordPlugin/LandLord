@@ -3,3 +3,7 @@ target/
 .idea/
 Landlord.iml
 LandLord.iml
+LandLord-core/LandLordcore.iml
+LandLord-latest/LandLordlatest.iml
+LandLord-legacy/LandLordlegacy.iml
+Testserver_1.13.2/
