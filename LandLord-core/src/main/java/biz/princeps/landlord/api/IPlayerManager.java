@@ -10,11 +10,11 @@ import java.util.function.Consumer;
 
 public interface IPlayerManager {
 
-    void add(LPlayer lPlayer);
+    void add(IPlayer lPlayer);
 
-    void saveAsync(LPlayer lp);
+    void saveAsync(IPlayer lp);
 
-    void saveSync(LPlayer lp);
+    void saveSync(IPlayer lp);
 
     void remove(UUID id);
 
@@ -28,9 +28,9 @@ public interface IPlayerManager {
 
     boolean contains(String name);
 
-    LPlayer get(String name);
+    IPlayer get(String name);
 
-    LPlayer get(UUID id);
+    IPlayer get(UUID id);
 
     boolean isInactive(LocalDateTime lastSeenDate);
 

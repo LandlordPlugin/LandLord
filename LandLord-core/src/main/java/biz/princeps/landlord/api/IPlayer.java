@@ -16,4 +16,11 @@ public interface IPlayer {
     UUID getUuid();
 
     String getName();
+
+    void setHome(Location loc);
+
+    void setLastSeen(LocalDateTime now);
+
+    void addClaims(int amount);
+
 }

@@ -4,19 +4,19 @@ import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.lib.storage.Datastorage;
 import biz.princeps.lib.storage_old.DatabaseType;
 import biz.princeps.lib.util.SpigotUtil;
+import biz.princeps.lib.util.TimeUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class Database extends Datastorage {
 
     private static final int CURRENT_VERSION = 4;
 
-    public Database(Logger logger, DatabaseType type, String hostname, String port, String username, String password, String database) {
+    public Database(Logger logger, DatabaseType type, String hostname, String port, String username, String password,
+                    String database) {
         super(logger, type, hostname, port, username, password, database);
         executeQuery("SELECT version FROM ll_version", this::handleUpgrade);
     }
@@ -112,6 +112,26 @@ public class Database extends Datastorage {
         return null;
     }
 
+    public Collection<IPlayer> getPlayers() {
+        Set<IPlayer> playerSet = new HashSet<>();
+
+        Triplet triplet = executeQuery("SELECT * FROM ll_players");
+        ResultSet res = triplet.getResultSet();
+        try {
+            while (res.next()) {
+                LPlayer lPlayer = new LPlayer(res.getString("uuid"),
+                        res.getString("name"),
+                        res.getInt("claims"),
+                        res.getString("home"),
+                        res.getString("lastseen"));
+                playerSet.add(lPlayer);
+            }
+        } catch (SQLException e) {
+            logger.warning("Error while getting all players!\nError: " + e.getMessage());
+        }
+        return playerSet;
+    }
+
     /**
      * Sanite input to avoid sql injections.
      */
@@ -120,11 +140,12 @@ public class Database extends Datastorage {
                 .replace("'", "").replace("\"", "");
     }
 
-    public void save(LPlayer lp) {
+    public void save(IPlayer lp) {
         //System.out.println("Saving... " + lp);
         execute("REPLACE INTO ll_players (uuid, name, claims, home, lastseen) VALUES ('" + lp.getUuid() + "', '" +
                 lp.getName() + "', " + lp.getClaims() + ", '" +
-                SpigotUtil.exactlocationToString(lp.getHome()) + "', '" + lp.getLastSeenAsString() + "')");
+                SpigotUtil.exactlocationToString(lp.getHome()) + "', '" +
+                TimeUtil.timeToString(lp.getLastSeen()) + "')");
     }
 
     public Map<String, Offer> fetchOffers() {
@@ -132,7 +153,8 @@ public class Database extends Datastorage {
         executeQuery("SELECT * FROM ll_advertise", res -> {
             try {
                 while (res.next()) {
-                    offers.put(res.getString("landname"), new Offer(res.getString("landname"), res.getDouble("price"), UUID.fromString(res.getString("seller"))));
+                    offers.put(res.getString("landname"), new Offer(res.getString("landname"), res.getDouble("price")
+                            , UUID.fromString(res.getString("seller"))));
                 }
             } catch (SQLException e) {
                 logger.warning("Error while handling fetchOffers!\nError:" + e.getMessage());

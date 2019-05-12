@@ -2,6 +2,7 @@ package biz.princeps.landlord.placeholderapi;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.persistent.LPlayer;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 import org.bukkit.entity.Player;
@@ -37,9 +38,10 @@ public class LandLordPlacehodlers extends EZPlaceholderHook {
                 return String.valueOf(landcount);
 
             case "claims":
-                LPlayer player1 = pl.getPlayerManager().get(player.getUniqueId());
+                IPlayer player1 = pl.getPlayerManager().get(player.getUniqueId());
                 if (player1 == null) {
-                    pl.getLogger().warning("A placeholder is trying to load %ll_claims% before async loading of the player has finished!!! Use FinishedLoadingPlayerEvent!");
+                    pl.getLogger().warning("A placeholder is trying to load %ll_claims% before async loading of the " +
+                            "player has finished!!! Use FinishedLoadingPlayerEvent!");
                     return "NaN";
                 }
                 return String.valueOf(player1.getClaims());
@@ -58,7 +60,8 @@ public class LandLordPlacehodlers extends EZPlaceholderHook {
 
             case "currentLandRefund":
                 int regionCount = pl.getWGProxy().getRegionCount(player.getUniqueId());
-                return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble("Payback"));
+                return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble(
+                        "Payback"));
 
         }
         return null;

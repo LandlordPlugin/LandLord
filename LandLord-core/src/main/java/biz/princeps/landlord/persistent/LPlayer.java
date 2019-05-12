@@ -76,10 +76,6 @@ public class LPlayer implements IPlayer {
         this.localDateTime = localDateTime;
     }
 
-    public String getLastSeenAsString() {
-        return lastseen;
-    }
-
     @Override
     public String toString() {
         return "LPlayer{" +

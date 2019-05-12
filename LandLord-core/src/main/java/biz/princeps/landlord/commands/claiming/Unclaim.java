@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands.claiming;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -102,7 +103,7 @@ public class Unclaim extends LandlordCommand {
             plugin.getWGProxy().unclaim(ol.getWorld(), ol.getName());
 
             // remove possible homes
-            LPlayer lPlayer = plugin.getPlayerManager().get(ol.getOwner());
+            IPlayer lPlayer = plugin.getPlayerManager().get(ol.getOwner());
             if (lPlayer != null) {
                 Location home = lPlayer.getHome();
                 if (home != null) {
