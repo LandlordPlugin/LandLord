@@ -46,14 +46,12 @@ public class Unclaim extends LandlordCommand {
 
         IOwnedLand ol;
         if (chunkname.equals("null")) {
-            ol = plugin.getWGProxy().getRegion(player.getLocation().getChunk());
-            if (ol == null) {
-                return;
-            }
-            chunkname = ol.getName();
+            Chunk chunk = player.getLocation().getChunk();
+            ol = plugin.getWGProxy().getRegion(chunk);
+            chunkname = plugin.getWGProxy().getLandName(chunk);
         } else {
             if (!plugin.getWGProxy().isLLRegion(chunkname)) {
-                Bukkit.dispatchCommand(player, "/ll help");
+                lm.sendMessage(player, lm.getString("Commands.Unclaim.notOwnFreeLand"));
                 return;
             }
 
