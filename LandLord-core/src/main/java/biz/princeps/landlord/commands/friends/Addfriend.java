@@ -6,13 +6,10 @@ import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
+import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.Arrays;
 
 /**
  * Project: LandLord
@@ -33,13 +30,20 @@ public class Addfriend extends LandlordCommand {
         if (properties.isConsole()) {
             return;
         }
+        try {
+            onAddfriend(properties.getPlayer(), arguments.get(0));
+        } catch (ArgumentsOutOfBoundsException e) {
+            onAddfriend(properties.getPlayer(), null);
+        }
+    }
 
-        Player player = properties.getPlayer();
-        String[] names = arguments.get();
+    private void onAddfriend(Player player, String playerName) {
+        if (isDisabledWorld(player)) {
+            return;
+        }
 
-        Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
+        IOwnedLand land = plugin.getWGProxy().getRegion(player.getLocation().getChunk());
 
-        IOwnedLand land = plugin.getWGProxy().getRegion(chunk);
         if (land != null) {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
                 lm.sendMessage(player, lm.getString("Commands.Addfriend.notOwn")
@@ -47,43 +51,33 @@ public class Addfriend extends LandlordCommand {
                 return;
             }
 
-            if (names.length == 0) {
+            if (playerName == null) {
                 lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
-                        .replace("%players%", Arrays.asList(names).toString()));
+                        .replace("%players%", "?"));
                 return;
             }
 
-            for (String target : names) {
+            plugin.getPlayerManager().getOfflinePlayerAsync(playerName, lPlayer -> {
+                if (lPlayer == null) {
+                    // Failure
+                    lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
+                            .replace("%players%", playerName));
+                } else if (!land.isOwner(lPlayer.getUuid())) {
+                    // Success
+                    land.addFriend(lPlayer.getUuid());
+                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                            null, "FRIENDS", land.getMembersString());
+                    Bukkit.getPluginManager().callEvent(landManageEvent);
 
-                plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
-                    if (lPlayer == null) {
-                        // TODO fix inconsistency with printing the entire names list
-                        lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
-                                .replace("%players%", Arrays.asList(names).toString()));
-                    } else {
-                        // Success
-                        if (!land.isOwner(lPlayer.getUuid())) {
-                            land.addFriend(lPlayer.getUuid());
-                            LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                    null, "FRIENDS", land.getMembersString());
-                            Bukkit.getPluginManager().callEvent(landManageEvent);
+                    lm.sendMessage(player, lm.getString("Commands.Addfriend.success")
+                            .replace("%players%", playerName));
 
-                            lm.sendMessage(player, lm.getString("Commands.Addfriend.success")
-                                    .replace("%players%", Arrays.asList(names).toString()));
-                        } else {
-                            lm.sendMessage(player, lm.getString("Commands.Addfriend.alreadyOwn"));
-                        }
-                    }
-                });
-
-                // lets delay it, because we cant be sure, that the requests are done when executing this piece of code
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        plugin.getMapManager().updateAll();
-                    }
-                }.runTaskLater(plugin.getPlugin(), 60L);
-            }
+                    // lets delay it, because we cant be sure, that the requests are done when executing this piece of code
+                    Bukkit.getScheduler().runTaskLater(plugin.getPlugin(), plugin.getMapManager()::updateAll, 60L);
+                } else {
+                    lm.sendMessage(player, lm.getString("Commands.Addfriend.alreadyOwn"));
+                }
+            });
         }
     }
 }

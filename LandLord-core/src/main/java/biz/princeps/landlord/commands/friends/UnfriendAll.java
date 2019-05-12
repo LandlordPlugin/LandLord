@@ -10,7 +10,6 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collections;
 
@@ -36,25 +35,26 @@ public class UnfriendAll extends LandlordCommand {
         try {
             onUnfriendall(properties.getPlayer(), arguments.get(0));
         } catch (ArgumentsOutOfBoundsException e) {
-            properties.sendUsage();
+            onUnfriendall(properties.getPlayer(), null);
         }
-
     }
 
     private void onUnfriendall(Player player, String name) {
+        if (isDisabledWorld(player)) {
+            return;
+        }
 
         if (name == null || name.isEmpty()) {
             lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
-                    .replace("%players%", Collections.singletonList("[]").toString()));
+                    .replace("%players%", "?"));
             return;
         }
 
         plugin.getPlayerManager().getOfflinePlayerAsync(name, lPlayer -> {
-
-            // Failure
             if (lPlayer == null) {
+                // Failure
                 lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noPlayer")
-                        .replace("%players%", Collections.singletonList(name).toString()));
+                        .replace("%players%", name));
             } else {
                 // Success
                 int count = 0;
@@ -72,13 +72,8 @@ public class UnfriendAll extends LandlordCommand {
                     lm.sendMessage(player, lm.getString("Commands.UnfriendAll.success")
                             .replace("%count%", String.valueOf(count))
                             .replace("%players%", name));
-                    new BukkitRunnable() {
 
-                        @Override
-                        public void run() {
-                            plugin.getMapManager().updateAll();
-                        }
-                    }.runTask(plugin.getPlugin());
+                    Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
                 } else {
                     lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noFriend")
                             .replace("%player%", name));

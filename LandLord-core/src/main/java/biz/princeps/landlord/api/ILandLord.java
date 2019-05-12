@@ -1,7 +1,6 @@
 package biz.princeps.landlord.api;
 
 import co.aikar.taskchain.TaskChain;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 

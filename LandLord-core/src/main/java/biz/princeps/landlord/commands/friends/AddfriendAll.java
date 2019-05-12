@@ -10,7 +10,8 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Collections;
 
 /**
  * Project: LandLord
@@ -28,20 +29,24 @@ public class AddfriendAll extends LandlordCommand {
 
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
-        if (properties.isPlayer()) {
+        if (properties.isConsole()) {
+            return;
+        }
             try {
                 onAddfriend(properties.getPlayer(), arguments.get(0));
             } catch (ArgumentsOutOfBoundsException e) {
-                properties.sendMessage(plugin.getLangManager().getString("Commands.AddfriendAll.noPlayer")
-                        .replace("%player%", "[]"));
+                onAddfriend(properties.getPlayer(), null);
             }
-        }
     }
 
     private void onAddfriend(Player player, String name) {
+        if (isDisabledWorld(player)) {
+            return;
+        }
+
         if (name == null || name.isEmpty()) {
             lm.sendMessage(player, lm.getString("Commands.AddfriendAll.noPlayer")
-                    .replace("%player%", name == null ? "[]" : name));
+                    .replace("%player%", "?"));
             return;
         }
 
@@ -50,7 +55,8 @@ public class AddfriendAll extends LandlordCommand {
                 // Failure
                 lm.sendMessage(player, lm.getString("Commands.AddfriendAll.noPlayer")
                         .replace("%player%", name));
-            } else {
+            } else if (!player.getUniqueId().equals(lPlayer.getUuid())) {
+                // Success
                 int count = 0;
                 for (IOwnedLand ol : plugin.getWGProxy().getRegions(player.getUniqueId())) {
                     if (!ol.isFriend(lPlayer.getUuid())) {
@@ -64,15 +70,11 @@ public class AddfriendAll extends LandlordCommand {
 
                 lm.sendMessage(player, lm.getString("Commands.AddfriendAll.success")
                         .replace("%player%", name)
-                        .replace("%count%", count + ""));
+                        .replace("%count%", String.valueOf(count)));
 
-                new BukkitRunnable() {
-
-                    @Override
-                    public void run() {
-                        plugin.getMapManager().updateAll();
-                    }
-                }.runTask(plugin.getPlugin());
+                Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
+            } else {
+                lm.sendMessage(player, lm.getString("Commands.Addfriend.alreadyOwn"));
             }
         });
     }

@@ -6,13 +6,10 @@ import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
+import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.Arrays;
 
 /**
  * Project: LandLord
@@ -33,20 +30,20 @@ public class Unfriend extends LandlordCommand {
         if (properties.isConsole()) {
             return;
         }
-
-        Player player = properties.getPlayer();
-        String[] names;
-
-        if (isDisabledWorld(player)) return;
-
-        IOwnedLand land;
-        if (arguments.size() > 1) {
-            land = plugin.getWGProxy().getRegion(arguments.get(0));
-            names = Arrays.copyOfRange(arguments.get(), 1, arguments.size());
-        } else {
-            land = plugin.getWGProxy().getRegion(player.getLocation());
-            names = arguments.get();
+        try {
+            onUnfriend(properties.getPlayer(), arguments.get(0));
+        } catch (ArgumentsOutOfBoundsException e) {
+            onUnfriend(properties.getPlayer(), null);
         }
+    }
+
+    private void onUnfriend(Player player, String playerName) {
+
+        if (isDisabledWorld(player)) {
+            return;
+        }
+
+        IOwnedLand land = plugin.getWGProxy().getRegion(player.getLocation().getChunk());
 
         if (land != null) {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
@@ -55,32 +52,34 @@ public class Unfriend extends LandlordCommand {
                 return;
             }
 
-            for (String target : names) {
-                plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
-                    if (lPlayer == null) {
-                        // Failure
-                        lm.sendMessage(player, lm.getString("Commands.Unfriend.noPlayer")
-                                .replace("%players%", Arrays.asList(names).toString()));
-                    } else {
-                        // Success
-                        land.removeFriend(lPlayer.getUuid());
-                        LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                null, "FRIENDS", land.getMembersString());
-                        Bukkit.getPluginManager().callEvent(landManageEvent);
-
-                        lm.sendMessage(player, lm.getString("Commands.Unfriend.success")
-                                .replace("%players%", Arrays.asList(names).toString()));
-                    }
-                });
+            if (playerName == null) {
+                lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
+                        .replace("%players%", "?"));
+                return;
             }
 
-            new BukkitRunnable() {
+            plugin.getPlayerManager().getOfflinePlayerAsync(playerName, lPlayer -> {
+                if (lPlayer == null) {
+                    // Failure
+                    lm.sendMessage(player, lm.getString("Commands.Unfriend.noPlayer")
+                            .replace("%players%", playerName));
+                } else if (land.getFriends().contains(lPlayer.getUuid())) {
+                    // Success
+                    land.removeFriend(lPlayer.getUuid());
+                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                            null, "FRIENDS", land.getMembersString());
+                    Bukkit.getPluginManager().callEvent(landManageEvent);
 
-                @Override
-                public void run() {
-                    plugin.getMapManager().updateAll();
+                    lm.sendMessage(player, lm.getString("Commands.Unfriend.success")
+                            .replace("%players%", playerName));
+
+                    // lets delay it, because we cant be sure, that the requests are done when executing this piece of code
+                    Bukkit.getScheduler().runTaskLater(plugin.getPlugin(), plugin.getMapManager()::updateAll, 60L);
+                } else {
+                    lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noFriend")
+                            .replace("%player%", playerName));
                 }
-            }.runTaskLater(plugin.getPlugin(), 60L);
+            });
         }
     }
 }
