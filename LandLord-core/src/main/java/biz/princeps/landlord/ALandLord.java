@@ -5,6 +5,7 @@ import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.items.Maitem;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
+import biz.princeps.landlord.listener.MapListener;
 import biz.princeps.landlord.listener.SecureWorldListener;
 import biz.princeps.landlord.manager.*;
 import biz.princeps.landlord.manager.map.MapManager;
@@ -12,7 +13,7 @@ import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.placeholderapi.LandLordPlacehodlers;
 import biz.princeps.landlord.util.ConfigUtil;
-import biz.princeps.landlord.util.DelimitationManager;
+import biz.princeps.landlord.manager.DelimitationManager;
 import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
@@ -40,7 +41,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     protected IUtilsProxy utilsProxy;
     protected IMaterialsProxy materialsProxy;
 
-    protected IVaultManager vaultHandler;
+    protected IVaultManager vaultManager;
     protected ILangManager langManager;
     protected IPlayerManager lPlayerManager;
     protected IMapManager mapManager;
@@ -53,8 +54,14 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
 
     private Database db;
 
+    /**
+     * Called after dependency check, but before everything else is going to be initialized
+     */
     abstract void onPreEnable();
 
+    /**
+     * Called after landlord has been loaded
+     */
     abstract void onPostEnable();
 
     @Override
@@ -94,6 +101,11 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
         }
     }
 
+    /**
+     * Checks if shared dependencies (protocollib+vault) are available
+     *
+     * @return if the dependencies are available
+     */
     protected boolean checkDependencies() {
         // shared deps
         if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
@@ -106,11 +118,19 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
         return true;
     }
 
+    /**
+     * Halts the plugin and display a warning message in the log
+     *
+     * @param warning the warning to be displayed in the log
+     */
     protected void haltPlugin(String warning) {
         getLogger().warning(warning);
         this.getPluginLoader().disablePlugin(this);
     }
 
+    /**
+     * @return the javaplugin instance
+     */
     public JavaPlugin getPlugin() {
         return this;
     }
@@ -169,7 +189,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     }
 
     /**
-     * Retrieve the LPlayer objects for all online players (in case of reload)
+     * Retrieve the LPlayer objects for all online players (in case of reload) and insert them into the PlayerManager
      */
     private void setupPlayers() {
         Bukkit.getOnlinePlayers().forEach(p -> lPlayerManager.getOfflinePlayerAsync(p.getUniqueId(), lPlayer1 -> {
@@ -188,7 +208,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      * c) OfferManager: handles advertised lands
      * d) MapManager: handles the displaying of the land map
      * e) CostManager: handles the cost calculations
-     * f) ThreadPool: For some parallel methods
+     * f) VaultManager: handles the bridge between landlord and vault
+     * g) DelimitationManager: handles the delimitation of single regions
      */
     private void setupManagers() {
         this.langManager = new LangManager(this, getConfig().getString("language", "en"));
@@ -196,16 +217,19 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
         this.offerManager = new OfferManager(this, db);
         this.mapManager = new MapManager(this);
         this.costManager = new CostManager(this);
-        this.vaultHandler = new VaultManager(getVault());
+        this.vaultManager = new VaultManager(getVault());
         this.delimitationManager = new DelimitationManager(this);
     }
 
     /**
      * I didnt planned to handle world names containing spaces in the first place, thats why this check exists.
+     * Also worldguard doesnt like worldnames with special characters
      */
     private void checkWorldNames() {
         if (!getConfig().getBoolean("DisableStartupWorldWarning")) {
-            Bukkit.getWorlds().stream().filter(w -> Pattern.compile("[^A-Za-z0-9_-]+").matcher(w.getName()).find()).forEach(w -> getLogger().warning("Found an invalid world name (" + w.getName() + ")! LandLord will not work in this world!"));
+            Bukkit.getWorlds().stream().filter(w -> Pattern.compile("[^A-Za-z0-9_-]+").matcher(w.getName()).find())
+                    .forEach(w -> getLogger().warning(
+                            "Found an invalid world name (" + w.getName() + ")! LandLord will not work in this world!"));
         }
     }
 
@@ -232,15 +256,11 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      */
     private void setupListeners() {
         new JoinListener(this);
-        new MapManager(this);
+        new MapListener(this);
+        new LandAlerter(this);
 
         if (getConfig().getBoolean("SecureWorld.enable")) {
             new SecureWorldListener(this);
-        }
-        if (getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
-            new LandAlerter(this);
-        } else {
-            getLogger().warning("ProtocolLib has not been found. LandAlerts wont function properly");
         }
     }
 
@@ -315,7 +335,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
 
     @Override
     public IVaultManager getVaultManager() {
-        return vaultHandler;
+        return vaultManager;
     }
 
     @Override

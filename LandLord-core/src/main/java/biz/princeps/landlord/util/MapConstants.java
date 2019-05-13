@@ -2,6 +2,10 @@ package biz.princeps.landlord.util;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
+/**
+ * MapConstants provides constants for the Map. I felt like it would be pointless to build all these two dimensional
+ * String arrays on demand. So this class builds them once and then provides them via getter methods.
+ */
 public class MapConstants {
     private String b1, b2, mi, ar;
     private String[][] s, ssw, sw, wsw,

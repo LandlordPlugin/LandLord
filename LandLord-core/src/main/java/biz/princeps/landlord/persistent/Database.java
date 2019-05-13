@@ -87,6 +87,16 @@ public class Database extends Datastorage {
                 " FROM DUAL WHERE NOT EXISTS (SELECT * FROM ll_version)");
     }
 
+    /**
+     * Fetch an IPlayer out of the database. There are two modes available:
+     * 1) uuid
+     * 2) name
+     * those two modes have to match the column names "uuid" or "name".
+     *
+     * @param obj  an uuid object or a name string
+     * @param mode uuid/name
+     * @return the IPlayer if found, if not null
+     */
     public IPlayer getPlayer(Object obj, Mode mode) {
         Triplet triplet = executeQuery("SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
                 sanitize(obj.toString()) + "'");
@@ -113,13 +123,18 @@ public class Database extends Datastorage {
     }
 
     /**
-     * Sanite input to avoid sql injections.
+     * Sanitize the input to avoid sql injections.
      */
     private String sanitize(String input) {
         return input.split(" ")[0].replace(";", "").replace("\\", "")
                 .replace("'", "").replace("\"", "");
     }
 
+    /**
+     * Saves an IPlayer to the database.
+     *
+     * @param lp the IPlayer to save
+     */
     public void save(LPlayer lp) {
         //System.out.println("Saving... " + lp);
         execute("REPLACE INTO ll_players (uuid, name, claims, home, lastseen) VALUES ('" + lp.getUuid() + "', '" +
@@ -127,6 +142,12 @@ public class Database extends Datastorage {
                 SpigotUtil.exactlocationToString(lp.getHome()) + "', '" + lp.getLastSeenAsString() + "')");
     }
 
+    /**
+     * Get all offers in the database inserted into a map.
+     * The landname is the key here, and an Offer the value, since there can only be one offer per land.
+     *
+     * @return an offer map
+     */
     public Map<String, Offer> fetchOffers() {
         Map<String, Offer> offers = new HashMap<>();
         executeQuery("SELECT * FROM ll_advertise", res -> {
@@ -141,11 +162,21 @@ public class Database extends Datastorage {
         return offers;
     }
 
+    /**
+     * Save an offer to the database.
+     *
+     * @param offer the offer
+     */
     public void save(Offer offer) {
         execute("INSERT INTO ll_advertise (landname, price seller)" +
                 "VALUES (?, ?, ?);", offer.getLandname(), offer.getPrice(), offer.getSeller());
     }
 
+    /**
+     * Delete an offer from the database.
+     *
+     * @param offer the offer
+     */
     public void remove(String offer) {
         execute("DELETE FROM ll_advertise WHERE landname = ?", offer);
     }
