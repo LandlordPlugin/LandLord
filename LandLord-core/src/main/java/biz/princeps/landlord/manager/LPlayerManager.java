@@ -170,11 +170,6 @@ public class LPlayerManager implements IPlayerManager {
         return -1;
     }
 
-    /**
-     * @param id
-     * @return
-     * @throws PlayerOfflineException
-     */
     @Override
     public IPlayer getOnlinePlayer(UUID id) throws PlayerOfflineException {
         if (get(id) == null) {

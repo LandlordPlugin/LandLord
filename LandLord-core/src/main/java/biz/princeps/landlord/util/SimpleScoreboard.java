@@ -22,6 +22,12 @@ public class SimpleScoreboard {
     private Player player;
     private BukkitRunnable runnable;
 
+    /**
+     * Creates a new scoreboard with a specific title for one player
+     *
+     * @param title the title to be displayed
+     * @param p     the player the scoreboard should be displayed for
+     */
     public SimpleScoreboard(String title, Player p) {
         Objects.requireNonNull(p);
         this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -30,10 +36,22 @@ public class SimpleScoreboard {
         this.player = p;
     }
 
+    /**
+     * Adds a line of text to the bottom of the scoreboard
+     *
+     * @param text the text
+     */
     public void add(String text) {
+        Preconditions.checkArgument(text.length() < 48, "text cannot be over 48 characters in length");
         add(text, scores.size());
     }
 
+    /**
+     * Replaces or inserts text into the line number given with score
+     *
+     * @param text  the text
+     * @param score the line number
+     */
     public void add(String text, Integer score) {
         Preconditions.checkArgument(text.length() < 48, "text cannot be over 48 characters in length");
         //text = fixDuplicates(text);
@@ -48,6 +66,9 @@ public class SimpleScoreboard {
         return text;
     }
 
+    /**
+     * Builds the scoreboard (create the objectives...)
+     */
     private void build() {
         String s = (title.length() > 16 ? title.substring(0, 15) : title);
         Objective obj = scoreboard.getObjective(s);
@@ -62,6 +83,11 @@ public class SimpleScoreboard {
         }
     }
 
+    /**
+     * Resets the current scoreboard.
+     * 1) Clear the current score list
+     * 2) Display an empty scoreboard to the player
+     */
     public void reset() {
         scores.clear();
         this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -72,11 +98,22 @@ public class SimpleScoreboard {
         return scoreboard;
     }
 
+    /**
+     * Builds and sets this scoreboard to the player
+     */
     public void send() {
         build();
         player.setScoreboard(scoreboard);
     }
 
+    /**
+     * Schedules an update task which regularly updates the the scoreboard with a given runnable
+     *
+     * @param pl    plugin reference
+     * @param run   runnable
+     * @param delay ~ delay
+     * @param timer the repeating time
+     */
     public void scheduleUpdate(JavaPlugin pl, Runnable run, long delay, long timer) {
 
         this.runnable = new BukkitRunnable() {
@@ -88,6 +125,11 @@ public class SimpleScoreboard {
         this.runnable.runTaskTimer(pl, delay, timer);
     }
 
+    /**
+     * Deactivates this scoreboard
+     * 1) Stops a probable update Task
+     * 2) Sets an empty scoreboard to the player
+     */
     //TODO here may be some logic to restore the old scoreboard for featherboard. But i dunno, never got to check this out
     public void deactivate() {
         if (runnable != null)

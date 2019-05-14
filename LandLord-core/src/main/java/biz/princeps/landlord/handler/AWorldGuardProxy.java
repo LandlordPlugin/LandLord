@@ -148,9 +148,6 @@ public abstract class AWorldGuardProxy implements IWorldGuardProxy {
 
     @Override
     public void highlightLand(Chunk chunk, Player p, Particle particle, int amount) {
-        if (!pl.getConfig().getBoolean("options.particleEffects", true)) {
-            return;
-        }
         List<Location> edgeBlocks = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
             for (int ii = -1; ii <= 10; ii++) {

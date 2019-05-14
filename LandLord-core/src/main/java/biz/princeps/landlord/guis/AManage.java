@@ -50,6 +50,10 @@ public class AManage extends AbstractGUI {
         createGeneralOptions();
     }
 
+    /**
+     * Inserts the frame information, and column information for wg flags.
+     * Also fills up the entire gui with gray stained glass.
+     */
     private void createFrame() {
         for (int i = 0; i < this.getSize(); i++) {
             Icon placehodler = new Icon(plugin.getMatProxy().getGreyStainedGlass());
@@ -75,6 +79,9 @@ public class AManage extends AbstractGUI {
         this.setIcon(18, everyone);
     }
 
+    /**
+     * Inserts all wg flags and their toggles for friends+all into the gui.
+     */
     private void createWGFlags() {
         IOwnedLand land = regions.get(0);
 
@@ -123,6 +130,16 @@ public class AManage extends AbstractGUI {
 
     }
 
+    /**
+     * Get all the icons related to a single wg flag.
+     * The flag item itself and the friends+all green/red wool toggle items
+     * icon[0] = the wg flag item
+     * icon[1] = the friend toggle wool
+     * icon[2] = the all toggle wool
+     *
+     * @param flag the flag to get the items for
+     * @return an array containing the items.
+     */
     private Icon[] getIcons(ILLFlag flag) {
         Icon[] icons = new Icon[3];
         String flagname = flag.getName();
@@ -159,6 +176,10 @@ public class AManage extends AbstractGUI {
         return icons;
     }
 
+    /**
+     * Creates the general options.
+     * Currently: regenerate, setgreet, setfarewell, friends, unclaim, mobspawn
+     */
     private void createGeneralOptions() {
         int position = 36;
         IOwnedLand land = regions.get(0);

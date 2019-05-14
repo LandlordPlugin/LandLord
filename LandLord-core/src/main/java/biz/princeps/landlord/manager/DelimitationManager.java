@@ -1,4 +1,4 @@
-package biz.princeps.landlord.util;
+package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.api.IDelimitationManager;
 import biz.princeps.landlord.api.ILandLord;
@@ -40,8 +40,7 @@ public class DelimitationManager implements IDelimitationManager {
      *
      * @return a map of a vector and a material
      */
-    @Override
-    public Map<BlockVector, Material> getPattern() {
+    private Map<BlockVector, Material> getPattern() {
         if (pattern != null) {
             return pattern;
         }
@@ -78,7 +77,12 @@ public class DelimitationManager implements IDelimitationManager {
         return delimitPattern;
     }
 
-
+    /**
+     * delimits a chunk for a player (with fakeblocks)
+     *
+     * @param player the player
+     * @param chunk  the chunk
+     */
     @Override
     public void delimit(Player player, Chunk chunk) {
         Map<BlockVector, Material> pattern = this.pattern;
@@ -99,17 +103,13 @@ public class DelimitationManager implements IDelimitationManager {
                     }
 
                     if (plugin.getConfig().getBoolean("CommandSettings.Claim.enablePhantomBlocks")) {
-                        sendBlockChangePacket(player, b.getLocation(), mat);
+                        plugin.getUtilsProxy().send_fake_block_packet(player, b.getLocation(), mat);
                     } else {
                         b.setType(mat);
                     }
                 }
             }
         }
-    }
-
-    private void sendBlockChangePacket(Player p, Location loc, Material mat) {
-        plugin.getUtilsProxy().send_fake_block_packet(p, loc, mat);
     }
 
     public class BlockVector {
