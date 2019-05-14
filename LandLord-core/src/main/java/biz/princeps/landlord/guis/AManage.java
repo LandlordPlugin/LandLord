@@ -432,7 +432,7 @@ public class AManage extends AbstractGUI {
                     } else {
                         LPlayer lp = chain.getTaskData("lp");
                         if (lp != null)
-                            lastseen = lp.getLastSeenAsString();
+                            lastseen = lp.getLastSeen().toString();
                         else
                             lastseen = "NaN";
                     }

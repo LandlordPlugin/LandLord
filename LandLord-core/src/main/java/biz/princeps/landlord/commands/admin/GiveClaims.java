@@ -1,10 +1,10 @@
 package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.IVaultManager;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
@@ -112,7 +112,7 @@ public class GiveClaims extends LandlordCommand {
     }
 
     private void addClaims(Properties issuer, String target, int amount) {
-        LPlayer lPlayer = plugin.getPlayerManager().get(target);
+        IPlayer lPlayer = plugin.getPlayerManager().get(target);
         Player player = Bukkit.getPlayer(target);
         if (player != null && player.isOnline() && lPlayer != null) {
             lPlayer.addClaims(amount);
@@ -121,8 +121,8 @@ public class GiveClaims extends LandlordCommand {
         } else {
             plugin.getPlayerManager().getOfflinePlayerAsync(target, p -> {
                 if (p != null) {
-                    ((LPlayer) p).addClaims(amount);
-                    plugin.getPlayerManager().saveSync((LPlayer) p);
+                    p.addClaims(amount);
+                    plugin.getPlayerManager().saveSync(p);
                     OfflinePlayer op = Bukkit.getOfflinePlayer(p.getUuid());
 
                     if (op.isOnline()) {

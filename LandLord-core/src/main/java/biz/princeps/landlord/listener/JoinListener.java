@@ -1,6 +1,7 @@
 package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.events.FinishedLoadingPlayerEvent;
 import biz.princeps.landlord.persistent.LPlayer;
 import co.aikar.taskchain.TaskChain;
@@ -39,7 +40,8 @@ public class JoinListener extends BasicListener {
                     }
                     plugin.getPlayerManager().add(lPlayer);
 
-                    // The next to lines are needed to protect claiming of "inactive" lands although the owner is online right now
+                    // The next to lines are needed to protect claiming of "inactive" lands although the owner is
+                    // online right now
                     // might just be a rare never happening edge case, but lets be safe
                     lPlayer.setName(p.getName());
                     lPlayer.setLastSeen(LocalDateTime.now());
@@ -56,7 +58,10 @@ public class JoinListener extends BasicListener {
     @EventHandler
     public void onDisconnect(PlayerQuitEvent event) {
         Player p = event.getPlayer();
-        LPlayer lp = plugin.getPlayerManager().get(p.getUniqueId());
+        IPlayer lp = plugin.getPlayerManager().get(p.getUniqueId());
+        if (lp == null) {
+            return;
+        }
         lp.setLastSeen(LocalDateTime.now());
         plugin.getPlayerManager().saveAsync(lp);
         plugin.getPlayerManager().remove(p.getUniqueId());

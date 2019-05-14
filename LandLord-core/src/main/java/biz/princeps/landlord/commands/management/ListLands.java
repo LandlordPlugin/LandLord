@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGui;
 import biz.princeps.landlord.guis.ManageGuiAll;
@@ -79,7 +80,7 @@ public class ListLands extends LandlordCommand {
         }
     }
 
-    private void onListLands(Player sender, LPlayer target, int page) {
+    private void onListLands(Player sender, IPlayer target, int page) {
 
         List<IOwnedLand> lands = new ArrayList<>(plugin.getWGProxy().getRegions(target.getUuid()));
 

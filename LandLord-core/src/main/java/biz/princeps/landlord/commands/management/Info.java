@@ -111,7 +111,7 @@ public class Info extends LandlordCommand {
                         } else {
                             LPlayer lp = chain.getTaskData("lp");
                             if (lp != null) {
-                                lastseen = lp.getLastSeenAsString();
+                                lastseen = lp.getLastSeen().toString();
                                 lastSeenDate = lp.getLastSeen();
                             } else {
                                 lastseen = lm.getRawString("Commands.Info.noLastSeen");

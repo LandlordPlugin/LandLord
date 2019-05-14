@@ -26,7 +26,7 @@ import java.util.function.Consumer;
  */
 public class LPlayerManager implements IPlayerManager {
 
-    private Map<UUID, LPlayer> players;
+    private Map<UUID, IPlayer> players;
 
     private Database db;
     private ILandLord plugin;
@@ -41,17 +41,17 @@ public class LPlayerManager implements IPlayerManager {
     }
 
     @Override
-    public void add(LPlayer lPlayer) {
+    public void add(IPlayer lPlayer) {
         this.players.put(lPlayer.getUuid(), lPlayer);
     }
 
     @Override
-    public void saveAsync(LPlayer lp) {
+    public void saveAsync(IPlayer lp) {
         Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin.getPlugin(), () -> saveSync(lp));
     }
 
     @Override
-    public void saveSync(LPlayer lp) {
+    public void saveSync(IPlayer lp) {
         db.save(lp);
     }
 
@@ -84,7 +84,7 @@ public class LPlayerManager implements IPlayerManager {
 
     @Override
     public boolean contains(String name) {
-        for (LPlayer lPlayer : this.players.values()) {
+        for (IPlayer lPlayer : this.players.values()) {
             if (lPlayer.getName() != null && lPlayer.getName().equals(name)) {
                 return true;
             }
@@ -93,8 +93,8 @@ public class LPlayerManager implements IPlayerManager {
     }
 
     @Override
-    public LPlayer get(String name) {
-        for (LPlayer lPlayer : this.players.values()) {
+    public IPlayer get(String name) {
+        for (IPlayer lPlayer : this.players.values()) {
             if (lPlayer.getName() != null && lPlayer.getName().equals(name)) {
                 return lPlayer;
             }
@@ -103,7 +103,7 @@ public class LPlayerManager implements IPlayerManager {
     }
 
     @Override
-    public LPlayer get(UUID id) {
+    public IPlayer get(UUID id) {
         return this.players.get(id);
     }
 
