@@ -1,5 +1,7 @@
 package biz.princeps.landlord.persistent;
 
+import biz.princeps.landlord.api.IOffer;
+
 import java.util.UUID;
 
 /**
@@ -7,7 +9,7 @@ import java.util.UUID;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 17/7/17
  */
-public class Offer {
+public class Offer implements IOffer {
 
     private String landname;
     private double price;

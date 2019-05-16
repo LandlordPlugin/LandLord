@@ -1,6 +1,8 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IOffer;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -98,7 +100,7 @@ public class Info extends LandlordCommand {
         Chunk chunk = player.getLocation().getChunk();
         IOwnedLand land = plugin.getWGProxy().getRegion(chunk);
 
-        TaskChain<?> chain = plugin.newChain();
+        TaskChain<?> chain = ((ALandLord) plugin).newChain();
         chain.asyncFirst(() -> chain.setTaskData("lp", land != null ? plugin.getPlayerManager().getOfflinePlayerSync(land.getOwner()) : null))
                 .sync(() -> {
                     // claimed
@@ -126,7 +128,7 @@ public class Info extends LandlordCommand {
                             return;
                         }
 
-                        Offer offer = plugin.getOfferManager().getOffer(land.getName());
+                        IOffer offer = plugin.getOfferManager().getOffer(land.getName());
                         if (offer != null) {
                             // advertised land
                             lm.sendMessage(player, replaceInMessage(advertised, land.getName(), owners, friends, lastseen,

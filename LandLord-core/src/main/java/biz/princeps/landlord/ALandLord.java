@@ -283,12 +283,10 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
         return (rsp == null ? null : rsp.getProvider());
     }
 
-    @Override
     public <T> TaskChain<T> newSharedChain(String name) {
         return taskChainFactory.newSharedChain(name);
     }
 
-    @Override
     public <T> TaskChain<T> newChain() {
         return taskChainFactory.newChain();
     }

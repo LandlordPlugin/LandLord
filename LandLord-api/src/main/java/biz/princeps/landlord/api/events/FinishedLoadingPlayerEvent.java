@@ -1,6 +1,6 @@
 package biz.princeps.landlord.api.events;
 
-import biz.princeps.landlord.persistent.LPlayer;
+import biz.princeps.landlord.api.IPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -19,9 +19,9 @@ public class FinishedLoadingPlayerEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private Player player;
-    private LPlayer lPlayer;
+    private IPlayer lPlayer;
 
-    public FinishedLoadingPlayerEvent(Player player, LPlayer lPlayer) {
+    public FinishedLoadingPlayerEvent(Player player, IPlayer lPlayer) {
         this.player = player;
         this.lPlayer = lPlayer;
     }
@@ -34,7 +34,7 @@ public class FinishedLoadingPlayerEvent extends Event {
         return player;
     }
 
-    public LPlayer getLPlayer() {
+    public IPlayer getLPlayer() {
         return lPlayer;
     }
 

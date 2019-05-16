@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IOffer;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.Database;
@@ -161,7 +162,7 @@ public class Migrate extends LandlordCommand {
             return;
         }
         plugin.getPlugin().getServer().getScheduler().scheduleAsyncDelayedTask(plugin.getPlugin(), () -> {
-            Map<String, Offer> stringOfferMap = sourcedb.fetchOffers();
+            Map<String, IOffer> stringOfferMap = sourcedb.fetchOffers();
             stringOfferMap.values().forEach(o -> plugin.getOfferManager().addOffer(o));
 
             Collection<IPlayer> players = sourcedb.getPlayers();

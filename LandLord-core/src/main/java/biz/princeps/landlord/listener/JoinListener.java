@@ -1,5 +1,6 @@
 package biz.princeps.landlord.listener;
 
+import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.events.FinishedLoadingPlayerEvent;
@@ -29,7 +30,7 @@ public class JoinListener extends BasicListener {
     public void onJoin(PlayerLoginEvent event) {
         Player p = event.getPlayer();
 
-        TaskChain<Object> chain = plugin.newChain();
+        TaskChain<Object> chain = ((ALandLord) plugin).newChain();
         chain.asyncFirst(() -> plugin.getPlayerManager().getOfflinePlayerSync(p.getUniqueId()))
                 .storeAsData("lp")
                 .sync(() -> {

@@ -13,15 +13,6 @@
         <module>LandLord-latest</module>
         <module>LandLord-core</module>
         <module>LandLord-legacy</module>
+        <module>LandLord-api</module>
     </modules>
-
-    <distributionManagement>
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <layout>default</layout>
-            <id>princepsrepo</id>
-            <url>http://princeps.biz:8081/nexus/content/repositories/princepsrepo</url>
-        </repository>
-    </distributionManagement>
-
 </project>

@@ -2,4 +2,4 @@ BuildTools/
 target/
 .idea/
 *.iml
-Testserver_1.13.2/
+Testserver_*/

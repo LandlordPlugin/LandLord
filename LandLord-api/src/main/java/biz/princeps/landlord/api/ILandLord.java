@@ -1,16 +1,11 @@
 package biz.princeps.landlord.api;
 
-import co.aikar.taskchain.TaskChain;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
 public interface ILandLord {
-
-    <T> TaskChain<T> newSharedChain(String name);
-
-    <T> TaskChain<T> newChain();
 
     void onEnable();
 

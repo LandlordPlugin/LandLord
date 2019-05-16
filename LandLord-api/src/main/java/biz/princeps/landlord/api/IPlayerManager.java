@@ -1,7 +1,6 @@
 package biz.princeps.landlord.api;
 
 import biz.princeps.landlord.api.exceptions.PlayerOfflineException;
-import biz.princeps.landlord.persistent.LPlayer;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;

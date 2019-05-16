@@ -1,5 +1,6 @@
 package biz.princeps.landlord.persistent;
 
+import biz.princeps.landlord.api.IOffer;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.lib.storage.Datastorage;
 import biz.princeps.lib.storage_old.DatabaseType;
@@ -169,8 +170,8 @@ public class Database extends Datastorage {
      *
      * @return an offer map
      */
-    public Map<String, Offer> fetchOffers() {
-        Map<String, Offer> offers = new HashMap<>();
+    public Map<String, IOffer> fetchOffers() {
+        Map<String, IOffer> offers = new HashMap<>();
         executeQuery("SELECT * FROM ll_advertise", res -> {
             try {
                 while (res.next()) {
@@ -189,7 +190,7 @@ public class Database extends Datastorage {
      *
      * @param offer the offer
      */
-    public void save(Offer offer) {
+    public void save(IOffer offer) {
         execute("INSERT INTO ll_advertise (landname, price seller)" +
                 "VALUES (?, ?, ?);", offer.getLandname(), offer.getPrice(), offer.getSeller());
     }

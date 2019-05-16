@@ -1,5 +1,6 @@
 package biz.princeps.landlord.guis;
 
+import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.persistent.LPlayer;
@@ -422,7 +423,7 @@ public class AManage extends AbstractGUI {
         OfflinePlayer op = Bukkit.getOfflinePlayer(id);
         Vector<String> vec = new Vector<>();
 
-        TaskChain<?> chain = plugin.newChain();
+        TaskChain<?> chain = ((ALandLord) plugin).newChain();
         chain.asyncFirst(() -> chain.setTaskData("lp", plugin.getPlayerManager().getOfflinePlayerSync(id)))
                 .sync(() -> {
                     List<String> stringList = lm.getStringList("Commands.Manage.ManageFriends.friendSegment");

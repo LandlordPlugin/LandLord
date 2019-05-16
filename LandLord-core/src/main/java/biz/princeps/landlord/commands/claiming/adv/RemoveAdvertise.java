@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands.claiming.adv;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IOffer;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -58,7 +59,7 @@ public class RemoveAdvertise extends LandlordCommand {
             return;
         }
 
-        Offer offer = plugin.getOfferManager().getOffer(ownedLand.getName());
+        IOffer offer = plugin.getOfferManager().getOffer(ownedLand.getName());
         if (offer == null) {
             lm.sendMessage(player, lm.getString("Commands.RemoveAdvertise.noAdvertise")
                     .replace("%landname%", ownedLand.getName()));

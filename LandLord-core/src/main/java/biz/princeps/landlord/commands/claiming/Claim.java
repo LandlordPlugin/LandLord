@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.claiming;
 
+import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
@@ -58,7 +59,7 @@ public class Claim extends LandlordCommand {
         String landName = wg.getLandName(chunk);
         String confirmcmd = "/" + plugin.getConfig().getString("CommandSettings.Main.name") + " confirm";
 
-        TaskChain<?> chain = plugin.newChain();
+        TaskChain<?> chain = ((ALandLord) plugin).newChain();
 
         chain.asyncFirst(() -> {
             if (ol == null) {
@@ -90,7 +91,7 @@ public class Claim extends LandlordCommand {
                     return;
                 }
 
-                Offer offer = plugin.getOfferManager().getOffer(ol.getName());
+                IOffer offer = plugin.getOfferManager().getOffer(ol.getName());
                 if (!plugin.getPlayerManager().isInactive(ol.getOwner()) && offer == null) {
                     lm.sendMessage(player, lm.getString("Commands.Claim.notYetInactive")
                             .replace("%owner%", ol.getOwnersString())
@@ -161,7 +162,7 @@ public class Claim extends LandlordCommand {
                         }
                     }
 
-                    Offer offer = plugin.getOfferManager().getOffer(landName);
+                    IOffer offer = plugin.getOfferManager().getOffer(landName);
                     if (offer != null && ol != null) {
                         // Player 2 player sale
                         if (vault.hasBalance(player.getUniqueId(), offer.getPrice())) {
