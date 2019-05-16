@@ -234,7 +234,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     }
 
     /**
-     * Registers special items (left/right click action; nbt data...) with the princepslib handler
+     * Registers special items (left/right click action; nbt data...) with the princepslib protection
      */
     private void setupItems() {
         PrincepsLib.getItemManager().registerItem(Maitem.NAME, Maitem.class);

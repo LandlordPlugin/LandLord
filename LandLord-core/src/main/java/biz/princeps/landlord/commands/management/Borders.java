@@ -51,7 +51,7 @@ public class Borders extends LandlordCommand {
             ComponentBuilder cp = new ComponentBuilder(lm.getString("Commands.Borders.activated")).event(
                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll borders")
             );
-            plugin.getUtilsProxy().send_basecomponent(p, cp.create());
+            plugin.getUtilsProxy().sendBasecomponent(p, cp.create());
 
             this.tasks.put(p, new BukkitRunnable() {
                 int counter = 0;

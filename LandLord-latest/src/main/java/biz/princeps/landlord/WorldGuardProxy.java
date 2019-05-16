@@ -2,7 +2,7 @@ package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.handler.AWorldGuardProxy;
+import biz.princeps.landlord.protection.AWorldGuardProxy;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;

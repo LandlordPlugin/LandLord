@@ -1,4 +1,4 @@
-package biz.princeps.landlord.handler;
+package biz.princeps.landlord.protection;
 
 import biz.princeps.landlord.api.IOwnedLand;
 import com.google.common.collect.Sets;
@@ -6,7 +6,7 @@ import org.bukkit.World;
 
 import java.util.*;
 
-public class MultiIndexCache {
+public class LandCache {
 
     private Map<String, IOwnedLand> indexLandname = new HashMap<>();
     private Map<UUID, Set<IOwnedLand>> indexPlayer = new HashMap<>();

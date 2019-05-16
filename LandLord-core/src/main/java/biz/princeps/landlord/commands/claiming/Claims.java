@@ -49,7 +49,7 @@ public class Claims extends LandlordCommand {
                 for (BaseComponent baseComponent : text) {
                     baseComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
                 }
-                plugin.getUtilsProxy().send_basecomponent(player, text);
+                plugin.getUtilsProxy().sendBasecomponent(player, text);
             }
         } else {
             lm.sendMessage(player, lm.getString("Commands.Claims.disabled"));

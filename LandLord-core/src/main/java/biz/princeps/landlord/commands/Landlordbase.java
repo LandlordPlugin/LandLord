@@ -30,7 +30,7 @@ import java.util.List;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 16/07/17
  * <p>
- * This command handler may look a bit unfamiliar. It is based on shitty system I programmed a long time ago (PrincepsLib)
+ * This command protection may look a bit unfamiliar. It is based on shitty system I programmed a long time ago (PrincepsLib)
  * Basically a single command is created by extending MainCommand. For example you would do:
  * class HealCommand extends MainCommand {...} // introduces a heal command
  * Landlordbase describes the base command ./landlord
@@ -194,7 +194,7 @@ public class Landlordbase extends MainCommand {
                 .setNextString(lm.getRawString("Commands.Help.next"))
                 .setPreviousString(lm.getRawString("Commands.Help.previous"))
                 .setCommand(pl.getConfig().getString("CommandSettings.Main.name"), argsN).build();
-        pl.getUtilsProxy().send_basecomponent(properties.getPlayer(), msg.create());
+        pl.getUtilsProxy().sendBasecomponent(properties.getPlayer(), msg.create());
     }
 
     public class Confirm extends SubCommand {

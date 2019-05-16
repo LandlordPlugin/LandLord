@@ -259,7 +259,7 @@ public class AManage extends AbstractGUI {
                 else
                     builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreet "));
 
-                plugin.getUtilsProxy().send_basecomponent(p, builder.create());
+                plugin.getUtilsProxy().sendBasecomponent(p, builder.create());
             }));
             this.setIcon(position++, icon);
         }
@@ -282,7 +282,7 @@ public class AManage extends AbstractGUI {
                 } else {
                     builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewell "));
                 }
-                plugin.getUtilsProxy().send_basecomponent(p, builder.create());
+                plugin.getUtilsProxy().sendBasecomponent(p, builder.create());
             }));
             this.setIcon(position++, icon);
         }

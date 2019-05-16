@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
  */
 public interface IUtilsProxy {
 
-    void send_basecomponent(Player player, BaseComponent[] message);
+    void sendBasecomponent(Player player, BaseComponent[] message);
 
-    void send_fake_block_packet(Player p, Location loc, Material mat);
+    void sendFakeBlockPacket(Player p, Location loc, Material mat);
 }

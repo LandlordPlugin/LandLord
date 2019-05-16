@@ -160,7 +160,7 @@ public class ListLands extends LandlordCommand {
                     plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
                     formatted, prev, next, page);
 
-            plugin.getUtilsProxy().send_basecomponent(sender, message.create());
+            plugin.getUtilsProxy().sendBasecomponent(sender, message.create());
         }
     }
 

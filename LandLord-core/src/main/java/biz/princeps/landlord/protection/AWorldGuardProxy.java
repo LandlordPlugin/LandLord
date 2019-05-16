@@ -1,4 +1,4 @@
-package biz.princeps.landlord.handler;
+package biz.princeps.landlord.protection;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AWorldGuardProxy implements IWorldGuardProxy {
 
-    protected MultiIndexCache cache = new MultiIndexCache();
+    protected LandCache cache = new LandCache();
     protected ILandLord pl;
 
     public AWorldGuardProxy(ILandLord pl) {

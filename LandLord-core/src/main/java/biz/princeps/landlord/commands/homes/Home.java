@@ -101,7 +101,7 @@ public class Home extends LandlordCommand {
         if (toGo == null) {
             ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Home.noHome"));
             builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll sethome"));
-            plugin.getUtilsProxy().send_basecomponent(player, builder.create());
+            plugin.getUtilsProxy().sendBasecomponent(player, builder.create());
             return;
         }
 

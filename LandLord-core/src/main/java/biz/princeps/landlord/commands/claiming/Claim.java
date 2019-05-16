@@ -342,7 +342,7 @@ public class Claim extends LandlordCommand {
                         .color(ChatColor.YELLOW)
                         .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
 
-                plugin.getUtilsProxy().send_basecomponent(player, builder.create());
+                plugin.getUtilsProxy().sendBasecomponent(player, builder.create());
                 return false;
             }
             return true;

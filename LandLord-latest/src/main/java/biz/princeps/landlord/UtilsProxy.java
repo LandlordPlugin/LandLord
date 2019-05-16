@@ -21,12 +21,12 @@ import java.lang.reflect.InvocationTargetException;
 public class UtilsProxy implements IUtilsProxy {
 
     @Override
-    public void send_basecomponent(Player player, BaseComponent[] message) {
+    public void sendBasecomponent(Player player, BaseComponent[] message) {
         player.spigot().sendMessage(message);
     }
 
     @Override
-    public void send_fake_block_packet(Player p, Location loc, Material mat) {
+    public void sendFakeBlockPacket(Player p, Location loc, Material mat) {
         PacketContainer fakeblock = new PacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
         fakeblock.getBlockPositionModifier().write(0, new BlockPosition(
                 loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));

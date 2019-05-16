@@ -1,4 +1,4 @@
-package biz.princeps.landlord.util;
+package biz.princeps.landlord.protection;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;

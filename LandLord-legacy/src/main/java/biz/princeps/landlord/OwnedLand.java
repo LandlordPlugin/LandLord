@@ -3,7 +3,7 @@ package biz.princeps.landlord;
 import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMob;
-import biz.princeps.landlord.util.AOwnedLand;
+import biz.princeps.landlord.protection.AOwnedLand;
 import com.google.common.collect.Sets;
 import com.sk89q.worldguard.protection.flags.*;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;

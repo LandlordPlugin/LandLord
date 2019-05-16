@@ -103,7 +103,7 @@ public class DelimitationManager implements IDelimitationManager {
                     }
 
                     if (plugin.getConfig().getBoolean("CommandSettings.Claim.enablePhantomBlocks")) {
-                        plugin.getUtilsProxy().send_fake_block_packet(player, b.getLocation(), mat);
+                        plugin.getUtilsProxy().sendFakeBlockPacket(player, b.getLocation(), mat);
                     } else {
                         b.setType(mat);
                     }

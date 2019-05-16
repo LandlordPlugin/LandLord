@@ -16,12 +16,12 @@ import org.bukkit.entity.Player;
 public class UtilsProxy implements IUtilsProxy {
 
     @Override
-    public void send_basecomponent(Player player, BaseComponent[] message) {
+    public void sendBasecomponent(Player player, BaseComponent[] message) {
         player.spigot().sendMessage(message);
     }
 
     @Override
-    public void send_fake_block_packet(Player p, Location loc, Material mat) {
+    public void sendFakeBlockPacket(Player p, Location loc, Material mat) {
         // jup i wanna kill myself for that.
         for (WorldServer world : MinecraftServer.getServer().worlds) {
             if (world.worldData.getName().equals(loc.getWorld().getName())) {
