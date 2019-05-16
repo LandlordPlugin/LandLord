@@ -183,6 +183,37 @@ public abstract class AWorldGuardProxy implements IWorldGuardProxy {
     }
 
     @Override
+    public IOwnedLand[] getSurroundings(Chunk chunk) {
+        return getSurroundings(chunk.getBlock(1, 1, 1).getLocation());
+    }
+
+    @Override
+    public IOwnedLand[] getSurroundings(IOwnedLand land) {
+        return getSurroundings(land.getChunk());
+    }
+
+    @Override
+    public IOwnedLand[] getSurroundingsOwner(Location ploc, UUID owner) {
+        IOwnedLand[] surroundings = getSurroundings(ploc);
+        for (int i = 0; i < surroundings.length; i++) {
+            if (!surroundings[i].isOwner(owner)) {
+                surroundings[i] = null;
+            }
+        }
+        return surroundings;
+    }
+
+    @Override
+    public IOwnedLand[] getSurroundingsOwner(Chunk chunk, UUID owner) {
+        return getSurroundingsOwner(chunk.getBlock(1, 1, 1).getLocation(), owner);
+    }
+
+    @Override
+    public IOwnedLand[] getSurroundingsOwner(IOwnedLand land, UUID owner) {
+        return getSurroundingsOwner(land.getChunk(), owner);
+    }
+
+    @Override
     public IOwnedLand getRegion(Chunk chunk) {
         String name = getLandName(chunk);
         return getRegion(name);

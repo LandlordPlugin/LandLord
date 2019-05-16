@@ -29,7 +29,23 @@ public interface IWorldGuardProxy {
 
     Set<IOwnedLand> getRegions(World world);
 
+    Set<IOwnedLand> getRegions();
+
+    Set<?> getAllWGRegions(World world);
+
+    Set<?> getAllWGRegions();
+
     IOwnedLand[] getSurroundings(Location ploc);
+
+    IOwnedLand[] getSurroundings(Chunk chunk);
+
+    IOwnedLand[] getSurroundings(IOwnedLand land);
+
+    IOwnedLand[] getSurroundingsOwner(Location ploc, UUID owner);
+
+    IOwnedLand[] getSurroundingsOwner(Chunk chunk, UUID owner);
+
+    IOwnedLand[] getSurroundingsOwner(IOwnedLand land, UUID owner);
 
     Map<Chunk, IOwnedLand> getNearbyLands(Location loc, int offsetX, int offsetZ);
 

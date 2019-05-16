@@ -95,6 +95,33 @@ public class WorldGuardProxy extends AWorldGuardProxy {
         return cache.getLands(id);
     }
 
+    @Override
+    public Set<IOwnedLand> getRegions() {
+        Set<IOwnedLand> lands = new HashSet<>();
+        Bukkit.getWorlds().forEach(w -> lands.addAll(cache.getLands(w)));
+        return lands;
+    }
+
+    @Override
+    public Set<?> getAllWGRegions(World world) {
+        Map<String, ProtectedRegion> regions = new HashMap<>(getRegionManager(world).getRegions());
+        regions.keySet().forEach(r -> {
+            if (isLLRegion(r)) {
+                regions.remove(r);
+            }
+        });
+        return new HashSet<>(regions.values());
+    }
+
+    @Override
+    public Set<?> getAllWGRegions() {
+        Set<ProtectedRegion> set = new HashSet<>();
+        Bukkit.getWorlds().forEach(w -> {
+            Set<?> allWGRegions = getAllWGRegions(w);
+            set.addAll(((Set<ProtectedRegion>) allWGRegions));
+        });
+        return set;
+    }
 
     @Override
     public void unclaim(IOwnedLand land) {

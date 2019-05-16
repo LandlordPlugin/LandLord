@@ -19,10 +19,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -89,6 +86,34 @@ public class WorldGuardProxy extends AWorldGuardProxy {
     }
 
     @Override
+    public Set<IOwnedLand> getRegions() {
+        Set<IOwnedLand> lands = new HashSet<>();
+        Bukkit.getWorlds().forEach(w -> lands.addAll(cache.getLands(w)));
+        return lands;
+    }
+
+    @Override
+    public Set<?> getAllWGRegions(World world) {
+        Map<String, ProtectedRegion> regions = new HashMap<>(getRegionManager(world).getRegions());
+        regions.keySet().forEach(r -> {
+            if (isLLRegion(r)) {
+                regions.remove(r);
+            }
+        });
+        return new HashSet<>(regions.values());
+    }
+
+    @Override
+    public Set<?> getAllWGRegions() {
+        Set<ProtectedRegion> set = new HashSet<>();
+        Bukkit.getWorlds().forEach(w -> {
+            Set<?> allWGRegions = getAllWGRegions(w);
+            set.addAll(((Set<ProtectedRegion>) allWGRegions));
+        });
+        return set;
+    }
+
+    @Override
     public Set<IOwnedLand> getRegions(UUID id, World world) {
         Set<IOwnedLand> lands = cache.getLands(id);
         return lands.stream().filter(l -> l.getWorld().equals(world)).collect(Collectors.toSet());
@@ -128,7 +153,8 @@ public class WorldGuardProxy extends AWorldGuardProxy {
             List<ProtectedRegion> intersects = check
                     .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
             for (ProtectedRegion intersect : intersects) {
-                // check this out, might not work. canBuild was removed in 1.13.1 and Im not sure if isMemberOfAll is equivalent
+                // check this out, might not work. canBuild was removed in 1.13.1 and Im not sure if isMemberOfAll is
+                // equivalent
                 // 10/26/18 looks like its working:
                 if (!regionManager.getApplicableRegions(intersect).isMemberOfAll(wgPlugin.wrapPlayer(player))) {
                     return false;
