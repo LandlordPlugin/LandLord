@@ -2,7 +2,7 @@ package biz.princeps.landlord.manager.map;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.IWorldGuardProxy;
+import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.util.MapConstants;
 import biz.princeps.landlord.util.SimpleScoreboard;
 import org.bukkit.ChatColor;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class LandMap {
 
     private ILandLord plugin;
-    private IWorldGuardProxy wg;
+    private IWorldGuardManager wg;
     private MapConstants cons;
     private long refreshRate;
     private String friendsSymbol, ownSymbol, foreignSymbol, header, yours, friends, others;
@@ -31,7 +31,7 @@ public class LandMap {
 
     LandMap(Player p, ILandLord plugin, MapConstants cons) {
         this.plugin = plugin;
-        this.wg = plugin.getWGProxy();
+        this.wg = plugin.getWGManager();
         this.ownSymbol = plugin.getConfig().getString("CommandSettings.Map.symbols.yours");
         this.friendsSymbol = plugin.getConfig().getString("CommandSettings.Map.symbols.friends");
         this.foreignSymbol = plugin.getConfig().getString("CommandSettings.Map.symbols.others");

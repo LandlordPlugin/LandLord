@@ -2,7 +2,7 @@ package biz.princeps.landlord.protection;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.IWorldGuardProxy;
+import biz.princeps.landlord.api.IWorldGuardManager;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -59,7 +59,7 @@ public abstract class AOwnedLand implements IOwnedLand {
     // TODO optimize this shit. maybe remove amt
     @Override
     public void highlightLand(Chunk chunk, Player p, Particle e, int amt) {
-        this.pl.getWGProxy().highlightLand(chunk, p, e, amt);
+        this.pl.getWGManager().highlightLand(chunk, p, e, amt);
     }
 
     /**
@@ -70,7 +70,7 @@ public abstract class AOwnedLand implements IOwnedLand {
      */
     @Override
     public Location getALocation() {
-        IWorldGuardProxy wg = pl.getWGProxy();
+        IWorldGuardManager wg = pl.getWGManager();
         World world = wg.getWorld(getName());
         if (world == null)
             return null;
@@ -89,7 +89,7 @@ public abstract class AOwnedLand implements IOwnedLand {
      */
     @Override
     public Chunk getChunk() {
-        IWorldGuardProxy wg = pl.getWGProxy();
+        IWorldGuardManager wg = pl.getWGManager();
         World w = wg.getWorld(getName());
         int x = wg.getX(getName());
         int z = wg.getZ(getName());

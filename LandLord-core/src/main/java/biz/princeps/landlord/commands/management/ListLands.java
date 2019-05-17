@@ -82,7 +82,7 @@ public class ListLands extends LandlordCommand {
 
     private void onListLands(Player sender, IPlayer target, int page) {
 
-        List<IOwnedLand> lands = new ArrayList<>(plugin.getWGProxy().getRegions(target.getUuid()));
+        List<IOwnedLand> lands = new ArrayList<>(plugin.getWGManager().getRegions(target.getUuid()));
 
         if (lands.size() == 0) {
             lm.sendMessage(sender, plugin.getLangManager().getString("Commands.ListLands.noLands"));
@@ -118,7 +118,7 @@ public class ListLands extends LandlordCommand {
                     }
                 }
 
-                Icon icon = new Icon(new ItemStack(plugin.getMatProxy().getGrass()));
+                Icon icon = new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()));
                 icon.setName(lm.getRawString("Commands.ListLands.gui.itemname")
                         .replace("%name%", land.getName()));
                 icon.setLore(lore);
@@ -160,7 +160,7 @@ public class ListLands extends LandlordCommand {
                     plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
                     formatted, prev, next, page);
 
-            plugin.getUtilsProxy().sendBasecomponent(sender, message.create());
+            plugin.getUtilsManager().sendBasecomponent(sender, message.create());
         }
     }
 

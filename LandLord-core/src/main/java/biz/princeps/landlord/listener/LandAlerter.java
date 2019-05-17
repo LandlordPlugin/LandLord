@@ -2,7 +2,7 @@ package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.IWorldGuardProxy;
+import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.lib.PrincepsLib;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -37,7 +37,7 @@ import java.util.UUID;
 public class LandAlerter extends BasicListener {
 
     private ILandLord pl;
-    private IWorldGuardProxy wg;
+    private IWorldGuardManager wg;
     private HashMap<UUID, ChunkCoords> currentLands;
     private HashMap<UUID, ChunkCoords> previousLands;
     // We need to update the player position separately bc spigot or worldguard sends the greeting message before actually
@@ -52,7 +52,7 @@ public class LandAlerter extends BasicListener {
      */
     public LandAlerter(ILandLord pl) {
         super(pl);
-        this.wg = pl.getWGProxy();
+        this.wg = pl.getWGManager();
         currentLands = new HashMap<>();
         previousLands = new HashMap<>();
 

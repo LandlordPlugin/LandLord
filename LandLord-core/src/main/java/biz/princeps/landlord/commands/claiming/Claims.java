@@ -36,7 +36,7 @@ public class Claims extends LandlordCommand {
 
         if (plugin.getConfig().getBoolean("Shop.enable")) {
             int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
-            int regionCount = plugin.getWGProxy().getRegionCount(player.getUniqueId());
+            int regionCount = plugin.getWGManager().getRegionCount(player.getUniqueId());
             String message = lm.getString("Commands.Claims.message");
             String noClaims = lm.getString("Commands.Claims.noClaims");
 
@@ -49,7 +49,7 @@ public class Claims extends LandlordCommand {
                 for (BaseComponent baseComponent : text) {
                     baseComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
                 }
-                plugin.getUtilsProxy().sendBasecomponent(player, text);
+                plugin.getUtilsManager().sendBasecomponent(player, text);
             }
         } else {
             lm.sendMessage(player, lm.getString("Commands.Claims.disabled"));

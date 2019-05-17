@@ -4,7 +4,7 @@ import org.bukkit.entity.EntityType;
 
 import java.util.Collection;
 
-public interface IMobProxy {
+public interface IMobManager {
 
     IMob valueOf(String name);
 

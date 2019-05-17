@@ -34,7 +34,7 @@ public class ManageAll extends LandlordCommand {
         Player player = properties.getPlayer();
 
         ManageGuiAll gui = new ManageGuiAll(
-               plugin, player, Lists.newArrayList(plugin.getWGProxy().getRegions(player.getUniqueId())));
+               plugin, player, Lists.newArrayList(plugin.getWGManager().getRegions(player.getUniqueId())));
         gui.display();
     }
 }

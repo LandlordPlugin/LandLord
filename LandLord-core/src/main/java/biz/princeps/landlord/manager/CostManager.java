@@ -45,7 +45,7 @@ public class CostManager implements ICostManager {
 
     @Override
     public double calculateCost(UUID uuid) {
-        return this.calculateCost(plugin.getWGProxy().getRegionCount(uuid));
+        return this.calculateCost(plugin.getWGManager().getRegionCount(uuid));
     }
 
     /**

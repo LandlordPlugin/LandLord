@@ -15,7 +15,7 @@ import java.util.UUID;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 06-05-19
  */
-public interface IWorldGuardProxy {
+public interface IWorldGuardManager {
 
     IOwnedLand getRegion(Chunk chunk);
 

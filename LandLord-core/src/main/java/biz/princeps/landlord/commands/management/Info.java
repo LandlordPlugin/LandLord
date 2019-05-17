@@ -1,10 +1,7 @@
 package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.ALandLord;
-import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOffer;
-import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.Options;
+import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.persistent.Offer;
@@ -31,12 +28,14 @@ import java.util.List;
 public class Info extends LandlordCommand {
 
     private String free, owned, advertised, inactive;
+    private IWorldGuardManager wg;
 
     public Info(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Info.name"),
                 pl.getConfig().getString("CommandSettings.Info.usage"),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Info.permissions")),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Info.aliases")));
+        this.wg = pl.getWGManager();
 
         List<String> ownedList = plugin.getLangManager().getStringList("Commands.Info.owned");
         StringBuilder sb = new StringBuilder();
@@ -98,7 +97,7 @@ public class Info extends LandlordCommand {
         if (isDisabledWorld(player)) return;
 
         Chunk chunk = player.getLocation().getChunk();
-        IOwnedLand land = plugin.getWGProxy().getRegion(chunk);
+        IOwnedLand land = wg.getRegion(chunk);
 
         TaskChain<?> chain = ((ALandLord) plugin).newChain();
         chain.asyncFirst(() -> chain.setTaskData("lp", land != null ? plugin.getPlayerManager().getOfflinePlayerSync(land.getOwner()) : null))
@@ -143,11 +142,11 @@ public class Info extends LandlordCommand {
 
                     } else {
                         // unclaimed
-                        lm.sendMessage(player, replaceInMessage(free, plugin.getWGProxy().getLandName(chunk), "", "", "",
+                        lm.sendMessage(player, replaceInMessage(free, wg.getLandName(chunk), "", "", "",
                                 (Options.isVaultEnabled() ? plugin.getVaultManager().format(
                                         plugin.getCostManager().calculateCost(player.getUniqueId())) : "")));
                         if (plugin.getConfig().getBoolean("Particles.info"))
-                            plugin.getWGProxy().highlightLand(chunk, player,
+                            wg.highlightLand(chunk, player,
                                     Particle.valueOf(plugin.getConfig().getString("Particles.info.unclaimed").toUpperCase()), 4);
                     }
 

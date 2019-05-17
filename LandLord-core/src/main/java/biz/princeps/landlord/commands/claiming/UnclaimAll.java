@@ -40,7 +40,7 @@ public class UnclaimAll extends LandlordCommand {
 
         Set<IOwnedLand> landsOfPlayer = new HashSet<>();
         for (World w : Bukkit.getWorlds()) {
-            landsOfPlayer.addAll(plugin.getWGProxy().getRegions(player.getUniqueId(), w));
+            landsOfPlayer.addAll(plugin.getWGManager().getRegions(player.getUniqueId(), w));
         }
 
         if (landsOfPlayer.isEmpty()) {

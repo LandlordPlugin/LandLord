@@ -53,12 +53,12 @@ public class AdminTeleport extends LandlordCommand {
                 lm.sendMessage(sender, lm.getString("Commands.AdminTp.noPlayer").replace("%player%", target));
             } else {
                 // Success
-                Set<IOwnedLand> lands = plugin.getWGProxy().getRegions(lplayer.getUuid());
+                Set<IOwnedLand> lands = plugin.getWGManager().getRegions(lplayer.getUuid());
                 if (lands.size() > 0) {
                     MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
                             lm.getRawString("Commands.AdminTp.guiHeader").replace("%player%", target));
 
-                    lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(plugin.getMatProxy().getGrass()))
+                    lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()))
                             .setName(land.getName())
                             .addClickAction((p) -> {
                                         Location toTp = land.getALocation();

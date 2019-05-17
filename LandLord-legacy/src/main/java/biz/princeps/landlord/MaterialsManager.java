@@ -1,6 +1,6 @@
 package biz.princeps.landlord;
 
-import biz.princeps.landlord.api.IMaterialsProxy;
+import biz.princeps.landlord.api.IMaterialsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -8,7 +8,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.UUID;
 
-public class MaterialsProxy implements IMaterialsProxy {
+public class MaterialsManager implements IMaterialsManager {
     @Override
     public Material getSkull() {
         return Material.SKULL_ITEM;

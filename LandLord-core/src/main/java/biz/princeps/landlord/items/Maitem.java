@@ -69,7 +69,7 @@ public class Maitem extends AbstractItem {
         if (location == null)
             location = p.getLocation();
 
-        IOwnedLand landAtLoc = plugin.getWGProxy().getRegion(location);
+        IOwnedLand landAtLoc = plugin.getWGManager().getRegion(location);
         switch (action) {
             case LEFT_CLICK_BLOCK:
 

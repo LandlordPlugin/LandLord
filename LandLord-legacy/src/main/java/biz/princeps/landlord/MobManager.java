@@ -1,7 +1,7 @@
 package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.IMob;
-import biz.princeps.landlord.api.IMobProxy;
+import biz.princeps.landlord.api.IMobManager;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MobProxy implements IMobProxy {
+public class MobManager implements IMobManager {
 
 
     static Collection<IMob> MOBS = new ArrayList<>();

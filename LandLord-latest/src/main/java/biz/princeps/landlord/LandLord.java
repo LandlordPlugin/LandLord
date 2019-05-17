@@ -13,12 +13,12 @@ public class LandLord extends ALandLord {
 
     @Override
     void onPreEnable() {
-        this.wgproxy = new WorldGuardProxy(this, getWorldGuard());
-        this.utilsProxy = new UtilsProxy();
-        this.materialsProxy = new MaterialsProxy();
-        this.mobProxy = new MobsProxy();
+        this.worldGuardManager = new WorldGuardManager(this, getWorldGuard());
+        this.utilsManager = new UtilsManager();
+        this.materialsManager = new MaterialsManager();
+        this.mobManager = new MobsManager();
 
-        ((WorldGuardProxy) wgproxy).initCache();
+        ((WorldGuardManager) worldGuardManager).initCache();
     }
 
     @Override

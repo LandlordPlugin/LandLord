@@ -194,7 +194,7 @@ public class Landlordbase extends MainCommand {
                 .setNextString(lm.getRawString("Commands.Help.next"))
                 .setPreviousString(lm.getRawString("Commands.Help.previous"))
                 .setCommand(pl.getConfig().getString("CommandSettings.Main.name"), argsN).build();
-        pl.getUtilsProxy().sendBasecomponent(properties.getPlayer(), msg.create());
+        pl.getUtilsManager().sendBasecomponent(properties.getPlayer(), msg.create());
     }
 
     public class Confirm extends SubCommand {

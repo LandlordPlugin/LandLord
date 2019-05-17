@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands.claiming.adv;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.Offer;
@@ -19,11 +20,14 @@ import org.bukkit.entity.Player;
  */
 public class Advertise extends LandlordCommand {
 
+    private IWorldGuardManager wg;
+
     public Advertise(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Advertise.name"),
                 pl.getConfig().getString("CommandSettings.Advertise.usage"),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Advertise.permissions")),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Advertise.aliases")));
+        wg = pl.getWGManager();
     }
 
 
@@ -56,14 +60,14 @@ public class Advertise extends LandlordCommand {
 
     private void onAdvertise(Player player, String landname, double price) {
 
-        if (isDisabledWorld(player, plugin.getWGProxy().getWorld(landname))) return;
+        if (isDisabledWorld(player, wg.getWorld(landname))) return;
 
         IOwnedLand iOwnedLand;
         if (landname.equals("this")) {
             Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
-            iOwnedLand = plugin.getWGProxy().getRegion(chunk);
+            iOwnedLand = wg.getRegion(chunk);
         } else {
-            iOwnedLand = plugin.getWGProxy().getRegion(landname);
+            iOwnedLand = wg.getRegion(landname);
         }
 
         if (iOwnedLand == null) {

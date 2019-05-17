@@ -5,7 +5,6 @@ import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
@@ -30,7 +29,7 @@ import java.util.List;
 public class Claim extends LandlordCommand {
 
     private boolean overrideConfirmations;
-    private IWorldGuardProxy wg;
+    private IWorldGuardManager wg;
     private IVaultManager vault;
 
     public Claim(ILandLord pl, boolean overrideConfirmations) {
@@ -40,7 +39,7 @@ public class Claim extends LandlordCommand {
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claim.aliases")));
 
         this.overrideConfirmations = overrideConfirmations;
-        this.wg = plugin.getWGProxy();
+        this.wg = plugin.getWGManager();
         this.vault = plugin.getVaultManager();
     }
 
@@ -253,7 +252,7 @@ public class Claim extends LandlordCommand {
                             lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
                                     .replace("%money%", vault.format(calculatedCost))
                                     .replace("%chunk%", landName)
-                                    .replace("%location%", plugin.getWGProxy().formatLocation(chunk))
+                                    .replace("%location%", wg.formatLocation(chunk))
                             );
                             return;
                         }
@@ -274,7 +273,7 @@ public class Claim extends LandlordCommand {
                 .replace("%player%", originalOwner)
                 .replace("%price%", vault.format(costForBuyer))
                 .replace("%chunk%", ol.getName())
-                .replace("%location%", plugin.getWGProxy().formatLocation(chunk))
+                .replace("%location%", wg.formatLocation(chunk))
         );
 
         ol.highlightLand(player, Particle.VILLAGER_HAPPY);
@@ -286,7 +285,7 @@ public class Claim extends LandlordCommand {
 
         lm.sendMessage(player, lm.getString("Commands.Claim.success")
                 .replace("%chunk%", claim.getName())
-                .replace("%location%", plugin.getWGProxy().formatLocation(chunk))
+                .replace("%location%", wg.formatLocation(chunk))
                 .replace("%world%", chunk.getWorld().getName()));
 
         if (plugin.getConfig().getBoolean("Particles.claim.enabled"))
@@ -343,7 +342,7 @@ public class Claim extends LandlordCommand {
                         .color(ChatColor.YELLOW)
                         .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
 
-                plugin.getUtilsProxy().sendBasecomponent(player, builder.create());
+                plugin.getUtilsManager().sendBasecomponent(player, builder.create());
                 return false;
             }
             return true;

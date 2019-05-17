@@ -1,9 +1,6 @@
 package biz.princeps.landlord.commands.claiming;
 
-import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.IPlayer;
-import biz.princeps.landlord.api.Options;
+import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
@@ -24,12 +21,14 @@ import org.bukkit.entity.Player;
  */
 public class Unclaim extends LandlordCommand {
 
+    private IWorldGuardManager wg;
+
     public Unclaim(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Unclaim.name"),
                 pl.getConfig().getString("CommandSettings.Unclaim.usage"),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Unclaim.permissions")),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Unclaim.aliases")));
-
+        this.wg = pl.getWGManager();
     }
 
     @Override
@@ -48,18 +47,18 @@ public class Unclaim extends LandlordCommand {
         IOwnedLand ol;
         if (chunkname.equals("null")) {
             Chunk chunk = player.getLocation().getChunk();
-            ol = plugin.getWGProxy().getRegion(chunk);
-            chunkname = plugin.getWGProxy().getLandName(chunk);
+            ol = wg.getRegion(chunk);
+            chunkname = wg.getLandName(chunk);
         } else {
-            if (!plugin.getWGProxy().isLLRegion(chunkname)) {
+            if (!wg.isLLRegion(chunkname)) {
                 lm.sendMessage(player, lm.getString("Commands.Unclaim.notOwnFreeLand"));
                 return;
             }
 
-            ol = plugin.getWGProxy().getRegion(chunkname);
+            ol = wg.getRegion(chunkname);
         }
 
-        if (isDisabledWorld(player, plugin.getWGProxy().getWorld(chunkname))) return;
+        if (isDisabledWorld(player, wg.getWorld(chunkname))) return;
 
         if (ol == null) {
             lm.sendMessage(player, lm.getString("Commands.Unclaim.notOwnFreeLand"));
@@ -84,7 +83,7 @@ public class Unclaim extends LandlordCommand {
         if (!event.isCancelled()) {
             double payback = -1;
             if (!isAdmin || ol.isOwner(player.getUniqueId())) {
-                int regionCount = plugin.getWGProxy().getRegionCount(player.getUniqueId());
+                int regionCount = wg.getRegionCount(player.getUniqueId());
                 int freeLands = plugin.getConfig().getInt("Freelands");
 
                 // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);
@@ -100,7 +99,7 @@ public class Unclaim extends LandlordCommand {
                     }
                 }
             }
-            plugin.getWGProxy().unclaim(ol.getWorld(), ol.getName());
+            wg.unclaim(ol.getWorld(), ol.getName());
 
             // remove possible homes
             IPlayer lPlayer = plugin.getPlayerManager().get(ol.getOwner());
@@ -123,7 +122,7 @@ public class Unclaim extends LandlordCommand {
 
             lm.sendMessage(player, lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", ol.getName())
-                    .replace("%location%", plugin.getWGProxy().formatLocation(ol.getChunk()))
+                    .replace("%location%", wg.formatLocation(ol.getChunk()))
                     .replace("%world%", ol.getWorld().getName())
                     .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultManager().format(payback) : "-eco disabled-")));
 

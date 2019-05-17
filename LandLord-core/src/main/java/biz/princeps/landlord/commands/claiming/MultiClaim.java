@@ -62,7 +62,7 @@ public class MultiClaim extends LandlordCommand {
                 return;
             }
 
-            int initalRegionCount = plugin.getWGProxy().getRegionCount(player.getUniqueId());
+            int initalRegionCount = plugin.getWGManager().getRegionCount(player.getUniqueId());
             double cost = 0;
             for (Chunk ignored : toClaim) {
                 cost += plugin.getCostManager().calculateCost(initalRegionCount);
@@ -106,7 +106,7 @@ public class MultiClaim extends LandlordCommand {
                 for (int x = xCenter - param; x <= xCenter + param; x++) {
                     for (int z = zCenter - param; z <= zCenter + param; z++) {
                         Chunk chunk = center.getWorld().getChunkAt(x, z);
-                        if (plugin.getWGProxy().getRegion(chunk) == null) {
+                        if (plugin.getWGManager().getRegion(chunk) == null) {
                             toClaim.add(chunk);
                         }
                     }

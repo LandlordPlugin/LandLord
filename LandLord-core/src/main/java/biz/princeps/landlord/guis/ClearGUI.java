@@ -3,6 +3,7 @@ package biz.princeps.landlord.guis;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
@@ -20,16 +21,18 @@ public class ClearGUI extends AbstractGUI {
 
     private ILandLord plugin;
     private ILangManager lm;
+    private IWorldGuardManager wg;
 
     public ClearGUI(ILandLord pl, Player player) {
         super(player, 9, pl.getLangManager().getRawString("Commands.ClearWorld.gui.title"));
         this.plugin = pl;
         lm = plugin.getLangManager();
+        wg = pl.getWGManager();
     }
 
     @Override
     protected void create() {
-        IOwnedLand land = plugin.getWGProxy().getRegion(player.getLocation());
+        IOwnedLand land = wg.getRegion(player.getLocation());
         /*
          * Clear Options:
          * 1. Clear all for player x        (target==x || player stands inside x claim)
@@ -39,7 +42,7 @@ public class ClearGUI extends AbstractGUI {
         int pos = 0;
         if (land != null) {
             // Only clear this land
-            Icon i1 = new Icon(new ItemStack(plugin.getMatProxy().getGrass()));
+            Icon i1 = new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()));
             i1.setName(lm.getRawString("Commands.ClearWorld.gui.clearcurrentland.name"));
             i1.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearcurrentland.desc").split("\\|")));
             i1.addClickAction((player1) -> {
@@ -58,7 +61,7 @@ public class ClearGUI extends AbstractGUI {
             this.setIcon(pos++, i1);
 
             // Clear all for owner of current land
-            Icon i2 = new Icon(plugin.getMatProxy().getPlayerHead(land.getOwner()));
+            Icon i2 = new Icon(plugin.getMaterialsManager().getPlayerHead(land.getOwner()));
             i2.setName(lm.getRawString("Commands.ClearWorld.gui.clearplayer.name"));
             i2.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearplayer.desc").split("\\|")));
             i2.addClickAction((player1) -> {
@@ -77,7 +80,7 @@ public class ClearGUI extends AbstractGUI {
             this.setIcon(pos++, i2);
         }
         // Clear all lands in a world
-        Icon i3 = new Icon(new ItemStack(plugin.getMatProxy().getFireCharge()));
+        Icon i3 = new Icon(new ItemStack(plugin.getMaterialsManager().getFireCharge()));
         i3.setName(lm.getRawString("Commands.ClearWorld.gui.clearworld.name"));
         i3.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearworld.desc").split("\\|")));
         i3.addClickAction((player1) -> {
@@ -103,7 +106,7 @@ public class ClearGUI extends AbstractGUI {
     }
 
     private void clearWorld(World world) {
-        Set<IOwnedLand> regions = plugin.getWGProxy().getRegions(world);
+        Set<IOwnedLand> regions = wg.getRegions(world);
         int count = handleUnclaim(regions);
 
         lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearworld.success")
@@ -120,7 +123,7 @@ public class ClearGUI extends AbstractGUI {
 
         for (IOwnedLand region : Sets.newHashSet(regions)) {
             plugin.getOfferManager().removeOffer(region.getName());
-            plugin.getWGProxy().unclaim(region);
+            wg.unclaim(region);
         }
         return count;
     }
@@ -134,7 +137,7 @@ public class ClearGUI extends AbstractGUI {
                         .replace("%players%", id.toString()));
             } else {
                 // Success
-                Set<IOwnedLand> regions = plugin.getWGProxy().getRegions(lPlayer.getUuid());
+                Set<IOwnedLand> regions = wg.getRegions(lPlayer.getUuid());
                 int amt = handleUnclaim(regions);
 
                 lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearplayer.success")

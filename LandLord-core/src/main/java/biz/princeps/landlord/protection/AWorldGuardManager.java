@@ -2,7 +2,7 @@ package biz.princeps.landlord.protection;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.IWorldGuardProxy;
+import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.lib.PrincepsLib;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 06-05-19
  */
-public abstract class AWorldGuardProxy implements IWorldGuardProxy {
+public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     protected LandCache cache = new LandCache();
     protected ILandLord pl;
 
-    public AWorldGuardProxy(ILandLord pl) {
+    public AWorldGuardManager(ILandLord pl) {
         this.pl = pl;
     }
 

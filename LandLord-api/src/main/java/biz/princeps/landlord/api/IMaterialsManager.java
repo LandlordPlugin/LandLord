@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
-public interface IMaterialsProxy {
+public interface IMaterialsManager {
 
     Material getSkull();
 

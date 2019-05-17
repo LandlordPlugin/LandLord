@@ -37,10 +37,9 @@ import java.util.regex.Pattern;
  */
 public abstract class ALandLord extends JavaPlugin implements ILandLord {
 
-    protected IWorldGuardProxy wgproxy;
-    protected IUtilsProxy utilsProxy;
-    protected IMaterialsProxy materialsProxy;
-
+    protected IWorldGuardManager worldGuardManager;
+    protected IUtilsManager utilsManager;
+    protected IMaterialsManager materialsManager;
     protected IVaultManager vaultManager;
     protected ILangManager langManager;
     protected IPlayerManager lPlayerManager;
@@ -48,7 +47,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     protected ICostManager costManager;
     protected IOfferManager offerManager;
     protected IDelimitationManager delimitationManager;
-    protected IMobProxy mobProxy;
+    protected IMobManager mobManager;
 
     private static TaskChainFactory taskChainFactory;
 
@@ -292,18 +291,18 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     }
 
     @Override
-    public IWorldGuardProxy getWGProxy() {
-        return wgproxy;
+    public IWorldGuardManager getWGManager() {
+        return worldGuardManager;
     }
 
     @Override
-    public IMaterialsProxy getMatProxy() {
-        return materialsProxy;
+    public IMaterialsManager getMaterialsManager() {
+        return materialsManager;
     }
 
     @Override
-    public IUtilsProxy getUtilsProxy() {
-        return utilsProxy;
+    public IUtilsManager getUtilsManager() {
+        return utilsManager;
     }
 
     @Override
@@ -342,7 +341,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     }
 
     @Override
-    public IMobProxy getMobProxy() {
-        return mobProxy;
+    public IMobManager getMobManager() {
+        return mobManager;
     }
 }

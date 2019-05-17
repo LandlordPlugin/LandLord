@@ -36,15 +36,15 @@ public interface ILandLord {
      *
      * @return the worldguard manager
      */
-    IWorldGuardProxy getWGProxy();
+    IWorldGuardManager getWGManager();
 
     /**
-     * Gets the reference to the MaterialsProxy.
+     * Gets the reference to the MaterialManager.
      * This class is responsible to handle Materials and Itemstacks, that change from version to version.
      *
      * @return the mat manager
      */
-    IMaterialsProxy getMatProxy();
+    IMaterialsManager getMaterialsManager();
 
     /**
      * Gets the reference to the UtilsManager
@@ -52,7 +52,7 @@ public interface ILandLord {
      *
      * @return the utils manager
      */
-    IUtilsProxy getUtilsProxy();
+    IUtilsManager getUtilsManager();
 
     /**
      * Gets the reference to the PlayerManager.
@@ -121,5 +121,5 @@ public interface ILandLord {
      *
      * @return the mob manager
      */
-    IMobProxy getMobProxy();
+    IMobManager getMobManager();
 }

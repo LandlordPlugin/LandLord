@@ -216,7 +216,7 @@ public class Migrate extends LandlordCommand {
                 World world1 = Bukkit.getWorld(next.world);
                 if (world1 != null) {
                     Chunk chunk = world1.getChunkAt(next.x, next.z);
-                    plugin.getWGProxy().claim(chunk, next.owner);
+                    plugin.getWGManager().claim(chunk, next.owner);
                 }
                 counter++;
 

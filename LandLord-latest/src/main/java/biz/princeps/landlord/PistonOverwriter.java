@@ -2,6 +2,7 @@ package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.listener.BasicListener;
 import com.sk89q.worldguard.bukkit.event.DelegateEvent;
 import com.sk89q.worldguard.bukkit.event.block.BreakBlockEvent;
@@ -27,8 +28,11 @@ import java.util.UUID;
  */
 public class PistonOverwriter extends BasicListener {
 
+    private IWorldGuardManager wg;
+
     public PistonOverwriter(ILandLord plugin) {
         super(plugin);
+        this.wg = plugin.getWGManager();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -66,14 +70,14 @@ public class PistonOverwriter extends BasicListener {
             return false;
         }
 
-        if (plugin.getWGProxy().getRegion(origin.getChunk()) == null) {
+        if (wg.getRegion(origin.getChunk()) == null) {
             return false;
         }
 
         Set<IOwnedLand> lands = new HashSet<>();
-        blocks.forEach(b -> lands.add(plugin.getWGProxy().getRegion(b.getChunk())));
+        blocks.forEach(b -> lands.add(wg.getRegion(b.getChunk())));
 
-        UUID onlyOwner = plugin.getWGProxy().getRegion(origin.getChunk()).getOwner();
+        UUID onlyOwner = wg.getRegion(origin.getChunk()).getOwner();
         // System.out.println("original owner" + onlyOwner);
         for (IOwnedLand land : lands) {
             // System.out.println(land);

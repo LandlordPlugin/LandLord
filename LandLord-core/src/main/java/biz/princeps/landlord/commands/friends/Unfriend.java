@@ -43,7 +43,7 @@ public class Unfriend extends LandlordCommand {
             return;
         }
 
-        IOwnedLand land = plugin.getWGProxy().getRegion(player.getLocation().getChunk());
+        IOwnedLand land = plugin.getWGManager().getRegion(player.getLocation().getChunk());
 
         if (land != null) {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {

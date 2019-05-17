@@ -32,9 +32,8 @@ public class OwnedLand extends AOwnedLand {
     }
 
     private OwnedLand(ILandLord pl, ProtectedRegion region) {
-        super(pl, pl.getWGProxy().getWorld(region.getId()));
+        super(pl, pl.getWGManager().getWorld(region.getId()));
         this.region = region;
-        this.world = pl.getWGProxy().getWorld(region.getId());
     }
 
     private OwnedLand(ILandLord pl, ProtectedRegion region, UUID owner) {
@@ -132,7 +131,7 @@ public class OwnedLand extends AOwnedLand {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            Flag flag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(s.toLowerCase());
+            Flag flag = ((WorldGuardManager) pl.getWGManager()).getFlag(s.toLowerCase());
             if (flag == null) {
                 pl.getLogger().warning("Invalid worldguard flag found: " + s);
                 continue;
@@ -189,48 +188,11 @@ public class OwnedLand extends AOwnedLand {
         else return flag.contains(mob.getType());
     }
 
-    //@Override
-    public Object getFlagValue(String flag) {
-        if (flag == null) return null;
-        Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
-        if (wgflag == null) return null;
-        return region.getFlag(wgflag);
-    }
-
-    //@Override
-    public void setFlagValue(String flag, String grp, Object value) {
-        if (flag == null) return;
-        Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
-        if (wgflag == null) return;
-        region.setFlag(wgflag, value);
-
-        if (grp != null)
-            region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.valueOf(grp.toUpperCase()));
-    }
-
-    //@Override
-    public void removeFlag(String flag) {
-        if (flag == null) return;
-        Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
-        if (wgflag == null) return;
-        region.getFlags().remove(wgflag);
-        region.getFlags().remove(wgflag.getRegionGroupFlag());
-    }
-
-    //@Override
-    public boolean containsFlag(String flag) {
-        if (flag == null) return false;
-        Flag wgflag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(flag.toLowerCase());
-        if (wgflag == null) return false;
-        return region.getFlags().containsKey(wgflag);
-    }
-
-
     private void initFlags(UUID owner) {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            Flag flag = ((WorldGuardProxy) pl.getWGProxy()).getFlag(s.toLowerCase());
+            Flag flag = ((WorldGuardManager) pl.getWGManager()).getFlag(s.toLowerCase());
             if (!(flag instanceof StateFlag)) {
                 Bukkit.getLogger().warning("Only stateflags are supported!");
                 return;

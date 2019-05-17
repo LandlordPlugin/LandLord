@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 public class Borders extends LandlordCommand {
 
     private HashMap<Player, BukkitTask> tasks;
+    private IWorldGuardManager wg;
 
     public Borders(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Borders.name"),
@@ -31,6 +33,7 @@ public class Borders extends LandlordCommand {
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Borders.permissions")),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Borders.aliases")));
         tasks = new HashMap<>();
+        this.wg = pl.getWGManager();
     }
 
     @Override
@@ -51,7 +54,7 @@ public class Borders extends LandlordCommand {
             ComponentBuilder cp = new ComponentBuilder(lm.getString("Commands.Borders.activated")).event(
                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll borders")
             );
-            plugin.getUtilsProxy().sendBasecomponent(p, cp.create());
+            plugin.getUtilsManager().sendBasecomponent(p, cp.create());
 
             this.tasks.put(p, new BukkitRunnable() {
                 int counter = 0;
@@ -60,7 +63,7 @@ public class Borders extends LandlordCommand {
                 public void run() {
                     if (counter <= 360 / plugin.getConfig().getInt("Borders.refreshRate")) {
                         if (plugin.getConfig().getBoolean("Particles.borders.enabled")) {
-                            IOwnedLand ol = plugin.getWGProxy().getRegion(p.getLocation().getChunk());
+                            IOwnedLand ol = wg.getRegion(p.getLocation().getChunk());
                             ol.highlightLand(p, Particle.valueOf(plugin.getConfig().getString("Particles.borders.particle")));
                         }
                     } else {

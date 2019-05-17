@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 06-05-19
  */
-public interface IUtilsProxy {
+public interface IUtilsManager {
 
     void sendBasecomponent(Player player, BaseComponent[] message);
 

@@ -58,7 +58,7 @@ public class AddfriendAll extends LandlordCommand {
             } else if (!player.getUniqueId().equals(lPlayer.getUuid())) {
                 // Success
                 int count = 0;
-                for (IOwnedLand ol : plugin.getWGProxy().getRegions(player.getUniqueId())) {
+                for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
                     if (!ol.isFriend(lPlayer.getUuid())) {
                         ol.addFriend(lPlayer.getUuid());
                         count++;

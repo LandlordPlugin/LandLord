@@ -1,9 +1,6 @@
 package biz.princeps.landlord.commands.claiming.adv;
 
-import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOffer;
-import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.Options;
+import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.lib.command.Arguments;
@@ -18,11 +15,14 @@ import org.bukkit.entity.Player;
  */
 public class RemoveAdvertise extends LandlordCommand {
 
+    private IWorldGuardManager wg;
+
     public RemoveAdvertise(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.RemoveAdvertise.name"),
                 pl.getConfig().getString("CommandSettings.RemoveAdvertise.usage"),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveAdvertise.permissions")),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveAdvertise.aliases")));
+        this.wg = pl.getWGManager();
     }
 
 
@@ -39,13 +39,13 @@ public class RemoveAdvertise extends LandlordCommand {
         String landname = arguments.size() == 1 ? arguments.get()[0] : "this";
         Player player = properties.getPlayer();
 
-        if (isDisabledWorld(player, plugin.getWGProxy().getWorld(landname))) return;
+        if (isDisabledWorld(player, wg.getWorld(landname))) return;
 
         IOwnedLand ownedLand;
         if (landname.equals("this")) {
-            ownedLand = plugin.getWGProxy().getRegion(player.getLocation().getChunk());
+            ownedLand = wg.getRegion(player.getLocation().getChunk());
         } else {
-            ownedLand = plugin.getWGProxy().getRegion(landname);
+            ownedLand = wg.getRegion(landname);
         }
 
         if (ownedLand == null) {

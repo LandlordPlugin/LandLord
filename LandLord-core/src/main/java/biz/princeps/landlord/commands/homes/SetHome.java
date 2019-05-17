@@ -42,7 +42,7 @@ public class SetHome extends LandlordCommand {
 
         Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
 
-        IOwnedLand land = plugin.getWGProxy().getRegion(chunk);
+        IOwnedLand land = plugin.getWGManager().getRegion(chunk);
 
         if (land == null) {
             lm.sendMessage(player, lm.getString("Commands.SetHome.nullLand"));

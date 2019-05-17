@@ -1,6 +1,6 @@
 package biz.princeps.landlord;
 
-import biz.princeps.landlord.api.IUtilsProxy;
+import biz.princeps.landlord.api.IUtilsManager;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Location;
@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 06-05-19
  */
-public class UtilsProxy implements IUtilsProxy {
+public class UtilsManager implements IUtilsManager {
 
     @Override
     public void sendBasecomponent(Player player, BaseComponent[] message) {

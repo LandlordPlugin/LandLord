@@ -1,7 +1,7 @@
 package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.IMob;
-import biz.princeps.landlord.api.IMobProxy;
+import biz.princeps.landlord.api.IMobManager;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MobsProxy implements IMobProxy {
+public class MobsManager implements IMobManager {
     private static Collection<IMob> MOBS = new ArrayList<>();
     public static final Mob ELDER_GUARDIAN = new Mob(EntityType.ELDER_GUARDIAN, Material.ELDER_GUARDIAN_SPAWN_EGG);
     public static final Mob WITHER_SKELETON = new Mob(EntityType.WITHER_SKELETON, Material.WITHER_SKELETON_SPAWN_EGG);

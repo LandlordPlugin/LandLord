@@ -28,6 +28,8 @@ public class AManage extends AbstractGUI {
 
     private Set<String> toggleMobs;
 
+    private IMaterialsManager mats;
+
     AManage(ILandLord pl, Player player, String header, List<IOwnedLand> land) {
         super(player, 45, header);
         this.plugin = pl;
@@ -57,7 +59,7 @@ public class AManage extends AbstractGUI {
      */
     private void createFrame() {
         for (int i = 0; i < this.getSize(); i++) {
-            Icon placehodler = new Icon(plugin.getMatProxy().getGreyStainedGlass());
+            Icon placehodler = new Icon(mats.getGreyStainedGlass());
             placehodler.setName(" ");
             this.setIcon(i, placehodler);
         }
@@ -69,12 +71,12 @@ public class AManage extends AbstractGUI {
         info.setLore(strings);
         this.setIcon(0, info);
 
-        Icon friends = new Icon(plugin.getMatProxy().getPlayerHead(player.getUniqueId()));
+        Icon friends = new Icon(mats.getPlayerHead(player.getUniqueId()));
         friends.setName(lm.getRawString("Commands.Manage.friends.title"));
         friends.setLore(lm.getStringList("Commands.Manage.friends.description"));
         this.setIcon(9, friends);
 
-        Icon everyone = new Icon(plugin.getMatProxy().getWitherSkull());
+        Icon everyone = new Icon(mats.getWitherSkull());
         everyone.setName(lm.getRawString("Commands.Manage.everyone.title"));
         everyone.setLore(lm.getStringList("Commands.Manage.everyone.description"));
         this.setIcon(18, everyone);
@@ -157,7 +159,7 @@ public class AManage extends AbstractGUI {
         boolean isFriend = flag.getFriendStatus();
         boolean isAll = flag.getAllStatus();
 
-        Icon friend = new Icon(isFriend ? plugin.getMatProxy().getLimeWool() : plugin.getMatProxy().getRedWool());
+        Icon friend = new Icon(isFriend ? mats.getLimeWool() : mats.getRedWool());
         friend.addClickAction((p) -> {
             if (flag.toggleFriends()) {
                 refresh();
@@ -166,7 +168,7 @@ public class AManage extends AbstractGUI {
         friend.setName(isFriend ? lm.getRawString("Commands.Manage.allow") : lm.getRawString("Commands.Manage.deny"));
         icons[1] = friend;
 
-        Icon all = new Icon(isAll ? plugin.getMatProxy().getLimeWool() : plugin.getMatProxy().getRedWool());
+        Icon all = new Icon(isAll ? mats.getLimeWool() : mats.getRedWool());
         all.addClickAction((p) -> {
             if (flag.toggleAll()) {
                 refresh();
@@ -260,7 +262,7 @@ public class AManage extends AbstractGUI {
                 else
                     builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreet "));
 
-                plugin.getUtilsProxy().sendBasecomponent(p, builder.create());
+                plugin.getUtilsManager().sendBasecomponent(p, builder.create());
             }));
             this.setIcon(position++, icon);
         }
@@ -283,7 +285,7 @@ public class AManage extends AbstractGUI {
                 } else {
                     builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewell "));
                 }
-                plugin.getUtilsProxy().sendBasecomponent(p, builder.create());
+                plugin.getUtilsManager().sendBasecomponent(p, builder.create());
             }));
             this.setIcon(position++, icon);
         }
@@ -291,7 +293,7 @@ public class AManage extends AbstractGUI {
         // set friends icon
         if (plugin.getConfig().getBoolean("Manage.friends.enable") &&
                 player.hasPermission("landlord.player.manage.friends")) {
-            Icon icon = new Icon(plugin.getMatProxy().getPlayerHead(player.getUniqueId()));
+            Icon icon = new Icon(mats.getPlayerHead(player.getUniqueId()));
             icon.setName(lm.getRawString("Commands.Manage.ManageFriends.title"));
             icon.setLore(lm.getStringList("Commands.Manage.ManageFriends.description"));
 
@@ -302,7 +304,7 @@ public class AManage extends AbstractGUI {
 
             friends.forEach(id -> {
                 OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-                Icon friend = new Icon(plugin.getMatProxy().getPlayerHead(id));
+                Icon friend = new Icon(mats.getPlayerHead(id));
                 friend.setName(op.getName());
                 friend.setLore(formatFriendsSegment(id));
                 friend.addClickAction((player) -> {
@@ -379,7 +381,7 @@ public class AManage extends AbstractGUI {
                 MultiPagedGUI gui = new MultiPagedGUI(p, 5, title, icons, this) {
                 };
                 String titleMob = lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title");
-                for (IMob m : plugin.getMobProxy().values()) {
+                for (IMob m : plugin.getMobManager().values()) {
                     // Skip mob if its not in the list, because that means this mob should not be manageable
                     if (!toggleMobs.contains(m.getName())) {
                         continue;
