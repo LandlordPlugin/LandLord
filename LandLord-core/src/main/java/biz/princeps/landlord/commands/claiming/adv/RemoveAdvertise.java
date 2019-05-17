@@ -2,7 +2,6 @@ package biz.princeps.landlord.commands.claiming.adv;
 
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
@@ -31,15 +30,13 @@ public class RemoveAdvertise extends LandlordCommand {
         if (properties.isConsole()) {
             return;
         }
-
-        if (Options.isVaultEnabled()) {
+        if (!Options.isVaultEnabled()) {
             return;
         }
 
         String landname = arguments.size() == 1 ? arguments.get()[0] : "this";
         Player player = properties.getPlayer();
 
-        if (isDisabledWorld(player, wg.getWorld(landname))) return;
 
         IOwnedLand ownedLand;
         if (landname.equals("this")) {
@@ -52,6 +49,9 @@ public class RemoveAdvertise extends LandlordCommand {
             lm.sendMessage(player, lm.getString("Commands.Advertise.notOwnFreeLand"));
             return;
         }
+        if (isDisabledWorld(player, ownedLand.getWorld())) {
+            return;
+        }
 
         if (!ownedLand.isOwner(player.getUniqueId())) {
             lm.sendMessage(player, lm.getString("Commands.Advertise.notOwn")
@@ -59,14 +59,14 @@ public class RemoveAdvertise extends LandlordCommand {
             return;
         }
 
-        IOffer offer = plugin.getOfferManager().getOffer(ownedLand.getName());
-        if (offer == null) {
+        if (ownedLand.getPrice() == -1) {
             lm.sendMessage(player, lm.getString("Commands.RemoveAdvertise.noAdvertise")
                     .replace("%landname%", ownedLand.getName()));
-        } else {
-            plugin.getOfferManager().removeOffer(offer.getLandname());
-            lm.sendMessage(player, lm.getString("Commands.RemoveAdvertise.success")
-                    .replace("%landname%", landname));
+            return;
         }
+
+        ownedLand.setPrice(-1);
+        lm.sendMessage(player, lm.getString("Commands.RemoveAdvertise.success")
+                .replace("%landname%", landname));
     }
 }

@@ -122,7 +122,6 @@ public class ClearGUI extends AbstractGUI {
         int count = regions.size();
 
         for (IOwnedLand region : Sets.newHashSet(regions)) {
-            plugin.getOfferManager().removeOffer(region.getName());
             wg.unclaim(region);
         }
         return count;

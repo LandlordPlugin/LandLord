@@ -117,9 +117,6 @@ public class Unclaim extends LandlordCommand {
                 ol.highlightLand(player,
                         Particle.valueOf(plugin.getConfig().getString("Particles.unclaim.particle").toUpperCase()));
 
-            // Remove possible advertisements
-            plugin.getOfferManager().removeOffer(ol.getName());
-
             lm.sendMessage(player, lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", ol.getName())
                     .replace("%location%", wg.formatLocation(ol.getChunk()))

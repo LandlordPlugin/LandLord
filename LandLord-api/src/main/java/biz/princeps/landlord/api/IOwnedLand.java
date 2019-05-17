@@ -64,11 +64,8 @@ public interface IOwnedLand {
 
     boolean isMobDenied(IMob mob);
 
-    // Object getFlagValue(String flag);
 
-    //void setFlagValue(String flag, String grp, Object value);
+    double getPrice();
 
-    //void removeFlag(String flag);
-
-    //boolean containsFlag(String flag);
+    void setPrice(double price);
 }

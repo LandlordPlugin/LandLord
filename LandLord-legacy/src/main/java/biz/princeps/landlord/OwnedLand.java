@@ -188,6 +188,16 @@ public class OwnedLand extends AOwnedLand {
         else return flag.contains(mob.getType());
     }
 
+    @Override
+    public double getPrice() {
+        return 0;
+    }
+
+    @Override
+    public void setPrice(double price) {
+
+    }
+
     private void initFlags(UUID owner) {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 

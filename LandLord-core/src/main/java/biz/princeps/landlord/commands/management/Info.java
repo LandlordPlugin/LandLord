@@ -4,7 +4,6 @@ import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.persistent.LPlayer;
-import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import co.aikar.taskchain.TaskChain;
@@ -127,11 +126,10 @@ public class Info extends LandlordCommand {
                             return;
                         }
 
-                        IOffer offer = plugin.getOfferManager().getOffer(land.getName());
-                        if (offer != null) {
+                        if (land.getPrice() != -1) {
                             // advertised land
                             lm.sendMessage(player, replaceInMessage(advertised, land.getName(), owners, friends, lastseen,
-                                    plugin.getVaultManager().format(offer.getPrice())));
+                                    plugin.getVaultManager().format(land.getPrice())));
                         } else {
                             // normal owned land
                             lm.sendMessage(player, replaceInMessage(owned, land.getName(), owners, friends, lastseen, ""));
@@ -149,8 +147,6 @@ public class Info extends LandlordCommand {
                             wg.highlightLand(chunk, player,
                                     Particle.valueOf(plugin.getConfig().getString("Particles.info.unclaimed").toUpperCase()), 4);
                     }
-
-
                 });
         chain.execute();
 

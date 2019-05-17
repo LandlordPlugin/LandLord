@@ -5,7 +5,6 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.persistent.Offer;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
@@ -59,9 +58,6 @@ public class Advertise extends LandlordCommand {
 
 
     private void onAdvertise(Player player, String landname, double price) {
-
-        if (isDisabledWorld(player, wg.getWorld(landname))) return;
-
         IOwnedLand iOwnedLand;
         if (landname.equals("this")) {
             Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
@@ -75,14 +71,17 @@ public class Advertise extends LandlordCommand {
             return;
         }
 
+        if (isDisabledWorld(player, iOwnedLand.getWorld())) {
+            return;
+        }
+
         if (!iOwnedLand.isOwner(player.getUniqueId())) {
             lm.sendMessage(player, lm.getString("Commands.Advertise.notOwn").replace("%owner%",
                     iOwnedLand.getOwnersString()));
             return;
         }
 
-        Offer offer = new Offer(iOwnedLand.getName(), price, player.getUniqueId());
-        plugin.getOfferManager().addOffer(offer);
+        iOwnedLand.setPrice(price);
 
         lm.sendMessage(player, lm.getString("Commands.Advertise.success")
                 .replace("%landname%", iOwnedLand.getName())

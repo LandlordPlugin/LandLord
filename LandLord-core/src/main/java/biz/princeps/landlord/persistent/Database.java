@@ -1,6 +1,5 @@
 package biz.princeps.landlord.persistent;
 
-import biz.princeps.landlord.api.IOffer;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.lib.storage.Datastorage;
 import biz.princeps.lib.storage_old.DatabaseType;
@@ -70,13 +69,6 @@ public class Database extends Datastorage {
                 "home TEXT," +
                 "lastseen VARCHAR(50)," +
                 "PRIMARY KEY(uuid)" +
-                ");");
-
-        execute("CREATE TABLE IF NOT EXISTS ll_advertise(" +
-                "landname VARCHAR(36)   NOT NULL," +
-                "price DOUBLE           NOT NULL," +
-                "seller VARCHAR(36)     NOT NULL," +
-                "PRIMARY KEY(landname)" +
                 ");");
 
         execute("CREATE TABLE IF NOT EXISTS ll_version(" +
@@ -162,46 +154,6 @@ public class Database extends Datastorage {
                 lp.getName() + "', " + lp.getClaims() + ", '" +
                 SpigotUtil.exactlocationToString(lp.getHome()) + "', '" +
                 TimeUtil.timeToString(lp.getLastSeen()) + "')");
-    }
-
-    /**
-     * Get all offers in the database inserted into a map.
-     * The landname is the key here, and an Offer the value, since there can only be one offer per land.
-     *
-     * @return an offer map
-     */
-    public Map<String, IOffer> fetchOffers() {
-        Map<String, IOffer> offers = new HashMap<>();
-        executeQuery("SELECT * FROM ll_advertise", res -> {
-            try {
-                while (res.next()) {
-                    offers.put(res.getString("landname"), new Offer(res.getString("landname"), res.getDouble("price")
-                            , UUID.fromString(res.getString("seller"))));
-                }
-            } catch (SQLException e) {
-                logger.warning("Error while handling fetchOffers!\nError:" + e.getMessage());
-            }
-        });
-        return offers;
-    }
-
-    /**
-     * Save an offer to the database.
-     *
-     * @param offer the offer
-     */
-    public void save(IOffer offer) {
-        execute("INSERT INTO ll_advertise (landname, price seller)" +
-                "VALUES (?, ?, ?);", offer.getLandname(), offer.getPrice(), offer.getSeller());
-    }
-
-    /**
-     * Delete an offer from the database.
-     *
-     * @param offer the offer
-     */
-    public void remove(String offer) {
-        execute("DELETE FROM ll_advertise WHERE landname = ?", offer);
     }
 
     public enum Mode {

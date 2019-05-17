@@ -45,7 +45,6 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     protected IPlayerManager lPlayerManager;
     protected IMapManager mapManager;
     protected ICostManager costManager;
-    protected IOfferManager offerManager;
     protected IDelimitationManager delimitationManager;
     protected IMobManager mobManager;
 
@@ -53,22 +52,9 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
 
     private Database db;
 
-    /**
-     * Called after dependency check, but before everything else is going to be initialized
-     */
-    abstract void onPreEnable();
-
-    /**
-     * Called after landlord has been loaded
-     */
-    abstract void onPostEnable();
 
     @Override
     public void onEnable() {
-        if (!checkDependencies()) return;
-
-        onPreEnable();
-
         Options.setConfig(this.getConfig(), getVault() != null);
         taskChainFactory = BukkitTaskChainFactory.create(this);
         setupPrincepsLib();
@@ -77,16 +63,15 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
 
         setupConfig();
         setupDatabase();
-        setupListeners();
         setupPlacerholders();
         setupItems();
         setupManagers();
+        setupListeners();
         setupPlayers();
         setupMetrics();
         postloadPrincepsLib();
 
         new Updater(this);
-        onPostEnable();
     }
 
     @Override
@@ -108,7 +93,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     protected boolean checkDependencies() {
         // shared deps
         if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
-            haltPlugin("ProtocolLib not found! Please ensure you have the correct version of ProtocolLib in order to use LandLord");
+            haltPlugin("ProtocolLib not found! Please ensure you have the correct version of ProtocolLib in order to " +
+                    "use LandLord");
             return false;
         }
         if (getVault() == null) {
@@ -152,7 +138,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      */
     public void setupPrincepsLib() {
         PrincepsLib.setPluginInstance(this);
-        PrincepsLib.getConfirmationManager().setState(ConfirmationManager.STATE.valueOf(getConfig().getString("ConfirmationDialog.mode")));
+        PrincepsLib.getConfirmationManager().setState(ConfirmationManager.STATE.valueOf(getConfig().getString(
+                "ConfirmationDialog.mode")));
         PrincepsLib.getConfirmationManager().setTimout(getConfig().getInt("ConfirmationDialog.timeout"));
     }
 
@@ -161,8 +148,10 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      * Some strings in Princepslib are translatable. set those here.
      */
     private void postloadPrincepsLib() {
-        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getRawString("Confirmation.accept"));
-        PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getRawString("Confirmation.decline"));
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getRawString("Confirmation" +
+                ".accept"));
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getRawString(
+                "Confirmation.decline"));
 
         PrincepsLib.getCommandManager().registerCommand(new Landlordbase(this));
     }
@@ -213,7 +202,6 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     private void setupManagers() {
         this.langManager = new LangManager(this, getConfig().getString("language", "en"));
         this.lPlayerManager = new LPlayerManager(db, this);
-        this.offerManager = new OfferManager(this, db);
         this.mapManager = new MapManager(this);
         this.costManager = new CostManager(this);
         this.vaultManager = new VaultManager(getVault());
@@ -228,7 +216,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
         if (!getConfig().getBoolean("DisableStartupWorldWarning")) {
             Bukkit.getWorlds().stream().filter(w -> Pattern.compile("[^A-Za-z0-9_-]+").matcher(w.getName()).find())
                     .forEach(w -> getLogger().warning(
-                            "Found an invalid world name (" + w.getName() + ")! LandLord will not work in this world!"));
+                            "Found an invalid world name (" + w.getName() + ")! LandLord will not work in this " +
+                                    "world!"));
         }
     }
 
@@ -308,11 +297,6 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     @Override
     public IPlayerManager getPlayerManager() {
         return lPlayerManager;
-    }
-
-    @Override
-    public IOfferManager getOfferManager() {
-        return offerManager;
     }
 
     @Override

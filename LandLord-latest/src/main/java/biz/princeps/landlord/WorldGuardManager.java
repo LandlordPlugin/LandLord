@@ -8,6 +8,10 @@ import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DoubleFlag;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -30,6 +34,8 @@ import java.util.stream.Collectors;
  */
 public class WorldGuardManager extends AWorldGuardManager {
 
+    public static final DoubleFlag REGION_PRICE_FLAG = new DoubleFlag("region-price");
+
     private WorldGuardPlugin wgPlugin;
     private WorldGuard wg;
 
@@ -48,6 +54,19 @@ public class WorldGuardManager extends AWorldGuardManager {
                     cache.add(OwnedLand.of(pl, value));
                 }
             }
+        }
+    }
+
+    static void initFlags() {
+        FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
+        try {
+            // register our flag with the registry
+            registry.register(REGION_PRICE_FLAG);
+        } catch (FlagConflictException e) {
+            // some other plugin registered a flag by the same name already.
+            // you may want to re-register with a different name, but this
+            // could cause issues with saved flags in region files. if you don't mind
+            // sharing a flag, consider making your field non-final and assigning it:
         }
     }
 

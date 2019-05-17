@@ -1,5 +1,6 @@
 package biz.princeps.landlord;
 
+import biz.princeps.landlord.protection.AWorldGuardManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -12,23 +13,25 @@ import org.bukkit.plugin.Plugin;
 public class LandLord extends ALandLord {
 
     @Override
-    void onPreEnable() {
+    public void onLoad() {
+        WorldGuardManager.initFlags();
+    }
+
+    @Override
+    public void onEnable() {
+        if (!checkDependencies()) {
+            return;
+        }
+
         this.worldGuardManager = new WorldGuardManager(this, getWorldGuard());
         this.utilsManager = new UtilsManager();
         this.materialsManager = new MaterialsManager();
         this.mobManager = new MobsManager();
 
         ((WorldGuardManager) worldGuardManager).initCache();
-    }
 
-    @Override
-    void onPostEnable() {
-
-    }
-
-    @Override
-    public void onEnable() {
         super.onEnable();
+
         new PistonOverwriter(this);
     }
 
@@ -66,7 +69,8 @@ public class LandLord extends ALandLord {
 
 
         if (getWorldGuard() == null) {
-            haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to use LandLord");
+            haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to " +
+                    "use LandLord");
             return false;
         } else {
             String v = getWorldGuard().getDescription().getVersion();

@@ -81,7 +81,6 @@ public abstract class AOwnedLand implements IOwnedLand {
 
     }
 
-
     /**
      * Gets a chunk based on the landname. Fetches the chunk from the land name and loads the chunk.
      *
@@ -99,5 +98,4 @@ public abstract class AOwnedLand implements IOwnedLand {
         }
         return null;
     }
-
 }

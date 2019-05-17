@@ -397,7 +397,7 @@ CommandSettings:
 
   Advertise:
     name: advertise
-    usage: '/land advertise <price> || /land advertise <landName> <price>'
+    usage: '/land advertise <price> |/land advertise <landName> <price>'
     permissions:
       - landlord.player.advertise
     aliases:
