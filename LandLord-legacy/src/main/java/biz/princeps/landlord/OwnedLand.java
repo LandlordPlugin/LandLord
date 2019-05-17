@@ -5,6 +5,7 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMob;
 import biz.princeps.landlord.protection.AOwnedLand;
 import com.google.common.collect.Sets;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.*;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
@@ -190,12 +191,16 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public double getPrice() {
-        return 0;
+        Double flag = region.getFlag(WorldGuardManager.REGION_PRICE_FLAG);
+        if (flag == null) {
+            return -1;
+        }
+        return flag;
     }
 
     @Override
     public void setPrice(double price) {
-
+        region.setFlag(WorldGuardManager.REGION_PRICE_FLAG, price);
     }
 
     private void initFlags(UUID owner) {

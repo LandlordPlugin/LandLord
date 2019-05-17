@@ -8,7 +8,10 @@ import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DoubleFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -29,12 +32,26 @@ import java.util.stream.Collectors;
  * Date: 06-05-19
  */
 public class WorldGuardManager extends AWorldGuardManager {
+    public static final DoubleFlag REGION_PRICE_FLAG = new DoubleFlag("region-price");
 
     private WorldGuardPlugin wgPlugin;
 
     public WorldGuardManager(ILandLord pl, WorldGuardPlugin worldGuard) {
         super(pl);
         this.wgPlugin = worldGuard;
+    }
+
+    static void initFlags(WorldGuardPlugin pl) {
+        FlagRegistry registry = pl.getFlagRegistry();
+        try {
+            // register our flag with the registry
+            registry.register(REGION_PRICE_FLAG);
+        } catch (FlagConflictException e) {
+            // some other plugin registered a flag by the same name already.
+            // you may want to re-register with a different name, but this
+            // could cause issues with saved flags in region files. if you don't mind
+            // sharing a flag, consider making your field non-final and assigning it:
+        }
     }
 
     //TODO check performance of sync loading
@@ -152,7 +169,8 @@ public class WorldGuardManager extends AWorldGuardManager {
             List<ProtectedRegion> intersects = check
                     .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
             for (ProtectedRegion intersect : intersects) {
-                // check this out, might not work. canBuild was removed in 1.13.1 and Im not sure if isMemberOfAll is equivalent
+                // check this out, might not work. canBuild was removed in 1.13.1 and Im not sure if isMemberOfAll is
+                // equivalent
                 // 10/26/18 looks like its working:
                 if (!regionManager.getApplicableRegions(intersect).isMemberOfAll(wgPlugin.wrapPlayer(player))) {
                     return false;

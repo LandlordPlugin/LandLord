@@ -2,6 +2,7 @@ package biz.princeps.landlord;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -9,29 +10,32 @@ import org.bukkit.plugin.Plugin;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 06-05-19
  */
-public class LandLord extends ALandLord {
+public class LandLord extends ALandLord implements Listener {
 
     @Override
-    void onPreEnable() {
+    public void onLoad() {
+        if (getWorldGuard() != null) {
+            WorldGuardManager.initFlags(getWorldGuard());
+        }
+    }
+
+    @Override
+    public void onEnable() {
+        if (!checkDependencies()) {
+            return;
+        }
+
         this.worldGuardManager = new WorldGuardManager(this, getWorldGuard());
         this.utilsManager = new UtilsManager();
         this.materialsManager = new MaterialsManager();
         this.mobManager = new MobManager();
 
         ((WorldGuardManager) worldGuardManager).initCache();
-    }
 
-    @Override
-    void onPostEnable() {
-
-    }
-
-    @Override
-    public void onEnable() {
         super.onEnable();
+
         new PistonOverwriter(this);
     }
-
 
     @Override
     public void onDisable() {
@@ -65,7 +69,8 @@ public class LandLord extends ALandLord {
         }
 
         if (getWorldGuard() == null) {
-            haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to use LandLord");
+            haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to " +
+                    "use LandLord");
             return false;
         } else {
             String v = Bukkit.getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
