@@ -59,6 +59,7 @@ public class MobProxy implements IMobProxy {
         return MOBS;
     }
 
+    @Override
     public IMob get(EntityType type) {
         for (IMob mob : MOBS) {
             if (mob.getType().equals(type)) {
@@ -68,6 +69,7 @@ public class MobProxy implements IMobProxy {
         return null;
     }
 
+    @Override
     public IMob valueOf(String name) {
         for (IMob mob : MOBS) {
             if (mob.getName().equalsIgnoreCase(name)) {

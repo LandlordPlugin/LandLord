@@ -61,10 +61,11 @@ public class MobsProxy implements IMobProxy {
     public static final Mob DOLPHIN = new Mob(EntityType.DOLPHIN, Material.DOLPHIN_SPAWN_EGG);
 
     @Override
-    public java.util.Collection<IMob> values() {
+    public Collection<IMob> values() {
         return MOBS;
     }
 
+    @Override
     public IMob get(EntityType type) {
         for (IMob mob : MOBS) {
             if (mob.getType().equals(type)) {
@@ -74,6 +75,7 @@ public class MobsProxy implements IMobProxy {
         return null;
     }
 
+    @Override
     public IMob valueOf(String name) {
         for (IMob mob : MOBS) {
             if (mob.getName().equalsIgnoreCase(name)) {
@@ -122,7 +124,7 @@ public class MobsProxy implements IMobProxy {
         }
 
         @Override
-        public String getName(){
+        public String getName() {
             return t.getName().toUpperCase();
         }
     }
