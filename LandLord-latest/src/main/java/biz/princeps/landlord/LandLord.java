@@ -29,7 +29,7 @@ public class LandLord extends ALandLord {
     @Override
     public void onEnable() {
         super.onEnable();
-        new PistonOverwriter(this);
+        // new PistonOverwriter(this);
     }
 
 

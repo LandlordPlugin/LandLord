@@ -2,22 +2,12 @@ package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
-import biz.princeps.landlord.api.Options;
-import biz.princeps.landlord.commands.admin.*;
-import biz.princeps.landlord.commands.claiming.*;
-import biz.princeps.landlord.commands.claiming.adv.Advertise;
-import biz.princeps.landlord.commands.claiming.adv.RemoveAdvertise;
-import biz.princeps.landlord.commands.friends.*;
-import biz.princeps.landlord.commands.homes.Home;
-import biz.princeps.landlord.commands.homes.SetHome;
-import biz.princeps.landlord.commands.management.*;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.MainCommand;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.command.SubCommand;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -30,7 +20,8 @@ import java.util.List;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 16/07/17
  * <p>
- * This command protection may look a bit unfamiliar. It is based on shitty system I programmed a long time ago (PrincepsLib)
+ * This command protection may look a bit unfamiliar. It is based on shitty system I programmed a long time ago
+ * (PrincepsLib)
  * Basically a single command is created by extending MainCommand. For example you would do:
  * class HealCommand extends MainCommand {...} // introduces a heal command
  * Landlordbase describes the base command ./landlord
@@ -62,32 +53,6 @@ public class Landlordbase extends MainCommand {
         this.addSubcommand(new Confirm());
 
         this.addSubcommand(new Info(pl));
-        this.addSubcommand(new Claim(pl, false));
-        this.addSubcommand(new Unclaim(pl));
-        this.addSubcommand(new UnclaimAll(pl));
-        this.addSubcommand(new Addfriend(pl));
-        this.addSubcommand(new AddfriendAll(pl));
-        this.addSubcommand(new Unfriend(pl));
-        this.addSubcommand(new UnfriendAll(pl));
-        this.addSubcommand(new Advertise(pl));
-        this.addSubcommand(new RemoveAdvertise(pl));
-        this.addSubcommand(new ListFriends(pl));
-        this.addSubcommand(new ListLands(pl));
-        this.addSubcommand(new Claims(pl));
-        this.addSubcommand(new Shop(pl));
-        this.addSubcommand(new GiveClaims(pl));
-        this.addSubcommand(new Update(pl));
-        this.addSubcommand(new AdminTeleport(pl));
-        this.addSubcommand(new MultiClaim(pl));
-        this.addSubcommand(new LLItem(pl));
-        this.addSubcommand(new Borders(pl));
-        this.addSubcommand(new Home(pl));
-        this.addSubcommand(new SetHome(pl));
-        this.addSubcommand(new Manage(pl));
-        this.addSubcommand(new ManageAll(pl));
-        this.addSubcommand(new Clear(pl));
-        this.addSubcommand(new LandMap(pl));
-        this.addSubcommand(new Migrate(pl));
     }
 
     @Override
@@ -98,26 +63,7 @@ public class Landlordbase extends MainCommand {
         if (args.length == 1) {
             for (SubCommand subCommand : this.subCommandMap.values()) {
                 if (subCommand.hasPermission(sender)) {
-
-                    if (subCommand instanceof Borders) {
-                        if (Options.enabled_borders()) {
-                            tabReturn.add(subCommand.getName());
-                        }
-                    } else if (subCommand instanceof LandMap) {
-                        if (Options.enabled_map()) {
-                            tabReturn.add(subCommand.getName());
-                        }
-                    } else if (subCommand instanceof Shop || subCommand instanceof Claims) {
-                        if (Options.enabled_shop()) {
-                            tabReturn.add(subCommand.getName());
-                        }
-                    } else if (subCommand instanceof Home || subCommand instanceof SetHome) {
-                        if (Options.enabled_homes()) {
-                            tabReturn.add(subCommand.getName());
-                        }
-                    } else {
-                        tabReturn.add(subCommand.getName());
-                    }
+                    tabReturn.add(subCommand.getName());
                 }
             }
 
@@ -128,27 +74,6 @@ public class Landlordbase extends MainCommand {
             for (SubCommand subcmd : subCommandMap.values()) {
                 if (subcmd.matches(args[0])) {
 
-                    if (subcmd instanceof LandMap) {
-                        tabReturn.add("on");
-                        tabReturn.add("off");
-                    }
-
-                    if (subcmd instanceof Addfriend || subcmd instanceof AddfriendAll ||
-                            subcmd instanceof Unfriend || subcmd instanceof UnfriendAll) {
-
-                        if (args[1].isEmpty()) {
-                            Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
-                        } else {
-                            Bukkit.getOnlinePlayers().stream()
-                                    .filter(p -> p.getName().startsWith(args[1])).forEach(p -> tabReturn.add(p.getName()));
-                        }
-                        return tabReturn;
-                    } else if (subcmd instanceof MultiClaim) {
-                        for (MultiClaim.MultiClaimMode value : MultiClaim.MultiClaimMode.values()) {
-                            tabReturn.add(value.name());
-                        }
-                        return tabReturn;
-                    }
                 }
             }
         }
@@ -228,7 +153,6 @@ public class Landlordbase extends MainCommand {
             properties.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
         }
     }
-
 
 
 }

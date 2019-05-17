@@ -1,5 +1,6 @@
 package biz.princeps.landlord.api.events;
 
+import biz.princeps.landlord.api.IPossessedLand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -17,13 +18,13 @@ public class LandManageEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private Player player;
-    private IOwnedLand land;
+    private IPossessedLand land;
     private String flagChanged;
     private Object oldValue;
     private Object newValue;
 
 
-    public LandManageEvent(Player player, IOwnedLand land, String flagChanged, Object oldValue, Object newValue) {
+    public LandManageEvent(Player player, IPossessedLand land, String flagChanged, Object oldValue, Object newValue) {
         this.player = player;
         this.land = land;
         this.flagChanged = flagChanged;
@@ -45,7 +46,7 @@ public class LandManageEvent extends Event {
     /**
      * Returns the bought land
      */
-    public IOwnedLand getLand() {
+    public IPossessedLand getLand() {
         return land;
     }
 

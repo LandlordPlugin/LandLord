@@ -1,19 +1,17 @@
-package biz.princeps.landlord;
+package biz.princeps.landlord.protection;
 
+import biz.princeps.landlord.LLFlag;
 import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMob;
-import biz.princeps.landlord.protection.AOwnedLand;
+import biz.princeps.landlord.api.IPossessedLand;
 import com.google.common.collect.Sets;
 import com.sk89q.worldedit.world.entity.EntityType;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
-import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -22,40 +20,23 @@ import java.util.*;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 06-05-19
  */
-public class OwnedLand extends AOwnedLand {
+public class PossessedLand extends APossessedLand {
 
     private ProtectedRegion region;
 
-    public static OwnedLand create(ILandLord pl, ProtectedRegion pr, UUID owner) {
-        return new OwnedLand(pl, pr, owner);
-    }
-
-    public static OwnedLand of(ILandLord pl, ProtectedRegion pr) {
-        return new OwnedLand(pl, pr);
-    }
-
-    private OwnedLand(ILandLord pl, ProtectedRegion region) {
-        super(pl, pl.getWGManager().getWorld(region.getId()));
+    private PossessedLand(ILandLord pl, World w, ProtectedRegion region) {
+        super(pl, w, region.getId());
         this.region = region;
     }
 
-    private OwnedLand(ILandLord pl, ProtectedRegion region, UUID owner) {
-        this(pl, region);
-
-        // insert default flags
-        if (region.getFlags().size() == 0) {
-            initFlags(owner);
-        }
-    }
-
     @Override
-    public String getOwnersString() {
+    public String getOwnerName() {
         Iterator<UUID> it = region.getOwners().getUniqueIds().iterator();
         return itToString(it);
     }
 
     @Override
-    public String getMembersString() {
+    public String getMembersName() {
         Iterator<UUID> it = region.getMembers().getUniqueIds().iterator();
         return itToString(it);
     }
@@ -86,12 +67,6 @@ public class OwnedLand extends AOwnedLand {
     }
 
     @Override
-    public void replaceOwner(UUID uuid) {
-        region.getOwners().clear();
-        region.getOwners().addPlayer(uuid);
-    }
-
-    @Override
     public boolean isFriend(UUID uuid) {
         return getFriends().contains(uuid);
     }
@@ -112,8 +87,18 @@ public class OwnedLand extends AOwnedLand {
     }
 
     @Override
-    public World getWorld() {
-        return world;
+    public void highlight(Player p, Particle pa) {
+
+    }
+
+    @Override
+    public void highlight(Player p, Particle e, int amt) {
+
+    }
+
+    @Override
+    public Location getALocation() {
+        return null;
     }
 
     @Override
@@ -184,31 +169,14 @@ public class OwnedLand extends AOwnedLand {
         }
     }
 
+
     @Override
-    public boolean isMobDenied(IMob mob) {
-        Set<EntityType> flag = region.getFlag(Flags.DENY_SPAWN);
-        if (flag == null) return false;
-        else return flag.contains(EntityType.REGISTRY.get(mob.getName().toLowerCase()));
+    public void addLand(IPossessedLand land) {
+        super.addLand(land);
     }
 
-    private void initFlags(UUID owner) {
-        List<String> rawList = pl.getConfig().getStringList("Flags");
-
-        for (String s : rawList) {
-            Flag flag = Flags.get(s.toUpperCase());
-            if (!(flag instanceof StateFlag)) {
-                Bukkit.getLogger().warning("Only stateflags are supported!");
-                return;
-            }
-            region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
-            region.setFlag(flag, StateFlag.State.ALLOW);
-        }
-        // add other flags
-        pl.getPlayerManager().getOfflinePlayerAsync(owner, p -> {
-            region.setFlag(Flags.GREET_MESSAGE, pl.getLangManager()
-                    .getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
-            region.setFlag(Flags.FAREWELL_MESSAGE, pl.getLangManager()
-                    .getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
-        });
+    @Override
+    public void removeLand(String name) {
+        super.removeLand(name);
     }
 }

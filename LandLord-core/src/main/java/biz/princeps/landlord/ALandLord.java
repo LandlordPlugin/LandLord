@@ -2,18 +2,12 @@ package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.commands.Landlordbase;
-import biz.princeps.landlord.items.Maitem;
 import biz.princeps.landlord.listener.JoinListener;
-import biz.princeps.landlord.listener.LandAlerter;
 import biz.princeps.landlord.listener.MapListener;
-import biz.princeps.landlord.listener.SecureWorldListener;
 import biz.princeps.landlord.manager.*;
-import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.LPlayer;
-import biz.princeps.landlord.placeholderapi.LandLordPlacehodlers;
 import biz.princeps.landlord.util.ConfigUtil;
-import biz.princeps.landlord.manager.DelimitationManager;
 import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
@@ -64,10 +58,16 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     abstract void onPostEnable();
 
     @Override
+    public void onLoad() {
+        onPreEnable();
+
+        worldGuardManager.initFlags();
+    }
+
+    @Override
     public void onEnable() {
         if (!checkDependencies()) return;
 
-        onPreEnable();
 
         Options.setConfig(this.getConfig(), getVault() != null);
         taskChainFactory = BukkitTaskChainFactory.create(this);
@@ -108,7 +108,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     protected boolean checkDependencies() {
         // shared deps
         if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
-            haltPlugin("ProtocolLib not found! Please ensure you have the correct version of ProtocolLib in order to use LandLord");
+            haltPlugin("ProtocolLib not found! Please ensure you have the correct version of ProtocolLib in order to " +
+                    "use LandLord");
             return false;
         }
         if (getVault() == null) {
@@ -152,7 +153,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      */
     public void setupPrincepsLib() {
         PrincepsLib.setPluginInstance(this);
-        PrincepsLib.getConfirmationManager().setState(ConfirmationManager.STATE.valueOf(getConfig().getString("ConfirmationDialog.mode")));
+        PrincepsLib.getConfirmationManager().setState(ConfirmationManager.STATE.valueOf(getConfig().getString(
+                "ConfirmationDialog.mode")));
         PrincepsLib.getConfirmationManager().setTimout(getConfig().getInt("ConfirmationDialog.timeout"));
     }
 
@@ -161,8 +163,10 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      * Some strings in Princepslib are translatable. set those here.
      */
     private void postloadPrincepsLib() {
-        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getRawString("Confirmation.accept"));
-        PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getRawString("Confirmation.decline"));
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getRawString("Confirmation" +
+                ".accept"));
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getRawString(
+                "Confirmation.decline"));
 
         PrincepsLib.getCommandManager().registerCommand(new Landlordbase(this));
     }
@@ -214,7 +218,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
         this.langManager = new LangManager(this, getConfig().getString("language", "en"));
         this.lPlayerManager = new LPlayerManager(db, this);
         this.offerManager = new OfferManager(this, db);
-        this.mapManager = new MapManager(this);
+        // this.mapManager = new MapManager(this);
         this.costManager = new CostManager(this);
         this.vaultManager = new VaultManager(getVault());
         this.delimitationManager = new DelimitationManager(this);
@@ -228,7 +232,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
         if (!getConfig().getBoolean("DisableStartupWorldWarning")) {
             Bukkit.getWorlds().stream().filter(w -> Pattern.compile("[^A-Za-z0-9_-]+").matcher(w.getName()).find())
                     .forEach(w -> getLogger().warning(
-                            "Found an invalid world name (" + w.getName() + ")! LandLord will not work in this world!"));
+                            "Found an invalid world name (" + w.getName() + ")! LandLord will not work in this " +
+                                    "world!"));
         }
     }
 
@@ -236,7 +241,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      * Registers special items (left/right click action; nbt data...) with the princepslib protection
      */
     private void setupItems() {
-        PrincepsLib.getItemManager().registerItem(Maitem.NAME, Maitem.class);
+        // PrincepsLib.getItemManager().registerItem(Maitem.NAME, Maitem.class);
     }
 
     /**
@@ -245,7 +250,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      */
     private void setupPlacerholders() {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new LandLordPlacehodlers(this).hook();
+            // new LandLordPlacehodlers(this).hook();
         }
     }
 
@@ -255,11 +260,11 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      */
     private void setupListeners() {
         new JoinListener(this);
-        new MapListener(this);
-        new LandAlerter(this);
+        // new MapListener(this);
+        // new LandAlerter(this);
 
         if (getConfig().getBoolean("SecureWorld.enable")) {
-            new SecureWorldListener(this);
+            // new SecureWorldListener(this);
         }
     }
 

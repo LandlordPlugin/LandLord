@@ -1,5 +1,6 @@
 package biz.princeps.landlord.api.events;
 
+import biz.princeps.landlord.api.IPossessedLand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -18,9 +19,9 @@ public class LandUnclaimEvent extends Event implements Cancellable {
     private boolean cancelled;
 
     private Player player;
-    private IOwnedLand land;
+    private IPossessedLand land;
 
-    public LandUnclaimEvent(Player player, IOwnedLand land) {
+    public LandUnclaimEvent(Player player, IPossessedLand land) {
         this.player = player;
         this.land = land;
     }
@@ -38,7 +39,7 @@ public class LandUnclaimEvent extends Event implements Cancellable {
         return player;
     }
 
-    public IOwnedLand getLand() {
+    public IPossessedLand getLand() {
         return land;
     }
 

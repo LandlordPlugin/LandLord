@@ -1,17 +1,20 @@
 package biz.princeps.landlord.protection;
 
+import biz.princeps.landlord.api.IPossessedLand;
 import com.google.common.collect.Sets;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public class LandCache {
 
-    private Map<String, IOwnedLand> indexLandname = new HashMap<>();
-    private Map<UUID, Set<IOwnedLand>> indexPlayer = new HashMap<>();
-    private Map<World, Set<IOwnedLand>> indexWorld = new HashMap<>();
+    private Map<String, IPossessedLand> indexLandname = new HashMap<>();
+    private Map<UUID, Set<IPossessedLand>> indexPlayer = new HashMap<>();
+    private Map<World, Set<IPossessedLand>> indexWorld = new HashMap<>();
 
-    public void add(IOwnedLand land) {
+    public void add(IPossessedLand land) {
         if (land == null) {
             throw new RuntimeException("Cant Insert a null land!");
         }
@@ -31,18 +34,33 @@ public class LandCache {
         }
     }
 
-    public IOwnedLand getLand(String name) {
+    @Nullable
+    public IPossessedLand getLand(String name) {
         return indexLandname.get(name);
     }
 
-    public Set<IOwnedLand> getLands(UUID uuid) {
-        if (indexPlayer.get(uuid) == null) return new HashSet<>();
+    @NotNull
+    public Set<IPossessedLand> getLands(UUID uuid) {
+        if (indexPlayer.get(uuid) == null) {
+            return new HashSet<>();
+        }
         return indexPlayer.get(uuid);
     }
 
-    public Set<IOwnedLand> getLands(World w) {
-        if (indexWorld.get(w) == null) return new HashSet<>();
+    @NotNull
+    public Set<IPossessedLand> getLands(World w) {
+        if (indexWorld.get(w) == null) {
+            return new HashSet<>();
+        }
         return indexWorld.get(w);
+    }
+
+    @NotNull
+    public Set<IPossessedLand> getLands() {
+        if (indexLandname.size() == 0) {
+            return Sets.newHashSet();
+        }
+        return new HashSet<>(indexLandname.values());
     }
 
     public boolean contains(String name) {
@@ -50,7 +68,7 @@ public class LandCache {
     }
 
     public void remove(String name) {
-        IOwnedLand toRemove = indexLandname.get(name);
+        IPossessedLand toRemove = indexLandname.get(name);
 
         indexPlayer.get(toRemove.getOwner()).remove(toRemove);
         indexWorld.get(toRemove.getWorld()).remove(toRemove);

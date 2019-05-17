@@ -17,64 +17,32 @@ import java.util.UUID;
  */
 public interface IWorldGuardManager {
 
-    IOwnedLand getRegion(Chunk chunk);
+    // Abstract WorldGuardManager
+    ILand getRegion(Chunk chunk);
 
-    IOwnedLand getRegion(Location loc);
+    ILand getRegion(String name);
 
-    IOwnedLand getRegion(String name);
+    Set<IPossessedLand> getRegions(UUID id, World world);
 
-    Set<IOwnedLand> getRegions(UUID id, World world);
+    Set<IPossessedLand> getRegions(UUID id);
 
-    Set<IOwnedLand> getRegions(UUID id);
+    Set<IPossessedLand> getRegions(World world);
 
-    Set<IOwnedLand> getRegions(World world);
-
-    Set<IOwnedLand> getRegions();
-
-    Set<?> getAllWGRegions(World world);
-
-    Set<?> getAllWGRegions();
-
-    IOwnedLand[] getSurroundings(Location ploc);
-
-    IOwnedLand[] getSurroundings(Chunk chunk);
-
-    IOwnedLand[] getSurroundings(IOwnedLand land);
-
-    IOwnedLand[] getSurroundingsOwner(Location ploc, UUID owner);
-
-    IOwnedLand[] getSurroundingsOwner(Chunk chunk, UUID owner);
-
-    IOwnedLand[] getSurroundingsOwner(IOwnedLand land, UUID owner);
-
-    Map<Chunk, IOwnedLand> getNearbyLands(Location loc, int offsetX, int offsetZ);
+    Set<IPossessedLand> getRegions();
 
     int getRegionCount(UUID id);
 
     int getRegionCount(World w);
 
-    void unclaim(IOwnedLand land);
+    String getChunkName(Chunk chunk);
 
-    void unclaim(World world, String regionname);
+    // Concrete WorldGuardMangaer
 
-    boolean canClaim(Player player, Chunk currChunk);
+    ILand getRegion(Location loc);
 
-    IOwnedLand claim(Chunk chunk, UUID owner);
+    Set<?> getAllWGRegions(World world);
 
-    World getWorld(String id);
+    Set<?> getAllWGRegions();
 
-    int getX(String name);
-
-    int getZ(String name);
-
-    boolean isLLRegion(String name);
-
-    String getLandName(Chunk chunk);
-
-    boolean isAllowedInOverlap(Player p, Location loc);
-
-    void highlightLand(Chunk chunk, Player p, Particle particle, int amount);
-
-    String formatLocation(Chunk chunk);
-
+    void initFlags();
 }
