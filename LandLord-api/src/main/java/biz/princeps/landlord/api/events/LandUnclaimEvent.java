@@ -1,6 +1,5 @@
 package biz.princeps.landlord.api.events;
 
-import biz.princeps.landlord.api.IOwnedLand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

@@ -1,6 +1,5 @@
 package biz.princeps.landlord.protection;
 
-import biz.princeps.landlord.api.IOwnedLand;
 import com.google.common.collect.Sets;
 import org.bukkit.World;
 

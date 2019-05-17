@@ -1,7 +1,6 @@
 package biz.princeps.landlord.commands.claiming;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;

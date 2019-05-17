@@ -1,7 +1,7 @@
 package biz.princeps.landlord.protection;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IPossessedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 06-05-19
  */
-public abstract class AOwnedLand implements IOwnedLand {
+public abstract class AOwnedLand implements IPossessedLand {
 
     protected World world;
     protected ILandLord pl;

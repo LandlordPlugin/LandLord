@@ -1,7 +1,6 @@
 package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.events.PlayerBrokeSecureWorldEvent;
 import biz.princeps.lib.PrincepsLib;

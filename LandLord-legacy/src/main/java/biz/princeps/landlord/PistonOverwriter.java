@@ -1,7 +1,6 @@
 package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.listener.BasicListener;
 import com.sk89q.worldguard.bukkit.event.DelegateEvent;

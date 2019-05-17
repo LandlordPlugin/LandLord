@@ -1,7 +1,6 @@
 package biz.princeps.landlord.manager.map;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.util.MapConstants;
 import biz.princeps.landlord.util.SimpleScoreboard;

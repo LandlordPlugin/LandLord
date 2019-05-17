@@ -2,7 +2,6 @@ package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
-import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;

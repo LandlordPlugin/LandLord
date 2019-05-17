@@ -1,7 +1,6 @@
 package biz.princeps.landlord.protection;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.lib.PrincepsLib;
 import org.bukkit.*;

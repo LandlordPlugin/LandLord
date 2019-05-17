@@ -1,7 +1,6 @@
 package biz.princeps.landlord.items;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.lib.item.AbstractItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

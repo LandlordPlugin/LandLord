@@ -1,7 +1,6 @@
 package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.protection.AWorldGuardManager;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldedit.BlockVector;
