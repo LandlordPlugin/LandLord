@@ -423,29 +423,27 @@ public class AManage extends AbstractGUI {
 
     private List<String> formatFriendsSegment(UUID id) {
         OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-        Vector<String> vec = new Vector<>();
+        List<String> toReturn = new ArrayList<>();
 
-        TaskChain<?> chain = ((ALandLord) plugin).newChain();
-        chain.asyncFirst(() -> chain.setTaskData("lp", plugin.getPlayerManager().getOfflinePlayerSync(id)))
-                .sync(() -> {
-                    List<String> stringList = lm.getStringList("Commands.Manage.ManageFriends.friendSegment");
-                    String lastseen;
-                    if (op.isOnline()) {
-                        lastseen = lm.getRawString("Commands.Info.online");
-                    } else {
-                        LPlayer lp = chain.getTaskData("lp");
-                        if (lp != null)
-                            lastseen = lp.getLastSeen().toString();
-                        else
-                            lastseen = "NaN";
-                    }
-                    stringList.forEach(s -> {
-                        String ss = s.replace("%seen%", lastseen);
-                        vec.add(ss);
-                    });
-                });
+        IPlayer offline = plugin.getPlayerManager().getOffline(id);
+        List<String> stringList = lm.getStringList("Commands.Manage.ManageFriends.friendSegment");
+        String lastseen;
 
-        return new ArrayList<>(vec);
+        if (op.isOnline()) {
+            lastseen = lm.getRawString("Commands.Info.online");
+        } else {
+            if (offline != null) {
+                lastseen = offline.getLastSeen().toString();
+            } else {
+                lastseen = "NaN";
+            }
+        }
+        stringList.forEach(s -> {
+            String ss = s.replace("%seen%", lastseen);
+            toReturn.add(ss);
+        });
+
+        return toReturn;
     }
 
 

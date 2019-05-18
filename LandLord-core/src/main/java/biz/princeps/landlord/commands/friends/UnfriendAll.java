@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands.friends;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
@@ -50,36 +51,35 @@ public class UnfriendAll extends LandlordCommand {
             return;
         }
 
-        plugin.getPlayerManager().getOfflinePlayerAsync(name, lPlayer -> {
-            if (lPlayer == null) {
-                // Failure
-                lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noPlayer")
-                        .replace("%players%", name));
-            } else {
-                // Success
-                int count = 0;
-                for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
-                    if (ol.isFriend(lPlayer.getUuid())) {
-                        ol.removeFriend(lPlayer.getUuid());
-                        count++;
-                        LandManageEvent landManageEvent = new LandManageEvent(player, ol,
-                                null, "FRIENDS", ol.getMembersString());
-                        Bukkit.getPluginManager().callEvent(landManageEvent);
-                    }
-                }
-
-                if (count > 0) {
-                    lm.sendMessage(player, lm.getString("Commands.UnfriendAll.success")
-                            .replace("%count%", String.valueOf(count))
-                            .replace("%players%", name));
-
-                    Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
-                } else {
-                    lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noFriend")
-                            .replace("%player%", name));
+        IPlayer offline = plugin.getPlayerManager().getOffline(name);
+        if (offline == null) {
+            // Failure
+            lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noPlayer")
+                    .replace("%players%", name));
+        } else {
+            // Success
+            int count = 0;
+            for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
+                if (ol.isFriend(offline.getUuid())) {
+                    ol.removeFriend(offline.getUuid());
+                    count++;
+                    LandManageEvent landManageEvent = new LandManageEvent(player, ol,
+                            null, "FRIENDS", ol.getMembersString());
+                    Bukkit.getPluginManager().callEvent(landManageEvent);
                 }
             }
-        });
+
+            if (count > 0) {
+                lm.sendMessage(player, lm.getString("Commands.UnfriendAll.success")
+                        .replace("%count%", String.valueOf(count))
+                        .replace("%players%", name));
+
+                Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
+            } else {
+                lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noFriend")
+                        .replace("%player%", name));
+            }
+        }
     }
 }
 

@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands.friends;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
@@ -57,27 +58,26 @@ public class Addfriend extends LandlordCommand {
                 return;
             }
 
-            plugin.getPlayerManager().getOfflinePlayerAsync(playerName, lPlayer -> {
-                if (lPlayer == null) {
-                    // Failure
-                    lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
-                            .replace("%players%", playerName));
-                } else if (!land.isOwner(lPlayer.getUuid())) {
-                    // Success
-                    land.addFriend(lPlayer.getUuid());
-                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                            null, "FRIENDS", land.getMembersString());
-                    Bukkit.getPluginManager().callEvent(landManageEvent);
+            IPlayer offline = plugin.getPlayerManager().getOffline(playerName);
+            if (offline == null) {
+                // Failure
+                lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
+                        .replace("%players%", playerName));
+            } else if (!land.isOwner(offline.getUuid())) {
+                // Success
+                land.addFriend(offline.getUuid());
+                LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                        null, "FRIENDS", land.getMembersString());
+                Bukkit.getPluginManager().callEvent(landManageEvent);
 
-                    lm.sendMessage(player, lm.getString("Commands.Addfriend.success")
-                            .replace("%players%", playerName));
+                lm.sendMessage(player, lm.getString("Commands.Addfriend.success")
+                        .replace("%players%", playerName));
 
-                    // lets delay it, because we cant be sure, that the requests are done when executing this piece of code
-                    Bukkit.getScheduler().runTaskLater(plugin.getPlugin(), plugin.getMapManager()::updateAll, 60L);
-                } else {
-                    lm.sendMessage(player, lm.getString("Commands.Addfriend.alreadyOwn"));
-                }
-            });
+                // lets delay it, because we cant be sure, that the requests are done when executing this piece of code
+                Bukkit.getScheduler().runTaskLater(plugin.getPlugin(), plugin.getMapManager()::updateAll, 60L);
+            } else {
+                lm.sendMessage(player, lm.getString("Commands.Addfriend.alreadyOwn"));
+            }
         }
     }
 }

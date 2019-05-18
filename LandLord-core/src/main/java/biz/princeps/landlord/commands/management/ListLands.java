@@ -14,6 +14,7 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import com.google.common.collect.Sets;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -64,18 +65,16 @@ public class ListLands extends LandlordCommand {
                         plugin.getPlayerManager().get(properties.getPlayer().getUniqueId()), page);
             } else if (properties.getPlayer().hasPermission("landlord.admin.list")) {
                 // Admin, Other lands, need to lookup their names
-                int finalPage = page;
-                String finalTarget = target;
-                plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
-                    if (lPlayer == null) {
-                        // Failure
-                        properties.getPlayer().sendMessage(lm.getString("Commands.ListLands.noPlayer")
-                                .replace("%player%", finalTarget));
-                    } else {
-                        // Success
-                        onListLands(properties.getPlayer(), (LPlayer) lPlayer, finalPage);
-                    }
-                });
+
+                IPlayer lPlayer = plugin.getPlayerManager().getOffline(Bukkit.getOfflinePlayer(target).getUniqueId());
+                if (lPlayer == null) {
+                    // Failure
+                    properties.getPlayer().sendMessage(lm.getString("Commands.ListLands.noPlayer")
+                            .replace("%player%", target));
+                } else {
+                    // Success
+                    onListLands(properties.getPlayer(), lPlayer, page);
+                }
             }
         }
     }

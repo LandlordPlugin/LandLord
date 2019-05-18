@@ -9,21 +9,19 @@ import biz.princeps.landlord.listener.MapListener;
 import biz.princeps.landlord.listener.SecureWorldListener;
 import biz.princeps.landlord.manager.*;
 import biz.princeps.landlord.manager.map.MapManager;
-import biz.princeps.landlord.persistent.Database;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.placeholderapi.LandLordPlacehodlers;
 import biz.princeps.landlord.util.ConfigUtil;
-import biz.princeps.landlord.manager.DelimitationManager;
 import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
-import biz.princeps.lib.storage_old.DatabaseType;
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,7 +33,7 @@ import java.util.regex.Pattern;
  * Created by Alex D. (SpatiumPrinceps)
  * Date: 06-05-19
  */
-public abstract class ALandLord extends JavaPlugin implements ILandLord {
+public abstract class ALandLord extends JavaPlugin implements ILandLord, Listener {
 
     protected IWorldGuardManager worldGuardManager;
     protected IUtilsManager utilsManager;
@@ -50,9 +48,6 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
 
     private static TaskChainFactory taskChainFactory;
 
-    private Database db;
-
-
     @Override
     public void onEnable() {
         Options.setConfig(this.getConfig(), getVault() != null);
@@ -62,7 +57,6 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
         checkWorldNames();
 
         setupConfig();
-        setupDatabase();
         setupPlacerholders();
         setupItems();
         setupManagers();
@@ -79,10 +73,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
         if (mapManager != null) {
             mapManager.removeAllMaps();
         }
-        Bukkit.getOnlinePlayers().forEach(p -> getPlayerManager().saveSync(getPlayerManager().get(p.getUniqueId())));
-        if (db != null) {
-            db.close();
-        }
+
+        getPlayerManager().saveAllOnlineSync();
     }
 
     /**
@@ -157,36 +149,17 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
     }
 
     /**
-     * Sets up the database. H2 and Mysql take the same parameters, so dont wonder about that
-     */
-    private void setupDatabase() {
-        String dbpath = getConfig().getString("MySQL.Database");
-        DatabaseType dbtype = DatabaseType.valueOf(getConfig().getString("DatabaseType"));
-        if (dbtype == DatabaseType.SQLite) {
-            getLogger().warning("SQLite is not longer supported! Use H2 instead!");
-            this.getPluginLoader().disablePlugin(this);
-        } else if (dbtype == DatabaseType.H2) {
-            dbpath = getDataFolder() + "/" + getConfig().getString("MySQL.Database");
-        }
-        db = new Database(getLogger(), DatabaseType.valueOf(getConfig().getString("DatabaseType")),
-                getConfig().getString("MySQL.Hostname"),
-                getConfig().getString("MySQL.Port"),
-                getConfig().getString("MySQL.User"),
-                getConfig().getString("MySQL.Password"),
-                dbpath);
-    }
-
-    /**
      * Retrieve the LPlayer objects for all online players (in case of reload) and insert them into the PlayerManager
      */
     private void setupPlayers() {
-        Bukkit.getOnlinePlayers().forEach(p -> lPlayerManager.getOfflinePlayerAsync(p.getUniqueId(), lPlayer1 -> {
-            if (lPlayer1 == null) {
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            IPlayer offline = getPlayerManager().getOffline(p.getUniqueId());
+            if (offline == null) {
                 this.getPlayerManager().add(new LPlayer(p.getUniqueId()));
             } else {
-                this.getPlayerManager().add((LPlayer) lPlayer1);
+                this.getPlayerManager().add(offline);
             }
-        }));
+        });
     }
 
     /**
@@ -201,7 +174,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord {
      */
     private void setupManagers() {
         this.langManager = new LangManager(this, getConfig().getString("language", "en"));
-        this.lPlayerManager = new LPlayerManager(db, this);
+        this.lPlayerManager = new LPlayerManager(this);
         this.mapManager = new MapManager(this);
         this.costManager = new CostManager(this);
         this.vaultManager = new VaultManager(getVault());

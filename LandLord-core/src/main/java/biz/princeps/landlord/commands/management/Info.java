@@ -78,7 +78,8 @@ public class Info extends LandlordCommand {
     }
 
 
-    private String replaceInMessage(String original, String landID, String owner, String member, String lastseen, String price) {
+    private String replaceInMessage(String original, String landID, String owner, String member, String lastseen,
+                                    String price) {
         return original.replace("%landid%", landID)
                 .replace("%owner%", owner)
                 .replace("%member%", member.isEmpty() ? "-" : member)
@@ -93,62 +94,62 @@ public class Info extends LandlordCommand {
         }
 
         Player player = properties.getPlayer();
-        if (isDisabledWorld(player)) return;
+        if (isDisabledWorld(player)) {
+            return;
+        }
 
         Chunk chunk = player.getLocation().getChunk();
         IOwnedLand land = wg.getRegion(chunk);
 
-        TaskChain<?> chain = ((ALandLord) plugin).newChain();
-        chain.asyncFirst(() -> chain.setTaskData("lp", land != null ? plugin.getPlayerManager().getOfflinePlayerSync(land.getOwner()) : null))
-                .sync(() -> {
-                    // claimed
-                    if (land != null) {
-                        String lastseen, owners = land.getOwnersString(), friends = land.getMembersString();
-                        LocalDateTime lastSeenDate = null;
-                        OfflinePlayer op = Bukkit.getOfflinePlayer(land.getOwner());
-                        if (op.isOnline()) {
-                            lastseen = lm.getRawString("Commands.Info.online");
-                        } else {
-                            LPlayer lp = chain.getTaskData("lp");
-                            if (lp != null) {
-                                lastseen = lp.getLastSeen().toString();
-                                lastSeenDate = lp.getLastSeen();
-                            } else {
-                                lastseen = lm.getRawString("Commands.Info.noLastSeen");
-                            }
-                        }
+        if (land != null) {
+            IPlayer owner = plugin.getPlayerManager().getOffline(land.getOwner());
 
-                        if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
-                            lm.sendMessage(player, replaceInMessage(inactive, land.getName(), owners, friends, lastseen,
-                                    plugin.getVaultManager().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
-                            if (plugin.getConfig().getBoolean("Particles.info"))
-                                land.highlightLand(player, Particle.valueOf(plugin.getConfig().getString("Particles.info.inactive").toUpperCase()));
-                            return;
-                        }
 
-                        if (land.getPrice() != -1) {
-                            // advertised land
-                            lm.sendMessage(player, replaceInMessage(advertised, land.getName(), owners, friends, lastseen,
-                                    plugin.getVaultManager().format(land.getPrice())));
-                        } else {
-                            // normal owned land
-                            lm.sendMessage(player, replaceInMessage(owned, land.getName(), owners, friends, lastseen, ""));
-                        }
-                        if (plugin.getConfig().getBoolean("Particles.info"))
-                            land.highlightLand(player,
-                                    Particle.valueOf(plugin.getConfig().getString("Particles.info.claimed").toUpperCase()));
+            String lastseen, owners = land.getOwnersString(), friends = land.getMembersString();
+            LocalDateTime lastSeenDate = null;
+            OfflinePlayer op = Bukkit.getOfflinePlayer(land.getOwner());
+            if (op.isOnline()) {
+                lastseen = lm.getRawString("Commands.Info.online");
+            } else {
+                if (owner != null) {
+                    lastseen = owner.getLastSeen().toString();
+                    lastSeenDate = owner.getLastSeen();
+                } else {
+                    lastseen = lm.getRawString("Commands.Info.noLastSeen");
+                }
+            }
 
-                    } else {
-                        // unclaimed
-                        lm.sendMessage(player, replaceInMessage(free, wg.getLandName(chunk), "", "", "",
-                                (Options.isVaultEnabled() ? plugin.getVaultManager().format(
-                                        plugin.getCostManager().calculateCost(player.getUniqueId())) : "")));
-                        if (plugin.getConfig().getBoolean("Particles.info"))
-                            wg.highlightLand(chunk, player,
-                                    Particle.valueOf(plugin.getConfig().getString("Particles.info.unclaimed").toUpperCase()), 4);
-                    }
-                });
-        chain.execute();
+            if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
+                lm.sendMessage(player, replaceInMessage(inactive, land.getName(), owners, friends, lastseen,
+                        plugin.getVaultManager().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
+                if (plugin.getConfig().getBoolean("Particles.info"))
+                    land.highlightLand(player, Particle.valueOf(plugin.getConfig().getString("Particles.info" +
+                            ".inactive").toUpperCase()));
+                return;
+            }
 
+            if (land.getPrice() != -1) {
+                // advertised land
+                lm.sendMessage(player, replaceInMessage(advertised, land.getName(), owners, friends, lastseen,
+                        plugin.getVaultManager().format(land.getPrice())));
+            } else {
+                // normal owned land
+                lm.sendMessage(player, replaceInMessage(owned, land.getName(), owners, friends, lastseen, ""));
+            }
+            if (plugin.getConfig().getBoolean("Particles.info")) {
+                land.highlightLand(player,
+                        Particle.valueOf(plugin.getConfig().getString("Particles.info.claimed").toUpperCase()));
+            }
+
+        } else {
+            // unclaimed
+            lm.sendMessage(player, replaceInMessage(free, wg.getLandName(chunk), "", "", "",
+                    (Options.isVaultEnabled() ? plugin.getVaultManager().format(
+                            plugin.getCostManager().calculateCost(player.getUniqueId())) : "")));
+            if (plugin.getConfig().getBoolean("Particles.info")) {
+                wg.highlightLand(chunk, player,
+                        Particle.valueOf(plugin.getConfig().getString("Particles.info.unclaimed").toUpperCase()), 4);
+            }
+        }
     }
 }
