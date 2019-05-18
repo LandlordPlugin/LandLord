@@ -1,13 +1,4 @@
 # -----------        General Stuff        -----------
-# Available: H2 / MySQL
-DatabaseType: H2
-MySQL:
-  Hostname: localhost
-  Port: 3306
-  Database: minecraft
-  User: root
-  Password: passy
-
 disabled-worlds:
   - world_nether
   - world_the_end

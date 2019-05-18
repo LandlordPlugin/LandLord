@@ -3,13 +3,18 @@ package biz.princeps.landlord;
 import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMob;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.protection.AOwnedLand;
 import com.google.common.collect.Sets;
 import com.sk89q.worldedit.world.entity.EntityType;
-import com.sk89q.worldguard.protection.flags.*;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.RegionGroup;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 
 import java.util.*;
@@ -201,12 +206,15 @@ public class OwnedLand extends AOwnedLand {
             region.setFlag(flag, StateFlag.State.ALLOW);
         }
         // add other flags
-        pl.getPlayerManager().getOfflinePlayerAsync(owner, p -> {
-            region.setFlag(Flags.GREET_MESSAGE, pl.getLangManager()
-                    .getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
-            region.setFlag(Flags.FAREWELL_MESSAGE, pl.getLangManager()
-                    .getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
-        });
+        OfflinePlayer p = Bukkit.getOfflinePlayer(owner);
+        if (p.getName() == null) {
+            return;
+        }
+        region.setFlag(Flags.GREET_MESSAGE, pl.getLangManager()
+                .getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
+        region.setFlag(Flags.FAREWELL_MESSAGE, pl.getLangManager()
+                .getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
+
     }
 
     @Override

@@ -16,9 +16,6 @@ import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
-import co.aikar.taskchain.BukkitTaskChainFactory;
-import co.aikar.taskchain.TaskChain;
-import co.aikar.taskchain.TaskChainFactory;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -46,12 +43,9 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     protected IDelimitationManager delimitationManager;
     protected IMobManager mobManager;
 
-    private static TaskChainFactory taskChainFactory;
-
     @Override
     public void onEnable() {
         Options.setConfig(this.getConfig(), getVault() != null);
-        taskChainFactory = BukkitTaskChainFactory.create(this);
         setupPrincepsLib();
 
         checkWorldNames();
@@ -242,14 +236,6 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         }
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         return (rsp == null ? null : rsp.getProvider());
-    }
-
-    public <T> TaskChain<T> newSharedChain(String name) {
-        return taskChainFactory.newSharedChain(name);
-    }
-
-    public <T> TaskChain<T> newChain() {
-        return taskChainFactory.newChain();
     }
 
     @Override

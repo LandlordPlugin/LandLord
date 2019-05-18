@@ -45,22 +45,13 @@
                             </relocations>
                             <artifactSet>
                                 <includes>
-                                    <include>com.h2database:*</include>
                                     <include>org.reflections:reflections</include>
                                     <include>org.javassist:javassist</include>
-                                    <include>com.zaxxer:HikariCP</include>
-                                    <include>co.aikar:acf-bukkit</include>
-                                    <include>co.aikar:acf-core</include>
                                     <include>co.aikar:locales</include>
                                     <include>co.aikar:minecraft-timings</include>
                                     <include>biz.princeps:LandLord-core</include>
                                     <include>biz.princeps:LandLord-api</include>
                                     <include>biz.princeps:PrincepsLib</include>
-                                    <exclude>biz.princeps:plugin.yml</exclude>
-                                    <include>org.slf4j:slf4j-api</include>
-                                    <include>org.slf4j:slf4j-nop</include>
-                                    <include>net.jodah:expiringmap</include>
-                                    <include>*:taskchain*</include>
                                     <include>org.inventivetalent.spiget-update:bukkit</include>
                                 </includes>
                             </artifactSet>
@@ -136,6 +127,4 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
-
 </project>

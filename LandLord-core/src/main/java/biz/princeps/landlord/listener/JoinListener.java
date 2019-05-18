@@ -2,11 +2,8 @@ package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IPlayer;
-import biz.princeps.landlord.api.events.FinishedLoadingPlayerEvent;
 import biz.princeps.landlord.persistent.LPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -29,7 +26,6 @@ public class JoinListener extends BasicListener {
         Player p = event.getPlayer();
         IPlayer offline = plugin.getPlayerManager().getOffline(p.getUniqueId());
 
-
         if (offline == null) {
             offline = new LPlayer(p.getUniqueId());
         }
@@ -41,10 +37,6 @@ public class JoinListener extends BasicListener {
         offline.setLastSeen(LocalDateTime.now());
 
         plugin.getPlayerManager().save(offline, true);
-
-        Event e = new FinishedLoadingPlayerEvent(p, offline);
-        Bukkit.getPluginManager().callEvent(e);
-
     }
 
     @EventHandler

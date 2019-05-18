@@ -1,14 +1,11 @@
 package biz.princeps.landlord.guis;
 
-import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandManageEvent;
-import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
-import co.aikar.taskchain.TaskChain;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
@@ -36,6 +33,7 @@ public class AManage extends AbstractGUI {
         this.regions = land;
         this.lm = plugin.getLangManager();
         this.toggleMobs = new HashSet<>(pl.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
+        this.mats = pl.getMaterialsManager();
     }
 
     AManage(ILandLord pl, Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land) {
@@ -44,6 +42,7 @@ public class AManage extends AbstractGUI {
         this.plugin = pl;
         this.lm = plugin.getLangManager();
         this.toggleMobs = new HashSet<>(pl.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
+        this.mats = pl.getMaterialsManager();
     }
 
     @Override

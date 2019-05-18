@@ -1,6 +1,5 @@
 package biz.princeps.landlord;
 
-import biz.princeps.landlord.protection.AWorldGuardManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;

@@ -3,7 +3,6 @@ package biz.princeps.landlord.commands.claiming;
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
