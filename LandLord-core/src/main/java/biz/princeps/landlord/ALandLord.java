@@ -68,7 +68,9 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
             mapManager.removeAllMaps();
         }
 
-        getPlayerManager().saveAllOnlineSync();
+        if (lPlayerManager != null) {
+            getPlayerManager().saveAllOnlineSync();
+        }
     }
 
     /**
