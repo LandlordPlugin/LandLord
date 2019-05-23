@@ -48,14 +48,7 @@ public abstract class AOwnedLand implements IOwnedLand {
     }
 
 
-    /**
-     * Highlight a specific chunk for a player with particles
-     *
-     * @param chunk the chunk
-     * @param p     the player to highlight the chunk for
-     * @param e     the particles
-     * @param amt   amount of particles
-     */
+
     // TODO optimize this shit. maybe remove amt
     @Override
     public void highlightLand(Chunk chunk, Player p, Particle e, int amt) {
