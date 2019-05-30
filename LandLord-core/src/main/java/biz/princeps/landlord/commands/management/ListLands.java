@@ -6,7 +6,6 @@ import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGui;
 import biz.princeps.landlord.guis.ManageGuiAll;
-import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
@@ -14,6 +13,7 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import com.google.common.collect.Sets;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -64,16 +64,17 @@ public class ListLands extends LandlordCommand {
                         plugin.getPlayerManager().get(properties.getPlayer().getUniqueId()), page);
             } else if (properties.getPlayer().hasPermission("landlord.admin.list")) {
                 // Admin, Other lands, need to lookup their names
-                int finalPage = page;
+
                 String finalTarget = target;
-                plugin.getPlayerManager().getOfflinePlayerAsync(target, lPlayer -> {
+                int finalPage = page;
+                plugin.getPlayerManager().getOffline(Bukkit.getOfflinePlayer(target).getUniqueId(), (lPlayer)->{
                     if (lPlayer == null) {
                         // Failure
                         properties.getPlayer().sendMessage(lm.getString("Commands.ListLands.noPlayer")
                                 .replace("%player%", finalTarget));
                     } else {
                         // Success
-                        onListLands(properties.getPlayer(), (LPlayer) lPlayer, finalPage);
+                        onListLands(properties.getPlayer(), lPlayer, finalPage);
                     }
                 });
             }

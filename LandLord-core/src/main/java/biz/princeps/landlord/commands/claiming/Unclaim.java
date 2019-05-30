@@ -3,7 +3,6 @@ package biz.princeps.landlord.commands.claiming;
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
@@ -116,9 +115,6 @@ public class Unclaim extends LandlordCommand {
             if (plugin.getConfig().getBoolean("Particles.unclaim.enabled"))
                 ol.highlightLand(player,
                         Particle.valueOf(plugin.getConfig().getString("Particles.unclaim.particle").toUpperCase()));
-
-            // Remove possible advertisements
-            plugin.getOfferManager().removeOffer(ol.getName());
 
             lm.sendMessage(player, lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", ol.getName())

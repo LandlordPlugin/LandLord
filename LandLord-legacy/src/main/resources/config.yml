@@ -1,6 +1,7 @@
 # -----------        General Stuff        -----------
-# Available: H2 / MySQL
-DatabaseType: H2
+# Available: FlatFile / MySQL
+# We highly recommend to use FlatFile. Please consider your use case.
+DatabaseType: FlatFile
 MySQL:
   Hostname: localhost
   Port: 3306

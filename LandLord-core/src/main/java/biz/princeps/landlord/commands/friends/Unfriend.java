@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands.friends;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
@@ -58,14 +59,14 @@ public class Unfriend extends LandlordCommand {
                 return;
             }
 
-            plugin.getPlayerManager().getOfflinePlayerAsync(playerName, lPlayer -> {
-                if (lPlayer == null) {
+            plugin.getPlayerManager().getOffline(playerName, (offline) -> {
+                if (offline == null) {
                     // Failure
                     lm.sendMessage(player, lm.getString("Commands.Unfriend.noPlayer")
                             .replace("%players%", playerName));
-                } else if (land.getFriends().contains(lPlayer.getUuid())) {
+                } else if (land.getFriends().contains(offline.getUuid())) {
                     // Success
-                    land.removeFriend(lPlayer.getUuid());
+                    land.removeFriend(offline.getUuid());
                     LandManageEvent landManageEvent = new LandManageEvent(player, land,
                             null, "FRIENDS", land.getMembersString());
                     Bukkit.getPluginManager().callEvent(landManageEvent);
@@ -73,7 +74,8 @@ public class Unfriend extends LandlordCommand {
                     lm.sendMessage(player, lm.getString("Commands.Unfriend.success")
                             .replace("%players%", playerName));
 
-                    // lets delay it, because we cant be sure, that the requests are done when executing this piece of code
+                    // lets delay it, because we cant be sure, that the requests are done when executing this piece
+                    // of code
                     Bukkit.getScheduler().runTaskLater(plugin.getPlugin(), plugin.getMapManager()::updateAll, 60L);
                 } else {
                     lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noFriend")

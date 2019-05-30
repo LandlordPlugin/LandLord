@@ -12,23 +12,25 @@ import org.bukkit.plugin.Plugin;
 public class LandLord extends ALandLord {
 
     @Override
-    void onPreEnable() {
+    public void onLoad() {
+        WorldGuardManager.initFlags();
+    }
+
+    @Override
+    public void onEnable() {
+        if (!checkDependencies()) {
+            return;
+        }
+
         this.worldGuardManager = new WorldGuardManager(this, getWorldGuard());
         this.utilsManager = new UtilsManager();
         this.materialsManager = new MaterialsManager();
         this.mobManager = new MobsManager();
 
         ((WorldGuardManager) worldGuardManager).initCache();
-    }
 
-    @Override
-    void onPostEnable() {
-
-    }
-
-    @Override
-    public void onEnable() {
         super.onEnable();
+
         new PistonOverwriter(this);
     }
 
@@ -59,14 +61,15 @@ public class LandLord extends ALandLord {
         if (!super.checkDependencies()) return false;
 
         // Dependency stuff
-        if (!Bukkit.getVersion().contains("1.13.2")) {
-            haltPlugin("Invalid spigot version detected! LandLord requires 1.13.2");
+        if (!Bukkit.getVersion().contains("1.13.2") && !Bukkit.getVersion().contains("1.14.1")) {
+            haltPlugin("Invalid spigot version detected! LandLord requires 1.13.2/1.14.1");
             return false;
         }
 
 
         if (getWorldGuard() == null) {
-            haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to use LandLord");
+            haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to " +
+                    "use LandLord");
             return false;
         } else {
             String v = getWorldGuard().getDescription().getVersion();

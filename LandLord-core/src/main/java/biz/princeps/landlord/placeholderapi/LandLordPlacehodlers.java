@@ -4,7 +4,6 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.IWorldGuardManager;
-import biz.princeps.landlord.persistent.LPlayer;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 import org.bukkit.entity.Player;
 

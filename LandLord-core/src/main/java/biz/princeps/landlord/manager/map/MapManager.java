@@ -12,6 +12,7 @@ import java.util.HashMap;
  */
 public class MapManager implements IMapManager {
 
+    //TODO change to <UUID, LandMap>
     private HashMap<String, LandMap> mapList;
     private ILandLord pl;
     private MapConstants constants;

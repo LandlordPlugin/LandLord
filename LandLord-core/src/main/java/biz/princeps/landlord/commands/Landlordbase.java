@@ -3,7 +3,10 @@ package biz.princeps.landlord.commands;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.api.Options;
-import biz.princeps.landlord.commands.admin.*;
+import biz.princeps.landlord.commands.admin.AdminTeleport;
+import biz.princeps.landlord.commands.admin.Clear;
+import biz.princeps.landlord.commands.admin.GiveClaims;
+import biz.princeps.landlord.commands.admin.Update;
 import biz.princeps.landlord.commands.claiming.*;
 import biz.princeps.landlord.commands.claiming.adv.Advertise;
 import biz.princeps.landlord.commands.claiming.adv.RemoveAdvertise;
@@ -87,7 +90,6 @@ public class Landlordbase extends MainCommand {
         this.addSubcommand(new ManageAll(pl));
         this.addSubcommand(new Clear(pl));
         this.addSubcommand(new LandMap(pl));
-        this.addSubcommand(new Migrate(pl));
     }
 
     @Override

@@ -1,14 +1,11 @@
 package biz.princeps.landlord.guis;
 
-import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandManageEvent;
-import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
-import co.aikar.taskchain.TaskChain;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
@@ -36,6 +33,7 @@ public class AManage extends AbstractGUI {
         this.regions = land;
         this.lm = plugin.getLangManager();
         this.toggleMobs = new HashSet<>(pl.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
+        this.mats = pl.getMaterialsManager();
     }
 
     AManage(ILandLord pl, Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land) {
@@ -44,6 +42,7 @@ public class AManage extends AbstractGUI {
         this.plugin = pl;
         this.lm = plugin.getLangManager();
         this.toggleMobs = new HashSet<>(pl.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
+        this.mats = pl.getMaterialsManager();
     }
 
     @Override
@@ -302,32 +301,36 @@ public class AManage extends AbstractGUI {
                     lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
             };
 
-            friends.forEach(id -> {
-                OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-                Icon friend = new Icon(mats.getPlayerHead(id));
-                friend.setName(op.getName());
-                friend.setLore(formatFriendsSegment(id));
-                friend.addClickAction((player) -> {
-                    ConfirmationGUI confirmationGUI = new ConfirmationGUI(player, lm.getRawString("Commands.Manage" +
-                            ".ManageFriends.unfriend")
-                            .replace("%player%", op.getName()),
-                            (p) -> {
-                                friendsGui.removeIcon(friendsGui.filter(op.getName()).get(0));
-                                for (IOwnedLand region : regions) {
-                                    Bukkit.dispatchCommand(player,
-                                            "land unfriend " + region.getName() + " " + op.getName());
-                                }
-                                player.closeInventory();
-                                friendsGui.display();
-                            },
-                            (p) -> {
-                                player.closeInventory();
-                                friendsGui.display();
-                            }, friendsGui);
-                    confirmationGUI.setConfirm(lm.getRawString("Confirmation.accept"));
-                    confirmationGUI.setDecline(lm.getRawString("Confirmation.decline"));
-                    confirmationGUI.display();
-                    friendsGui.addIcon(friend);
+            //TODO test this
+            Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+                friends.forEach(id -> {
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+                    Icon friend = new Icon(mats.getPlayerHead(id));
+                    friend.setName(op.getName());
+                    friend.setLore(formatFriendsSegment(id));
+                    friend.addClickAction((player) -> {
+                        ConfirmationGUI confirmationGUI = new ConfirmationGUI(player, lm.getRawString("Commands" +
+                                ".Manage" +
+                                ".ManageFriends.unfriend")
+                                .replace("%player%", op.getName()),
+                                (p) -> {
+                                    friendsGui.removeIcon(friendsGui.filter(op.getName()).get(0));
+                                    for (IOwnedLand region : regions) {
+                                        Bukkit.dispatchCommand(player,
+                                                "land unfriend " + region.getName() + " " + op.getName());
+                                    }
+                                    player.closeInventory();
+                                    friendsGui.display();
+                                },
+                                (p) -> {
+                                    player.closeInventory();
+                                    friendsGui.display();
+                                }, friendsGui);
+                        confirmationGUI.setConfirm(lm.getRawString("Confirmation.accept"));
+                        confirmationGUI.setDecline(lm.getRawString("Confirmation.decline"));
+                        confirmationGUI.display();
+                        friendsGui.addIcon(friend);
+                    });
                 });
             });
 
@@ -423,29 +426,27 @@ public class AManage extends AbstractGUI {
 
     private List<String> formatFriendsSegment(UUID id) {
         OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-        Vector<String> vec = new Vector<>();
+        List<String> toReturn = new ArrayList<>();
 
-        TaskChain<?> chain = ((ALandLord) plugin).newChain();
-        chain.asyncFirst(() -> chain.setTaskData("lp", plugin.getPlayerManager().getOfflinePlayerSync(id)))
-                .sync(() -> {
-                    List<String> stringList = lm.getStringList("Commands.Manage.ManageFriends.friendSegment");
-                    String lastseen;
-                    if (op.isOnline()) {
-                        lastseen = lm.getRawString("Commands.Info.online");
-                    } else {
-                        LPlayer lp = chain.getTaskData("lp");
-                        if (lp != null)
-                            lastseen = lp.getLastSeen().toString();
-                        else
-                            lastseen = "NaN";
-                    }
-                    stringList.forEach(s -> {
-                        String ss = s.replace("%seen%", lastseen);
-                        vec.add(ss);
-                    });
-                });
+        IPlayer offline = plugin.getPlayerManager().getOfflineSync(id);
+        List<String> stringList = lm.getStringList("Commands.Manage.ManageFriends.friendSegment");
+        String lastseen;
 
-        return new ArrayList<>(vec);
+        if (op.isOnline()) {
+            lastseen = lm.getRawString("Commands.Info.online");
+        } else {
+            if (offline != null) {
+                lastseen = offline.getLastSeen().toString();
+            } else {
+                lastseen = "NaN";
+            }
+        }
+        stringList.forEach(s -> {
+            String ss = s.replace("%seen%", lastseen);
+            toReturn.add(ss);
+        });
+
+        return toReturn;
     }
 
 

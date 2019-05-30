@@ -3,7 +3,6 @@ package biz.princeps.landlord.manager;
 import biz.princeps.landlord.api.IDelimitationManager;
 import biz.princeps.landlord.api.ILandLord;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

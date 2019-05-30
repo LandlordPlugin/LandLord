@@ -1,9 +1,6 @@
 package biz.princeps.landlord.guis;
 
-import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.ILangManager;
-import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.api.*;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
@@ -85,7 +82,8 @@ public class ClearGUI extends AbstractGUI {
         i3.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearworld.desc").split("\\|")));
         i3.addClickAction((player1) -> {
             ConfirmationGUI confirm = new ConfirmationGUI(player1,
-                    lm.getRawString("Commands.ClearWorld.gui.clearworld.confirm").replace("%world%", player.getWorld().getName()),
+                    lm.getRawString("Commands.ClearWorld.gui.clearworld.confirm").replace("%world%",
+                            player.getWorld().getName()),
                     (a) -> {
                         clearWorld(a.getWorld());
                         a.closeInventory();
@@ -122,15 +120,13 @@ public class ClearGUI extends AbstractGUI {
         int count = regions.size();
 
         for (IOwnedLand region : Sets.newHashSet(regions)) {
-            plugin.getOfferManager().removeOffer(region.getName());
             wg.unclaim(region);
         }
         return count;
     }
 
     private void clearPlayer(UUID id) {
-        plugin.getPlayerManager().getOfflinePlayerAsync(id, lPlayer -> {
-
+        plugin.getPlayerManager().getOffline(id, (lPlayer) -> {
             if (lPlayer == null) {
                 // Failure
                 lm.sendMessage(player, lm.getString("Commands.ClearWorld.noPlayer")
@@ -144,7 +140,8 @@ public class ClearGUI extends AbstractGUI {
                         .replace("%count%", String.valueOf(amt))
                         .replace("%player%", lPlayer.getName()));
 
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(),
+                        () -> plugin.getMapManager().updateAll());
             }
         });
     }

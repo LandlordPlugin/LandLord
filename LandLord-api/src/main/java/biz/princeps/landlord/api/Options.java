@@ -25,7 +25,7 @@ public class Options {
     }
 
     public static boolean isVaultEnabled() {
-        return cfg.getBoolean("Economy.enable") && hasVault;
+        return hasVault;
     }
 
     public static boolean enabled_borders() {
@@ -70,6 +70,6 @@ public class Options {
 
     public static void setConfig(FileConfiguration config, boolean hasVault) {
         cfg = config;
-        Options.hasVault = hasVault;
+        Options.hasVault = cfg.getBoolean("Economy.enable") && hasVault;
     }
 }

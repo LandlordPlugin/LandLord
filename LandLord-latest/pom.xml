@@ -35,7 +35,7 @@
                         </goals>
                         <configuration>
                             <outputFile>
-                                ${project.build.directory}/Testserver_1.13.2/plugins/Landlord-latest.jar
+                                ${project.build.directory}/Testserver_1.14.1/plugins/Landlord-latest.jar
                             </outputFile>
                             <relocations>
                                 <relocation>
@@ -45,23 +45,15 @@
                             </relocations>
                             <artifactSet>
                                 <includes>
-                                    <include>com.h2database:*</include>
                                     <include>org.reflections:reflections</include>
                                     <include>org.javassist:javassist</include>
-                                    <include>com.zaxxer:HikariCP</include>
-                                    <include>co.aikar:acf-bukkit</include>
-                                    <include>co.aikar:acf-core</include>
                                     <include>co.aikar:locales</include>
                                     <include>co.aikar:minecraft-timings</include>
                                     <include>biz.princeps:LandLord-core</include>
                                     <include>biz.princeps:LandLord-api</include>
                                     <include>biz.princeps:PrincepsLib</include>
-                                    <exclude>biz.princeps:plugin.yml</exclude>
-                                    <include>org.slf4j:slf4j-api</include>
-                                    <include>org.slf4j:slf4j-nop</include>
-                                    <include>net.jodah:expiringmap</include>
-                                    <include>*:taskchain*</include>
                                     <include>org.inventivetalent.spiget-update:bukkit</include>
+                                    <include>com.zaxxer:HikariCP</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
@@ -111,7 +103,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
+            <version>1.14.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 

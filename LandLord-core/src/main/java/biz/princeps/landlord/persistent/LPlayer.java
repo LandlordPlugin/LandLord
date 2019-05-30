@@ -1,8 +1,6 @@
 package biz.princeps.landlord.persistent;
 
 import biz.princeps.landlord.api.IPlayer;
-import biz.princeps.lib.util.SpigotUtil;
-import biz.princeps.lib.util.TimeUtil;
 import org.bukkit.Location;
 
 import java.time.LocalDateTime;
@@ -19,16 +17,14 @@ public class LPlayer implements IPlayer {
     private String name;
     private int claims;
     private Location home;
-    private String lastseen;
     private LocalDateTime localDateTime;
 
-    public LPlayer(String uuid, String name, int claims, String home, String lastseen) {
-        this.uuid = UUID.fromString(uuid);
+    public LPlayer(UUID uuid, String name, int claims, Location home, LocalDateTime lastseen) {
+        this.uuid = uuid;
         this.name = name;
         this.claims = claims;
-        this.home = SpigotUtil.exactlocationFromString(home);
-        this.lastseen = lastseen;
-        this.localDateTime = TimeUtil.stringToTime(lastseen);
+        this.home = home;
+        this.localDateTime = lastseen;
     }
 
     public LPlayer(UUID uuid) {
@@ -72,7 +68,6 @@ public class LPlayer implements IPlayer {
     }
 
     public void setLastSeen(LocalDateTime localDateTime) {
-        this.lastseen = TimeUtil.timeToString(localDateTime);
         this.localDateTime = localDateTime;
     }
 
@@ -83,7 +78,7 @@ public class LPlayer implements IPlayer {
                 ", name='" + name + '\'' +
                 ", claims=" + claims +
                 ", home=" + home +
-                ", lastseen='" + lastseen + '\'' +
+                ", lastseen='" + getLastSeen() + '\'' +
                 '}';
     }
 }

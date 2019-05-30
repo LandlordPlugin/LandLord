@@ -5,6 +5,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
+/**
+ * Handles Materials, that changed during major minecraft version upgrades.
+ */
 public interface IMaterialsManager {
 
     Material getSkull();

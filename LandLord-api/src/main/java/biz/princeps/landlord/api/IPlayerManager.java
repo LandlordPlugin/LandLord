@@ -1,6 +1,5 @@
 package biz.princeps.landlord.api;
 
-import biz.princeps.landlord.api.exceptions.PlayerOfflineException;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
@@ -11,19 +10,12 @@ public interface IPlayerManager {
 
     void add(IPlayer lPlayer);
 
-    void saveAsync(IPlayer lp);
-
-    void saveSync(IPlayer lp);
+    void save(IPlayer lp, boolean async);
 
     void remove(UUID id);
 
-    void getOfflinePlayerAsync(UUID uuid, Consumer<IPlayer> consumer);
+    void saveAllOnlineSync();
 
-    void getOfflinePlayerAsync(String name, Consumer<IPlayer> consumer);
-
-    IPlayer getOfflinePlayerSync(UUID uuid);
-
-    IPlayer getOfflinePlayerSync(String name);
 
     boolean contains(String name);
 
@@ -31,19 +23,28 @@ public interface IPlayerManager {
 
     IPlayer get(UUID id);
 
+    void getOffline(UUID id, Consumer<IPlayer> consumer);
+
+    void getOffline(String name, Consumer<IPlayer> consumer);
+
+
     boolean isInactive(LocalDateTime lastSeenDate);
 
     void isInactive(UUID id, Consumer<Boolean> consumer);
 
-    Boolean isInactive(UUID id);
-
     void getInactiveRemainingDays(UUID owner, Consumer<Integer> consumer);
 
-    int getInactiveRemainingDays(UUID owner);
+    boolean isInactiveSync(UUID id);
 
-    IPlayer getOnlinePlayer(UUID id) throws PlayerOfflineException;
-
-    void getOfflinePlayer(UUID id, Consumer<IPlayer> consumer);
+    int getInactiveRemainingDaysSync(UUID owner);
 
     int getMaxClaimPermission(Player player);
+
+    /**
+     * Warning, this is blocking! might kill your server.
+     *
+     * @param id the uuid to get the iplayer from
+     * @return the iplayer
+     */
+    IPlayer getOfflineSync(UUID id);
 }

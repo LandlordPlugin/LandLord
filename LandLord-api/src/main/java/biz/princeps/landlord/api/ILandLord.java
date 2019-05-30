@@ -63,14 +63,6 @@ public interface ILandLord {
     IPlayerManager getPlayerManager();
 
     /**
-     * Gets the reference to the OfferManager.
-     * This class manages interactions with the land advertise/offer system.
-     *
-     * @return the offer manager
-     */
-    IOfferManager getOfferManager();
-
-    /**
      * Gets the reference to the CostManager.
      * This class calculates costs for the next claim.
      *

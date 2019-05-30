@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands.homes;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
@@ -71,18 +72,19 @@ public class Home extends LandlordCommand {
                 return;
             }
 
-            plugin.getPlayerManager().getOfflinePlayerAsync(targetPlayer, lPlayer -> {
-                if (lPlayer == null) {
+            plugin.getPlayerManager().getOffline(targetPlayer, (offline) -> {
+                if (offline == null) {
                     lm.sendMessage(player, lm.getString("Commands.Home.otherNoHome"));
                 } else {
-                    Location home = lPlayer.getHome();
+                    Location home = offline.getHome();
                     if (home == null) {
                         lm.sendMessage(player, lm.getString("Commands.Home.otherNoHome"));
                         return;
                     }
 
                     // do the actual teleport sync again
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> teleport(home, player, targetPlayer));
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> teleport(home, player,
+                            targetPlayer));
                 }
             });
         }
@@ -93,7 +95,8 @@ public class Home extends LandlordCommand {
         double cost = plugin.getConfig().getDouble("Homes.teleportCost");
         if (Options.isVaultEnabled()) {
             if (!plugin.getVaultManager().hasBalance(player.getUniqueId(), cost)) {
-                lm.sendMessage(player, lm.getString("Commands.Home.notEnoughMoney").replace("%cost%", plugin.getVaultManager().format(cost)));
+                lm.sendMessage(player, lm.getString("Commands.Home.notEnoughMoney").replace("%cost%",
+                        plugin.getVaultManager().format(cost)));
                 return;
             }
         }
