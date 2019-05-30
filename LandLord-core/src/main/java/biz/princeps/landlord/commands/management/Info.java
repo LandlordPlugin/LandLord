@@ -99,45 +99,43 @@ public class Info extends LandlordCommand {
         IOwnedLand land = wg.getRegion(chunk);
 
         if (land != null) {
-            IPlayer owner = plugin.getPlayerManager().getOffline(land.getOwner());
-
-
-            String lastseen, owners = land.getOwnersString(), friends = land.getMembersString();
-            LocalDateTime lastSeenDate = null;
-            OfflinePlayer op = Bukkit.getOfflinePlayer(land.getOwner());
-            if (op.isOnline()) {
-                lastseen = lm.getRawString("Commands.Info.online");
-            } else {
-                if (owner != null) {
-                    lastseen = owner.getLastSeen().toString();
-                    lastSeenDate = owner.getLastSeen();
+            plugin.getPlayerManager().getOffline(land.getOwner(), (owner) -> {
+                String lastseen, owners = land.getOwnersString(), friends = land.getMembersString();
+                LocalDateTime lastSeenDate = null;
+                OfflinePlayer op = Bukkit.getOfflinePlayer(land.getOwner());
+                if (op.isOnline()) {
+                    lastseen = lm.getRawString("Commands.Info.online");
                 } else {
-                    lastseen = lm.getRawString("Commands.Info.noLastSeen");
+                    if (owner != null) {
+                        lastseen = owner.getLastSeen().toString();
+                        lastSeenDate = owner.getLastSeen();
+                    } else {
+                        lastseen = lm.getRawString("Commands.Info.noLastSeen");
+                    }
                 }
-            }
 
-            if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
-                lm.sendMessage(player, replaceInMessage(inactive, land.getName(), owners, friends, lastseen,
-                        plugin.getVaultManager().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
-                if (plugin.getConfig().getBoolean("Particles.info"))
-                    land.highlightLand(player, Particle.valueOf(plugin.getConfig().getString("Particles.info" +
-                            ".inactive").toUpperCase()));
-                return;
-            }
+                if (plugin.getPlayerManager().isInactive(lastSeenDate)) {
+                    lm.sendMessage(player, replaceInMessage(inactive, land.getName(), owners, friends, lastseen,
+                            plugin.getVaultManager().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
+                    if (plugin.getConfig().getBoolean("Particles.info"))
+                        land.highlightLand(player, Particle.valueOf(plugin.getConfig().getString("Particles.info" +
+                                ".inactive").toUpperCase()));
+                    return;
+                }
 
-            if (land.getPrice() != -1) {
-                // advertised land
-                lm.sendMessage(player, replaceInMessage(advertised, land.getName(), owners, friends, lastseen,
-                        plugin.getVaultManager().format(land.getPrice())));
-            } else {
-                // normal owned land
-                lm.sendMessage(player, replaceInMessage(owned, land.getName(), owners, friends, lastseen, ""));
-            }
-            if (plugin.getConfig().getBoolean("Particles.info")) {
-                land.highlightLand(player,
-                        Particle.valueOf(plugin.getConfig().getString("Particles.info.claimed").toUpperCase()));
-            }
-
+                if (land.getPrice() != -1) {
+                    // advertised land
+                    lm.sendMessage(player, replaceInMessage(advertised, land.getName(), owners, friends, lastseen,
+                            plugin.getVaultManager().format(land.getPrice())));
+                } else {
+                    // normal owned land
+                    lm.sendMessage(player, replaceInMessage(owned, land.getName(), owners, friends, lastseen, ""));
+                }
+                if (plugin.getConfig().getBoolean("Particles.info")) {
+                    land.highlightLand(player,
+                            Particle.valueOf(plugin.getConfig().getString("Particles.info.claimed").toUpperCase()));
+                }
+            });
         } else {
             // unclaimed
             lm.sendMessage(player, replaceInMessage(free, wg.getLandName(chunk), "", "", "",

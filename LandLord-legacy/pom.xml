@@ -53,6 +53,7 @@
                                     <include>biz.princeps:LandLord-api</include>
                                     <include>biz.princeps:PrincepsLib</include>
                                     <include>org.inventivetalent.spiget-update:bukkit</include>
+                                    <include>com.zaxxer:HikariCP</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

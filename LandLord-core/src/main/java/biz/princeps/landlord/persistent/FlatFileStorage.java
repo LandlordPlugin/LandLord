@@ -1,6 +1,7 @@
 package biz.princeps.landlord.persistent;
 
 import biz.princeps.landlord.api.IPlayer;
+import biz.princeps.landlord.api.IStorage;
 import biz.princeps.lib.util.SpigotUtil;
 import biz.princeps.lib.util.TimeUtil;
 import org.bukkit.Bukkit;
@@ -13,8 +14,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-public class FlatFileStorage {
+public class FlatFileStorage implements IStorage {
 
     private JavaPlugin pl;
 
@@ -42,8 +44,15 @@ public class FlatFileStorage {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+        getPlayer(UUID.randomUUID(), (p) -> {
+        });
     }
 
+    public void getPlayer(UUID id, Consumer<IPlayer> consumer) {
+        consumer.accept(getPlayer(id));
+    }
+
+    @Override
     public IPlayer getPlayer(UUID id) {
         ConfigurationSection sec = customConfig.getConfigurationSection(id.toString());
 
@@ -57,6 +66,7 @@ public class FlatFileStorage {
                 TimeUtil.stringToTime(sec.getString("lastlogin")));
     }
 
+    @Override
     public void savePlayer(IPlayer p, boolean async) {
         ConfigurationSection sec = customConfig.createSection(p.getUuid().toString());
         sec.set("claims", p.getClaims());

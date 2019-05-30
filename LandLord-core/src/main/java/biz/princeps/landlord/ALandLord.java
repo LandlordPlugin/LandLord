@@ -149,12 +149,13 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      */
     private void setupPlayers() {
         Bukkit.getOnlinePlayers().forEach(p -> {
-            IPlayer offline = getPlayerManager().getOffline(p.getUniqueId());
-            if (offline == null) {
-                this.getPlayerManager().add(new LPlayer(p.getUniqueId()));
-            } else {
-                this.getPlayerManager().add(offline);
-            }
+            getPlayerManager().getOffline(p.getUniqueId(), (offline) -> {
+                if (offline == null) {
+                    this.getPlayerManager().add(new LPlayer(p.getUniqueId()));
+                } else {
+                    this.getPlayerManager().add(offline);
+                }
+            });
         });
     }
 

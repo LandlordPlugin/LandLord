@@ -1,13 +1,10 @@
 package biz.princeps.landlord.manager;
 
-import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IPlayer;
-import biz.princeps.landlord.api.IPlayerManager;
-import biz.princeps.landlord.api.Options;
+import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.persistent.FlatFileStorage;
+import biz.princeps.landlord.persistent.SQLStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -15,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Project: LandLord
@@ -26,28 +24,29 @@ public class LPlayerManager implements IPlayerManager {
     private Map<UUID, IPlayer> players;
 
     private ILandLord plugin;
-    private BukkitScheduler scheduler;
-
-    private FlatFileStorage stor;
+    private IStorage stor;
 
 
     public LPlayerManager(ILandLord pl) {
         this.players = new HashMap<>();
         this.plugin = pl;
-        this.stor = new FlatFileStorage(pl.getPlugin());
-        this.stor.init();
 
-        this.scheduler = plugin.getPlugin().getServer().getScheduler();
+        if (pl.getConfig().getString("DatabaseType").equalsIgnoreCase("MySQL")) {
+            this.stor = new SQLStorage(plugin.getPlugin());
+        } else {
+            this.stor = new FlatFileStorage(pl.getPlugin());
+            ((FlatFileStorage) this.stor).init();
+        }
     }
 
     @Override
-    public void add(IPlayer lPlayer) {
+    public synchronized void add(IPlayer lPlayer) {
         this.players.put(lPlayer.getUuid(), lPlayer);
     }
 
 
     @Override
-    public void save(IPlayer lp, boolean b) {
+    public synchronized void save(IPlayer lp, boolean b) {
         this.stor.savePlayer(lp, true);
     }
 
@@ -56,7 +55,9 @@ public class LPlayerManager implements IPlayerManager {
         for (IPlayer value : players.values()) {
             save(value, false);
         }
-        stor.save();
+        if (this.stor instanceof FlatFileStorage) {
+            ((FlatFileStorage) stor).save();
+        }
     }
 
 
@@ -92,13 +93,13 @@ public class LPlayerManager implements IPlayerManager {
     }
 
     @Override
-    public IPlayer getOffline(UUID id) {
-        return stor.getPlayer(id);
+    public void getOffline(UUID id, Consumer<IPlayer> consumer) {
+        stor.getPlayer(id, consumer);
     }
 
     @Override
-    public IPlayer getOffline(String name) {
-        return getOffline(Bukkit.getOfflinePlayer(name).getUniqueId());
+    public void getOffline(String name, Consumer<IPlayer> consumer) {
+        getOffline(Bukkit.getOfflinePlayer(name).getUniqueId(), consumer);
     }
 
     /**
@@ -124,19 +125,51 @@ public class LPlayerManager implements IPlayerManager {
 
 
     @Override
-    public boolean isInactive(UUID id) {
-        return isInactive(getOffline(id).getLastSeen());
+    public void isInactive(UUID id, Consumer<Boolean> consumer) {
+        getOffline(id, (lp) -> {
+            if (lp != null) {
+                consumer.accept(isInactive(lp.getLastSeen()));
+            } else {
+                consumer.accept(false);
+            }
+        });
     }
 
 
     @Override
-    public int getInactiveRemainingDays(UUID owner) {
+    public void getInactiveRemainingDays(UUID owner, Consumer<Integer> consumer) {
         long days = plugin.getConfig().getInt("BuyUpInactive.timegate");
-        IPlayer offline = getOffline(owner);
+        this.getOffline(owner, (offline) -> {
+            if (offline != null) {
+                consumer.accept((int) (days - (Duration.between(offline.getLastSeen(), LocalDateTime.now()).toDays())));
+            } else {
+                consumer.accept(-1);
+            }
+        });
+    }
+
+    @Override
+    public boolean isInactiveSync(UUID id) {
+        IPlayer lp = getOfflineSync(id);
+        if (lp != null) {
+            return isInactive(lp.getLastSeen());
+        } else {
+            return false;
+        }
+
+    }
+
+    @Override
+    public int getInactiveRemainingDaysSync(UUID owner) {
+        long days = plugin.getConfig().getInt("BuyUpInactive.timegate");
+
+        IPlayer offline = getOfflineSync(owner);
+
         if (offline != null) {
             return (int) (days - (Duration.between(offline.getLastSeen(), LocalDateTime.now()).toDays()));
+        } else {
+            return -1;
         }
-        return -1;
     }
 
 
@@ -157,5 +190,10 @@ public class LPlayerManager implements IPlayerManager {
         } else {
             return Integer.MIN_VALUE;
         }
+    }
+
+    @Override
+    public IPlayer getOfflineSync(UUID id) {
+        return stor.getPlayer(id);
     }
 }

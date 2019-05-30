@@ -49,32 +49,33 @@ public class AddfriendAll extends LandlordCommand {
             return;
         }
 
-        IPlayer offline = plugin.getPlayerManager().getOffline(name);
-        if (offline == null) {
-            // Failure
-            lm.sendMessage(player, lm.getString("Commands.AddfriendAll.noPlayer")
-                    .replace("%player%", name));
-        } else if (!player.getUniqueId().equals(offline.getUuid())) {
-            // Success
-            int count = 0;
-            for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
-                if (!ol.isFriend(offline.getUuid())) {
-                    ol.addFriend(offline.getUuid());
-                    count++;
-                    LandManageEvent landManageEvent = new LandManageEvent(player, ol,
-                            null, "FRIENDS", ol.getMembersString());
-                    Bukkit.getPluginManager().callEvent(landManageEvent);
+        plugin.getPlayerManager().getOffline(name, (offline) -> {
+            if (offline == null) {
+                // Failure
+                lm.sendMessage(player, lm.getString("Commands.AddfriendAll.noPlayer")
+                        .replace("%player%", name));
+            } else if (!player.getUniqueId().equals(offline.getUuid())) {
+                // Success
+                int count = 0;
+                for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
+                    if (!ol.isFriend(offline.getUuid())) {
+                        ol.addFriend(offline.getUuid());
+                        count++;
+                        LandManageEvent landManageEvent = new LandManageEvent(player, ol,
+                                null, "FRIENDS", ol.getMembersString());
+                        Bukkit.getPluginManager().callEvent(landManageEvent);
+                    }
                 }
+
+                lm.sendMessage(player, lm.getString("Commands.AddfriendAll.success")
+                        .replace("%player%", name)
+                        .replace("%count%", String.valueOf(count)));
+
+                Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
+            } else {
+                lm.sendMessage(player, lm.getString("Commands.Addfriend.alreadyOwn"));
             }
-
-            lm.sendMessage(player, lm.getString("Commands.AddfriendAll.success")
-                    .replace("%player%", name)
-                    .replace("%count%", String.valueOf(count)));
-
-            Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
-        } else {
-            lm.sendMessage(player, lm.getString("Commands.Addfriend.alreadyOwn"));
-        }
+        });
     }
 }
 

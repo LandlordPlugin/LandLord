@@ -24,19 +24,19 @@ public class JoinListener extends BasicListener {
     @EventHandler
     public void onJoin(PlayerLoginEvent event) {
         Player p = event.getPlayer();
-        IPlayer offline = plugin.getPlayerManager().getOffline(p.getUniqueId());
+        plugin.getPlayerManager().getOffline(p.getUniqueId(), (offline) -> {
+            if (offline == null) {
+                offline = new LPlayer(p.getUniqueId());
+            }
+            plugin.getPlayerManager().add(offline);
 
-        if (offline == null) {
-            offline = new LPlayer(p.getUniqueId());
-        }
-        plugin.getPlayerManager().add(offline);
+            // The next to lines are needed to protect claiming of "inactive" lands although the owner is
+            // online right now
+            // might just be a rare never happening edge case, but lets be safe
+            offline.setLastSeen(LocalDateTime.now());
 
-        // The next to lines are needed to protect claiming of "inactive" lands although the owner is
-        // online right now
-        // might just be a rare never happening edge case, but lets be safe
-        offline.setLastSeen(LocalDateTime.now());
-
-        plugin.getPlayerManager().save(offline, true);
+            plugin.getPlayerManager().save(offline, true);
+        });
     }
 
     @EventHandler

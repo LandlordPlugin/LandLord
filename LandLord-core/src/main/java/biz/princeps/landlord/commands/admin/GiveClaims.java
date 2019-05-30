@@ -119,21 +119,22 @@ public class GiveClaims extends LandlordCommand {
             lm.sendMessage(player, lm.getString("Commands.GiveClaims.success")
                     .replace("%amount%", String.valueOf(amount)));
         } else {
-            IPlayer offline = plugin.getPlayerManager().getOffline(target);
-            if (offline != null) {
-                offline.addClaims(amount);
-                plugin.getPlayerManager().save(offline, true);
-                OfflinePlayer op = Bukkit.getOfflinePlayer(offline.getUuid());
+            plugin.getPlayerManager().getOffline(target, (offline) -> {
+                if (offline != null) {
+                    offline.addClaims(amount);
+                    plugin.getPlayerManager().save(offline, true);
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(offline.getUuid());
 
-                if (op.isOnline()) {
-                    lm.sendMessage(op.getPlayer(), lm.getString("Commands.GiveClaims.success").replace("%amount%",
-                            String.valueOf(amount)));
+                    if (op.isOnline()) {
+                        lm.sendMessage(op.getPlayer(), lm.getString("Commands.GiveClaims.success").replace("%amount%",
+                                String.valueOf(amount)));
+                    }
+                } else {
+                    if (issuer.getPlayer() != null) {
+                        lm.sendMessage(issuer.getPlayer(), lm.getString("Commands.GiveClaims.noPlayer"));
+                    }
                 }
-            } else {
-                if (issuer.getPlayer() != null) {
-                    lm.sendMessage(issuer.getPlayer(), lm.getString("Commands.GiveClaims.noPlayer"));
-                }
-            }
+            });
         }
     }
 

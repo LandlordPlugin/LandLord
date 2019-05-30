@@ -126,22 +126,23 @@ public class ClearGUI extends AbstractGUI {
     }
 
     private void clearPlayer(UUID id) {
-        IPlayer lPlayer = plugin.getPlayerManager().getOffline(id);
+        plugin.getPlayerManager().getOffline(id, (lPlayer) -> {
+            if (lPlayer == null) {
+                // Failure
+                lm.sendMessage(player, lm.getString("Commands.ClearWorld.noPlayer")
+                        .replace("%players%", id.toString()));
+            } else {
+                // Success
+                Set<IOwnedLand> regions = wg.getRegions(lPlayer.getUuid());
+                int amt = handleUnclaim(regions);
 
-        if (lPlayer == null) {
-            // Failure
-            lm.sendMessage(player, lm.getString("Commands.ClearWorld.noPlayer")
-                    .replace("%players%", id.toString()));
-        } else {
-            // Success
-            Set<IOwnedLand> regions = wg.getRegions(lPlayer.getUuid());
-            int amt = handleUnclaim(regions);
+                lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearplayer.success")
+                        .replace("%count%", String.valueOf(amt))
+                        .replace("%player%", lPlayer.getName()));
 
-            lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearplayer.success")
-                    .replace("%count%", String.valueOf(amt))
-                    .replace("%player%", lPlayer.getName()));
-
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
-        }
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(),
+                        () -> plugin.getMapManager().updateAll());
+            }
+        });
     }
 }

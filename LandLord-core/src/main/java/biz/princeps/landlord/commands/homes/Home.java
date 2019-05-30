@@ -72,20 +72,21 @@ public class Home extends LandlordCommand {
                 return;
             }
 
-            IPlayer offline = plugin.getPlayerManager().getOffline(targetPlayer);
-            if (offline == null) {
-                lm.sendMessage(player, lm.getString("Commands.Home.otherNoHome"));
-            } else {
-                Location home = offline.getHome();
-                if (home == null) {
+            plugin.getPlayerManager().getOffline(targetPlayer, (offline) -> {
+                if (offline == null) {
                     lm.sendMessage(player, lm.getString("Commands.Home.otherNoHome"));
-                    return;
-                }
+                } else {
+                    Location home = offline.getHome();
+                    if (home == null) {
+                        lm.sendMessage(player, lm.getString("Commands.Home.otherNoHome"));
+                        return;
+                    }
 
-                // do the actual teleport sync again
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> teleport(home, player,
-                        targetPlayer));
-            }
+                    // do the actual teleport sync again
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> teleport(home, player,
+                            targetPlayer));
+                }
+            });
         }
     }
 

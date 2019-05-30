@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public interface IPlayerManager {
 
@@ -22,17 +23,28 @@ public interface IPlayerManager {
 
     IPlayer get(UUID id);
 
-    IPlayer getOffline(UUID id);
+    void getOffline(UUID id, Consumer<IPlayer> consumer);
 
-    IPlayer getOffline(String name);
+    void getOffline(String name, Consumer<IPlayer> consumer);
 
 
     boolean isInactive(LocalDateTime lastSeenDate);
 
-    boolean isInactive(UUID id);
+    void isInactive(UUID id, Consumer<Boolean> consumer);
 
-    int getInactiveRemainingDays(UUID owner);
+    void getInactiveRemainingDays(UUID owner, Consumer<Integer> consumer);
 
+    boolean isInactiveSync(UUID id);
+
+    int getInactiveRemainingDaysSync(UUID owner);
 
     int getMaxClaimPermission(Player player);
+
+    /**
+     * Warning, this is blocking! might kill your server.
+     *
+     * @param id the uuid to get the iplayer from
+     * @return the iplayer
+     */
+    IPlayer getOfflineSync(UUID id);
 }

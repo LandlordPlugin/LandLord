@@ -46,32 +46,31 @@ public class AdminTeleport extends LandlordCommand {
             return;
         }
 
-
-        IPlayer offline = plugin.getPlayerManager().getOffline(target);
-
-        if (offline == null) {
-            // Failure
-            lm.sendMessage(sender, lm.getString("Commands.AdminTp.noPlayer").replace("%player%", target));
-        } else {
-            // Success
-            Set<IOwnedLand> lands = plugin.getWGManager().getRegions(offline.getUuid());
-            if (lands.size() > 0) {
-                MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
-                        lm.getRawString("Commands.AdminTp.guiHeader").replace("%player%", target));
-
-                lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()))
-                        .setName(land.getName())
-                        .addClickAction((p) -> {
-                                    Location toTp = land.getALocation();
-                                    sender.teleport(toTp);
-                                    land.highlightLand(sender, Particle.VILLAGER_HAPPY);
-                                }
-                        )
-                ));
-                landGui.display();
+        plugin.getPlayerManager().getOffline(target, (offline) -> {
+            if (offline == null) {
+                // Failure
+                lm.sendMessage(sender, lm.getString("Commands.AdminTp.noPlayer").replace("%player%", target));
             } else {
-                lm.sendMessage(sender, lm.getString("Commands.AdminTp.noLands").replace("%player%", target));
+                // Success
+                Set<IOwnedLand> lands = plugin.getWGManager().getRegions(offline.getUuid());
+                if (lands.size() > 0) {
+                    MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
+                            lm.getRawString("Commands.AdminTp.guiHeader").replace("%player%", target));
+
+                    lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()))
+                            .setName(land.getName())
+                            .addClickAction((p) -> {
+                                        Location toTp = land.getALocation();
+                                        sender.teleport(toTp);
+                                        land.highlightLand(sender, Particle.VILLAGER_HAPPY);
+                                    }
+                            )
+                    ));
+                    landGui.display();
+                } else {
+                    lm.sendMessage(sender, lm.getString("Commands.AdminTp.noLands").replace("%player%", target));
+                }
             }
-        }
+        });
     }
 }

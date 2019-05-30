@@ -65,15 +65,18 @@ public class ListLands extends LandlordCommand {
             } else if (properties.getPlayer().hasPermission("landlord.admin.list")) {
                 // Admin, Other lands, need to lookup their names
 
-                IPlayer lPlayer = plugin.getPlayerManager().getOffline(Bukkit.getOfflinePlayer(target).getUniqueId());
-                if (lPlayer == null) {
-                    // Failure
-                    properties.getPlayer().sendMessage(lm.getString("Commands.ListLands.noPlayer")
-                            .replace("%player%", target));
-                } else {
-                    // Success
-                    onListLands(properties.getPlayer(), lPlayer, page);
-                }
+                String finalTarget = target;
+                int finalPage = page;
+                plugin.getPlayerManager().getOffline(Bukkit.getOfflinePlayer(target).getUniqueId(), (lPlayer)->{
+                    if (lPlayer == null) {
+                        // Failure
+                        properties.getPlayer().sendMessage(lm.getString("Commands.ListLands.noPlayer")
+                                .replace("%player%", finalTarget));
+                    } else {
+                        // Success
+                        onListLands(properties.getPlayer(), lPlayer, finalPage);
+                    }
+                });
             }
         }
     }

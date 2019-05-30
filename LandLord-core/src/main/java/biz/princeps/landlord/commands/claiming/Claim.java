@@ -1,6 +1,5 @@
 package biz.princeps.landlord.commands.claiming;
 
-import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
@@ -59,86 +58,87 @@ public class Claim extends LandlordCommand {
         String landName = wg.getLandName(chunk);
         String confirmcmd = "/" + plugin.getConfig().getString("CommandSettings.Main.name") + " confirm";
 
+        Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+            boolean inactive = ol != null && plugin.getPlayerManager().isInactiveSync(ol.getOwner());
+            int inactiveDays = ol == null ? -1 : plugin.getPlayerManager().getInactiveRemainingDaysSync(ol.getOwner());
 
-        boolean inactive = ol != null && plugin.getPlayerManager().isInactive(ol.getOwner());
-        int inactiveDays = ol == null ? -1 : plugin.getPlayerManager().getInactiveRemainingDays(ol.getOwner());
 
-
-        // Check if there is an overlapping wg-region
-        if (!wg.canClaim(player, chunk)) {
-            if (ol == null || !inactive) {
-                lm.sendMessage(player, lm.getString("Commands.Claim.notAllowed"));
-                return;
+            // Check if there is an overlapping wg-region
+            if (!wg.canClaim(player, chunk)) {
+                if (ol == null || !inactive) {
+                    lm.sendMessage(player, lm.getString("Commands.Claim.notAllowed"));
+                    return;
+                }
             }
-        }
-        // Checks for the case if its not a nullland, but its not buyable
-        if (ol != null) {
-            if (ol.isOwner(player.getUniqueId())) {
-                // cannot buy own land
-                lm.sendMessage(player, lm.getString("Commands.Claim.alreadyClaimed")
-                        .replace("%owner%", ol.getOwnersString()));
-                return;
-            }
+            // Checks for the case if its not a nullland, but its not buyable
+            if (ol != null) {
+                if (ol.isOwner(player.getUniqueId())) {
+                    // cannot buy own land
+                    lm.sendMessage(player, lm.getString("Commands.Claim.alreadyClaimed")
+                            .replace("%owner%", ol.getOwnersString()));
+                    return;
+                }
 
-            if (!plugin.getPlayerManager().isInactive(ol.getOwner())) {
-                lm.sendMessage(player, lm.getString("Commands.Claim.notYetInactive")
-                        .replace("%owner%", ol.getOwnersString())
-                        .replace("%days%", "" + inactiveDays));
-                return;
-            }
-        }
-
-        int regionCount = wg.getRegionCount(player.getUniqueId());
-        // Ckeck for hardcap based on permissions
-        if (!hasLimitPermissions(player, regionCount)) {
-            return;
-        }
-
-        // Check for claims
-        if (!hasClaims(player, regionCount)) {
-            return;
-        }
-
-        // Ckeck for adjacent claims
-        if (!isAdjacentLandOwned(player, chunk, regionCount)) {
-            return;
-        }
-
-        // Check for gap between lands
-        if (!isGapBetweenLands(player, chunk)) {
-            return;
-        }
-
-        LandPreClaimEvent event = new LandPreClaimEvent(player, chunk);
-        Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
-            return;
-        }
-
-        // Money stuff
-        if (Options.isVaultEnabled()) {
-            if (ol != null && inactive) {
-                // Inactive sale
-                if (!handleInactiveSale(player, ol, chunk, confirmcmd)) {
-                    // unsuccessful
+                if (!inactive) {
+                    lm.sendMessage(player, lm.getString("Commands.Claim.notYetInactive")
+                            .replace("%owner%", ol.getOwnersString())
+                            .replace("%days%", "" + inactiveDays));
                     return;
                 }
             }
 
-            if (ol != null && ol.getPrice() > -1) {
-                // Player 2 player sale
-                if (!handlePlayer2PlayerSell(player, ol, chunk, confirmcmd)) {
-                    // unsuccessful
-                    return;
+            int regionCount = wg.getRegionCount(player.getUniqueId());
+            // Ckeck for hardcap based on permissions
+            if (!hasLimitPermissions(player, regionCount)) {
+                return;
+            }
+
+            // Check for claims
+            if (!hasClaims(player, regionCount)) {
+                return;
+            }
+
+            // Ckeck for adjacent claims
+            if (!isAdjacentLandOwned(player, chunk, regionCount)) {
+                return;
+            }
+
+            // Check for gap between lands
+            if (!isGapBetweenLands(player, chunk)) {
+                return;
+            }
+
+            LandPreClaimEvent event = new LandPreClaimEvent(player, chunk);
+            Bukkit.getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                return;
+            }
+
+            // Money stuff
+            if (Options.isVaultEnabled()) {
+                if (ol != null && inactive) {
+                    // Inactive sale
+                    if (!handleInactiveSale(player, ol, chunk, confirmcmd)) {
+                        // unsuccessful
+                        return;
+                    }
                 }
-            } else {
-                // Normal sale
-                if (!handleNormalSell(player, landName, chunk, confirmcmd)) {
-                    return;
+
+                if (ol != null && ol.getPrice() > -1) {
+                    // Player 2 player sale
+                    if (!handlePlayer2PlayerSell(player, ol, chunk, confirmcmd)) {
+                        // unsuccessful
+                        return;
+                    }
+                } else {
+                    // Normal sale
+                    if (!handleNormalSell(player, landName, chunk, confirmcmd)) {
+                        return;
+                    }
                 }
             }
-        }
-        performClaim(player, chunk);
+            performClaim(player, chunk);
+        });
     }
 
 
@@ -410,7 +410,7 @@ public class Claim extends LandlordCommand {
                 performClaim(player, chunk);
             }
 
-            return true;
+            return false;
         } else {
             // NOT ENOUGH MONEY
             lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
