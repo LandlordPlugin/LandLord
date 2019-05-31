@@ -3,14 +3,15 @@ package biz.princeps.landlord;
 import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMob;
-import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.protection.AOwnedLand;
 import com.google.common.collect.Sets;
 import com.sk89q.worldedit.world.entity.EntityType;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -27,6 +28,7 @@ import java.util.*;
 public class OwnedLand extends AOwnedLand {
 
     private ProtectedRegion region;
+    private FlagRegistry flagRegistry = WorldGuard.getInstance().getFlagRegistry();
 
     public static OwnedLand create(ILandLord pl, ProtectedRegion pr, UUID owner) {
         return new OwnedLand(pl, pr, owner);
@@ -136,7 +138,7 @@ public class OwnedLand extends AOwnedLand {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            Flag flag = Flags.get(s.toLowerCase());
+            Flag flag = getFlag(s.toLowerCase());
             if (flag == null) {
                 pl.getLogger().warning("Invalid worldguard flag found: " + s);
                 continue;
@@ -193,11 +195,54 @@ public class OwnedLand extends AOwnedLand {
         else return flag.contains(EntityType.REGISTRY.get(mob.getName().toLowerCase()));
     }
 
+    //@Override
+    public Object getFlagValue(String flag) {
+        if (flag == null) return null;
+        Flag wgflag = getFlag(flag.toLowerCase());
+        if (wgflag == null) return null;
+        return region.getFlag(wgflag);
+    }
+
+    public void setGroupFlag(String flag) {
+        if (flag == null) return;
+        Flag wgflag = getFlag(flag.toLowerCase());
+        if (wgflag == null) return;
+        region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+
+    }
+
+    //@Override
+    public void setFlagValue(String flag, String grp, Object value) {
+        if (flag == null) return;
+        Flag wgflag = getFlag(flag.toLowerCase());
+        if (wgflag == null) return;
+        region.setFlag(wgflag, value);
+        if (grp != null)
+            region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.valueOf(grp.toUpperCase()));
+    }
+
+    //@Override
+    public void removeFlag(String flag) {
+        if (flag == null) return;
+        Flag wgflag = getFlag(flag.toLowerCase());
+        if (wgflag == null) return;
+        region.getFlags().remove(wgflag);
+    }
+
+    //@Override
+    public boolean containsFlag(String flag) {
+        if (flag == null) return false;
+        Flag wgflag = getFlag(flag.toLowerCase());
+        if (wgflag == null) return false;
+        return region.getFlags().containsKey(wgflag);
+    }
+
+
     private void initFlags(UUID owner) {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            Flag flag = Flags.get(s.toUpperCase());
+            Flag flag = getFlag(s.toUpperCase());
             if (!(flag instanceof StateFlag)) {
                 Bukkit.getLogger().warning("Only stateflags are supported!");
                 return;
@@ -229,5 +274,9 @@ public class OwnedLand extends AOwnedLand {
     @Override
     public void setPrice(double price) {
         region.setFlag(WorldGuardManager.REGION_PRICE_FLAG, price);
+    }
+
+    private Flag getFlag(String flagName) {
+        return Flags.fuzzyMatchFlag(flagRegistry, flagName);
     }
 }

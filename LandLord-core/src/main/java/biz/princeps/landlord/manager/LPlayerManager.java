@@ -47,7 +47,7 @@ public class LPlayerManager implements IPlayerManager {
 
     @Override
     public synchronized void save(IPlayer lp, boolean b) {
-        this.stor.savePlayer(lp, true);
+        this.stor.savePlayer(lp, b);
     }
 
     @Override
