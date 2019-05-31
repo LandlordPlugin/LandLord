@@ -74,13 +74,8 @@ public class FlatFileStorage implements IStorage {
         sec.set("home", SpigotUtil.exactlocationToString(p.getHome()));
         sec.set("lastlogin", TimeUtil.timeToString(p.getLastSeen()));
 
-        //Throw an exception when the server is shutdowning and players are still online
         if (async) {
-            try {
-                Bukkit.getScheduler().scheduleAsyncDelayedTask(pl, this::save);
-            } catch (IllegalPluginAccessException e) {
-                this.save();
-            }
+            Bukkit.getScheduler().scheduleAsyncDelayedTask(pl, this::save);
         }
     }
 
