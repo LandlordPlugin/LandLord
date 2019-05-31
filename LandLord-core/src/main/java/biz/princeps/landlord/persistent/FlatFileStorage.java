@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -73,8 +74,13 @@ public class FlatFileStorage implements IStorage {
         sec.set("home", SpigotUtil.exactlocationToString(p.getHome()));
         sec.set("lastlogin", TimeUtil.timeToString(p.getLastSeen()));
 
+        //Throw an exception when the server is shutdowning and players are still online
         if (async) {
-            Bukkit.getScheduler().scheduleAsyncDelayedTask(pl, this::save);
+            try {
+                Bukkit.getScheduler().scheduleAsyncDelayedTask(pl, this::save);
+            } catch (IllegalPluginAccessException e) {
+                this.save();
+            }
         }
     }
 
