@@ -66,43 +66,20 @@ public class LandLord extends ALandLord {
             return false;
         }
 
-
         if (getWorldGuard() == null) {
             haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to " +
                     "use LandLord");
             return false;
         } else {
-            String v = getWorldGuard().getDescription().getVersion();
-            boolean flag = false;
-            if (!v.contains("beta")) {
-                try {
-                    int version = Integer.valueOf(v.split(";")[1].split("-")[0]);
-                    if (version < 1754) {
-                        flag = true;
-                    }
-                } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
-                    flag = true;
-                }
-            }
-            if (flag) {
-                haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 1754+");
+            String worldGuardVersion = getWorldGuard().getDescription().getVersion();
+            if (!worldGuardVersion.contains("7.0.0") || worldGuardVersion.contains("SNAPSHOT")) {
+                haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 7.0.0! : You have WG " + worldGuardVersion);
                 return false;
             }
 
-            String worldeditVerison = Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
-            flag = false;
-            if (!worldeditVerison.contains("beta")) {
-                try {
-                    int version = Integer.valueOf(worldeditVerison.split(";")[1].split("-")[0]);
-                    if (version < 3937) {
-                        flag = true;
-                    }
-                } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
-                    flag = true;
-                }
-            }
-            if (flag) {
-                haltPlugin("Invalid WorldEdit Version found. LandLord requires WE 3937+");
+            String worldEditVersion = Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
+            if (!worldEditVersion.contains("7.0.0") || worldEditVersion.contains("SNAPSHOT")) {
+                haltPlugin("Invalid WorldEdit Version found. LandLord requires WE 7.0.0! : You have WE " + worldEditVersion);
                 return false;
             }
         }
