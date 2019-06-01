@@ -109,7 +109,12 @@ public class Claim extends LandlordCommand {
             }
 
             LandPreClaimEvent event = new LandPreClaimEvent(player, chunk);
-            Bukkit.getPluginManager().callEvent(event);
+
+            //In 1.14.x, an event can't be fired by an async thread
+            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                Bukkit.getPluginManager().callEvent(event);
+            });
+
             if (event.isCancelled()) {
                 return;
             }
