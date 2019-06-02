@@ -128,7 +128,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     @Override
     public String getLandName(Chunk chunk) {
-        return chunk.getWorld().getName() + "_" + chunk.getX() + "_" + chunk.getZ();
+        return chunk.getWorld().getName().toLowerCase() + "_" + chunk.getX() + "_" + chunk.getZ();
     }
 
     @Override
