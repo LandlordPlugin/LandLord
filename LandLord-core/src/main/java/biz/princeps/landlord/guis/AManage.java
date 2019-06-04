@@ -222,6 +222,15 @@ public class AManage extends AbstractGUI {
                                         null, "REGENERATE", "REGENERATE");
                                 Bukkit.getPluginManager().callEvent(landManageEvent);
                                 player.getWorld().regenerateChunk(land.getChunk().getX(), land.getChunk().getZ());
+                                /*
+                                 * From Spigot JavaDocs :
+                                 * Deprecated. regenerating a single chunk is not likely to produce the same chunk as before as terrain decoration may be spread across chunks.
+                                 * Use of this method should be avoided as it is known to produce buggy results.Regenerates the Chunk at the specified coordinates
+                                 *
+                                 * "Impossible" to fix that with SpigotApi, PaperApi perhaps, but it requires sacrifices :/
+                                 * I propose to use a Worldedit selection and apply "//regen".
+                                 *
+                                */
                                 lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.success")
                                         .replace("%land%", land.getName()));
                                 display();
