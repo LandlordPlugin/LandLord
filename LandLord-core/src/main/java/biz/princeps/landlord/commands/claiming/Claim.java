@@ -172,7 +172,11 @@ public class Claim extends LandlordCommand {
         plugin.getMapManager().updateAll();
 
         LandPostClaimEvent postEvent = new LandPostClaimEvent(player, claim);
-        Bukkit.getPluginManager().callEvent(postEvent);
+
+        //In 1.14.x, an event can't be fired by an async thread
+        Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+            Bukkit.getPluginManager().callEvent(postEvent);
+        });
     }
 
     private boolean hasLimitPermissions(Player player, int regionCount) {
