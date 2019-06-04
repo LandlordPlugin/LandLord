@@ -57,21 +57,97 @@ public class Claim extends LandlordCommand {
         IOwnedLand ol = wg.getRegion(chunk);
         String landName = wg.getLandName(chunk);
         String confirmcmd = "/" + plugin.getConfig().getString("CommandSettings.Main.name") + " confirm";
+        int regionCount = wg.getRegionCount(player.getUniqueId());
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-            boolean inactive = ol != null && plugin.getPlayerManager().isInactiveSync(ol.getOwner());
-            int inactiveDays = ol == null ? -1 : plugin.getPlayerManager().getInactiveRemainingDaysSync(ol.getOwner());
+        // First check, if outer conditions (conditions that are related more to the buyer as individual)
+        // Ckeck for hardcap based on permissions
+        if (!hasLimitPermissions(player, regionCount)) {
+            return;
+        }
+
+        // Check for claims
+        if (!hasClaims(player, regionCount)) {
+            return;
+        }
+
+        // Ckeck for adjacent claims
+        if (!isAdjacentLandOwned(player, chunk, regionCount)) {
+            return;
+        }
+
+        // Check for gap between lands
+        if (!isGapBetweenLands(player, chunk)) {
+            return;
+        }
+
+        LandPreClaimEvent event = new LandPreClaimEvent(player, chunk);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
+        // is free land
+        if (ol == null) {
+            String guiDesc = landName;
+            String chatDesc = lm.getString("Commands.Claim.confirmation")
+                    .replace("%chunk%", landName)
+                    .replace("%location%", wg.formatLocation(chunk));
 
 
-            // Check if there is an overlapping wg-region
-            if (!wg.canClaim(player, chunk)) {
-                if (ol == null || !inactive) {
-                    lm.sendMessage(player, lm.getString("Commands.Claim.notAllowed"));
+            double calculatedCost = plugin.getCostManager().calculateCost(player.getUniqueId());
+
+            if (!hasMoney(player, calculatedCost, landName, chunk, chatDesc, guiDesc)) {
+                return;
+            }
+
+            // if the player des not have enough money, the claim process is terminated before this line.
+            if (plugin.getConfig().getBoolean("ConfirmationDialog.onNormalClaim") && !overrideConfirmations) {
+                PrincepsLib.getConfirmationManager().draw(player, guiDesc, chatDesc,
+                        (p) -> {
+                            performNormalClaim(player, chunk, calculatedCost, landName);
+                            p.closeInventory();
+                        },
+                        (p) -> {
+                            lm.sendMessage(player, lm.getString("Commands.Claim.aborted"));
+                            p.closeInventory();
+                        }, confirmcmd);
+            } else {
+                performNormalClaim(player, chunk, calculatedCost, landName);
+            }
+
+        } else {
+            // either inactive or advertised or not claimable or own land
+            if (ol.getPrice() > -1 && Options.isVaultEnabled()) {
+                // Advertised land
+                String guiDesc = landName;
+                String chatDesc = lm.getString("Commands.Claim.confirmation")
+                        .replace("%chunk%", landName)
+                        .replace("%location%", wg.formatLocation(chunk));
+
+
+                double calculatedCost = ol.getPrice();
+
+                if (!hasMoney(player, calculatedCost, landName, chunk, chatDesc, guiDesc)) {
                     return;
                 }
-            }
-            // Checks for the case if its not a nullland, but its not buyable
-            if (ol != null) {
+
+                // if the player des not have enough money, the claim process is terminated before this line.
+                if (plugin.getConfig().getBoolean("ConfirmationDialog.onNormalClaim") && !overrideConfirmations) {
+                    PrincepsLib.getConfirmationManager().draw(player, guiDesc, chatDesc,
+                            (p) -> {
+                                performAdvertisedClaim(player, ol);
+                                p.closeInventory();
+                            },
+                            (p) -> {
+                                lm.sendMessage(player, lm.getString("Commands.Claim.aborted"));
+                                p.closeInventory();
+                            }, confirmcmd);
+                } else {
+                    performAdvertisedClaim(player, ol);
+                }
+
+            } else {
+                // either inactive or unclaimable or own land
                 if (ol.isOwner(player.getUniqueId())) {
                     // cannot buy own land
                     lm.sendMessage(player, lm.getString("Commands.Claim.alreadyClaimed")
@@ -79,75 +155,137 @@ public class Claim extends LandlordCommand {
                     return;
                 }
 
-                if (!inactive) {
-                    lm.sendMessage(player, lm.getString("Commands.Claim.notYetInactive")
-                            .replace("%owner%", ol.getOwnersString())
-                            .replace("%days%", "" + inactiveDays));
-                    return;
-                }
-            }
+                // inactive or unclaimable
+                plugin.getPlayerManager().getOffline(ol.getOwner(), (offline) -> {
+                    boolean isInactive = plugin.getPlayerManager().isInactive(offline.getLastSeen());
+                    int inactiveDays = plugin.getPlayerManager().getInactiveRemainingDays(offline.getLastSeen());
 
-            int regionCount = wg.getRegionCount(player.getUniqueId());
-            // Ckeck for hardcap based on permissions
-            if (!hasLimitPermissions(player, regionCount)) {
-                return;
-            }
+                    if (isInactive) {
+                        // inactive
+                        String guiDesc = landName;
+                        String chatDesc = lm.getString("Commands.Claim.confirmation")
+                                .replace("%chunk%", landName)
+                                .replace("%location%", wg.formatLocation(chunk));
 
-            // Check for claims
-            if (!hasClaims(player, regionCount)) {
-                return;
-            }
+                        double costForBuyer = plugin.getCostManager().calculateCost(player.getUniqueId());
+                        double payBackForInactive = plugin.getCostManager().calculateCost(ol.getOwner());
+                        String originalOwner = Bukkit.getOfflinePlayer(ol.getOwner()).getName();
 
-            // Ckeck for adjacent claims
-            if (!isAdjacentLandOwned(player, chunk, regionCount)) {
-                return;
-            }
+                        if (!hasMoney(player, costForBuyer, landName, chunk, chatDesc, guiDesc)) {
+                            return;
+                        }
 
-            // Check for gap between lands
-            if (!isGapBetweenLands(player, chunk)) {
-                return;
-            }
+                        if (plugin.getConfig().getBoolean("ConfirmationDialog.onBuyUp") && !overrideConfirmations) {
+                            PrincepsLib.getConfirmationManager().draw(player, guiDesc, chatDesc,
+                                    (p) -> {
+                                        handleInactiveClaim(player, ol, costForBuyer, payBackForInactive,
+                                                originalOwner);
+                                        player.closeInventory();
+                                    }, (p) -> {
+                                        lm.sendMessage(player, lm.getString("Commands.Claim.aborted"));
+                                        player.closeInventory();
+                                    }, confirmcmd);
 
-            LandPreClaimEvent event = new LandPreClaimEvent(player, chunk);
+                        } else {
+                            handleInactiveClaim(player, ol, costForBuyer, payBackForInactive,
+                                    originalOwner);
+                        }
 
-            //In 1.14.x, an event can't be fired by an async thread
-            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                Bukkit.getPluginManager().callEvent(event);
-            });
-
-            if (event.isCancelled()) {
-                return;
-            }
-
-            // Money stuff
-            if (Options.isVaultEnabled()) {
-                if (ol != null && inactive) {
-                    // Inactive sale
-                    if (!handleInactiveSale(player, ol, chunk, confirmcmd)) {
-                        // unsuccessful
+                    } else {
+                        // unclaimable
+                        lm.sendMessage(player, lm.getString("Commands.Claim.notYetInactive")
+                                .replace("%owner%", ol.getOwnersString())
+                                .replace("%days%", "" + inactiveDays));
                         return;
                     }
-                }
-
-                if (ol != null && ol.getPrice() > -1) {
-                    // Player 2 player sale
-                    if (!handlePlayer2PlayerSell(player, ol, chunk, confirmcmd)) {
-                        // unsuccessful
-                        return;
-                    }
-                } else {
-                    // Normal sale
-                    if (!handleNormalSell(player, landName, chunk, confirmcmd)) {
-                        return;
-                    }
-                }
+                });
             }
-            performClaim(player, chunk);
-        });
+        }
+    }
+
+    private boolean hasMoney(Player player, double costForBuyer, String landName, Chunk chunk, String chatDesc, String guiDesc) {
+        if (Options.isVaultEnabled()) {
+            if (vault.hasBalance(player.getUniqueId(), costForBuyer)) {
+                // Enough money
+                guiDesc += " | " + vault.format(costForBuyer);
+                chatDesc = chatDesc.replace("%price%", vault.format(costForBuyer));
+                return true;
+            } else {
+                // not enough money
+                lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
+                        .replace("%money%", vault.format(costForBuyer))
+                        .replace("%chunk%", landName)
+                        .replace("%location%", wg.formatLocation(chunk))
+                );
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void handleInactiveClaim(Player player, IOwnedLand ol, double costForBuyer, double payBackForInactive,
+                                     String originalOwner) {
+        vault.take(player.getUniqueId(), costForBuyer);
+        vault.give(ol.getOwner(), payBackForInactive);
+
+        ol.replaceOwner(player.getUniqueId());
+        lm.sendMessage(player, lm.getString("Commands.Claim.boughtUp")
+                .replace("%player%", originalOwner)
+                .replace("%price%", vault.format(costForBuyer))
+                .replace("%chunk%", ol.getName())
+                .replace("%location%", wg.formatLocation(ol.getChunk()))
+        );
+
+        ol.highlightLand(player,
+                Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
+        plugin.getMapManager().updateAll();
+
+        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol);
+        Bukkit.getPluginManager().callEvent(postEvent);
     }
 
 
-    private void performClaim(Player player, Chunk chunk) {
+    private void performAdvertisedClaim(Player player, IOwnedLand ol) {
+        Chunk chunk = ol.getChunk();
+
+        vault.take(player.getUniqueId(), ol.getPrice());
+        vault.give(ol.getOwner(), ol.getPrice());
+        Player pp = Bukkit.getPlayer(ol.getOwner());
+
+        ol.replaceOwner(player.getUniqueId());
+
+        lm.sendMessage(player, lm.getString("Commands.Claim.success")
+                .replace("%chunk%", ol.getName())
+                .replace("%location%", wg.formatLocation(chunk))
+                .replace("%world%", chunk.getWorld().getName()));
+
+        if (pp.isOnline()) {
+            lm.sendMessage(pp, lm.getString("Commands.Claim.p2pSuccess")
+                    .replace("%player%", player.getName())
+                    .replace("%chunk%", ol.getName())
+                    .replace("%location%", wg.formatLocation(chunk))
+                    .replace("%world%", chunk.getWorld().getName())
+                    .replace("%price%", vault.format(ol.getPrice())));
+        }
+
+        ol.highlightLand(player,
+                Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
+        plugin.getMapManager().updateAll();
+
+        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol);
+        Bukkit.getPluginManager().callEvent(postEvent);
+    }
+
+    private void performNormalClaim(Player player, Chunk chunk, double calculatedCost, String landName) {
+        if (Options.isVaultEnabled() && calculatedCost > 0) {
+            vault.take(player.getUniqueId(), calculatedCost);
+            lm.sendMessage(player, lm.getString("Commands.Claim.moneyTook")
+                    .replace("%money%", vault.format(calculatedCost))
+                    .replace("%chunk%", landName)
+                    .replace("%location%", wg.formatLocation(chunk))
+            );
+        }
+
         IOwnedLand claim = wg.claim(chunk, player.getUniqueId());
 
         lm.sendMessage(player, lm.getString("Commands.Claim.success")
@@ -172,11 +310,7 @@ public class Claim extends LandlordCommand {
         plugin.getMapManager().updateAll();
 
         LandPostClaimEvent postEvent = new LandPostClaimEvent(player, claim);
-
-        //In 1.14.x, an event can't be fired by an async thread
-        Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-            Bukkit.getPluginManager().callEvent(postEvent);
-        });
+        Bukkit.getPluginManager().callEvent(postEvent);
     }
 
     private boolean hasLimitPermissions(Player player, int regionCount) {
@@ -281,154 +415,6 @@ public class Claim extends LandlordCommand {
             }
         }
         return true;
-    }
-
-    private boolean handleInactiveSale(Player player, IOwnedLand ol, Chunk chunk, String confirmcmd) {
-        double costForBuyer = plugin.getCostManager().calculateCost(player.getUniqueId());
-        double payBackForInactive = plugin.getCostManager().calculateCost(ol.getOwner());
-        String originalOwner = Bukkit.getOfflinePlayer(ol.getOwner()).getName();
-
-        if (vault.hasBalance(player.getUniqueId(), costForBuyer)) {
-
-            if (plugin.getConfig().getBoolean("ConfirmationDialog.onBuyUp")) {
-                String sellDesc = ol.getName() + " | " + vault.format(costForBuyer);
-                String chatDesc = lm.getString("Commands.Claim.confirmation");
-
-                PrincepsLib.getConfirmationManager().draw(player, sellDesc, chatDesc,
-                        (p) -> {
-                            handleInactiveSell(player, ol, costForBuyer, payBackForInactive,
-                                    originalOwner, chunk);
-                            player.closeInventory();
-                        }, (p) -> {
-                            lm.sendMessage(player, lm.getString("Commands.Claim.aborted"));
-                            player.closeInventory();
-                        }, confirmcmd);
-
-            } else {
-                handleInactiveSell(player, ol, costForBuyer, payBackForInactive, originalOwner, chunk);
-            }
-            return true;
-        } else {
-            // Not enough money
-            lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
-                    .replace("%money%", vault.format(costForBuyer))
-                    .replace("%chunk%", ol.getName())
-                    .replace("%location%", wg.formatLocation(chunk))
-            );
-            return false;
-        }
-    }
-
-    private void handleInactiveSell(Player player, IOwnedLand ol, double costForBuyer, double payBackForInactive,
-                                    String originalOwner, Chunk chunk) {
-        vault.take(player.getUniqueId(), costForBuyer);
-        vault.give(ol.getOwner(), payBackForInactive);
-
-        ol.replaceOwner(player.getUniqueId());
-        lm.sendMessage(player, lm.getString("Commands.Claim.boughtUp")
-                .replace("%player%", originalOwner)
-                .replace("%price%", vault.format(costForBuyer))
-                .replace("%chunk%", ol.getName())
-                .replace("%location%", wg.formatLocation(chunk))
-        );
-
-        ol.highlightLand(player, Particle.VILLAGER_HAPPY);
-        plugin.getMapManager().updateAll();
-    }
-
-    private boolean handlePlayer2PlayerSell(Player player, IOwnedLand ol, Chunk chunk, String confirmcmd) {
-        if (vault.hasBalance(player.getUniqueId(), ol.getPrice())) {
-
-            String sellDesc = ol.getName() + " | " + vault.format(ol.getPrice());
-            String chatDesc = lm.getString("Commands.Claim.confirmation");
-
-            PrincepsLib.getConfirmationManager().draw(player, sellDesc, chatDesc, (p) -> {
-                vault.take(player.getUniqueId(), ol.getPrice());
-                vault.give(ol.getOwner(), ol.getPrice());
-                Player pp = Bukkit.getPlayer(ol.getOwner());
-
-                ol.replaceOwner(player.getUniqueId());
-
-                lm.sendMessage(player, lm.getString("Commands.Claim.success")
-                        .replace("%chunk%", ol.getName())
-                        .replace("%location%", wg.formatLocation(chunk))
-                        .replace("%world%", chunk.getWorld().getName()));
-
-                if (pp.isOnline()) {
-                    lm.sendMessage(pp, lm.getString("Commands.Claim.p2pSuccess")
-                            .replace("%player%", p.getName())
-                            .replace("%chunk%", ol.getName())
-                            .replace("%location%", wg.formatLocation(chunk))
-                            .replace("%world%", chunk.getWorld().getName())
-                            .replace("%price%", vault.format(ol.getPrice())));
-                }
-
-                ol.highlightLand(player, Particle.VILLAGER_HAPPY);
-                plugin.getMapManager().updateAll();
-
-                player.closeInventory();
-            }, (p) -> {
-                lm.sendMessage(player, lm.getString("Commands.Claim.aborted"));
-                player.closeInventory();
-            }, confirmcmd);
-            return true;
-        } else {
-            // Not enough money
-            lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
-                    .replace("%money%", vault.format(ol.getPrice()))
-                    .replace("%chunk%", ol.getName())
-                    .replace("%location%", wg.formatLocation(chunk))
-            );
-            return false;
-        }
-    }
-
-
-    private boolean handleNormalSell(Player player, String landName, Chunk chunk, String confirmcmd) {
-        double calculatedCost = plugin.getCostManager().calculateCost(player.getUniqueId());
-        if (vault.hasBalance(player.getUniqueId(), calculatedCost)) {
-            String guiDesc = landName + " | " + vault.format(calculatedCost);
-            String chatDesc = lm.getString("Commands.Claim.confirmation")
-                    .replace("%chunk%", landName)
-                    .replace("%location%", wg.formatLocation(chunk))
-                    .replace("%price%", vault.format(calculatedCost));
-
-            if (plugin.getConfig().getBoolean("ConfirmationDialog.onNormalClaim") && !overrideConfirmations) {
-                PrincepsLib.getConfirmationManager().draw(player, guiDesc, chatDesc,
-                        (p) -> {
-                            vault.take(player.getUniqueId(), calculatedCost);
-                            if (calculatedCost > 0)
-                                lm.sendMessage(player, lm.getString("Commands.Claim.moneyTook")
-                                        .replace("%money%", vault.format(calculatedCost))
-                                        .replace("%chunk%", landName));
-                            performClaim(player, chunk);
-                            p.closeInventory();
-                        },
-                        (p) -> {
-                            lm.sendMessage(player, lm.getString("Commands.Claim.aborted"));
-                            p.closeInventory();
-                        }, confirmcmd);
-            } else {
-                vault.take(player.getUniqueId(), calculatedCost);
-                if (calculatedCost > 0)
-                    lm.sendMessage(player, lm.getString("Commands.Claim.moneyTook")
-                            .replace("%money%", vault.format(calculatedCost))
-                            .replace("%chunk%", landName)
-                            .replace("%location%", wg.formatLocation(chunk))
-                    );
-                performClaim(player, chunk);
-            }
-
-            return false;
-        } else {
-            // NOT ENOUGH MONEY
-            lm.sendMessage(player, lm.getString("Commands.Claim.notEnoughMoney")
-                    .replace("%money%", vault.format(calculatedCost))
-                    .replace("%chunk%", landName)
-                    .replace("%location%", wg.formatLocation(chunk))
-            );
-            return false;
-        }
     }
 }
 

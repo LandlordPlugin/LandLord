@@ -172,6 +172,12 @@ public class LPlayerManager implements IPlayerManager {
         }
     }
 
+    @Override
+    public int getInactiveRemainingDays(LocalDateTime date) {
+        long days = plugin.getConfig().getInt("BuyUpInactive.timegate");
+        return (int) (days - (Duration.between(date, LocalDateTime.now()).toDays()));
+    }
+
 
     @Override
     public int getMaxClaimPermission(Player player) {

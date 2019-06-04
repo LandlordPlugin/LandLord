@@ -38,6 +38,8 @@ public interface IPlayerManager {
 
     int getInactiveRemainingDaysSync(UUID owner);
 
+    int getInactiveRemainingDays(LocalDateTime date);
+
     int getMaxClaimPermission(Player player);
 
     /**
