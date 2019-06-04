@@ -1,7 +1,6 @@
 package biz.princeps.landlord.commands.homes;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
