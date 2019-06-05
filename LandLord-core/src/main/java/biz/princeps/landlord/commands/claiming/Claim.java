@@ -238,7 +238,7 @@ public class Claim extends LandlordCommand {
         plugin.getMapManager().updateAll();
 
         LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol);
-        Bukkit.getPluginManager().callEvent(postEvent);
+        Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> Bukkit.getPluginManager().callEvent(postEvent));
     }
 
 
