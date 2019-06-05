@@ -88,13 +88,12 @@ public class Claim extends LandlordCommand {
 
         // is free land
         if (ol == null) {
-            String guiDesc = landName;
+            double calculatedCost = plugin.getCostManager().calculateCost(player.getUniqueId());
+
+            String guiDesc = "Claim " + landName + " for " + calculatedCost + "?";
             String chatDesc = lm.getString("Commands.Claim.confirmation")
                     .replace("%chunk%", landName)
-                    .replace("%location%", wg.formatLocation(chunk));
-
-
-            double calculatedCost = plugin.getCostManager().calculateCost(player.getUniqueId());
+                    .replace("%price%", String.valueOf(calculatedCost));
 
             if (!hasMoney(player, calculatedCost, landName, chunk, chatDesc, guiDesc)) {
                 return;
@@ -119,13 +118,12 @@ public class Claim extends LandlordCommand {
             // either inactive or advertised or not claimable or own land
             if (ol.getPrice() > -1 && Options.isVaultEnabled()) {
                 // Advertised land
-                String guiDesc = landName;
+                double calculatedCost = ol.getPrice();
+
+                String guiDesc = "Claim " + landName + " for " + calculatedCost + "?";
                 String chatDesc = lm.getString("Commands.Claim.confirmation")
                         .replace("%chunk%", landName)
-                        .replace("%location%", wg.formatLocation(chunk));
-
-
-                double calculatedCost = ol.getPrice();
+                        .replace("%price%", String.valueOf(calculatedCost));
 
                 if (!hasMoney(player, calculatedCost, landName, chunk, chatDesc, guiDesc)) {
                     return;
@@ -162,13 +160,14 @@ public class Claim extends LandlordCommand {
 
                     if (isInactive) {
                         // inactive
-                        String guiDesc = landName;
-                        String chatDesc = lm.getString("Commands.Claim.confirmation")
-                                .replace("%chunk%", landName)
-                                .replace("%location%", wg.formatLocation(chunk));
-
                         double costForBuyer = plugin.getCostManager().calculateCost(player.getUniqueId());
                         double payBackForInactive = plugin.getCostManager().calculateCost(ol.getOwner());
+
+                        String guiDesc = "Claim " + landName + " for " + costForBuyer + "?";
+                        String chatDesc = lm.getString("Commands.Claim.confirmation")
+                                .replace("%chunk%", landName)
+                                .replace("%price%", String.valueOf(costForBuyer));
+
                         String originalOwner = Bukkit.getOfflinePlayer(ol.getOwner()).getName();
 
                         if (!hasMoney(player, costForBuyer, landName, chunk, chatDesc, guiDesc)) {
@@ -207,8 +206,6 @@ public class Claim extends LandlordCommand {
         if (Options.isVaultEnabled()) {
             if (vault.hasBalance(player.getUniqueId(), costForBuyer)) {
                 // Enough money
-                guiDesc += " | " + vault.format(costForBuyer);
-                chatDesc = chatDesc.replace("%price%", vault.format(costForBuyer));
                 return true;
             } else {
                 // not enough money
@@ -240,10 +237,8 @@ public class Claim extends LandlordCommand {
                 Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
         plugin.getMapManager().updateAll();
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), ()->{
-            LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol);
-            Bukkit.getPluginManager().callEvent(postEvent);
-        });
+        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol);
+        Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> Bukkit.getPluginManager().callEvent(postEvent));
     }
 
 
