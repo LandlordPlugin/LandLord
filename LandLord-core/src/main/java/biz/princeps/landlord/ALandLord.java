@@ -10,7 +10,7 @@ import biz.princeps.landlord.listener.SecureWorldListener;
 import biz.princeps.landlord.manager.*;
 import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.LPlayer;
-import biz.princeps.landlord.placeholderapi.LandLordPlacehodlers;
+import biz.princeps.landlord.placeholderapi.LLExpansion;
 import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.Updater;
@@ -204,7 +204,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      */
     private void setupPlacerholders() {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new LandLordPlacehodlers(this).hook();
+            new LLExpansion(this).register();
         }
     }
 

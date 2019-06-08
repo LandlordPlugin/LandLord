@@ -189,8 +189,10 @@ public class AManage extends AbstractGUI {
 
         // Reminder: Regenerate is not implemented in Manageall, cos it might cos some trouble. Calculating costs
         // might be a bit tedious
-        if (plugin.getConfig().getBoolean("Manage.regenerate.enable") && regions.size() == 1 &&
-                player.hasPermission("landlord.player.manage.regenerate")) {
+        if (plugin.getConfig().getBoolean("Manage.regenerate.enable") &&
+                regions.size() == 1 &&
+                player.hasPermission("landlord.player.manage.regenerate") &&
+                !Bukkit.getServer().getVersion().contains("1.14")) {
             List<String> regenerateDesc = lm.getStringList("Commands.Manage.Regenerate.description");
             double cost = plugin.getConfig().getDouble("ResetCost");
             String costString = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "-1");
@@ -230,7 +232,7 @@ public class AManage extends AbstractGUI {
                                  * "Impossible" to fix that with SpigotApi, PaperApi perhaps, but it requires sacrifices :/
                                  * I propose to use a Worldedit selection and apply "//regen".
                                  *
-                                */
+                                 */
                                 lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.success")
                                         .replace("%land%", land.getName()));
                                 display();
@@ -249,8 +251,6 @@ public class AManage extends AbstractGUI {
 
             });
             this.setIcon(position++, icon);
-        } else {
-            System.out.println("no perms");
         }
 
         // Set greet icon

@@ -4,33 +4,39 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.IWorldGuardManager;
-import me.clip.placeholderapi.external.EZPlaceholderHook;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
-/**
- * Project: LandLord
- * Created by Alex D. (SpatiumPrinceps)
- * Date: Unknown
- * <p>
- * HODL
- */
-public class LandLordPlacehodlers extends EZPlaceholderHook {
+public class LLExpansion extends PlaceholderExpansion {
 
     private ILandLord pl;
     private IWorldGuardManager wg;
 
-    public LandLordPlacehodlers(ILandLord plugin) {
-        super(plugin.getPlugin(), "ll");
-        this.pl = plugin;
+    public LLExpansion(ILandLord pl) {
+        this.pl = pl;
         this.wg = pl.getWGManager();
     }
 
-    /**
-     * Tries to replace in a string s placeholders of landlord.
-     * It is looking for %ll_seebelow%
-     *
-     * @return a nice string
-     */
+    @Override
+    public String getIdentifier() {
+        return "LandLord";
+    }
+
+    @Override
+    public String getPlugin() {
+        return pl.getPlugin().getName();
+    }
+
+    @Override
+    public String getAuthor() {
+        return String.valueOf(pl.getPlugin().getDescription().getAuthors());
+    }
+
+    @Override
+    public String getVersion() {
+        return pl.getPlugin().getDescription().getVersion();
+    }
+
     @Override
     public String onPlaceholderRequest(Player player, String s) {
         switch (s) {
