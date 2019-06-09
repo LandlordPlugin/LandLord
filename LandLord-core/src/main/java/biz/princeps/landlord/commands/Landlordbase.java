@@ -100,7 +100,6 @@ public class Landlordbase extends MainCommand {
         if (args.length == 1) {
             for (SubCommand subCommand : this.subCommandMap.values()) {
                 if (subCommand.hasPermission(sender)) {
-
                     if (subCommand instanceof Borders) {
                         if (Options.enabled_borders()) {
                             tabReturn.add(subCommand.getName());
@@ -109,7 +108,8 @@ public class Landlordbase extends MainCommand {
                         if (Options.enabled_map()) {
                             tabReturn.add(subCommand.getName());
                         }
-                    } else if (subCommand instanceof Shop || subCommand instanceof Claims) {
+                    } else if (subCommand instanceof Shop || subCommand instanceof Claims
+                            || subCommand instanceof GiveClaims) {
                         if (Options.enabled_shop()) {
                             tabReturn.add(subCommand.getName());
                         }
@@ -123,12 +123,17 @@ public class Landlordbase extends MainCommand {
                 }
             }
 
-            if (!args[0].isEmpty())
+            if (!args[0].isEmpty()) {
                 tabReturn.removeIf(next -> !next.startsWith(args[0]));
-
+            }
         } else if (args.length == 2) {
             for (SubCommand subcmd : subCommandMap.values()) {
                 if (subcmd.matches(args[0])) {
+
+                    if (subcmd instanceof GiveClaims) {
+                        tabReturn.add("<amount>");
+                        Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
+                    }
 
                     if (subcmd instanceof LandMap) {
                         tabReturn.add("on");
@@ -153,8 +158,26 @@ public class Landlordbase extends MainCommand {
                     }
                 }
             }
-        }
+        } else if (args.length == 3) {
+            for (SubCommand subcmd : subCommandMap.values()) {
+                if (subcmd.matches(args[0])) {
 
+                    if (subcmd instanceof GiveClaims) {
+                        tabReturn.add("<amount>");
+                        tabReturn.add("<price>");
+                    }
+                }
+            }
+        } else if (args.length == 4) {
+            for (SubCommand subcmd : subCommandMap.values()) {
+                if (subcmd.matches(args[0])) {
+
+                    if (subcmd instanceof GiveClaims) {
+                        tabReturn.add("<amount>");
+                    }
+                }
+            }
+        }
         return tabReturn;
     }
 
@@ -230,7 +253,6 @@ public class Landlordbase extends MainCommand {
             properties.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
         }
     }
-
 
 
 }

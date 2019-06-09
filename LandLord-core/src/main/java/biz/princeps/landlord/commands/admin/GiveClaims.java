@@ -38,6 +38,7 @@ public class GiveClaims extends LandlordCommand {
         double cost;
 
         if (!Options.isVaultEnabled()) {
+
             return;
         }
 
