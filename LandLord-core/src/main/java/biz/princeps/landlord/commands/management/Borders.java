@@ -56,22 +56,25 @@ public class Borders extends LandlordCommand {
             );
             plugin.getUtilsManager().sendBasecomponent(p, cp.create());
 
+
+            int refreshRate = plugin.getConfig().getInt("Borders.refreshRate");
             this.tasks.put(p, new BukkitRunnable() {
                 int counter = 0;
+                int timeout = plugin.getConfig().getInt("Borders.timeout");
 
                 @Override
                 public void run() {
-                    if (counter <= 360 / plugin.getConfig().getInt("Borders.refreshRate")) {
+                    if (counter * refreshRate <= timeout) {
                         if (plugin.getConfig().getBoolean("Particles.borders.enabled")) {
-                            IOwnedLand ol = wg.getRegion(p.getLocation().getChunk());
-                            ol.highlightLand(p, Particle.valueOf(plugin.getConfig().getString("Particles.borders.particle")));
+                            wg.highlightLand(p.getLocation().getChunk(), p,
+                                    Particle.valueOf(plugin.getConfig().getString("Particles.borders.particle")), 1);
                         }
                     } else {
                         cancel();
                         counter++;
                     }
                 }
-            }.runTaskTimer(plugin.getPlugin(), 0, plugin.getConfig().getInt("Borders.refreshRate") * 20));
+            }.runTaskTimer(plugin.getPlugin(), 0, refreshRate * 20));
         } else {
             lm.sendMessage(p, lm.getString("Commands.Borders.deactivated"));
             tasks.get(p).cancel();

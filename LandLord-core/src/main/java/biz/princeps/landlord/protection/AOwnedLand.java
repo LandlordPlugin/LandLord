@@ -33,7 +33,7 @@ public abstract class AOwnedLand implements IOwnedLand {
      */
     @Override
     public void highlightLand(Chunk chunk, Player p, Particle pa) {
-        highlightLand(chunk, p, pa, 5);
+        highlightLand(chunk, p, pa, 1);
     }
 
     /**
@@ -44,12 +44,9 @@ public abstract class AOwnedLand implements IOwnedLand {
      */
     @Override
     public void highlightLand(Player p, Particle e) {
-        highlightLand(p.getLocation().getChunk(), p, e, 5);
+        highlightLand(p.getLocation().getChunk(), p, e, 1);
     }
 
-
-
-    // TODO optimize this shit. maybe remove amt
     @Override
     public void highlightLand(Chunk chunk, Player p, Particle e, int amt) {
         this.pl.getWGManager().highlightLand(chunk, p, e, amt);

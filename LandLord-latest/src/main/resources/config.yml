@@ -152,6 +152,8 @@ Borders:
   enable: true
   # interval in seconds
   refreshRate: 10
+  # timeout value in seconds. after this amount the map will be turned off again
+  timeout: 600
 
 CommandSettings:
   Main:
