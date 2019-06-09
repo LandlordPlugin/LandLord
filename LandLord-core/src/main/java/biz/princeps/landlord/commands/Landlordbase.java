@@ -135,6 +135,10 @@ public class Landlordbase extends MainCommand {
                         Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
                     }
 
+                    if (subcmd instanceof AdminTeleport) {
+                        Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
+                    }
+
                     if (subcmd instanceof LandMap) {
                         tabReturn.add("on");
                         tabReturn.add("off");
@@ -142,7 +146,6 @@ public class Landlordbase extends MainCommand {
 
                     if (subcmd instanceof Addfriend || subcmd instanceof AddfriendAll ||
                             subcmd instanceof Unfriend || subcmd instanceof UnfriendAll) {
-
                         if (args[1].isEmpty()) {
                             Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
                         } else {
@@ -150,7 +153,9 @@ public class Landlordbase extends MainCommand {
                                     .filter(p -> p.getName().startsWith(args[1])).forEach(p -> tabReturn.add(p.getName()));
                         }
                         return tabReturn;
-                    } else if (subcmd instanceof MultiClaim) {
+                    }
+
+                    if (subcmd instanceof MultiClaim) {
                         for (MultiClaim.MultiClaimMode value : MultiClaim.MultiClaimMode.values()) {
                             tabReturn.add(value.name());
                         }
