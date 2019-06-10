@@ -166,7 +166,7 @@ public class ListLands extends LandlordCommand {
     }
 
     private String formatState(boolean bool) {
-        if (bool) {
+        if (!bool) {
             return lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.deny");
         } else {
             return lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.allow");
