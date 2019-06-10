@@ -4,6 +4,7 @@ import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
@@ -56,7 +57,9 @@ public class Claim extends LandlordCommand {
 
         IOwnedLand ol = wg.getRegion(chunk);
         String landName = wg.getLandName(chunk);
-        String confirmcmd = "/" + plugin.getConfig().getString("CommandSettings.Main.name") + " confirm";
+        String confirmcmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
+                .getCommandString(Landlordbase.Confirm.class);
+        System.out.println(confirmcmd);
         int regionCount = wg.getRegionCount(player.getUniqueId());
 
         // First check, if outer conditions (conditions that are related more to the buyer as individual)

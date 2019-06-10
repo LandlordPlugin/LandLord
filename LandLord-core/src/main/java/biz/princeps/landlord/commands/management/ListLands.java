@@ -4,8 +4,10 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.guis.ManageGui;
 import biz.princeps.landlord.guis.ManageGuiAll;
+import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
@@ -67,7 +69,7 @@ public class ListLands extends LandlordCommand {
 
                 String finalTarget = target;
                 int finalPage = page;
-                plugin.getPlayerManager().getOffline(Bukkit.getOfflinePlayer(target).getUniqueId(), (lPlayer)->{
+                plugin.getPlayerManager().getOffline(Bukkit.getOfflinePlayer(target).getUniqueId(), (lPlayer) -> {
                     if (lPlayer == null) {
                         // Failure
                         properties.getPlayer().sendMessage(lm.getString("Commands.ListLands.noPlayer")
@@ -155,7 +157,8 @@ public class ListLands extends LandlordCommand {
             String next = lm.getRawString("Commands.ListLands.chat.next");
 
 
-            MultiPagedMessage message = new MultiPagedMessage("/land list",
+            MultiPagedMessage message = new MultiPagedMessage(PrincepsLib.getCommandManager()
+                    .getCommand(Landlordbase.class).getCommandString(ListLands.class),
                     plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
                             .replace("%player%", target.getName()),
                     plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),

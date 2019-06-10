@@ -3,6 +3,7 @@ package biz.princeps.landlord.commands.claiming;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
@@ -49,7 +50,8 @@ public class MultiClaim extends LandlordCommand {
         }
 
         Player player = properties.getPlayer();
-        String confirmcmd = "/" + plugin.getConfig().getString("CommandSettings.Main.name") + " confirm";
+        String confirmcmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
+                .getCommandString(Landlordbase.Confirm.class);
 
         try {
             MultiClaimMode mode = MultiClaimMode.valueOf(arguments.get()[0].toUpperCase());

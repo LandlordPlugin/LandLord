@@ -231,7 +231,7 @@ public class Landlordbase extends MainCommand {
 
         public Confirm() {
             super("confirm",
-                    "/lldm help",
+                    "/ll help",
                     Sets.newHashSet(Collections.singleton("landlord.use")),
                     Sets.newHashSet());
         }

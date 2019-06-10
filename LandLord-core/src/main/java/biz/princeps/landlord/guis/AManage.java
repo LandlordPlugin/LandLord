@@ -2,6 +2,12 @@ package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandManageEvent;
+import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.landlord.commands.claiming.Unclaim;
+import biz.princeps.landlord.commands.claiming.UnclaimAll;
+import biz.princeps.landlord.commands.friends.Unfriend;
+import biz.princeps.landlord.commands.management.Manage;
+import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
@@ -252,7 +258,8 @@ public class AManage extends AbstractGUI {
             });
             this.setIcon(position++, icon);
         }
-
+        String managecmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
+                .getCommandString(Manage.class);
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet.enable") &&
                 player.hasPermission("landlord.player.manage.setgreet")) {
@@ -265,11 +272,12 @@ public class AManage extends AbstractGUI {
             icon.addClickAction(((p) -> {
                 p.closeInventory();
                 ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetGreet.clickMsg"));
-                if (regions.size() > 1)
-                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreetall "));
-                else
-                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setgreet "));
 
+                if (regions.size() > 1) {
+                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setgreetall "));
+                } else {
+                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setgreet "));
+                }
                 plugin.getUtilsManager().sendBasecomponent(p, builder.create());
             }));
             this.setIcon(position++, icon);
@@ -289,9 +297,9 @@ public class AManage extends AbstractGUI {
                 p.closeInventory();
                 ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetFarewell.clickMsg"));
                 if (regions.size() > 1) {
-                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewellall "));
+                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setfarewellall "));
                 } else {
-                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/land manage setfarewell "));
+                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setfarewell "));
                 }
                 plugin.getUtilsManager().sendBasecomponent(p, builder.create());
             }));
@@ -325,8 +333,9 @@ public class AManage extends AbstractGUI {
                                 (p) -> {
                                     friendsGui.removeIcon(friendsGui.filter(op.getName()).get(0));
                                     for (IOwnedLand region : regions) {
-                                        Bukkit.dispatchCommand(player,
-                                                "land unfriend " + region.getName() + " " + op.getName());
+                                        Bukkit.dispatchCommand(player, PrincepsLib.getCommandManager()
+                                                .getCommand(Landlordbase.class).getCommandString(Unfriend.class)
+                                                .substring(1) + " " + region.getName() + " " + op.getName());
                                     }
                                     player.closeInventory();
                                     friendsGui.display();
@@ -360,9 +369,11 @@ public class AManage extends AbstractGUI {
                         ".confirmationTitle").replace("%land%", land.getName()),
                         (p1) -> {
                             if (regions.size() > 1) {
-                                Bukkit.dispatchCommand(p, "ll unclaimall");
+                                Bukkit.dispatchCommand(p, PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
+                                        .getCommandString(UnclaimAll.class).substring(1));
                             } else {
-                                Bukkit.dispatchCommand(p, "ll unclaim " + land.getName());
+                                Bukkit.dispatchCommand(p, PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
+                                        .getCommandString(Unclaim.class).substring(1) + " " + land.getName());
                             }
                             p.closeInventory();
                         },

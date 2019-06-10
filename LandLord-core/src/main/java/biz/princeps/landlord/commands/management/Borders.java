@@ -5,6 +5,8 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
@@ -52,7 +54,8 @@ public class Borders extends LandlordCommand {
         if (tasks.get(p) == null) {
 
             ComponentBuilder cp = new ComponentBuilder(lm.getString("Commands.Borders.activated")).event(
-                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll borders")
+                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, PrincepsLib.getCommandManager()
+                            .getCommand(Landlordbase.class).getCommandString(Borders.class))
             );
             plugin.getUtilsManager().sendBasecomponent(p, cp.create());
 

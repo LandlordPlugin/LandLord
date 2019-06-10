@@ -1,6 +1,10 @@
 package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.landlord.commands.admin.GiveClaims;
+import biz.princeps.landlord.commands.management.Manage;
+import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import org.bukkit.Bukkit;
@@ -64,7 +68,10 @@ public class ShopGUI extends AbstractGUI {
             setIcon(i, new Icon(new ItemStack(buyable.mat))
                     .setName(pl.getLangManager().getRawString("Shop.item.header").replace("%number%", buyable.amount + ""))
                     .setLore(list)
-                    .addClickAction((p) -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ll giveclaims " + p.getName() + " " + buyable.price + " " + buyable.amount)
+                    .addClickAction((p) -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                            PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
+                                    .getCommandString(GiveClaims.class).substring(1) +
+                                    " " + p.getName() + " " + buyable.price + " " + buyable.amount)
                     ));
             i++;
         }

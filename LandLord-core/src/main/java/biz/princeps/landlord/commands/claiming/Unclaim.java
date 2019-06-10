@@ -72,8 +72,9 @@ public class Unclaim extends LandlordCommand {
                         .replace("%owner%", ol.getOwnersString()));
                 return;
             }
-        } else
+        } else {
             isAdmin = true;
+        }
 
         // Normal unclaim
         LandUnclaimEvent event = new LandUnclaimEvent(player, ol);
@@ -88,13 +89,14 @@ public class Unclaim extends LandlordCommand {
                 // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);
 
                 if (Options.isVaultEnabled()) {
-                    if (regionCount <= freeLands)
+                    if (regionCount <= freeLands) {
                         payback = 0;
-                    else {
+                    } else {
                         payback = plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble("Payback");
                         // System.out.println(payback);
-                        if (payback > 0)
+                        if (payback > 0) {
                             plugin.getVaultManager().give(player.getUniqueId(), payback);
+                        }
                     }
                 }
             }
@@ -112,9 +114,10 @@ public class Unclaim extends LandlordCommand {
                 }
             }
 
-            if (plugin.getConfig().getBoolean("Particles.unclaim.enabled"))
+            if (plugin.getConfig().getBoolean("Particles.unclaim.enabled")) {
                 ol.highlightLand(player,
                         Particle.valueOf(plugin.getConfig().getString("Particles.unclaim.particle").toUpperCase()));
+            }
 
             lm.sendMessage(player, lm.getString("Commands.Unclaim.success")
                     .replace("%chunk%", ol.getName())
