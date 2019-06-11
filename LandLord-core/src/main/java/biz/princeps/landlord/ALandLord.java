@@ -148,15 +148,13 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * Retrieve the LPlayer objects for all online players (in case of reload) and insert them into the PlayerManager
      */
     private void setupPlayers() {
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            getPlayerManager().getOffline(p.getUniqueId(), (offline) -> {
-                if (offline == null) {
-                    this.getPlayerManager().add(new LPlayer(p.getUniqueId()));
-                } else {
-                    this.getPlayerManager().add(offline);
-                }
-            });
-        });
+        Bukkit.getOnlinePlayers().forEach(p -> getPlayerManager().getOffline(p.getUniqueId(), (offline) -> {
+            if (offline == null) {
+                this.getPlayerManager().add(new LPlayer(p.getUniqueId()));
+            } else {
+                this.getPlayerManager().add(offline);
+            }
+        }));
     }
 
     /**

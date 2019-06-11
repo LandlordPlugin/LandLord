@@ -21,17 +21,12 @@ public class MapListener extends BasicListener {
 
     @EventHandler
     public void playerLeave(PlayerQuitEvent event) {
-        if (mapManager.hasMap(event.getPlayer().getName())) {
-            mapManager.removeMap(event.getPlayer());
-        }
-
+        mapManager.removeMap(event.getPlayer());
     }
 
     @EventHandler
     public void playerWorldChange(PlayerChangedWorldEvent event) {
-        if (mapManager.hasMap(event.getPlayer().getName())) {
-            mapManager.removeMap(event.getPlayer());
-        }
+        mapManager.removeMap(event.getPlayer());
     }
 
     /**
@@ -51,13 +46,7 @@ public class MapListener extends BasicListener {
 
     private void handleMapRefresh(Player player) {
         final Player p = player;
-        if (mapManager.hasMap(player.getName())) {
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> {
-                if (mapManager.hasMap(p.getName())) {
-                    mapManager.update(p.getName());
-                }
-            }, 15L);
-        }
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> mapManager.update(p.getName()), 15L);
     }
 
 }
