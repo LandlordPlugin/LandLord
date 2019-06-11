@@ -134,6 +134,7 @@ public class ListLands extends LandlordCommand {
                 landGui.addIcon(icon);
             }
 
+            //TODO Not working due to https://gitlab.com/princeps/PrincepsLib/blob/master/src/main/java/biz/princeps/lib/gui/MultiPagedGUI.java#L92
             landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
                     .setName(lm.getRawString("Commands.ListLands.gui.manageAll"))
                     .addClickAction((p) -> {

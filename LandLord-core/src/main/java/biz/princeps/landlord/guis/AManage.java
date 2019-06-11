@@ -103,7 +103,7 @@ public class AManage extends AbstractGUI {
         }
 
         if (flagPage * 8 > flags.size()) {
-            throw new RuntimeException("Invalid page!!");
+            throw new RuntimeException("Invalid page!");
         }
 
         for (int i = flagPage * 8; i < flagPage * 8 + 8; i++) {
@@ -168,6 +168,11 @@ public class AManage extends AbstractGUI {
         friend.addClickAction((p) -> {
             if (flag.toggleFriends()) {
                 refresh();
+                //Avoid lag with lots of lands
+                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () ->
+                        regions.forEach(land -> land.getFlags().stream().filter(llFlag ->
+                                land != regions.get(0) && flag.getName().equals(llFlag.getName())
+                                        && flag.getFriendStatus() != llFlag.getFriendStatus()).forEach(ILLFlag::toggleFriends)));
             }
         });
         friend.setName(isFriend ? lm.getRawString("Commands.Manage.allow") : lm.getRawString("Commands.Manage.deny"));
@@ -177,6 +182,11 @@ public class AManage extends AbstractGUI {
         all.addClickAction((p) -> {
             if (flag.toggleAll()) {
                 refresh();
+                //Avoid lag with lots of lands
+                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () ->
+                        regions.forEach(land -> land.getFlags().stream().filter(llFlag ->
+                                land != regions.get(0) && flag.getName().equals(llFlag.getName())
+                                        && flag.getAllStatus() != llFlag.getAllStatus()).forEach(ILLFlag::toggleAll)));
             }
         });
         all.setName(isAll ? lm.getRawString("Commands.Manage.allow") : lm.getRawString("Commands.Manage.deny"));
@@ -319,7 +329,7 @@ public class AManage extends AbstractGUI {
             };
 
             //TODO test this
-            Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () ->
                 friends.forEach(id -> {
                     OfflinePlayer op = Bukkit.getOfflinePlayer(id);
                     Icon friend = new Icon(mats.getPlayerHead(id));
@@ -349,8 +359,7 @@ public class AManage extends AbstractGUI {
                         confirmationGUI.display();
                         friendsGui.addIcon(friend);
                     });
-                });
-            });
+                }));
 
             icon.addClickAction((p) -> friendsGui.display());
 
@@ -401,8 +410,7 @@ public class AManage extends AbstractGUI {
                 List<Icon> icons = new ArrayList<>();
                 List<String> lore = lm.getStringList("Commands.Manage.AllowMob-spawning.toggleItem.description");
 
-                MultiPagedGUI gui = new MultiPagedGUI(p, 5, title, icons, this) {
-                };
+                MultiPagedGUI gui = new MultiPagedGUI(p, 5, title, icons, this);
                 String titleMob = lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title");
                 for (IMob m : plugin.getMobManager().values()) {
                     // Skip mob if its not in the list, because that means this mob should not be manageable
@@ -414,13 +422,22 @@ public class AManage extends AbstractGUI {
                     mob.setName(titleMob.replace("%mob%", m.getNiceName()));
                     mob.setLore(formatList(formatList(lore, "%value%", formatMobState(land.isMobDenied(m))),
                             "%mob%", m.getNiceName()));
+                    //Make allowed mobs icon more distinctive
+                    if (!land.isMobDenied(m)) mob.itemStack.setAmount(2);
                     gui.addIcon(mob);
 
                     mob.addClickAction((p1) -> {
-                        regions.forEach(l -> l.toggleMob(m));
-                        mob.setLore(formatList(formatList(lore, "%value%", formatMobState(land.isMobDenied(m))),
-                                "%mob%", m.getNiceName()));
-                        gui.refresh();
+                        //Avoid lag with lots of lands
+                        land.toggleMob(m);
+                        Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+                            regions.stream().filter(region -> region != land && region.isMobDenied(m) != land.isMobDenied(m))
+                                    .forEach(ownedLand -> ownedLand.toggleMob(m));
+                            mob.setLore(formatList(formatList(lore, "%value%", formatMobState(land.isMobDenied(m))),
+                                    "%mob%", m.getNiceName()));
+                            if (land.isMobDenied(m)) mob.itemStack.setAmount(1);
+                            else mob.itemStack.setAmount(2);
+                            gui.refresh();
+                        });
                     });
                 }
                 gui.display();
@@ -468,7 +485,6 @@ public class AManage extends AbstractGUI {
 
         return toReturn;
     }
-
 
 }
 
