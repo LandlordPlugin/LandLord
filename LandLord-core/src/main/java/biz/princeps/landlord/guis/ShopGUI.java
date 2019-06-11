@@ -1,9 +1,11 @@
 package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IMaterialsManager;
 import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.commands.admin.GiveClaims;
 import biz.princeps.landlord.commands.management.Manage;
+import biz.princeps.landlord.manager.cost.ClaimsCostManager;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
@@ -25,70 +27,43 @@ import java.util.List;
 public class ShopGUI extends AbstractGUI {
 
     private ILandLord pl;
-    private List<String> rawList;
-    private List<Buyable> claims;
+    private ClaimsCostManager costManager;
+
+    private IMaterialsManager mats;
 
     public ShopGUI(ILandLord pl, Player player, String title) {
         super(player, 18, title);
         this.pl = pl;
-        this.rawList = pl.getConfig().getStringList("Shop.extras");
-        this.claims = new ArrayList<>();
-
-        for (String s : rawList) {
-            String[] splitted = s.split(":");
-            int number = -1;
-            double price = -1;
-            Material material = Material.AIR;
-            try {
-                material = Material.valueOf(splitted[0]);
-                number = Integer.parseInt(splitted[1]);
-                price = Double.parseDouble(splitted[2]);
-            } catch (NumberFormatException e) {
-                pl.getLogger().warning("Your landlord config contains an illegal statement: " + s);
-            }
-
-            if (number > 0 && price > 0 && material != Material.AIR) {
-                claims.add(new Buyable(number, price, material));
-            }
-        }
-
-        setSize((int) Math.ceil((double) rawList.size() / 9.0) * 9 + 9);
+        this.costManager = new ClaimsCostManager(pl);
+        this.mats = pl.getMaterialsManager();
     }
 
     @Override
     protected void create() {
-        int i = 0;
-        for (Buyable buyable : claims) {
-            List<String> listraw = pl.getLangManager().getStringList("Shop.item.lore");
-            List<String> list = new ArrayList<>();
-            for (String s : listraw) {
-                s = s.replace("%number%", buyable.amount + "").replace("%cost%", buyable.price + "");
-                list.add(s);
-            }
-            setIcon(i, new Icon(new ItemStack(buyable.mat))
-                    .setName(pl.getLangManager().getRawString("Shop.item.header").replace("%number%", buyable.amount + ""))
-                    .setLore(list)
-                    .addClickAction((p) -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                            PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
-                                    .getCommandString(GiveClaims.class).substring(1) +
-                                    " " + p.getName() + " " + buyable.price + " " + buyable.amount)
-                    ));
-            i++;
-        }
+        int claims = pl.getPlayerManager().get(player.getUniqueId()).getClaims();
+        int max = getMaxLimitPerm();
 
-        setIcon((int) Math.ceil((double) rawList.size() / 9.0) * 9 + 8, new Icon(new ItemStack(Material.BARRIER)).
-                setName(ChatColor.RED + "Close").addClickAction(HumanEntity::closeInventory));
+        ItemStack playerHead = mats.getPlayerHead(player.getUniqueId());
+        this.setIcon(0, new Icon(playerHead));
+        this.setIcon(9, new Icon(new ItemStack(Material.BARRIER)));
     }
 
-    class Buyable {
-        int amount;
-        double price;
-        Material mat;
 
-        public Buyable(int amount, double price, Material mat) {
-            this.amount = amount;
-            this.price = price;
-            this.mat = mat;
+    private int getMaxLimitPerm() {
+        List<Integer> limitlist = pl.getConfig().getIntegerList("limits");
+
+        if (!player.hasPermission("landlord.limit.override")) {
+            // We need to find out, whats the maximum limit.x permission is a player has
+
+            int highestAllowedLandCount = -1;
+            for (Integer integer : limitlist) {
+                if (player.hasPermission("landlord.limit." + integer)) {
+                    highestAllowedLandCount = integer;
+                }
+            }
+
+            return highestAllowedLandCount;
         }
+        return Integer.MAX_VALUE;
     }
 }

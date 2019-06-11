@@ -346,7 +346,8 @@ public class Claim extends LandlordCommand {
                         .replace("%regions%", regionCount + "")
                         .replace("%claims%", claims + ""))
                         .color(ChatColor.YELLOW)
-                        .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
+                        .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, PrincepsLib.getCommandManager()
+                                .getCommand(Landlordbase.class).getCommandString(Shop.class)));
 
                 plugin.getUtilsManager().sendBasecomponent(player, builder.create());
                 return false;

@@ -8,6 +8,7 @@ import biz.princeps.landlord.listener.LandAlerter;
 import biz.princeps.landlord.listener.MapListener;
 import biz.princeps.landlord.listener.SecureWorldListener;
 import biz.princeps.landlord.manager.*;
+import biz.princeps.landlord.manager.cost.LandCostManager;
 import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.placeholderapi.LLExpansion;
@@ -173,7 +174,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         this.langManager = new LangManager(this, getConfig().getString("language", "en"));
         this.lPlayerManager = new LPlayerManager(this);
         this.mapManager = new MapManager(this);
-        this.costManager = new CostManager(this);
+        this.costManager = new LandCostManager(this);
         this.vaultManager = new VaultManager(getVault());
         this.delimitationManager = new DelimitationManager(this);
     }
