@@ -113,8 +113,9 @@ public class GiveClaims extends LandlordCommand {
     }
 
     private void addClaims(Properties issuer, String target, int amount) {
-        IPlayer lPlayer = plugin.getPlayerManager().get(target);
         Player player = Bukkit.getPlayer(target);
+        IPlayer lPlayer = player != null ? plugin.getPlayerManager().get(player.getUniqueId()) : null;
+
         if (player != null && player.isOnline() && lPlayer != null) {
             lPlayer.addClaims(amount);
             lm.sendMessage(player, lm.getString("Commands.GiveClaims.success")
