@@ -26,7 +26,7 @@ public class MapManager implements IMapManager {
 
     @Override
     public void toggleMap(Player p) {
-        if (mapList.containsKey(p.getName())) {
+        if (hasMap(p.getName())) {
             removeMap(p);
         } else {
             addMap(p);
@@ -35,7 +35,7 @@ public class MapManager implements IMapManager {
 
     @Override
     public void addMap(Player player) {
-        if (!mapList.containsKey(player.getName())) {
+        if (!hasMap(player.getName())) {
             mapList.put(player.getName(), new LandMap(player, pl, constants));
         }
     }
@@ -43,7 +43,7 @@ public class MapManager implements IMapManager {
     @Override
     public void removeMap(Player player) {
         String pName = player.getName();
-        if (mapList.containsKey(pName)) {
+        if (hasMap(pName)) {
             LandMap curr = mapList.get(pName);
             curr.removeMap();
             mapList.remove(pName);
