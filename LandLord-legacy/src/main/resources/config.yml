@@ -101,10 +101,7 @@ Homes:
   enable: true
   # enable to this to automatically set home on claim, when the user doesnt have a previous home
   enableAutoSetHome: false
-  spawnParticles: true
   teleportCost: 100.0
-  # delay in seconds
-  delay: 3
 
 # This option allows players to buy up the lands of players, who are not playing actively any longer
 BuyUpInactive:

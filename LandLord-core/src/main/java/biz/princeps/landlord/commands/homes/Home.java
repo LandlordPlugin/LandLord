@@ -3,6 +3,8 @@ package biz.princeps.landlord.commands.homes;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
@@ -102,7 +104,8 @@ public class Home extends LandlordCommand {
 
         if (toGo == null) {
             ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Home.noHome"));
-            builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll sethome"));
+            builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, PrincepsLib.getCommandManager()
+                    .getCommand(Landlordbase.class).getCommandString(SetHome.class)));
             plugin.getUtilsManager().sendBasecomponent(player, builder.create());
             return;
         }
