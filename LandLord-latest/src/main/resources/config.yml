@@ -74,8 +74,8 @@ Claims:
   free: 1
   calc:
     function: LIMITED
-      # x is the amount of owned claims (/ll claims)!
-      # Formula: minCost + multiplier * x
+    # x is the amount of owned claims (/ll claims)!
+    # Formula: minCost + multiplier * x
     LINEAR:
       minCost: 500.0
       multiplier: 1.0

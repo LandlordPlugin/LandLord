@@ -17,8 +17,11 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
@@ -423,7 +426,7 @@ public class AManage extends AbstractGUI {
                     mob.setLore(formatList(formatList(lore, "%value%", formatMobState(land.isMobDenied(m))),
                             "%mob%", m.getNiceName()));
                     //Make allowed mobs icon more distinctive
-                    if (!land.isMobDenied(m)) mob.itemStack.setAmount(2);
+                    setGlowing(mob.itemStack, !land.isMobDenied(m));
                     gui.addIcon(mob);
 
                     mob.addClickAction((p1) -> {
@@ -434,8 +437,8 @@ public class AManage extends AbstractGUI {
                                     .forEach(ownedLand -> ownedLand.toggleMob(m));
                             mob.setLore(formatList(formatList(lore, "%value%", formatMobState(land.isMobDenied(m))),
                                     "%mob%", m.getNiceName()));
-                            if (land.isMobDenied(m)) mob.itemStack.setAmount(1);
-                            else mob.itemStack.setAmount(2);
+                            //Make allowed mobs icon more distinctive
+                            setGlowing(mob.itemStack, !land.isMobDenied(m));
                             gui.refresh();
                         });
                     });
@@ -453,6 +456,18 @@ public class AManage extends AbstractGUI {
         } else {
             return lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.allow");
         }
+    }
+
+    private void setGlowing(ItemStack stack, boolean glowing) {
+        ItemMeta itemMeta = stack.getItemMeta();
+        if (glowing) {
+            itemMeta.addEnchant(Enchantment.DAMAGE_ALL, 1, false);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        } else {
+            itemMeta.removeEnchant(Enchantment.DAMAGE_ALL);
+            itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+        stack.setItemMeta(itemMeta);
     }
 
     private List<String> formatList(List<String> list, String toReplace, String newValue) {
