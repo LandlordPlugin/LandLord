@@ -216,6 +216,8 @@ Commands:
         title: 'Spawn %mob%'
         description:
           - 'Spawning of %mob%: %value%'
+        deny: 'verboten'
+        allow: 'erlaubt'
     Regenerate:
       title: '&cRegenerieren'
       description:

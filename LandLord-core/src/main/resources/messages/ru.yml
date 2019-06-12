@@ -125,9 +125,9 @@ Commands:
     noPlayer: '&7Не удалось найти игроков&8: &c%players%'
   Manage:
     info:
-    title: '&aInformation'
-    description:
-      - 'Land: %land%'
+      title: '&aInformation'
+      description:
+        - 'Land: %land%'
     friends:
       title: '&aFriends'
       description:
@@ -215,6 +215,8 @@ Commands:
         title: 'Спавн %mob%'
         description:
           - 'Спавнить из %mob%: %value%'
+        deny: 'deny'
+        allow: 'allow'
     Regenerate:
       title: '&cВосстановление'
       description:

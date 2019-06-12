@@ -125,9 +125,9 @@ Commands:
     noPlayer: '&7No pude encontrar los siguientes jugadores&8: &c%players%'
   Manage:
     info:
-    title: '&aInformation'
-    description:
-      - 'Land: %land%'
+      title: '&aInformation'
+      description:
+        - 'Land: %land%'
     friends:
       title: '&aFriends'
       description:
@@ -215,6 +215,8 @@ Commands:
         title: 'Spawn %mob%'
         description:
           - 'Spawneo de %mob%: %value%'
+        deny: 'deny'
+        allow: 'allow'
     Regenerate:
       title: '&cRegeneración'
       description:

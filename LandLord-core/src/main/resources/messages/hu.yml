@@ -124,9 +124,9 @@ Commands:
     noPlayer: '&7Nem találhatók a következő játékosok&8: &c%players%'
   Manage:
     info:
-    title: '&aInformation'
-    description:
-      - 'Land: %land%'
+      title: '&aInformation'
+      description:
+        - 'Land: %land%'
     friends:
       title: '&aFriends'
       description:
@@ -214,6 +214,8 @@ Commands:
         title: 'Idézés %mob%'
         description:
           - 'Idézés %mob%: %value%'
+        deny: 'deny'
+        allow: 'allow'
     Regenerate:
       title: '&cRegenerálás'
       description:

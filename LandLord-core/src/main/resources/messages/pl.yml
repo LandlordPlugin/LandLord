@@ -125,9 +125,9 @@ Commands:
     noPlayer: '&7Nie można odnaleść danych gracza&8: &c%players%'
   Manage:
     info:
-    title: '&aInformation'
-    description:
-      - 'Land: %land%'
+      title: '&aInformation'
+      description:
+        - 'Land: %land%'
     friends:
       title: '&aFriends'
       description:
@@ -215,6 +215,8 @@ Commands:
         title: 'Spawn %mob%'
         description:
           - 'Spawnowanie %mob%: %value%'
+        deny: 'deny'
+        allow: 'allow'
     Regenerate:
       title: '&cRegeneracja'
       description:

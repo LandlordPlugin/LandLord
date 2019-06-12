@@ -211,7 +211,7 @@ Commands:
         title: 'Spawn %mob%'
         description:
           - 'Spawning of %mob%: %value%'
-        deny: 'Deny'
+        deny: 'deny'
         allow: 'allow'
     Regenerate:
       title: '&cRegneration'
