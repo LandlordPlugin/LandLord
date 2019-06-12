@@ -59,7 +59,7 @@ public class Claim extends LandlordCommand {
         String landName = wg.getLandName(chunk);
         String confirmcmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
                 .getCommandString(Landlordbase.Confirm.class);
-        System.out.println(confirmcmd);
+
         int regionCount = wg.getRegionCount(player.getUniqueId());
 
         // First check, if outer conditions (conditions that are related more to the buyer as individual)
