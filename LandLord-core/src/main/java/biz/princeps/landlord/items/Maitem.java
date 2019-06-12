@@ -32,7 +32,7 @@ public class Maitem extends AbstractItem {
     public Maitem(ILandLord pl) {
         super(NAME, new ItemStack(Material.valueOf(pl.getConfig().getString("MaItem.item"))), true, false);
         this.plugin = pl;
-        this.STACK = new ItemStack(Material.valueOf(pl.getConfig().getString("MaItem.item")));
+        this.STACK = getBukkitStack();
         initClickActions();
         setItemAppearance();
     }
