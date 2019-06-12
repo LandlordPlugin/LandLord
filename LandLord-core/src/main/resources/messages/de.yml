@@ -126,9 +126,9 @@ Commands:
     noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
   Manage:
     info:
-    title: '&aInformation'
-    description:
-      - 'Land: %land%'
+      title: '&aInformation'
+      description:
+        - 'Land: %land%'
     friends:
       title: '&aFriends'
       description:
