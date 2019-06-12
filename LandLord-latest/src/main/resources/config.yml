@@ -76,31 +76,31 @@ Claims:
     function: LIMITED
       # x is the amount of owned claims (/ll claims)!
       # Formula: minCost + multiplier * x
-      LINEAR:
-        minCost: 500.0
-        multiplier: 1.0
-      # Formula: minCost + multiplier * x ^ exponent
-      EXPONENTIAL:
-        minCost: 500.0
-        multiplier: 1.0
-        exponent: 2.0
-      # Formula: minCost + multiplier * lg (b * x + c)
-      LOGARITHMIC:
-        minCost: 500.0
-        multiplier: 1.0
-        b: 1.0
-        c: 1
-      # Formula: minCost + multiplier * sin (b * x + c)
-      SINUS:
-        minCost: 500.0
-        multiplier: 3.0
-        b: 1.0
-        c: 1.0
-      # Formula: maxCost - ( maxCost - minCost ) * multiplier ^ x
-      LIMITED:
-        maxCost: 3000.0
-        minCost: 500.0
-        multiplier: 0.95
+    LINEAR:
+      minCost: 500.0
+      multiplier: 1.0
+    # Formula: minCost + multiplier * x ^ exponent
+    EXPONENTIAL:
+      minCost: 500.0
+      multiplier: 1.0
+      exponent: 2.0
+    # Formula: minCost + multiplier * lg (b * x + c)
+    LOGARITHMIC:
+      minCost: 500.0
+      multiplier: 1.0
+      b: 1.0
+      c: 1
+    # Formula: minCost + multiplier * sin (b * x + c)
+    SINUS:
+      minCost: 500.0
+      multiplier: 3.0
+      b: 1.0
+      c: 1.0
+    # Formula: maxCost - ( maxCost - minCost ) * multiplier ^ x
+    LIMITED:
+      maxCost: 3000.0
+      minCost: 500.0
+      multiplier: 0.95
 
 locationFormat: '%world% - (%x%|%z%)'
 # These are hard caps. If a player has the permission "landlord.limit.10" he will be able to buy up to 10 lands.
