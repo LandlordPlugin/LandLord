@@ -37,7 +37,7 @@ public class Options {
     }
 
     public static boolean enabled_shop() {
-        return cfg.getBoolean("Shop.enable");
+        return cfg.getBoolean("Claims.enable");
     }
 
     public static boolean enabled_homes() {

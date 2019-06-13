@@ -330,17 +330,49 @@ Confirmation:
   accept: '&bAnnehmen!'
   decline: '&eAblehnen!'
 Shop:
-  title: 'Grundstück/Genehmigung (%regions%/%claims%)'
-  notEnoughMoney: '&7Sie haben nicht genug Geld um %number% Genehmigungen zu kaufen &7&o(Preis&8&o: &c&o%cost%&7&o)'
-  success: '&aSie haben %number% Genehmigungen gekauft für %cost%'
-  notAllowed: '&eSie dürfen keine weiteren Genehmigungen kaufen!'
-  item:
-    header: '%number% Genehmigungen'
-    lore:
-      - 'Klicke hier um %number% Genehmigungen zu kaufen'
-      - 'Sie können dann %number% Grundstücke mehr'
-      - 'kaufen als zuvor.'
-      - 'Preis: %cost%'
+  title: 'Claims Shop'
+  notEnoughMoney: '&7You dont have enough money buy %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
+  successBuy: '&aYou successfully bought %number% claims for %cost%'
+  successSell: '&aYou successfully sold %number% claims for %cost%'
+  abort: '&cYou aborted the transaction!'
+  gui:
+    lands:
+      name: '&aLands'
+      lore:
+        - '&fIn this row you can see'
+        - '&fhow many lands you own'
+        - ''
+        - '&fYou own &e%amount% &flands!'
+    claims:
+      name: '&aClaims'
+      lore:
+        - '&fAmount of claims you will'
+        - '&fown after the transaction.'
+        - ''
+        - '&fYou will own &e%amount% &fclaims!'
+        - ''
+        - '&fYou are allowed to buy up to'
+        - '&e%max% &fclaims!'
+    decrease1: '&c-1'
+    decrease5: '&c-5'
+    decrease10: '&c-10'
+    increase1: '&a+1'
+    increase5: '&a+5'
+    increase10: '&a+10'
+
+    confirm:
+      name: '&aConfirm'
+      lore:
+        - '&fClaims: %delta%'
+        - '&fPrice: %price%'
+    error:
+      name: '&cError!'
+      lore:
+        - '&cYou dont have enough money!'
+        - '&cCost: %cost%'
+        - '&cOwned: %own%'
+    abort: '&cAbort'
+
 MaItem:
   itemname: 'LL Maimaitem of doomness'
   lore:
@@ -359,4 +391,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 21
+version: 22

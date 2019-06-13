@@ -2,6 +2,8 @@ package biz.princeps.landlord.commands.claiming;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
@@ -34,7 +36,7 @@ public class Claims extends LandlordCommand {
 
         Player player = properties.getPlayer();
 
-        if (plugin.getConfig().getBoolean("Shop.enable")) {
+        if (plugin.getConfig().getBoolean("Claims.enable")) {
             int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
             int regionCount = plugin.getWGManager().getRegionCount(player.getUniqueId());
             String message = lm.getString("Commands.Claims.message");
@@ -47,7 +49,8 @@ public class Claims extends LandlordCommand {
             } else {
                 BaseComponent[] text = TextComponent.fromLegacyText(noClaims);
                 for (BaseComponent baseComponent : text) {
-                    baseComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ll shop"));
+                    baseComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                            PrincepsLib.getCommandManager().getCommand(Landlordbase.class).getCommandString(Shop.class)));
                 }
                 plugin.getUtilsManager().sendBasecomponent(player, text);
             }

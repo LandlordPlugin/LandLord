@@ -326,17 +326,48 @@ Confirmation:
   accept: '&bElfogad!'
   decline: '&eElutasít!'
 Shop:
-  title: 'Igény bolt. Igényléseid (%regions%/%claims%)'
-  notEnoughMoney: '&7Nincs elég pénzed, hogy vásárolj %number% egényt &7&o(Ára&8&o: &c&o%cost%&7&o)'
-  success: '&aSikeresen megvásároltad %number% egényt %cost% pénzért'
-  notAllowed: '&eNem vehetsz több igényt'
-  item:
-    header: '%number% extra igény'
-    lore:
-      - 'Kattints ide a vásárláshoz %number%'
-      - 'igények. Megvásárolhatod'
-      - '%number% több igényt, mint korábban'
-      - 'Ára: %cost%'
+  title: 'Claims Shop'
+  notEnoughMoney: '&7You dont have enough money buy %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
+  successBuy: '&aYou successfully bought %number% claims for %cost%'
+  successSell: '&aYou successfully sold %number% claims for %cost%'
+  abort: '&cYou aborted the transaction!'
+  gui:
+    lands:
+      name: '&aLands'
+      lore:
+        - '&fIn this row you can see'
+        - '&fhow many lands you own'
+        - ''
+        - '&fYou own &e%amount% &flands!'
+    claims:
+      name: '&aClaims'
+      lore:
+        - '&fAmount of claims you will'
+        - '&fown after the transaction.'
+        - ''
+        - '&fYou will own &e%amount% &fclaims!'
+        - ''
+        - '&fYou are allowed to buy up to'
+        - '&e%max% &fclaims!'
+    decrease1: '&c-1'
+    decrease5: '&c-5'
+    decrease10: '&c-10'
+    increase1: '&a+1'
+    increase5: '&a+5'
+    increase10: '&a+10'
+
+    confirm:
+      name: '&aConfirm'
+      lore:
+        - '&fClaims: %delta%'
+        - '&fPrice: %price%'
+    error:
+      name: '&cError!'
+      lore:
+        - '&cYou dont have enough money!'
+        - '&cCost: %cost%'
+        - '&cOwned: %own%'
+    abort: '&cAbort'
 MaItem:
   itemname: 'LL Maimaitem a végzet'
   lore:
@@ -355,4 +386,4 @@ MaItem:
     - '&l&ba levegőben:'
     - '&cjobb klikk: &7térkép kapcsolása'
     - '&cbal klikk: &7határok kapcsolása'
-version: 21
+version: 22

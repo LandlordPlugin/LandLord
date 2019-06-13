@@ -37,12 +37,17 @@ public class ClaimsCostManager extends ACostManager {
     public double calculateCost(int x, int times) {
         double cost = 0;
         if (times < 0) {
-            for (int i = times + 1; i <= 0; i++) {
+            System.out.println("times " + times);
+            for (int i = times; i < 0; i++) {
                 cost += calculateCost(x + i);
+                System.out.println("\tCost for (" + (x + i) + ") is " + cost);
             }
         } else {
-            for (int i = 1; i < times + 1; i++) {
+            System.out.println("times " + times);
+            for (int i = 0; i < times; i++) {
                 cost += calculateCost(x + i);
+                System.out.println("\tCost for (" + (x + i) + ") is " + cost);
+
             }
         }
         return cost;

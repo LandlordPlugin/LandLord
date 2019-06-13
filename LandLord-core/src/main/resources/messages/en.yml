@@ -327,7 +327,8 @@ Confirmation:
 Shop:
   title: 'Claims Shop'
   notEnoughMoney: '&7You dont have enough money buy %number% claims &7&o(Cost&8&o: &c&o%cost%&7&o)'
-  success: '&aYou successfully bought %number% claims for %cost%'
+  successBuy: '&aYou successfully bought %number% claims for %cost%'
+  successSell: '&aYou successfully sold %number% claims for %cost%'
   abort: '&cYou aborted the transaction!'
   gui:
     lands:
@@ -354,7 +355,17 @@ Shop:
     increase5: '&a+5'
     increase10: '&a+10'
 
-    confirm: '&aConfirm'
+    confirm:
+      name: '&aConfirm'
+      lore:
+        - '&fClaims: %delta%'
+        - '&fPrice: %price%'
+    error:
+      name: '&cError!'
+      lore:
+        - '&cYou dont have enough money!'
+        - '&cCost: %cost%'
+        - '&cOwned: %own%'
     abort: '&cAbort'
 
 
@@ -376,4 +387,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 21
+version: 22
