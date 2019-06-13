@@ -271,6 +271,13 @@ Commands:
       - '&c/land list &8- &7Wyświetl posiadane przez ciebie tereny'
       - '&c/land info &8- &7Wyświetl info ogólne terenu, w którym się znajdujesz'
       - '&c/land map &8- &7Wyświetl mapę terenu'
+      - '&c/land shop &8- &7Opens the claim shop'
+      - '&c/land sethome &8- &7Places your home into one of your lands'
+      - '&c/land home &8- &7Teleports you to your home'
+      - '&c/land borders &8- &7Toggles the border display'
+      - '&c/land item &8- &7Gives you the magic management item (nobody uses it tho)'
+      - '&c/land advertise &8- &7Advertise your land for sale'
+      - '&c/land removeadvertise &8- &7Remove your land from advertisement'
     previous: '&8[&7Previous&8]'
     next: '&8[&7Next&8]'
   Reload:

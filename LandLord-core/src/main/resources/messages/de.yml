@@ -89,7 +89,6 @@ Commands:
       flagformat: '&a%flagname%: &8(&fFriends: &a%friend% &fAll: &a%all%&8)'
       manageAll: '&7Alle Grundstücke verwalten'
     chat:
-      header: '&2%player%s Grundstück'
       previous: '&8[&7Previous&8]'
       next: '&8[&7Next&8]'
       segment: '&eName: &c%landname% &eMembers: &c%members%'

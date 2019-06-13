@@ -271,6 +271,13 @@ Commands:
       - '&b&l/land list &7- &6Lista de tus chunks en propiedad'
       - '&b&l/land info &7- &6Ver información general sobre el terreno en el que se encuentra'
       - '&b&l/land map &7- &6Alternar el mapa de terrenos'
+      - '&c&l/land shop &8- &7Opens the claim shop'
+      - '&c&l/land sethome &8- &7Places your home into one of your lands'
+      - '&c&l/land home &8- &7Teleports you to your home'
+      - '&c&l/land borders &8- &7Toggles the border display'
+      - '&c&l/land item &8- &7Gives you the magic management item (nobody uses it tho)'
+      - '&c&l/land advertise &8- &7Advertise your land for sale'
+      - '&c&l/land removeadvertise &8- &7Remove your land from advertisement'
     previous: '&f&l[&d&lPrevio&f&l]'
     next: '&f&l[&d&lSiguiente&f&l]'
   Reload:

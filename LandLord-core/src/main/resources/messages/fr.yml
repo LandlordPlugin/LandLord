@@ -271,6 +271,13 @@ Commands:
       - '&c/land list &8- &7Liste tous vos claims détenus'
       - '&c/land info &8- &7Montre les infos générales du chunk sur lequel vous vous trouvez'
       - '&c/land map &8- &7Affiche ou retire la carte des chunks'
+      - '&c/land shop &8- &7Ouvre le magasin des claims'
+      - '&c/land sethome &8- &7Place votre homme dans un de vos chunks'
+      - '&c/land home &8- &7Vous téléporte à votre home'
+      - '&c/land borders &8- &7Gère l''affichage des bordures'
+      - '&c/land item &8- &7Vous donne l''item magique de gérance (personne ne l''utilise :c)'
+      - '&c/land advertise &8- &7Annonce la vente de votre chunk'
+      - '&c/land removeadvertise &8- &7Retire votre chunk de la vente'
     previous: '&8[&7Précedent&8]'
     next: '&8[&7Suivant&8]'
   Reload:
