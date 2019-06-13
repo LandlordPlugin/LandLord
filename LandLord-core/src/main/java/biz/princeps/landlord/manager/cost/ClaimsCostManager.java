@@ -33,4 +33,18 @@ public class ClaimsCostManager extends ACostManager {
 
         return strategy.calculate(x);
     }
+
+    public double calculateCost(int x, int times) {
+        double cost = 0;
+        if (times < 0) {
+            for (int i = times + 1; i <= 0; i++) {
+                cost += calculateCost(x + i);
+            }
+        } else {
+            for (int i = 1; i < times + 1; i++) {
+                cost += calculateCost(x + i);
+            }
+        }
+        return cost;
+    }
 }

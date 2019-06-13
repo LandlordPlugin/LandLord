@@ -1,5 +1,5 @@
 name: Landlord
-version: 4.1
+version: 4.225
 main: biz.princeps.landlord.LandLord
 author: SpatiumPrinceps
 website: https://www.spigotmc.org/resources/beta-landlord-2.44398/
@@ -40,6 +40,7 @@ permissions:
       landlord.admin.giveclaims: true
       landlord.admin.update: true
       landlord.admin.admintp: true
+      landlord.limit.override: true
 
   landlord.player.manage.*:
     description: required to manage all the stuff in ll manage
@@ -116,7 +117,7 @@ permissions:
 
   landlord.limit.override:
     description: allows unlimited land ownership
-    default: false
+    default: op
 
   landlord.admin.help:
     description: will have an advanced ll help menu
