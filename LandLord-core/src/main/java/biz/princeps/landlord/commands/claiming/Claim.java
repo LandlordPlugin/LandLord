@@ -91,14 +91,14 @@ public class Claim extends LandlordCommand {
 
         // is free land
         if (ol == null) {
-            double calculatedCost = plugin.getCostManager().calculateCost(player.getUniqueId());
+            double calculatedCost = Options.isVaultEnabled() ? plugin.getCostManager().calculateCost(player.getUniqueId()) : 0;
 
             String guiDesc = "Claim " + landName + " for " + calculatedCost + "?";
             String chatDesc = lm.getString("Commands.Claim.confirmation")
                     .replace("%chunk%", landName)
                     .replace("%price%", String.valueOf(calculatedCost));
 
-            if (!hasMoney(player, calculatedCost, landName, chunk, chatDesc, guiDesc)) {
+            if (!hasMoney(player, calculatedCost, landName, chunk)) {
                 return;
             }
 
@@ -128,7 +128,7 @@ public class Claim extends LandlordCommand {
                         .replace("%chunk%", landName)
                         .replace("%price%", String.valueOf(calculatedCost));
 
-                if (!hasMoney(player, calculatedCost, landName, chunk, chatDesc, guiDesc)) {
+                if (!hasMoney(player, calculatedCost, landName, chunk)) {
                     return;
                 }
 
@@ -173,7 +173,7 @@ public class Claim extends LandlordCommand {
 
                         String originalOwner = Bukkit.getOfflinePlayer(ol.getOwner()).getName();
 
-                        if (!hasMoney(player, costForBuyer, landName, chunk, chatDesc, guiDesc)) {
+                        if (!hasMoney(player, costForBuyer, landName, chunk)) {
                             return;
                         }
 
@@ -205,7 +205,7 @@ public class Claim extends LandlordCommand {
         }
     }
 
-    private boolean hasMoney(Player player, double costForBuyer, String landName, Chunk chunk, String chatDesc, String guiDesc) {
+    private boolean hasMoney(Player player, double costForBuyer, String landName, Chunk chunk) {
         if (Options.isVaultEnabled()) {
             if (vault.hasBalance(player.getUniqueId(), costForBuyer)) {
                 // Enough money
