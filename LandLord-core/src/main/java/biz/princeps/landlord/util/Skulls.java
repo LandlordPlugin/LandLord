@@ -1,6 +1,5 @@
 package biz.princeps.landlord.util;
 
-import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.ILandLord;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -70,9 +69,6 @@ public enum Skulls {
         String numstring = String.valueOf(num);
         for (char c : numstring.toCharArray()) {
             switch (c) {
-                case '0':
-                    list.add(BLACK0);
-                    break;
                 case '1':
                     list.add(BLACK1);
                     break;
