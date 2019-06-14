@@ -97,6 +97,11 @@ public class ShopGUI extends AbstractGUI {
             if (claims + delta - 1 < 0) {
                 return;
             }
+
+            if (claims + delta - 1 < lands) {
+                return;
+            }
+
             delta -= 1;
             cost -= this.costManager.calculateCost(claims + delta);
             refresh();
@@ -108,6 +113,11 @@ public class ShopGUI extends AbstractGUI {
             if (claims + delta <= 0) {
                 return;
             }
+
+            if (claims + delta - 5 <= lands) {
+                return;
+            }
+
             if (claims + delta - 5 < 0) {
                 cost -= this.costManager.calculateCost(claims + delta, -delta);
                 delta = -claims;
@@ -125,6 +135,11 @@ public class ShopGUI extends AbstractGUI {
             if (claims + delta <= 0) {
                 return;
             }
+
+            if (claims + delta - 10 <= lands) {
+                return;
+            }
+
             if (claims + delta - 10 < 0) {
                 cost -= this.costManager.calculateCost(claims + delta, -delta);
                 delta = -claims;
