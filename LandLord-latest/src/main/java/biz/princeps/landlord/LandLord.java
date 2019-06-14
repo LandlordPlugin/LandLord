@@ -68,18 +68,12 @@ public class LandLord extends ALandLord {
 
         if (getWorldGuard() == null) {
             haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to " +
-                    "use LandLord");
+                    "use LandLord. Maybe adequate WorldEdit plugin missing?");
             return false;
         } else {
             String worldGuardVersion = getWorldGuard().getDescription().getVersion();
-            if (!worldGuardVersion.contains("7.0.0") || worldGuardVersion.contains("SNAPSHOT") && Integer.valueOf(worldGuardVersion.replace("7.0.0-SNAPSHOT;", "").split("-")[0]) < 1880) {
+            if (!worldGuardVersion.contains("7.0") || worldGuardVersion.contains("SNAPSHOT") && Integer.valueOf(worldGuardVersion.replace("7.0.0-SNAPSHOT;", "").split("-")[0]) < 1880) {
                 haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 7.0.0-1880 ! You have WG " + worldGuardVersion);
-                return false;
-            }
-
-            String worldEditVersion = Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
-            if (!worldEditVersion.contains("7.0.0") || worldEditVersion.contains("SNAPSHOT") && Integer.valueOf(worldEditVersion.replace("7.0.0-SNAPSHOT;", "").split("-")[0]) < 4271) {
-                haltPlugin("Invalid WorldEdit Version found. LandLord requires WE 7.0.0-4271+ ! You have WE " + worldEditVersion);
                 return false;
             }
         }

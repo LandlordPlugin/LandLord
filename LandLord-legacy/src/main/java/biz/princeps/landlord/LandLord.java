@@ -70,18 +70,12 @@ public class LandLord extends ALandLord implements Listener {
 
         if (getWorldGuard() == null) {
             haltPlugin("WorldGuard not found! Please ensure you have the correct version of WorldGuard in order to " +
-                    "use LandLord");
+                    "use LandLord. Maybe adequate WorldEdit plugin missing?");
             return false;
         } else {
             String worldGuardVersion = getWorldGuard().getDescription().getVersion();
             if (!worldGuardVersion.contains("6.2.2")) {
                 haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 6.2.2! : You have WG " + worldGuardVersion);
-                return false;
-            }
-
-            String worldEditVersion = Bukkit.getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
-            if (!worldEditVersion.contains("6.1.9")) {
-                haltPlugin("Invalid WorldEdit Version found. LandLord requires WE 6.1.9! : You have WE " + worldEditVersion);
                 return false;
             }
         }
