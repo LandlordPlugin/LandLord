@@ -37,12 +37,33 @@ public interface IWorldGuardManager {
 
     IOwnedLand[] getSurroundings(Location ploc);
 
+    /**
+     * Returns 4 direct adjacents protectedlands to pr
+     * toReturn[0] = self
+     * toReturn[1] = North
+     * toReturn[2] = East
+     * toReturn[3] = South
+     * toReturn[4] = West
+     */
     IOwnedLand[] getSurroundings(Chunk chunk);
 
     IOwnedLand[] getSurroundings(IOwnedLand land);
 
     IOwnedLand[] getSurroundingsOwner(Location ploc, UUID owner);
 
+    /**
+     * Returns all the adjacent lands, that are owned by the same person as pr.
+     * If a chunk is from a different owner, null will be placed inside the array.
+     * <p>
+     * toReturn[0] = self
+     * toReturn[1] = North
+     * toReturn[2] = East
+     * toReturn[3] = South
+     * toReturn[4] = West
+     *
+     * @param chunk the chunk to get adjacent of same owner from
+     * @return an array containing all  the nearby lands
+     */
     IOwnedLand[] getSurroundingsOwner(Chunk chunk, UUID owner);
 
     IOwnedLand[] getSurroundingsOwner(IOwnedLand land, UUID owner);

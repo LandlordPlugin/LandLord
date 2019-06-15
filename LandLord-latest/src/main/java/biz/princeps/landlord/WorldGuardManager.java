@@ -113,7 +113,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public Set<?> getAllWGRegions(World world) {
         Map<String, ProtectedRegion> regions = new HashMap<>(getRegionManager(world).getRegions());
-        regions.keySet().forEach(r -> {
+        getRegionManager(world).getRegions().keySet().forEach(r -> {
             if (isLLRegion(r)) {
                 regions.remove(r);
             }

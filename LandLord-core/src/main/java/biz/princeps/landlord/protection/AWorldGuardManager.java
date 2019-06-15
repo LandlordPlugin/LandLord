@@ -176,8 +176,8 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         return new IOwnedLand[]{
                 getRegion(ploc),
                 getRegion(ploc.clone().add(16, 0, 0)),
-                getRegion(ploc.clone().subtract(16, 0, 0)),
                 getRegion(ploc.clone().add(0, 0, 16)),
+                getRegion(ploc.clone().subtract(16, 0, 0)),
                 getRegion(ploc.clone().subtract(0, 0, 16)),
         };
     }
@@ -196,7 +196,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
     public IOwnedLand[] getSurroundingsOwner(Location ploc, UUID owner) {
         IOwnedLand[] surroundings = getSurroundings(ploc);
         for (int i = 0; i < surroundings.length; i++) {
-            if (!surroundings[i].isOwner(owner)) {
+            if (surroundings[i] != null && !surroundings[i].isOwner(owner)) {
                 surroundings[i] = null;
             }
         }
