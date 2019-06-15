@@ -6,7 +6,6 @@ It is hosted on [spigotmc.org](https://www.spigotmc.org/resources/beta-landlord-
 
 Maven
 =====
-Replace the version with the current version number!
 ```xml
 <repository>
     <id>princepsrepo</id>
@@ -15,8 +14,8 @@ Replace the version with the current version number!
 
 <dependency>
     <groupId>biz.princeps</groupId>
-    <artifactId>LandLord</artifactId>
-    <version>3.138</version>
+    <artifactId>LandLord-api</artifactId>
+    <version>4.0.5</version>
     <scope>provided</scope>
 </dependency>
 ```
