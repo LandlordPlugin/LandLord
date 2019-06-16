@@ -64,6 +64,12 @@ public class Claim extends LandlordCommand {
 
         // First check, if outer conditions (conditions that are related more to the buyer as individual)
         // Ckeck for hardcap based on permissions
+        if (!plugin.getConfig().getBoolean("CommandSettings.Claim.allowOverlap", false) &&
+                !wg.canClaim(player, chunk)) {
+            lm.sendMessage(player, lm.getString("Commands.Claim.notAllowed"));
+            return;
+        }
+
         if (!hasLimitPermissions(player, regionCount)) {
             return;
         }

@@ -138,9 +138,16 @@ public class Info extends LandlordCommand {
             });
         } else {
             // unclaimed
-            lm.sendMessage(player, replaceInMessage(free, wg.getLandName(chunk), "", "", "",
-                    (Options.isVaultEnabled() ? plugin.getVaultManager().format(
-                            plugin.getCostManager().calculateCost(player.getUniqueId())) : "")));
+            if (!plugin.getConfig().getBoolean("CommandSettings.Claim.allowOverlap", false) &&
+                    !wg.canClaim(player, chunk)) {
+                lm.sendMessage(player, lm.getString("Commands.Claim.notAllowed"));
+                return;
+            } else {
+                lm.sendMessage(player, replaceInMessage(free, wg.getLandName(chunk), "", "", "",
+                        (Options.isVaultEnabled() ? plugin.getVaultManager().format(
+                                plugin.getCostManager().calculateCost(player.getUniqueId())) : "")));
+            }
+
             if (plugin.getConfig().getBoolean("Particles.info")) {
                 wg.highlightLand(chunk, player,
                         Particle.valueOf(plugin.getConfig().getString("Particles.info.unclaimed").toUpperCase()), 4);
