@@ -14,8 +14,8 @@ Maven
 
 <dependency>
     <groupId>biz.princeps</groupId>
-    <artifactId>LandLord</artifactId>
-    <version>3.138</version>
+    <artifactId>LandLord-api</artifactId>
+    <version>4.0.5</version>
     <scope>provided</scope>
 </dependency>
 ```

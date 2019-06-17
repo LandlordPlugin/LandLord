@@ -180,7 +180,6 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
                 getRegion(ploc.clone().subtract(16, 0, 0)),
                 getRegion(ploc.clone().subtract(0, 0, 16)),
         };
-
     }
 
     @Override
