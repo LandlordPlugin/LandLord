@@ -1,6 +1,7 @@
 Tag: '&8[&c&l!&8]'
 Disabled-World: '&7Grundstückkauf ist in dieser Welt deaktiviert'
 noPermissions: '&7Keine Erlaubnis'
+locOutsideWorld: '§7You can''t interact with the chunk %chunk% being outside of the world %world%!'
 Commands:
   Claim:
     success: '&bSie haben erfolgreich das Grundstück %chunk% in Welt %world% gekauft'

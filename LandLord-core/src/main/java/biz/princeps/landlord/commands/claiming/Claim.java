@@ -55,6 +55,11 @@ public class Claim extends LandlordCommand {
             return;
         }
 
+        //Don't claim outside of the world
+        if (!isInsideWorld(player, chunk)) {
+            return;
+        }
+
         IOwnedLand ol = wg.getRegion(chunk);
         String landName = wg.getLandName(chunk);
         String confirmcmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)

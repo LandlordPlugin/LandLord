@@ -3,6 +3,8 @@ package biz.princeps.landlord.commands;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.lib.command.SubCommand;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -28,6 +30,38 @@ public abstract class LandlordCommand extends SubCommand {
         super(name, usage, permissions, aliases);
         this.plugin = plugin;
         this.lm = plugin.getLangManager();
+    }
+
+    /**
+     * Checks if the specified location is inside of the world, in order to avoid claiming outside world.
+     *
+     * @param player the player to send the message
+     * @return if the player's location is inside of the world
+     */
+    public boolean isInsideWorld(Player player) {
+        if (player.getWorld().getWorldBorder().isInside(player.getLocation())) return true;
+
+        lm.sendMessage(player, lm.getString("locOutsideWorld")
+                .replace("%chunk%", plugin.getWGManager().getLandName(player.getChunk()))
+                .replace("%world%", player.getWorld().getName()));
+        return false;
+    }
+
+    /**
+     * Checks if the specified location is inside of the world, in order to avoid claiming outside world.
+     *
+     * @param player the player to send the message
+     * @param chunk the chunk's location to check if its inside of the world
+     * @return if the location is inside of the world
+     */
+    public boolean isInsideWorld(Player player, Chunk chunk) {
+        //+ 8 enables to create a location at the "center" of the chunk. y location : 100 is a random value
+        if (chunk.getWorld().getWorldBorder().isInside(new Location(chunk.getWorld(), chunk.getX() * 16 + 8, 100, chunk.getZ() * 16 + 8))) return true;
+
+        lm.sendMessage(player, lm.getString("locOutsideWorld")
+                .replace("%chunk%", plugin.getWGManager().getLandName(chunk))
+                .replace("%world%", chunk.getWorld().getName()));
+        return false;
     }
 
     /**
