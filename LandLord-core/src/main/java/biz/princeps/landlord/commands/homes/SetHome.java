@@ -33,6 +33,11 @@ public class SetHome extends LandlordCommand {
 
         Player player = properties.getPlayer();
 
+        //Don't sethome outside of the world
+        if (!isInsideWorld(player)) {
+            return;
+        }
+
         if (!Options.enabled_homes()) {
             lm.sendMessage(player, lm.getString("Commands.SetHome.disabled"));
             return;

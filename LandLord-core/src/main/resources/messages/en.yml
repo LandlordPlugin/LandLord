@@ -1,6 +1,7 @@
 Tag: '&8[&c&l!&8]'
 Disabled-World: '&7Land-claiming is disabled in this world'
 noPermissions: '&7No permission'
+locOutsideWorld: '§7You can''t interact with the chunk %chunk% being outside of the world %world%!'
 Commands:
   Claim:
     success: '&bYou successfully claimed chunk %chunk% in world %world%'

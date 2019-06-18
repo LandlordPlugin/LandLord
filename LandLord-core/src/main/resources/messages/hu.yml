@@ -1,6 +1,7 @@
 Tag: '&8[&c&l!&8]'
 Disabled-World: '&7A földtámogatás le van tiltva ebben a világban'
 noPermissions: '&7Nincs jogod'
+locOutsideWorld: '§7You can''t interact with the chunk %chunk% being outside of the world %world%!'
 Commands:
   Claim:
     success: '&bSikeresen igényelted %chunk% darabot a(z) %world% világban'
