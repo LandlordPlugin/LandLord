@@ -7,7 +7,7 @@ Commands:
     success: '&bSie haben erfolgreich das Grundstück %chunk% in Welt %world% gekauft'
     p2pSuccess: '&bDer Spieler %player% hat dein Grundstück %chunk% in Welt %world% für %price% gekauft!'
     notEnoughMoney: '&eSie haben nicht genug Geld (%money%) um das Grundstück (%chunk%) zu kaufen!'
-    moneyTook: '&4 %money% wurden für das Grundstück %chunk% abgezogen'
+    moneyTook: '&4 %money% wurden für den Kauf des Grundstücks %chunk% abgezogen'
     alreadyClaimed: '&eDieses Grundstück gehört bereits %owner%'
     limit: '&eSie müssen erst eine Genehmigung kaufen um neue Grundstücke kaufen zu können (%regions%/%claims%)! Klicke hier um den Laden zu öffnen!'
     hardcap: '&eSie können nicht mehr Grundstücke als %regions% besitzen!'
@@ -87,11 +87,11 @@ Commands:
         - '&aMembers: &f%members%'
         - ''
         - '%flags%'
-      flagformat: '&a%flagname%: &8(&fFriends: &a%friend% &fAll: &a%all%&8)'
+      flagformat: '&a%flagname%: &8(&fFreunde: &a%friend% &fAlle: &a%all%&8)'
       manageAll: '&7Alle Grundstücke verwalten'
     chat:
-      previous: '&8[&7Previous&8]'
-      next: '&8[&7Next&8]'
+      previous: '&8[&7Vorherige Seite&8]'
+      next: '&8[&7Nächste Seite&8]'
       segment: '&eName: &c%landname% &eMembers: &c%members%'
     noPlayer: '&7Folgender Spieler konnte nicht gefunden werden&8: &c%player%'
   LandMap:
@@ -130,53 +130,59 @@ Commands:
       description:
         - 'Land: %land%'
     friends:
-      title: '&aFriends'
+      title: '&aFreunde'
       description:
-        - 'Click in this row to manage the permission of friends'
+        - 'Klicke Wollblöcke in'
+        - 'dieser Reihe an, um '
+        - 'die Permissions für '
+        - 'Freunde einzustellen.'
     everyone:
-      title: '&aEveryone'
+      title: '&aAlle'
       description:
-        - 'Click in this row to manage the permission for everyone'
-    allow: '&aAllow'
-    deny: '&cDeny'
-    prevArrow: '&aPrevious page'
-    nextArrow: '&aNext page'
+        - 'Klicke Wollblöcke in'
+        - 'dieser Reihe an, um '
+        - 'die Permissions für '
+        - 'Alle einzustellen.'
+    allow: '&aErlauben'
+    deny: '&cVerbieten'
+    prevArrow: '&aVorherige Seite'
+    nextArrow: '&aNächste Seite'
     all:
       header: '&7Verwalte alle Grundstücke'
     notOwn: '&7Dieses Grundstück gehört dir nicht.'
     notOwnFreeLand: '&7Dieses Grundstück gehört dir nicht.'
     header: '&7Verwalten&8: &c%info%'
-    invalidArguments: '&7Invalid arguments'
+    invalidArguments: '&7Unerlaubte Argumente!'
     AllowDamage-animals:
-      title: '&cAllow damaging animals'
+      title: '&cErlaube das Schlagen von Tieren'
       description:
-        - ' &7Toggle the ability for players to'
-        - ' &7hit mobs in this chunk'
+        - ' &7Schalte die Option um Spielern zu erlauben'
+        - ' &7Deine Tiere in diesem Land zu schlagen.'
     AllowRide:
-      title: '&cAllow riding mobs'
+      title: '&cErlaube das Reiten von Viechern'
       description:
-        - ' &7Toggle the ability for players to'
-        - ' &7ride entities in this chunk'
+        - ' &7Schalte die Option um Spielern zu erlauben'
+        - ' &7Deine Tiere in diesem Land zu reiten.'
     AllowFrosted-ice-form:
-      title: '&cAllow ice boots'
+      title: '&cErlaube Eisstiefel'
       description:
-        - ' &7Toggle the ability for players to'
-        - ' &7to use ice boots in this chunk'
+        - ' &7Schalte die Option um Spielern zu erlauben'
+        - ' &7Eisstiefel in diesem Land zu verwenden.'
     AllowBlock-trampling:
-      title: '&cAllow trampling blocks'
+      title: '&cErlaube Block Trampelei'
       description:
-        - ' &7Toggle the ability for players to'
-        - ' &7trample farmland in this chunk'
+        - ' &7Schalte die Option um Spielern zu erlauben'
+        - ' &7Dein Farmland zu zertrampeln.'
     AllowPotion-splash:
-      title: '&cAllow splashing potions'
+      title: '&cErlaube Wurftränke'
       description:
-        - ' &7Toggle the ability for players to'
-        - ' &7throw splash potions in this chunk'
+        - ' &7Schalte die Option um Spielern zu erlauben'
+        - ' &7Tränke zu werfen..'
     AllowPistons:
-      title: '&cAllow pistons'
+      title: '&cErlaube Pistons'
       description:
-        - ' &7Toggle the ability for players to'
-        - ' &7use pistons in this chunk'
+        - ' &7Schalte die Option um Spielern zu erlauben'
+        - ' &7Pistons zu verwenden.'
     AllowBuild:
       title: '&cBauen erlauben'
       description:

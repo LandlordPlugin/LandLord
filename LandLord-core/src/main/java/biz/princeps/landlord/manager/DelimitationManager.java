@@ -97,7 +97,9 @@ public class DelimitationManager implements IDelimitationManager {
                     int highestY = chunk.getWorld().getHighestBlockYAt(chunk.getX() * 16 + x, chunk.getZ() * 16 + z);
                     Block b = chunk.getBlock(x, highestY, z);
 
-                    while (b.getType() != Material.AIR && b.getType() != Material.GRASS) {
+                    while (b.getType() != Material.AIR &&
+                            b.getType() != Material.GRASS &&
+                            b.getType() != Material.LONG_GRASS) {
                         b = chunk.getBlock(x, ++highestY, z);
                     }
 
