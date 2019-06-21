@@ -5,10 +5,9 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMob;
 import biz.princeps.landlord.protection.AOwnedLand;
 import com.google.common.collect.Sets;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.*;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,6 +25,7 @@ import java.util.*;
 public class OwnedLand extends AOwnedLand {
 
     private ProtectedRegion region;
+    private FlagRegistry flagRegistry =  WorldGuardPlugin.inst().getFlagRegistry();
 
     public static OwnedLand create(ILandLord pl, ProtectedRegion pr, UUID owner) {
         return new OwnedLand(pl, pr, owner);
@@ -135,7 +135,7 @@ public class OwnedLand extends AOwnedLand {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            Flag flag = ((WorldGuardManager) pl.getWGManager()).getFlag(s.toLowerCase());
+            Flag flag = getFlag(s.toLowerCase());
             if (flag == null) {
                 pl.getLogger().warning("Invalid worldguard flag found: " + s);
                 continue;
@@ -206,11 +206,12 @@ public class OwnedLand extends AOwnedLand {
         region.setFlag(WorldGuardManager.REGION_PRICE_FLAG, price);
     }
 
-    private void initFlags(UUID owner) {
+    @Override
+    public void initFlags(UUID owner) {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            Flag flag = ((WorldGuardManager) pl.getWGManager()).getFlag(s.toLowerCase());
+            Flag flag = getFlag(s.toLowerCase());
             if (!(flag instanceof StateFlag)) {
                 Bukkit.getLogger().warning("Only stateflags are supported!");
                 return;
@@ -227,5 +228,47 @@ public class OwnedLand extends AOwnedLand {
                 .getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
         region.setFlag(DefaultFlag.FAREWELL_MESSAGE, pl.getLangManager()
                 .getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
+    }
+
+
+    @Override
+    public void updateFlags(UUID owner) {
+        List<String> rawList = pl.getConfig().getStringList("Flags");
+
+        // remove flags, that are no longer required
+        for (Flag<?> iWrapperFlag : region.getFlags().keySet()) {
+            String flagname = iWrapperFlag.getName().toLowerCase().replace("-group", "");
+            if (!rawList.contains(flagname) &&
+                    !flagname.equals(DefaultFlag.GREET_MESSAGE.getName().toLowerCase()) &&
+                    !flagname.equals(DefaultFlag.FAREWELL_MESSAGE.getName().toLowerCase())) {
+
+                region.setFlag(iWrapperFlag, null);
+            }
+        }
+
+        // add missing flags
+        for (String s : rawList) {
+            Flag flag = getFlag(s.toLowerCase());
+            if (!region.getFlags().keySet().contains(flag)) {
+                region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
+                region.setFlag(flag, StateFlag.State.ALLOW);
+            }
+        }
+        // add other flags
+        OfflinePlayer p = Bukkit.getOfflinePlayer(owner);
+        if (p.getName() == null) {
+            return;
+        }
+        if (!region.getFlags().keySet().contains(DefaultFlag.GREET_MESSAGE)) {
+            region.setFlag(DefaultFlag.GREET_MESSAGE,
+                    pl.getLangManager().getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
+        } else if (!region.getFlags().keySet().contains(DefaultFlag.FAREWELL_MESSAGE)) {
+            region.setFlag(DefaultFlag.FAREWELL_MESSAGE,
+                    pl.getLangManager().getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
+        }
+    }
+
+    private Flag getFlag(String flagName) {
+        return DefaultFlag.fuzzyMatchFlag(flagRegistry, flagName);
     }
 }

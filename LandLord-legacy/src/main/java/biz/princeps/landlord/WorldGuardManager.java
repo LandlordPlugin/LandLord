@@ -225,9 +225,4 @@ public class WorldGuardManager extends AWorldGuardManager {
         return false;
     }
 
-    public Flag<?> getFlag(String flag) {
-        return wgPlugin.getFlagRegistry().get(flag);
-    }
-
-
 }
