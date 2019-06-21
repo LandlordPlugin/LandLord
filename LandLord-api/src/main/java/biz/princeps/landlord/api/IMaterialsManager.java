@@ -14,6 +14,8 @@ public interface IMaterialsManager {
 
     Material getGrass();
 
+    Material getLongGrass();
+
     ItemStack getPlayerHead(UUID owner);
 
     ItemStack getWitherSkull();

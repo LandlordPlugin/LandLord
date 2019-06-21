@@ -16,7 +16,12 @@ public class MaterialsManager implements IMaterialsManager {
 
     @Override
     public Material getGrass() {
-        return Material.GRASS_BLOCK;
+        return Material.GRASS;
+    }
+
+    @Override
+    public Material getLongGrass() {
+        return Material.LEGACY_LONG_GRASS;
     }
 
     @Override

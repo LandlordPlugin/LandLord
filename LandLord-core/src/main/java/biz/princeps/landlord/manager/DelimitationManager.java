@@ -98,8 +98,8 @@ public class DelimitationManager implements IDelimitationManager {
                     Block b = chunk.getBlock(x, highestY, z);
 
                     while (b.getType() != Material.AIR &&
-                            b.getType() != Material.GRASS &&
-                            b.getType() != Material.LONG_GRASS) {
+                            b.getType() != plugin.getMaterialsManager().getGrass() &&
+                            b.getType() != plugin.getMaterialsManager().getLongGrass()) {
                         b = chunk.getBlock(x, ++highestY, z);
                     }
 
