@@ -237,8 +237,8 @@ public class OwnedLand extends AOwnedLand {
         return region.getFlags().containsKey(wgflag);
     }
 
-
-    private void initFlags(UUID owner) {
+    @Override
+    public void initFlags(UUID owner) {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
@@ -259,7 +259,43 @@ public class OwnedLand extends AOwnedLand {
                 .getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
         region.setFlag(Flags.FAREWELL_MESSAGE, pl.getLangManager()
                 .getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
+    }
 
+    @Override
+    public void updateFlags(UUID owner) {
+        List<String> rawList = pl.getConfig().getStringList("Flags");
+
+        // remove flags, that are no longer required
+        for (Flag<?> iWrapperFlag : region.getFlags().keySet()) {
+            String flagname = iWrapperFlag.getName().toLowerCase();
+            if (!rawList.contains(flagname) &&
+                    !flagname.equals(Flags.GREET_MESSAGE.getName().toLowerCase()) &&
+                    !flagname.equals(Flags.FAREWELL_MESSAGE.getName().toLowerCase())) {
+
+                region.setFlag(iWrapperFlag, null);
+            }
+        }
+
+        // add missing flags
+        for (String s : rawList) {
+            Flag flag = getFlag(s.toUpperCase());
+            if (!region.getFlags().keySet().contains(flag)) {
+                region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
+                region.setFlag(flag, StateFlag.State.ALLOW);
+            }
+        }
+        // add other flags
+        OfflinePlayer p = Bukkit.getOfflinePlayer(owner);
+        if (p.getName() == null) {
+            return;
+        }
+        if (!region.getFlags().keySet().contains(Flags.GREET_MESSAGE)) {
+            region.setFlag(Flags.GREET_MESSAGE,
+                    pl.getLangManager().getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
+        } else if (!region.getFlags().keySet().contains(Flags.FAREWELL_MESSAGE)) {
+            region.setFlag(Flags.FAREWELL_MESSAGE,
+                    pl.getLangManager().getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
+        }
     }
 
     @Override

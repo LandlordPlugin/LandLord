@@ -149,4 +149,18 @@ public interface IOwnedLand {
      * @param price the price
      */
     void setPrice(double price);
+
+    /**
+     * Init default flags for a land.
+     *
+     * @param owner the land's owner
+     */
+    void initFlags(UUID owner);
+
+    /**
+     * Update flags for a land (add missing flags and remove non existing flags).
+     *
+     * @param owner the land's owner
+     */
+    void updateFlags(UUID owner);
 }

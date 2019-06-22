@@ -20,6 +20,11 @@ public class MaterialsManager implements IMaterialsManager {
     }
 
     @Override
+    public Material getLongGrass() {
+        return Material.LONG_GRASS;
+    }
+
+    @Override
     public ItemStack getPlayerHead(UUID owner) {
         ItemStack skull = new ItemStack(Material.SKULL_ITEM);
         SkullMeta itemMeta = (SkullMeta) skull.getItemMeta();

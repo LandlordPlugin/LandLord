@@ -72,8 +72,8 @@ public class LandLord extends ALandLord {
             return false;
         } else {
             String worldGuardVersion = getWorldGuard().getDescription().getVersion();
-            if (!worldGuardVersion.contains("7.0") || worldGuardVersion.contains("SNAPSHOT") && Integer.valueOf(worldGuardVersion.replace("7.0.0-SNAPSHOT;", "").split("-")[0]) < 1880) {
-                haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 7.0.0-1880 ! You have WG " + worldGuardVersion);
+            if (worldGuardVersion.charAt(0) != '7') {
+                haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 7.0.0+ ! You have WG " + worldGuardVersion);
                 return false;
             }
         }
