@@ -217,7 +217,7 @@ public class AManage extends AbstractGUI {
             String costString = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "-1");
 
             Icon icon = new Icon(new ItemStack(Material.BARRIER));
-            icon.setLore(formatList(regenerateDesc, "%var", costString));
+            icon.setLore(formatList(regenerateDesc, "%var%", costString));
             icon.setName(lm.getRawString("Commands.Manage.Regenerate.title"));
             icon.addClickAction((p) -> {
                 if (!land.isOwner(player.getUniqueId())) {
