@@ -56,27 +56,23 @@ public class ListFriends extends LandlordCommand {
             lm.sendMessage(player, lm.getString("Commands.Listfriends.freeLand"));
             return;
         }
-
-        if (wg.isLLRegion(landname)) {
+        if (!wg.isLLRegion(landname)) {
             lm.sendMessage(player, lm.getString("Commands.Listfriends.invalidGeneral"));
             return;
         }
 
-        try {
-            IOwnedLand land = wg.getRegion(landname);
+        IOwnedLand land = wg.getRegion(landname);
 
-            if (land == null) {
-                lm.sendMessage(player, lm.getString("Commands.Listfriends.freeLand"));
-                return;
-            }
-            if (land.getFriends().size() > 0)
-                lm.sendMessage(player, lm.getString("Commands.Listfriends.friends")
-                        .replace("%friends%", land.getMembersString()));
-            else {
-                lm.sendMessage(player, lm.getString("Commands.Listfriends.noFriends"));
-            }
-        } catch (NumberFormatException ex) {
-            lm.sendMessage(player, lm.getString("Commands.Listfriends.invalidGeneral"));
+        if (land == null) {
+            lm.sendMessage(player, lm.getString("Commands.Listfriends.freeLand"));
+            return;
         }
+        if (land.getFriends().size() > 0)
+            lm.sendMessage(player, lm.getString("Commands.Listfriends.friends")
+                    .replace("%friends%", land.getMembersString()));
+        else {
+            lm.sendMessage(player, lm.getString("Commands.Listfriends.noFriends"));
+        }
+
     }
 }
