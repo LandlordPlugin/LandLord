@@ -30,6 +30,22 @@ EOF
 	echo "Installed run script. Please reopen the project!"
 }
 
+function download_deps_1_14 {
+	mkdir -p LandLord-latest/target/Testserver_1.14.2/plugins
+
+	cd LandLord-latest/target/Testserver_1.14.2/plugins
+	# download dependency plugins into right folder
+	curl -o wg.jar http://builds.enginehub.org/job/worldguard/12048/download/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar
+	curl -o we.jar http://builds.enginehub.org/job/worldedit/12054/download/worldedit-bukkit-7.0.0-SNAPSHOT-dist.jar
+	wget -O vault.jar https://dev.bukkit.org/projects/vault/files/latest
+	wget -O protocollib.jar https://dev.bukkit.org/projects/protocollib/files/latest
+	wget -O eco.jar https://github.com/HimaJyun/Jecon/releases/download/2.1.0/Jecon-2.1.0.jar
+	cd ..
+	cd ..
+	cd ..
+	cd ..
+	echo "Downloaded all dependencies for 1.14.2"
+}
 
 function download_deps_1_13 {
 	mkdir -p LandLord-latest/target/Testserver_1.13.2/plugins
@@ -85,18 +101,18 @@ function install_buildtools {
 
 function accept_eulas {
 	echo "eula=true" > LandLord-legacy/target/Testserver_1.12.2/eula.txt
-	echo "eula=true" > LandLord-latest/target/Testserver_1.13.2/eula.txt
+	echo "eula=true" > LandLord-latest/target/Testserver_1.14.2/eula.txt
 	echo "Accepted eula!"
 }
 
 
-versions=(1.13.2)
+versions=(1.12.2 1.14.2)
 
 for version in ${versions}; do
     install_buildtools ${version}
 done
 
 download_deps_1_12
-download_deps_1_13
+download_deps_1_14
 install_run_scripts
 accept_eulas
