@@ -38,7 +38,7 @@ function download_deps_1_14 {
 	curl -o wg.jar http://builds.enginehub.org/job/worldguard/12048/download/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar
 	curl -o we.jar http://builds.enginehub.org/job/worldedit/12054/download/worldedit-bukkit-7.0.0-SNAPSHOT-dist.jar
 	wget -O vault.jar https://dev.bukkit.org/projects/vault/files/latest
-	wget -O protocollib.jar https://dev.bukkit.org/projects/protocollib/files/latest
+	wget -O protocollib.jar http://ci.dmulloy2.net/job/ProtocolLib%20Gradle/lastStableBuild/artifact/build/libs/ProtocolLib.jar
 	wget -O eco.jar https://github.com/HimaJyun/Jecon/releases/download/2.1.0/Jecon-2.1.0.jar
 	cd ..
 	cd ..
