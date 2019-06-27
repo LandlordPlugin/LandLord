@@ -331,39 +331,41 @@ public class AManage extends AbstractGUI {
                     lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
             };
 
-            //TODO test this
-            Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () ->
-                friends.forEach(id -> {
-                    OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-                    Icon friend = new Icon(mats.getPlayerHead(id));
-                    friend.setName(op.getName());
-                    friend.setLore(formatFriendsSegment(id));
-                    friend.addClickAction((player) -> {
-                        ConfirmationGUI confirmationGUI = new ConfirmationGUI(player, lm.getRawString("Commands" +
-                                ".Manage" +
-                                ".ManageFriends.unfriend")
-                                .replace("%player%", op.getName()),
-                                (p) -> {
-                                    friendsGui.removeIcon(friendsGui.filter(op.getName()).get(0));
-                                    for (IOwnedLand region : regions) {
-                                        Bukkit.dispatchCommand(player, PrincepsLib.getCommandManager()
-                                                .getCommand(Landlordbase.class).getCommandString(Unfriend.class)
-                                                .substring(1) + " " + region.getName() + " " + op.getName());
-                                    }
-                                    player.closeInventory();
-                                    friendsGui.display();
-                                },
-                                (p) -> {
-                                    player.closeInventory();
-                                    friendsGui.display();
-                                }, friendsGui);
-                        confirmationGUI.setConfirm(lm.getRawString("Confirmation.accept"));
-                        confirmationGUI.setDecline(lm.getRawString("Confirmation.decline"));
-                        confirmationGUI.display();
-                        friendsGui.addIcon(friend);
-                    });
-                }));
+            String rawTitle = lm.getRawString("Commands.Manage.ManageFriends.unfriend");
 
+            //Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () ->
+            for (UUID id : friends) {
+                OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+                Icon friend = new Icon(mats.getPlayerHead(id));
+                String name = (op != null && op.getName() != null ? op.getName() : "OfflinePlayer");
+                String confititle = rawTitle.replace("%player%", name);
+                friend.setName(name);
+                friend.setLore(formatFriendsSegment(id));
+                friend.addClickAction((player) -> {
+                    ConfirmationGUI confirmationGUI = new ConfirmationGUI(this.player,
+                            confititle,
+                            (p) -> {
+                                friendsGui.removeIcon(friend);
+
+                                for (IOwnedLand region : regions) {
+                                    Bukkit.dispatchCommand(player, PrincepsLib.getCommandManager()
+                                            .getCommand(Landlordbase.class).getCommandString(Unfriend.class)
+                                            .substring(1) + " " + name + " " + region.getName());
+                                }
+                                player.closeInventory();
+                                friendsGui.display();
+                            },
+                            (p) -> {
+                                player.closeInventory();
+                                friendsGui.display();
+                            }, friendsGui);
+                    confirmationGUI.setConfirm(lm.getRawString("Confirmation.accept"));
+                    confirmationGUI.setDecline(lm.getRawString("Confirmation.decline"));
+                    confirmationGUI.display();
+                });
+                friendsGui.addIcon(friend);
+            }
+            //;
             icon.addClickAction((p) -> friendsGui.display());
 
             this.setIcon(position++, icon);

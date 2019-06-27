@@ -11,6 +11,8 @@ import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
+
 /**
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
@@ -30,31 +32,39 @@ public class Unfriend extends LandlordCommand {
         if (properties.isConsole()) {
             return;
         }
+        Player player = properties.getPlayer();
+        if (arguments.size() == 0) {
+            lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
+                    .replace("%players%", "?"));
+            return;
+        }
+
         try {
-            onUnfriend(properties.getPlayer(), arguments.get(0));
+            IOwnedLand targetLand;
+            String targetPlayer;
+            if (arguments.size() == 1) {
+                targetPlayer = arguments.get(0);
+                targetLand = plugin.getWGManager().getRegion(player.getLocation().getChunk());
+            } else {
+                targetPlayer = arguments.get(0);
+                targetLand = plugin.getWGManager().getRegion(arguments.get(1));
+            }
+            onUnfriend(player, targetPlayer, targetLand);
         } catch (ArgumentsOutOfBoundsException e) {
-            onUnfriend(properties.getPlayer(), null);
+            properties.sendUsage();
         }
     }
 
-    private void onUnfriend(Player player, String playerName) {
+    private void onUnfriend(Player player, String playerName, IOwnedLand land) {
 
         if (isDisabledWorld(player)) {
             return;
         }
 
-        IOwnedLand land = plugin.getWGManager().getRegion(player.getLocation().getChunk());
-
         if (land != null) {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
                 lm.sendMessage(player, lm.getString("Commands.Unfriend.notOwn")
                         .replace("%owner%", land.getOwnersString()));
-                return;
-            }
-
-            if (playerName == null) {
-                lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
-                        .replace("%players%", "?"));
                 return;
             }
 
