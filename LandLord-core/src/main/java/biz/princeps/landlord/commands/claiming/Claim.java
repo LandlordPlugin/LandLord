@@ -349,7 +349,7 @@ public class Claim extends LandlordCommand {
     }
 
     private boolean hasClaims(Player player, int regionCount) {
-        if (plugin.getConfig().getBoolean("Shop.enable") && Options.isVaultEnabled()) {
+        if (plugin.getConfig().getBoolean("Claims.enable") && Options.isVaultEnabled()) {
             int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
 
             if (regionCount >= claims) {
