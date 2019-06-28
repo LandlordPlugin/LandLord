@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGuiAll;
 import biz.princeps.lib.command.Arguments;
@@ -8,6 +9,9 @@ import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project: LandLord
@@ -33,8 +37,15 @@ public class ManageAll extends LandlordCommand {
 
         Player player = properties.getPlayer();
 
+        List<IOwnedLand> lands = Lists.newArrayList(plugin.getWGManager().getRegions(player.getUniqueId()));
+
+        if (lands.size() == 0) {
+            lm.sendMessage(player, plugin.getLangManager().getString("Commands.ListLands.noLands"));
+            return;
+        }
+
         ManageGuiAll gui = new ManageGuiAll(
-               plugin, player, Lists.newArrayList(plugin.getWGManager().getRegions(player.getUniqueId())));
+               plugin, player, lands);
         gui.display();
     }
 }
