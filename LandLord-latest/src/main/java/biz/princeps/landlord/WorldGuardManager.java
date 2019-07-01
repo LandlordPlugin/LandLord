@@ -217,7 +217,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     public boolean isAllowedInOverlap(Player p, Location loc) {
         LocalPlayer localPlayer = wgPlugin.wrapPlayer(p);
         ApplicableRegionSet applicableRegions = getRegionManager(loc.getWorld())
-                .getApplicableRegions(localPlayer.getLocation().toVector().toBlockPoint());
+                .getApplicableRegions(BlockVector3.at(loc.getX(), loc.getY(), loc.getZ()));
         if (applicableRegions.getRegions().size() > 0) { // check for other lands, that may not be handled by landlord
             for (ProtectedRegion protectedRegion : applicableRegions.getRegions()) {
                 if (protectedRegion.isMember(localPlayer) || protectedRegion.isOwner(localPlayer)) {

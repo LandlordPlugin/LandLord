@@ -79,31 +79,33 @@ public class SecureWorldListener extends BasicListener {
 
     private void handleLand(Player p, Location loc, IOwnedLand land, Cancellable e) {
         // is free land
-        if (p.isOp() || p.hasPermission("landlord.admin.bypass"))
+        if (p.isOp() || p.hasPermission("landlord.admin.bypass")) {
             return;
+        }
+        if (plugin.getConfig().getStringList("disabled-worlds").contains(loc.getWorld().getName())) {
+            return;
+        }
+        if (wg.isAllowedInOverlap(p, loc)) {
+            return;
+        }
+        if (land != null) {
+            return;
+        }
+        int landcount = wg.getRegionCount(p.getUniqueId());
 
-        if (!plugin.getConfig().getStringList("disabled-worlds").contains(loc.getWorld().getName())) {
-
-            if (wg.isAllowedInOverlap(p, loc)) return;
-
-            if (land == null) {
-                int landcount = wg.getRegionCount(p.getUniqueId());
-
-                if (landcount < treshold) {
-                    String rawString = plugin.getLangManager().getRawString("Alerts.tresholdNotReached")
-                            .replace("%x%", treshold + "");
-                    if (display == LandAlerter.LandMessageDisplay.ActionBar) {
-                        PrincepsLib.getStuffManager().sendActionBar(p, rawString);
-                    } else if (display == LandAlerter.LandMessageDisplay.Chat) {
-                        plugin.getLangManager().sendMessage(p, plugin.getLangManager().getString("Alerts.tresholdNotReached")
-                                .replace("%x%", treshold + ""));
-                    } else if (display == LandAlerter.LandMessageDisplay.Title) {
-                        p.sendTitle(rawString, null);
-                    }
-
-                    e.setCancelled(true);
-                }
+        if (landcount < treshold) {
+            String rawString = plugin.getLangManager().getRawString("Alerts.tresholdNotReached")
+                    .replace("%x%", treshold + "");
+            if (display == LandAlerter.LandMessageDisplay.ActionBar) {
+                PrincepsLib.getStuffManager().sendActionBar(p, rawString);
+            } else if (display == LandAlerter.LandMessageDisplay.Chat) {
+                plugin.getLangManager().sendMessage(p, plugin.getLangManager().getString("Alerts.tresholdNotReached")
+                        .replace("%x%", treshold + ""));
+            } else if (display == LandAlerter.LandMessageDisplay.Title) {
+                p.sendTitle(rawString, null);
             }
+
+            e.setCancelled(true);
         }
     }
 }
