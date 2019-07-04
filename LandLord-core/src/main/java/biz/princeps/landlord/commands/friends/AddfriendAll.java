@@ -58,11 +58,14 @@ public class AddfriendAll extends LandlordCommand {
                 int count = 0;
                 for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
                     if (!ol.isFriend(offline.getUuid())) {
+                        String oldfriends = ol.getMembersString();
                         ol.addFriend(offline.getUuid());
                         count++;
-                        LandManageEvent landManageEvent = new LandManageEvent(player, ol,
-                                null, "FRIENDS", ol.getMembersString());
-                        Bukkit.getPluginManager().callEvent(landManageEvent);
+                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> {
+                            LandManageEvent landManageEvent = new LandManageEvent(player, ol,
+                                    "FRIENDS", oldfriends, ol.getMembersString());
+                            Bukkit.getPluginManager().callEvent(landManageEvent);
+                        });
                     }
                 }
 
