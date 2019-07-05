@@ -75,10 +75,14 @@ public class Unfriend extends LandlordCommand {
                             .replace("%players%", playerName));
                 } else if (land.getFriends().contains(offline.getUuid())) {
                     // Success
+                    String old = land.getMembersString();
                     land.removeFriend(offline.getUuid());
-                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                            null, "FRIENDS", land.getMembersString());
-                    Bukkit.getPluginManager().callEvent(landManageEvent);
+
+                    Bukkit.getScheduler().runTask(plugin.getPlugin(),()->{
+                        LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                "FRIENDS", old, land.getMembersString());
+                        Bukkit.getPluginManager().callEvent(landManageEvent);
+                    });
 
                     lm.sendMessage(player, lm.getString("Commands.Unfriend.success")
                             .replace("%players%", playerName));

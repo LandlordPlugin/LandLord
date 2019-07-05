@@ -58,11 +58,14 @@ public class UnfriendAll extends LandlordCommand {
                 int count = 0;
                 for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
                     if (ol.isFriend(offline.getUuid())) {
+                        String oldvalue = ol.getMembersString();
                         ol.removeFriend(offline.getUuid());
                         count++;
-                        LandManageEvent landManageEvent = new LandManageEvent(player, ol,
-                                null, "FRIENDS", ol.getMembersString());
-                        Bukkit.getPluginManager().callEvent(landManageEvent);
+                        Bukkit.getScheduler().runTask(plugin.getPlugin(), ()->{
+                            LandManageEvent landManageEvent = new LandManageEvent(player, ol,
+                                    "FRIENDS", oldvalue, ol.getMembersString());
+                            Bukkit.getPluginManager().callEvent(landManageEvent);
+                        });
                     }
                 }
 

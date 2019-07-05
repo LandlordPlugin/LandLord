@@ -61,7 +61,7 @@ public class AddfriendAll extends LandlordCommand {
                         String oldfriends = ol.getMembersString();
                         ol.addFriend(offline.getUuid());
                         count++;
-                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> {
+                        Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
                             LandManageEvent landManageEvent = new LandManageEvent(player, ol,
                                     "FRIENDS", oldfriends, ol.getMembersString());
                             Bukkit.getPluginManager().callEvent(landManageEvent);
