@@ -212,8 +212,8 @@ Commands:
         title: 'Autoriser %mob% à apparaître ?'
         description:
           - 'Apparition de %mob%: %value%'
-        deny: 'Autorisée'
-        allow: 'Interdite'
+        deny: 'Interdite'
+        allow: 'Autorisée'
     Regenerate:
       title: '&cRegénération'
       description:
