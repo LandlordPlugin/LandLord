@@ -64,10 +64,14 @@ public class Addfriend extends LandlordCommand {
                             .replace("%players%", playerName));
                 } else if (!land.isOwner(offline.getUuid())) {
                     // Success
+                    String oldFriends = land.getMembersString();
                     land.addFriend(offline.getUuid());
-                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                            null, "FRIENDS", land.getMembersString());
-                    Bukkit.getPluginManager().callEvent(landManageEvent);
+
+                    Bukkit.getScheduler().runTask(plugin.getPlugin(), ()->{
+                        LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                "FRIENDS", oldFriends, land.getMembersString());
+                        Bukkit.getPluginManager().callEvent(landManageEvent);
+                    });
 
                     lm.sendMessage(player, lm.getString("Commands.Addfriend.success")
                             .replace("%players%", playerName));
