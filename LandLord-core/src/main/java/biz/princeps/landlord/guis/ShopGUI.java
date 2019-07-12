@@ -220,8 +220,8 @@ public class ShopGUI extends AbstractGUI {
                     "%own%", "" + vault.format(vault.getBalance(player.getUniqueId()))
             ));
             error.addClickAction((p) -> lm.sendMessage(player, lm.getString("Shop.notEnoughMoney")
-                    .replace("%number%", String.valueOf(delta)
-                            .replace("%cost%", vault.format(cost)))));
+                    .replace("%number%", String.valueOf(delta))
+                    .replace("%cost%", vault.format(cost))));
             this.setIcon(53, error);
             return;
         } else {
