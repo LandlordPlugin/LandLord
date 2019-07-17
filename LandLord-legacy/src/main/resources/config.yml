@@ -106,11 +106,6 @@ locationFormat: '%world% - (%x%|%z%)'
 # These are hard caps. If a player has the permission "landlord.limit.10" he will be able to buy up to 10 lands.
 # define all the landlord.limit.x permissions you wanna use here in this list.
 # Please sort the entries ascending!
-limits:
-  - 10
-  - 20
-  - 30
-  - 40
 
 # Secures the world in which landlord is active. This means, players wont be able to destroy anything in free lands
 SecureWorld:
@@ -601,4 +596,4 @@ Manage:
 EnableMetrics: true
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 25
+version: 26

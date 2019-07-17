@@ -10,9 +10,11 @@ import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Project: LandLord
@@ -257,15 +259,20 @@ public class ShopGUI extends AbstractGUI {
 
 
     private int getMaxLimitPerm() {
-        List<Integer> limitlist = pl.getConfig().getIntegerList("limits");
-
         if (!player.hasPermission("landlord.limit.override")) {
             // We need to find out, whats the maximum limit.x permission is a player has
 
             int highestAllowedLandCount = -1;
-            for (Integer integer : limitlist) {
-                if (player.hasPermission("landlord.limit." + integer)) {
-                    highestAllowedLandCount = integer;
+            Set<PermissionAttachmentInfo> perms = player.getEffectivePermissions();
+            for (PermissionAttachmentInfo perm : perms) {
+                if (perm.getValue()) {
+                    String s = perm.getPermission();
+                    if (s.startsWith("landlord.limit.")) {
+                        int value = Integer.parseInt(s.substring(s.lastIndexOf('.') + 1));
+                        if (value > highestAllowedLandCount) {
+                            highestAllowedLandCount = value;
+                        }
+                    }
                 }
             }
 
