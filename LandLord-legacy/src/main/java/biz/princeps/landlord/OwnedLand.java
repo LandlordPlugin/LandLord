@@ -249,7 +249,7 @@ public class OwnedLand extends AOwnedLand {
         // add missing flags
         for (String s : rawList) {
             Flag flag = getFlag(s.toLowerCase());
-            if (!region.getFlags().keySet().contains(flag)) {
+            if (!region.getFlags().containsKey(flag)) {
                 region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
                 region.setFlag(flag, StateFlag.State.ALLOW);
             }
@@ -259,10 +259,10 @@ public class OwnedLand extends AOwnedLand {
         if (p.getName() == null) {
             return;
         }
-        if (!region.getFlags().keySet().contains(DefaultFlag.GREET_MESSAGE)) {
+        if (!region.getFlags().containsKey(DefaultFlag.GREET_MESSAGE)) {
             region.setFlag(DefaultFlag.GREET_MESSAGE,
                     pl.getLangManager().getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
-        } else if (!region.getFlags().keySet().contains(DefaultFlag.FAREWELL_MESSAGE)) {
+        } else if (!region.getFlags().containsKey(DefaultFlag.FAREWELL_MESSAGE)) {
             region.setFlag(DefaultFlag.FAREWELL_MESSAGE,
                     pl.getLangManager().getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
         }

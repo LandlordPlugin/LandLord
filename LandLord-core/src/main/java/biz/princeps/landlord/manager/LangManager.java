@@ -4,6 +4,7 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.util.ConfigUtil;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -91,10 +92,12 @@ public class LangManager implements ILangManager {
 
     @Override
     public void sendMessage(Player player, String msg) {
-        if (msg.equals("MISSING STRING") &&
-                pl.getConfig().getBoolean("CommandSettings.Main.enableMissingStringWarning")) {
+        if (msg.isEmpty() || msg.equals("null")) return;
+        if (msg.equals("MISSING STRING") && pl.getConfig().getBoolean("CommandSettings.Main.enableMissingStringWarning")) {
             player.sendMessage("§cThe string you are looking for does not exist. Please check the log for further information!");
-        } else if (msg.equals("null") || msg.isEmpty()) {
-        } else player.sendMessage(msg);
+        } else {
+            //I don't know why, but some messages are not sent correctly without TextComponent...
+            player.sendMessage(new TextComponent(msg));
+        }
     }
 }

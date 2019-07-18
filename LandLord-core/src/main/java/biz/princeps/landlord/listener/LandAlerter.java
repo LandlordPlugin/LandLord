@@ -52,6 +52,7 @@ public class LandAlerter extends BasicListener {
      */
     public LandAlerter(ILandLord pl) {
         super(pl);
+        this.pl = pl;
         this.wg = pl.getWGManager();
         currentLands = new HashMap<>();
         previousLands = new HashMap<>();
@@ -219,8 +220,7 @@ public class LandAlerter extends BasicListener {
             this.previousLands.put(p.getUniqueId(), landFrom);
             prevLand = landFrom;
         }
-        if (landFrom.equals(landTowards)) {
-        } else {
+        if (!landFrom.equals(landTowards)) {
             // Unequals, so they changed
             if (!currentLand.equals(landTowards)) {
                 this.previousLands.replace(p.getUniqueId(), currentLand);
