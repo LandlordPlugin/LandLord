@@ -2,6 +2,8 @@ package biz.princeps.landlord.api;
 
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public interface IMapManager {
 
     /**
@@ -41,15 +43,15 @@ public interface IMapManager {
     /**
      * Updates a map for a specific player
      *
-     * @param player the player
+     * @param playerUUID the player's uuid
      */
-    void update(String player);
+    void update(UUID playerUUID);
 
     /**
      * Checks, if a player has a landmap opened.
      *
-     * @param playername the player
+     * @param playerUUID the player's uuid
      * @return if the player has a landmap openf
      */
-    boolean hasMap(String playername);
+    boolean hasMap(UUID playerUUID);
 }

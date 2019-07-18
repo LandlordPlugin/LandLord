@@ -6,14 +6,14 @@ import biz.princeps.landlord.util.MapConstants;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * File created by jcdesimp on 3/10/14. updated by SpatiumPrinceps on 19/07/17
  */
 public class MapManager implements IMapManager {
 
-    //TODO change to <UUID, LandMap>
-    private HashMap<String, LandMap> mapList;
+    private HashMap<UUID, LandMap> mapList;
     private ILandLord pl;
     private MapConstants constants;
 
@@ -26,7 +26,7 @@ public class MapManager implements IMapManager {
 
     @Override
     public void toggleMap(Player p) {
-        if (hasMap(p.getName())) {
+        if (hasMap(p.getUniqueId())) {
             removeMap(p);
         } else {
             addMap(p);
@@ -35,45 +35,45 @@ public class MapManager implements IMapManager {
 
     @Override
     public void addMap(Player player) {
-        if (!hasMap(player.getName())) {
-            mapList.put(player.getName(), new LandMap(player, pl, constants));
+        if (!hasMap(player.getUniqueId())) {
+            mapList.put(player.getUniqueId(), new LandMap(player, pl, constants));
         }
     }
 
     @Override
     public void removeMap(Player player) {
-        String pName = player.getName();
-        if (hasMap(pName)) {
-            LandMap curr = mapList.get(pName);
+        UUID pUUID = player.getUniqueId();
+        if (hasMap(pUUID)) {
+            LandMap curr = mapList.get(pUUID);
             curr.removeMap();
-            mapList.remove(pName);
+            mapList.remove(pUUID);
         }
     }
 
     @Override
     public void removeAllMaps() {
-        for (String k : mapList.keySet()) {
-            mapList.get(k).removeMap();
+        for (UUID uuid : mapList.keySet()) {
+            mapList.get(uuid).removeMap();
         }
         mapList.clear();
     }
 
     @Override
     public void updateAll() {
-        for (String k : mapList.keySet()) {
-            mapList.get(k).forceUpdate();
+        for (UUID uuid : mapList.keySet()) {
+            mapList.get(uuid).forceUpdate();
         }
     }
 
     @Override
-    public void update(String player) {
-        if (hasMap(player)) {
-            mapList.get(player).forceUpdate();
+    public void update(UUID playerUUID) {
+        if (hasMap(playerUUID)) {
+            mapList.get(playerUUID).forceUpdate();
         }
     }
 
     @Override
-    public boolean hasMap(String playername) {
-        return mapList.containsKey(playername);
+    public boolean hasMap(UUID playerUUID) {
+        return mapList.containsKey(playerUUID);
     }
 }

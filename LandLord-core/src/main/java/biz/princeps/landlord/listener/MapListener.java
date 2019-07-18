@@ -46,7 +46,7 @@ public class MapListener extends BasicListener {
 
     private void handleMapRefresh(Player player) {
         final Player p = player;
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> mapManager.update(p.getName()), 15L);
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> mapManager.update(p.getUniqueId()), 15L);
     }
 
 }

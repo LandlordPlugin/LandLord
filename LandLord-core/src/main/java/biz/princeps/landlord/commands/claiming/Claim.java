@@ -17,8 +17,9 @@ import org.bukkit.Chunk;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Project: LandLord
@@ -325,15 +326,20 @@ public class Claim extends LandlordCommand {
     }
 
     private boolean hasLimitPermissions(Player player, int regionCount) {
-        List<Integer> limitlist = plugin.getConfig().getIntegerList("limits");
-
         if (!player.hasPermission("landlord.limit.override")) {
             // We need to find out, whats the maximum limit.x permission is a player has
 
             int highestAllowedLandCount = -1;
-            for (Integer integer : limitlist) {
-                if (player.hasPermission("landlord.limit." + integer)) {
-                    highestAllowedLandCount = integer;
+            Set<PermissionAttachmentInfo> perms = player.getEffectivePermissions();
+            for (PermissionAttachmentInfo perm : perms) {
+                if (perm.getValue()) {
+                    String s = perm.getPermission();
+                    if (s.startsWith("landlord.limit.")) {
+                        int value = Integer.parseInt(s.substring(s.lastIndexOf('.') + 1));
+                        if (value > highestAllowedLandCount) {
+                            highestAllowedLandCount = value;
+                        }
+                    }
                 }
             }
 

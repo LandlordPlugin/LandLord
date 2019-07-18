@@ -12,8 +12,9 @@ import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Project: LandLord
@@ -140,19 +141,24 @@ public class GiveClaims extends LandlordCommand {
         }
     }
 
-    // TODO clean up this mess Claim#hasLimitPermission!! This is so bad style, i get ill just by thinking about i
-    //  wrote this bullshit
     private boolean checkPermission(Player player, int amount) {
         if (!player.hasPermission("landlord.limit.override")) {
             int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
-            List<Integer> limitlist = plugin.getConfig().getIntegerList("limits");
 
             int highestAllowedLandCount = -1;
-            for (Integer integer : limitlist) {
-                if (player.hasPermission("landlord.limit." + integer)) {
-                    highestAllowedLandCount = integer;
+            Set<PermissionAttachmentInfo> perms = player.getEffectivePermissions();
+            for (PermissionAttachmentInfo perm : perms) {
+                if (perm.getValue()) {
+                    String s = perm.getPermission();
+                    if (s.startsWith("landlord.limit.")) {
+                        int value = Integer.parseInt(s.substring(s.lastIndexOf('.') + 1));
+                        if (value > highestAllowedLandCount) {
+                            highestAllowedLandCount = value;
+                        }
+                    }
                 }
             }
+
             if (claimcount + amount > highestAllowedLandCount) {
                 lm.sendMessage(player, plugin.getLangManager().getString("Shop.notAllowed"));
                 return false;

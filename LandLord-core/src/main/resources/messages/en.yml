@@ -51,6 +51,9 @@ Commands:
     notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
     notOwnFreeLand: '&7You do not own this chunk'
     success: '&7You successfully unclaimed chunk &c%chunk% &7in world &c%world% &7and got &c%money% &7back'
+  UnclaimAll:
+    notOwnFreeLand: '&7You do not own any land'
+    success: '&7You successfully unclaimed %amount% chunk(s) &7in world &c%world% &7and got &c%money% &7back'
   Listfriends:
     invalidWorld: '&cThe entered world does not exist!'
     invalidGeneral: '&cThe entered coordinates are invalid!'

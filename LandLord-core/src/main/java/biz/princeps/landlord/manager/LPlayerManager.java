@@ -5,12 +5,13 @@ import biz.princeps.landlord.persistent.FlatFileStorage;
 import biz.princeps.landlord.persistent.SQLStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -181,15 +182,20 @@ public class LPlayerManager implements IPlayerManager {
 
     @Override
     public int getMaxClaimPermission(Player player) {
-        List<Integer> limitlist = plugin.getConfig().getIntegerList("limits");
-
         if (!player.hasPermission("landlord.limit.override")) {
             // We need to find out, whats the maximum limit.x permission is a player has
 
             int highestAllowedLandCount = -1;
-            for (Integer integer : limitlist) {
-                if (player.hasPermission("landlord.limit." + integer)) {
-                    highestAllowedLandCount = integer;
+            Set<PermissionAttachmentInfo> perms = player.getEffectivePermissions();
+            for (PermissionAttachmentInfo perm : perms) {
+                if (perm.getValue()) {
+                    String s = perm.getPermission();
+                    if (s.startsWith("landlord.limit.")) {
+                        int value = Integer.parseInt(s.substring(s.lastIndexOf('.') + 1));
+                        if (value > highestAllowedLandCount) {
+                            highestAllowedLandCount = value;
+                        }
+                    }
                 }
             }
             return highestAllowedLandCount;
