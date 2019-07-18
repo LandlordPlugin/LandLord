@@ -50,6 +50,9 @@ Commands:
     notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
     notOwnFreeLand: '&7Nem a sajátod ennek a darabnak'
     success: '&7Sikeresen mentesítetted &c%chunk%&7 darabot &c%world%&7 világban &c%money% &7és kaptál vissza'
+  UnclaimAll:
+    notOwnFreeLand: '&7You do not own any land'
+    success: '&7You successfully unclaimed %amount% chunk(s) &7in world &c%world% &7and got &c%money% &7back'
   Listfriends:
     invalidWorld: '&cThe entered world does not exist!'
     invalidGeneral: '&cThe entered coordinates are invalid!'

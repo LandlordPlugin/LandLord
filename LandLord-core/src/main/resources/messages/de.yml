@@ -51,6 +51,9 @@ Commands:
     notOwn: '&7Dieses Grundstück gehört dir nicht.'
     notOwnFreeLand: '&7Dieses Grundstück gehört dir nicht.'
     success: '&7Sie haben erfolgreich das Grundstück &c%chunk% &7in Welt &c%world% &7frei gegeben und erhalten &c%money% &7zurück'
+  UnclaimAll:
+    notOwnFreeLand: '&7You do not own any land'
+    success: '&7You successfully unclaimed %amount% chunk(s) &7in world &c%world% &7and got &c%money% &7back'
   Listfriends:
     invalidWorld: '&cDie angegebene Welt existiert nicht!'
     invalidGeneral: '&cDie eingegebenen Koordinaten sind ungültig!'
