@@ -1,5 +1,5 @@
 name: Landlord
-version: 4.249
+version: 4.251
 main: biz.princeps.landlord.LandLord
 author: SpatiumPrinceps
 website: https://www.spigotmc.org/resources/beta-landlord-2.44398/
@@ -26,6 +26,8 @@ permissions:
       landlord.player.advertise: true
       landlord.player.manage: true
       landlord.player.manage.*: true
+      /gg
+
 
   landlord.admin.*:
     description: Gives access to admin commands.

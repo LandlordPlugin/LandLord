@@ -97,7 +97,7 @@ public class LangManager implements ILangManager {
             player.sendMessage("§cThe string you are looking for does not exist. Please check the log for further information!");
         } else {
             //I don't know why, but some messages are not sent correctly without TextComponent...
-            player.sendMessage(new TextComponent(msg));
+            player.spigot().sendMessage(new TextComponent(msg));
         }
     }
 }
