@@ -267,7 +267,8 @@ public class OwnedLand extends AOwnedLand {
 
         // remove flags, that are no longer required
         for (Flag<?> iWrapperFlag : region.getFlags().keySet()) {
-            String flagname = iWrapperFlag.getName().toLowerCase();
+            //Flags names has -group as suffix :x
+            String flagname = iWrapperFlag.getName().toLowerCase().replace("-group", "");
             if (!rawList.contains(flagname) &&
                     !flagname.equals(Flags.GREET_MESSAGE.getName().toLowerCase()) &&
                     !flagname.equals(Flags.FAREWELL_MESSAGE.getName().toLowerCase())) {
