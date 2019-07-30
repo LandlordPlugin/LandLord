@@ -126,8 +126,17 @@ public class ListLands extends LandlordCommand {
                         .replace("%name%", land.getName()));
                 icon.setLore(lore);
                 icon.addClickAction((p) -> {
-                    ManageGui manageGUI = new ManageGui(plugin, sender, landGui, land);
-                    manageGUI.display();
+                    boolean hasPerm = false;
+                    for (String s : Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Manage.permissions"))) {
+                        if (p.hasPermission(s)) {
+                            hasPerm = true;
+                            break;
+                        }
+                    }
+                    if (hasPerm) {
+                        ManageGui manageGUI = new ManageGui(plugin, sender, landGui, land);
+                        manageGUI.display();
+                    }
                 });
 
 
