@@ -105,10 +105,10 @@ public class Claim extends LandlordCommand {
         if (ol == null) {
             double calculatedCost = Options.isVaultEnabled() ? plugin.getCostManager().calculateCost(player.getUniqueId()) : 0;
 
-            String guiDesc = "Claim " + landName + " for " + calculatedCost + "?";
             String chatDesc = lm.getString("Commands.Claim.confirmation")
                     .replace("%chunk%", landName)
                     .replace("%price%", String.valueOf(calculatedCost));
+            String guiDesc = chatDesc;
 
             if (!hasMoney(player, calculatedCost, landName, chunk)) {
                 return;
@@ -135,10 +135,10 @@ public class Claim extends LandlordCommand {
                 // Advertised land
                 double calculatedCost = ol.getPrice();
 
-                String guiDesc = "Claim " + landName + " for " + calculatedCost + "?";
                 String chatDesc = lm.getString("Commands.Claim.confirmation")
                         .replace("%chunk%", landName)
                         .replace("%price%", String.valueOf(calculatedCost));
+                String guiDesc = chatDesc;
 
                 if (!hasMoney(player, calculatedCost, landName, chunk)) {
                     return;
@@ -178,10 +178,10 @@ public class Claim extends LandlordCommand {
                         double costForBuyer = plugin.getCostManager().calculateCost(player.getUniqueId());
                         double payBackForInactive = plugin.getCostManager().calculateCost(ol.getOwner());
 
-                        String guiDesc = "Claim " + landName + " for " + costForBuyer + "?";
                         String chatDesc = lm.getString("Commands.Claim.confirmation")
                                 .replace("%chunk%", landName)
                                 .replace("%price%", String.valueOf(costForBuyer));
+                        String guiDesc = chatDesc;
 
                         String originalOwner = Bukkit.getOfflinePlayer(ol.getOwner()).getName();
 
