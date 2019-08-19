@@ -26,8 +26,6 @@ permissions:
       landlord.player.advertise: true
       landlord.player.manage: true
       landlord.player.manage.*: true
-      /gg
-
 
   landlord.admin.*:
     description: Gives access to admin commands.
