@@ -44,8 +44,6 @@ public class FlatFileStorage implements IStorage {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        getPlayer(UUID.randomUUID(), (p) -> {
-        });
     }
 
     public void getPlayer(UUID id, Consumer<IPlayer> consumer) {
