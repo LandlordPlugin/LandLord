@@ -39,15 +39,12 @@ public class Claims extends LandlordCommand {
         if (plugin.getConfig().getBoolean("Claims.enable")) {
             int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
             int regionCount = plugin.getWGManager().getRegionCount(player.getUniqueId());
-            String message = lm.getString("Commands.Claims.message");
-            String noClaims = lm.getString("Commands.Claims.noClaims");
-
 
             if (claimcount > 0) {
-                lm.sendMessage(player, message.replace("%regions%", regionCount + "")
+                lm.sendMessage(player, lm.getString("Commands.Claims.message").replace("%regions%", regionCount + "")
                         .replace("%claims%", claimcount + ""));
             } else {
-                BaseComponent[] text = TextComponent.fromLegacyText(noClaims);
+                BaseComponent[] text = TextComponent.fromLegacyText(lm.getString("Commands.Claims.noClaims"));
                 for (BaseComponent baseComponent : text) {
                     baseComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                             PrincepsLib.getCommandManager().getCommand(Landlordbase.class).getCommandString(Shop.class)));
@@ -55,7 +52,10 @@ public class Claims extends LandlordCommand {
                 plugin.getUtilsManager().sendBasecomponent(player, text);
             }
         } else {
-            lm.sendMessage(player, lm.getString("Commands.Claims.disabled"));
+            final int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
+            final int regionCount = plugin.getWGManager().getRegionCount(player.getUniqueId());
+            lm.sendMessage(player, lm.getString("Commands.Claims.message").replace("%regions%", regionCount + "")
+                    .replace("%claims%", (highestAllowedLandCount == Integer.MAX_VALUE ? "∞" : highestAllowedLandCount <= 0 ? "∅" : highestAllowedLandCount + "")));
         }
     }
 }
