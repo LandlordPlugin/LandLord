@@ -10,11 +10,9 @@ import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Project: LandLord
@@ -46,7 +44,7 @@ public class ShopGUI extends AbstractGUI {
     protected void create() {
         int lands = pl.getWGManager().getRegionCount(player.getUniqueId());
         int claims = pl.getPlayerManager().get(player.getUniqueId()).getClaims();
-        int max = getMaxLimitPerm();
+        int max = pl.getPlayerManager().getMaxClaimPermission(player);
 
         for (int i = 0; i < this.getSize(); i++) {
             Icon placehodler = new Icon(mats.getGreyStainedGlass());
@@ -255,31 +253,6 @@ public class ShopGUI extends AbstractGUI {
             this.setIcon(53, confirm);
         }
     }
-
-
-    private int getMaxLimitPerm() {
-        if (!player.hasPermission("landlord.limit.override")) {
-            // We need to find out, whats the maximum limit.x permission is a player has
-
-            int highestAllowedLandCount = -1;
-            Set<PermissionAttachmentInfo> perms = player.getEffectivePermissions();
-            for (PermissionAttachmentInfo perm : perms) {
-                if (perm.getValue()) {
-                    String s = perm.getPermission();
-                    if (s.startsWith("landlord.limit.")) {
-                        int value = Integer.parseInt(s.substring(s.lastIndexOf('.') + 1));
-                        if (value > highestAllowedLandCount) {
-                            highestAllowedLandCount = value;
-                        }
-                    }
-                }
-            }
-
-            return highestAllowedLandCount;
-        }
-        return Integer.MAX_VALUE;
-    }
-
 
     private List<String> replaceLore(List<String> list, String toReplace, String newValue) {
         List<String> newList = new ArrayList<>();

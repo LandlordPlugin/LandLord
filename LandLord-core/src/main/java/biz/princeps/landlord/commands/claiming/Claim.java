@@ -17,9 +17,6 @@ import org.bukkit.Chunk;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
-
-import java.util.Set;
 
 /**
  * Project: LandLord
@@ -325,32 +322,14 @@ public class Claim extends LandlordCommand {
     }
 
     private boolean hasLimitPermissions(Player player, int regionCount) {
-        if (!player.hasPermission("landlord.limit.override")) {
-            // We need to find out, whats the maximum limit.x permission is a player has
+        final int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
 
-            int highestAllowedLandCount = -1;
-            Set<PermissionAttachmentInfo> perms = player.getEffectivePermissions();
-            for (PermissionAttachmentInfo perm : perms) {
-                if (perm.getValue()) {
-                    String s = perm.getPermission();
-                    if (s.startsWith("landlord.limit.")) {
-                        int value = Integer.parseInt(s.substring(s.lastIndexOf('.') + 1));
-                        if (value > highestAllowedLandCount) {
-                            highestAllowedLandCount = value;
-                        }
-                    }
-                }
-            }
-
-            if (regionCount >= highestAllowedLandCount) {
-                lm.sendMessage(player, lm.getString("Commands.Claim.hardcap").replace("%regions%",
-                        highestAllowedLandCount + ""));
-                return false;
-            }
-            return true;
-        } else {
-            return true;
+        if (regionCount >= highestAllowedLandCount) {
+            lm.sendMessage(player, lm.getString("Commands.Claim.hardcap").replace("%regions%",
+                    highestAllowedLandCount + ""));
+            return false;
         }
+        return true;
     }
 
     private boolean hasClaims(Player player, int regionCount) {

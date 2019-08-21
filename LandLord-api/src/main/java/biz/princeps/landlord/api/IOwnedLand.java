@@ -163,4 +163,10 @@ public interface IOwnedLand {
      * @param owner the land's owner
      */
     void updateFlags(UUID owner);
+
+    /**
+     * Set the priority of a land region (incidence when it is not zero)
+     *
+     */
+    void initRegionPriority();
 }

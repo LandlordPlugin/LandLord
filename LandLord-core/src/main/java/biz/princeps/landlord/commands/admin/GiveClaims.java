@@ -12,9 +12,6 @@ import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
-
-import java.util.Set;
 
 /**
  * Project: LandLord
@@ -142,27 +139,13 @@ public class GiveClaims extends LandlordCommand {
     }
 
     private boolean checkPermission(Player player, int amount) {
-        if (!player.hasPermission("landlord.limit.override")) {
-            int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
+        final int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
 
-            int highestAllowedLandCount = -1;
-            Set<PermissionAttachmentInfo> perms = player.getEffectivePermissions();
-            for (PermissionAttachmentInfo perm : perms) {
-                if (perm.getValue()) {
-                    String s = perm.getPermission();
-                    if (s.startsWith("landlord.limit.")) {
-                        int value = Integer.parseInt(s.substring(s.lastIndexOf('.') + 1));
-                        if (value > highestAllowedLandCount) {
-                            highestAllowedLandCount = value;
-                        }
-                    }
-                }
-            }
+        final int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
 
-            if (claimcount + amount > highestAllowedLandCount) {
-                lm.sendMessage(player, plugin.getLangManager().getString("Shop.notAllowed"));
-                return false;
-            }
+        if (claimcount + amount > highestAllowedLandCount) {
+            lm.sendMessage(player, plugin.getLangManager().getString("Shop.notAllowed"));
+            return false;
         }
         return true;
     }
