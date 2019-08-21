@@ -170,7 +170,7 @@ public class LandAlerter extends BasicListener {
                 pl.getLangManager().sendMessage(p, msg);
                 return true;
             case Title:
-                p.sendTitle(msg, null);
+                p.sendTitle(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', msg), null);
                 return true;
             case Disabled:
             default:
