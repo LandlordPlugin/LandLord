@@ -68,7 +68,7 @@ ResetCost: 1000.0
 # here you can manage your claims shop.
 Claims:
   # set this to false, if you want to use the traditional permission based system
-  # if this is true, a player will still need the limit permissions (see below) to be able to buy claims.
+  # if this is true, a player will still need the limit permissions to be able to buy claims.
   enable: true
   # amount of free claims a user should be able to receive for free.
   free: 1
