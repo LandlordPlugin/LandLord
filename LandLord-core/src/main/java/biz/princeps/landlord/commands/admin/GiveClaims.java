@@ -35,8 +35,8 @@ public class GiveClaims extends LandlordCommand {
         int amount;
         double cost;
 
-        if (!Options.isVaultEnabled()) {
-
+        if (!Options.isVaultEnabled() || !Options.enabled_shop()) {
+            plugin.getLogger().info("Vault or the shop system is disabled! Therefore you cant execute giveclaims.");
             return;
         }
 
@@ -57,6 +57,7 @@ public class GiveClaims extends LandlordCommand {
                 if (player != null) {
                     if (checkPermission(player, amount)) {
                         if (vault.hasBalance(player.getUniqueId(), cost)) {
+
                             vault.take(player.getUniqueId(), cost);
                             lm.sendMessage(player, plugin.getLangManager().getString("Shop.success")
                                     .replace("%number%", amount + "")
@@ -93,7 +94,7 @@ public class GiveClaims extends LandlordCommand {
                 //ll giveclaims amount
                 try {
                     amount = args.getInt(0);
-                } catch (ArgumentsOutOfBoundsException e) {
+                } catch (Exception e) {
                     issuer.sendUsage();
                     return;
                 }
