@@ -215,6 +215,8 @@ CommandSettings:
     needsGapBetweenOwners: false
     # allow to claim a land when there is already another worldguard region
     allowOverlap: false
+    # if you use overlapping regions, this value manage the priority of the lands region relative to the others
+    regionPriority: 0
 
     name: claim
     usage: 'Usage: /land claim'
@@ -596,4 +598,4 @@ Manage:
 EnableMetrics: true
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 26
+version: 27
