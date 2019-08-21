@@ -16,12 +16,9 @@ public abstract class ACostManager implements ICostManager {
     protected ICostStrategy strategy;
     protected int free;
 
-    private String namespace;
-
     public ACostManager(ILandLord plugin, int free, String namespace) {
         this.plugin = plugin;
         this.free = free;
-        this.namespace = namespace;
         String func = plugin.getConfig().getString(namespace + "function");
 
         switch (func.toLowerCase()) {

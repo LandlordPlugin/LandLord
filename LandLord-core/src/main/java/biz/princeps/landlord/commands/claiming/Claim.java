@@ -210,7 +210,6 @@ public class Claim extends LandlordCommand {
                         lm.sendMessage(player, lm.getString("Commands.Claim.notYetInactive")
                                 .replace("%owner%", ol.getOwnersString())
                                 .replace("%days%", "" + inactiveDays));
-                        return;
                     }
                 });
             }

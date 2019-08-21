@@ -225,7 +225,6 @@ public class ShopGUI extends AbstractGUI {
                     .replace("%number%", String.valueOf(delta))
                     .replace("%cost%", vault.format(cost))));
             this.setIcon(53, error);
-            return;
         } else {
 
             Icon confirm = new Icon(Skulls.CONFIRM.getSkull(pl));
