@@ -1,6 +1,7 @@
 package biz.princeps.landlord.manager.cost;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.util.JavaUtils;
 
 import java.util.UUID;
 
@@ -26,6 +27,6 @@ public class LandCostManager extends ACostManager {
         if (x < free)
             return 0;
 
-        return strategy.calculate(x);
+        return JavaUtils.round(strategy.calculate(x), 2);
     }
 }

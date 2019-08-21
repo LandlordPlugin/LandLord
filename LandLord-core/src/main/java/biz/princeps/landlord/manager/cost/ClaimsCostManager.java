@@ -1,6 +1,7 @@
 package biz.princeps.landlord.manager.cost;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.util.JavaUtils;
 import org.bukkit.Bukkit;
 
 import java.util.UUID;
@@ -40,16 +41,16 @@ public class ClaimsCostManager extends ACostManager {
             System.out.println("times " + times);
             for (int i = times; i < 0; i++) {
                 cost += calculateCost(x + i);
-                System.out.println("\tCost for (" + (x + i) + ") is " + cost);
+                //System.out.println("\tCost for (" + (x + i) + ") is " + cost);
             }
         } else {
             System.out.println("times " + times);
             for (int i = 0; i < times; i++) {
                 cost += calculateCost(x + i);
-                System.out.println("\tCost for (" + (x + i) + ") is " + cost);
+                // System.out.println("\tCost for (" + (x + i) + ") is " + cost);
 
             }
         }
-        return cost;
+        return JavaUtils.round(cost, 2);
     }
 }

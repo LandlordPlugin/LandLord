@@ -104,7 +104,7 @@ public class Claim extends LandlordCommand {
 
             String chatDesc = lm.getString("Commands.Claim.confirmation")
                     .replace("%chunk%", landName)
-                    .replace("%price%", String.valueOf(calculatedCost));
+                    .replace("%price%", vault.format(calculatedCost));
             String guiDesc = chatDesc;
 
             if (!hasMoney(player, calculatedCost, landName, chunk)) {
@@ -134,7 +134,7 @@ public class Claim extends LandlordCommand {
 
                 String chatDesc = lm.getString("Commands.Claim.confirmation")
                         .replace("%chunk%", landName)
-                        .replace("%price%", String.valueOf(calculatedCost));
+                        .replace("%price%", vault.format(calculatedCost));
                 String guiDesc = chatDesc;
 
                 if (!hasMoney(player, calculatedCost, landName, chunk)) {
@@ -177,7 +177,7 @@ public class Claim extends LandlordCommand {
 
                         String chatDesc = lm.getString("Commands.Claim.confirmation")
                                 .replace("%chunk%", landName)
-                                .replace("%price%", String.valueOf(costForBuyer));
+                                .replace("%price%", vault.format(costForBuyer));
                         String guiDesc = chatDesc;
 
                         String originalOwner = Bukkit.getOfflinePlayer(ol.getOwner()).getName();
