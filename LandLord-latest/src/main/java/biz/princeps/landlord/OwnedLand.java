@@ -49,6 +49,7 @@ public class OwnedLand extends AOwnedLand {
         // insert default flags
         if (region.getFlags().size() == 0) {
             initFlags(owner);
+            initRegionPriority();
         }
     }
 
@@ -297,6 +298,11 @@ public class OwnedLand extends AOwnedLand {
             region.setFlag(Flags.FAREWELL_MESSAGE,
                     pl.getLangManager().getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
         }
+    }
+
+    @Override
+    public void initRegionPriority() {
+        region.setPriority(pl.getConfig().getInt("Claim.regionPriority"));
     }
 
     @Override

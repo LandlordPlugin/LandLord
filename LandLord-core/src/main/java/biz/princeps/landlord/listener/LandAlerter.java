@@ -266,7 +266,7 @@ public class LandAlerter extends BasicListener {
         Disabled
     }
 
-    class ChunkCoords {
+    static class ChunkCoords {
         int x;
         int z;
         World world;

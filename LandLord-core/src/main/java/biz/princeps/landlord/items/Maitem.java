@@ -178,7 +178,7 @@ public class Maitem extends AbstractItem {
         INFO, BUY, MANAGE, MANAGEALL, TOGGLEMAP, TOGGLEBORDERS
     }
 
-    class ItemClickAction {
+    static class ItemClickAction {
 
         private ClickedAtCondition activation;
         private ClickCondition condition;

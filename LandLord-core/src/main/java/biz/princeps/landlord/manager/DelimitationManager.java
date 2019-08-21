@@ -113,7 +113,7 @@ public class DelimitationManager implements IDelimitationManager {
         }
     }
 
-    public class BlockVector {
+    public static class BlockVector {
 
         private int x, z;
 

@@ -200,7 +200,7 @@ public class LPlayerManager implements IPlayerManager {
             }
             return highestAllowedLandCount;
         } else {
-            return Integer.MIN_VALUE;
+            return Integer.MAX_VALUE;
         }
     }
 
