@@ -56,6 +56,7 @@ public class LandMap extends LandlordCommand {
 
         if (!Options.enabled_map()) {
             lm.sendMessage(player, lm.getString("Commands.LandMap.disabled"));
+            return;
         }
 
         if (state.equals("on")) {
