@@ -7,7 +7,6 @@ import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
-import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
 import org.bukkit.entity.Player;
 
@@ -31,17 +30,18 @@ public class ListFriends extends LandlordCommand {
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
         if (properties.isPlayer()) {
+            String[] args = arguments.get();
 
             String landname;
-            try {
-                landname = arguments.get(0);
-            } catch (ArgumentsOutOfBoundsException e) {
+            if (args.length == 0) {
                 IOwnedLand region = wg.getRegion(properties.getPlayer().getLocation());
                 if (region != null) {
                     landname = region.getName();
                 } else {
                     landname = null;
                 }
+            } else {
+                landname = args[0];
             }
 
             onListFriends(properties.getPlayer(), landname);
