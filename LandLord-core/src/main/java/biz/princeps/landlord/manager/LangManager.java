@@ -5,6 +5,7 @@ import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.util.ConfigUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -91,7 +92,7 @@ public class LangManager implements ILangManager {
     }
 
     @Override
-    public void sendMessage(Player player, String msg) {
+    public void sendMessage(CommandSender player, String msg) {
         if (msg.isEmpty() || msg.equals("null")) return;
         if (msg.equals("MISSING STRING") && pl.getConfig().getBoolean("CommandSettings.Main.enableMissingStringWarning")) {
             player.sendMessage("§cThe string you are looking for does not exist. Please check the log for further information!");

@@ -9,6 +9,7 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -33,17 +34,18 @@ public class Clear extends LandlordCommand {
 
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
+
+        if (arguments.size() == 1){
+            // Clear a single player
+            String name = arguments.get()[0];
+            clearPlayer(name, properties.getCommandSender());
+            return;
+        }
+
         if (properties.isConsole()) {
             return;
         }
         Player player = properties.getPlayer();
-
-        if (arguments.size() == 1){
-            // Clear a single player
-            UUID id = UUID.fromString(arguments.get()[0]);
-            clearPlayer(id, player);
-            return;
-        }
 
         if (isDisabledWorld(player)) return;
 
@@ -57,12 +59,12 @@ public class Clear extends LandlordCommand {
         clearGUI.display();
     }
 
-    private void clearPlayer(UUID id, Player player) {
-        plugin.getPlayerManager().getOffline(id, (lPlayer) -> {
+    private void clearPlayer(String name, CommandSender player) {
+        plugin.getPlayerManager().getOffline(name, (lPlayer) -> {
             if (lPlayer == null) {
                 // Failure
                 lm.sendMessage(player, lm.getString("Commands.ClearWorld.noPlayer")
-                        .replace("%players%", id.toString()));
+                        .replace("%players%", name));
             } else {
                 // Success
                 Set<IOwnedLand> regions = wg.getRegions(lPlayer.getUuid());
