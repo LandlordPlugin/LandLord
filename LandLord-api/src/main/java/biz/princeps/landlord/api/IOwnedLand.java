@@ -111,6 +111,8 @@ public interface IOwnedLand {
 
     boolean contains(int x, int y, int z);
 
+    boolean contains(Location loc);
+
     List<ILLFlag> getFlags();
 
     String getGreetMessage();

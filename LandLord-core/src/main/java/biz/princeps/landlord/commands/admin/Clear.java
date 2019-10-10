@@ -67,8 +67,7 @@ public class Clear extends LandlordCommand {
                         .replace("%players%", name));
             } else {
                 // Success
-                Set<IOwnedLand> regions = wg.getRegions(lPlayer.getUuid());
-                int amt = handleUnclaim(regions);
+                int amt = wg.unclaim(wg.getRegions(lPlayer.getUuid()));
 
                 lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearplayer.success")
                         .replace("%count%", String.valueOf(amt))
@@ -78,15 +77,5 @@ public class Clear extends LandlordCommand {
                         () -> plugin.getMapManager().updateAll());
             }
         });
-    }
-
-    //TODO checkout if this is a memory leak
-    private int handleUnclaim(Set<IOwnedLand> regions) {
-        int count = regions.size();
-
-        for (IOwnedLand region : Sets.newHashSet(regions)) {
-            wg.unclaim(region);
-        }
-        return count;
     }
 }

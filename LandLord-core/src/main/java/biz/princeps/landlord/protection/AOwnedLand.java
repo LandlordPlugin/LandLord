@@ -88,4 +88,9 @@ public abstract class AOwnedLand implements IOwnedLand {
         }
         return null;
     }
+
+    @Override
+    public boolean contains(Location loc) {
+        return this.contains(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    }
 }

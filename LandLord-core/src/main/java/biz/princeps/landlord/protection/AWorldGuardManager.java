@@ -2,8 +2,10 @@ package biz.princeps.landlord.protection;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.lib.PrincepsLib;
+import com.google.common.collect.Sets;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
@@ -234,5 +236,36 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         return getRegion(name);
     }
 
+    //TODO checkout if this is a memory leak
+    @Override
+    public int unclaim(Set<IOwnedLand> regions) {
+        int count = regions.size();
+
+        Set<UUID> owners = new HashSet<>();
+        for (IOwnedLand region : Sets.newHashSet(regions)) {
+            System.out.println(region);
+            owners.add(region.getOwner());
+            this.unclaim(region);
+        }
+        System.out.println(owners);
+//TODO do this Im to tired to debug this garbage
+        for (UUID owner : owners) {
+            pl.getPlayerManager().getOffline(owner, player -> {
+                System.out.println(player);
+                for (IOwnedLand region : Sets.newHashSet(regions)) {
+                    System.out.println(region);
+                    if (region.isOwner(player.getUuid())) {
+                        System.out.println("isowner");
+                        if (region.contains(player.getHome())) {
+                            System.out.println("remo");
+                            player.setHome(null);
+                            pl.getPlayerManager().save(player, true);
+                        }
+                    }
+                }
+            });
+        }
+        return count;
+    }
 
 }
