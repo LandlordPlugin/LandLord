@@ -3,6 +3,7 @@ package biz.princeps.landlord.manager;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.util.ConfigUtil;
+import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
@@ -73,6 +74,12 @@ public class LangManager implements ILangManager {
     @Override
     public List<String> getStringList(String path) {
         List<String> message = msg.getStringList(path);
+
+        if (message == null) {
+            pl.getLogger().warning("Your language file " + filename + " seems to miss string '" + path + "'");
+            return Lists.newArrayList();
+        }
+
         List<String> finishedFormatting = new ArrayList<>();
         for (String s : message) {
             finishedFormatting.add(ChatColor.translateAlternateColorCodes('&', s));
