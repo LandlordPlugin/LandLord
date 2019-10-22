@@ -151,7 +151,8 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public String getGreetMessage() {
-        return region.getFlag(DefaultFlag.GREET_MESSAGE);
+        String greetMessage = region.getFlag(DefaultFlag.GREET_MESSAGE);
+        return greetMessage == null ? "" : greetMessage;
     }
 
     @Override
@@ -161,7 +162,8 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public String getFarewellMessage() {
-        return region.getFlag(DefaultFlag.FAREWELL_MESSAGE);
+        String farewellMessage = region.getFlag(DefaultFlag.FAREWELL_MESSAGE);
+        return farewellMessage == null ? "" : farewellMessage;
     }
 
     @Override
