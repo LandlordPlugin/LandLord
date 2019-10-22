@@ -98,14 +98,14 @@ public class ClearGUI extends AbstractGUI {
     }
 
     private void clearLand(IOwnedLand land) {
-        handleUnclaim(Sets.newHashSet(land));
+        wg.unclaim(Sets.newHashSet(land));
         lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearcurrentland.success")
                 .replace("%land%", land.getName()));
     }
 
     private void clearWorld(World world) {
         Set<IOwnedLand> regions = wg.getRegions(world);
-        int count = handleUnclaim(regions);
+        int count = wg.unclaim(regions);
 
         lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearworld.success")
                 .replace("%count%", String.valueOf(count))
@@ -113,16 +113,6 @@ public class ClearGUI extends AbstractGUI {
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
 
-    }
-
-    //TODO checkout if this is a memory leak
-    private int handleUnclaim(Set<IOwnedLand> regions) {
-        int count = regions.size();
-
-        for (IOwnedLand region : Sets.newHashSet(regions)) {
-            wg.unclaim(region);
-        }
-        return count;
     }
 
     private void clearPlayer(UUID id) {
@@ -134,7 +124,7 @@ public class ClearGUI extends AbstractGUI {
             } else {
                 // Success
                 Set<IOwnedLand> regions = wg.getRegions(lPlayer.getUuid());
-                int amt = handleUnclaim(regions);
+                int amt = wg.unclaim(regions);
 
                 lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearplayer.success")
                         .replace("%count%", String.valueOf(amt))

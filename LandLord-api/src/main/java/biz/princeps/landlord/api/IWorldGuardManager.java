@@ -76,6 +76,8 @@ public interface IWorldGuardManager {
 
     void unclaim(IOwnedLand land);
 
+    int unclaim(Set<IOwnedLand> regions);
+
     void unclaim(World world, String regionname);
 
     boolean canClaim(Player player, Chunk currChunk);

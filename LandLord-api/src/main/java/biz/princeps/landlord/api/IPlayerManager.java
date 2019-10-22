@@ -27,7 +27,6 @@ public interface IPlayerManager {
 
     void getOffline(String name, Consumer<IPlayer> consumer);
 
-
     boolean isInactive(LocalDateTime lastSeenDate);
 
     void isInactive(UUID id, Consumer<Boolean> consumer);

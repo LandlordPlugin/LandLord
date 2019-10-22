@@ -1,5 +1,6 @@
 package biz.princeps.landlord.api;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -53,5 +54,5 @@ public interface ILangManager {
      * @param player the player
      * @param msg    the message
      */
-    void sendMessage(Player player, String msg);
+    void sendMessage(CommandSender player, String msg);
 }
