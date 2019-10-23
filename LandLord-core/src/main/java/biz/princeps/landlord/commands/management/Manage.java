@@ -119,11 +119,11 @@ public class Manage extends LandlordCommand {
                     break;
                 case "setgreet":
                     //System.out.println("greet " + Arrays.toString(args));
-                    setGreet(player, args, wg.getRegion(player.getLocation()), 1);
+                    setGreet(player, args, wg.getRegion(player.getLocation().getChunk()), 1);
 
                     break;
                 case "setfarewell":
-                    setFarewell(player, args, wg.getRegion(player.getLocation()), 1);
+                    setFarewell(player, args, wg.getRegion(player.getLocation().getChunk()), 1);
                     break;
                 default:
                     try {

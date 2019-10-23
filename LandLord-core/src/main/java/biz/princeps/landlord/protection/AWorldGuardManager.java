@@ -223,7 +223,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     @Override
     public IOwnedLand getRegion(Location loc) {
-        String name = loc.getWorld().getName().replace(" ", "_");
+        String name = loc.getWorld().getName().toLowerCase().replace(" ", "_");
         name += "_";
 
         // x coord
