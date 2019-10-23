@@ -10,6 +10,7 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
@@ -76,7 +77,8 @@ public class Manage extends LandlordCommand {
                     for (int i = 1; i < args.length; i++) {
                         sb1.append(args[i]).append(" ");
                     }
-                    String newmsg1 = sb1.toString();
+                    String newmsg1 = ChatColor.translateAlternateColorCodes('&', sb1.toString());
+
                     if (newmsg1.isEmpty()) {
                         newmsg1 = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", player.getName());
                     }
@@ -98,7 +100,8 @@ public class Manage extends LandlordCommand {
                     for (int i = 1; i < args.length; i++) {
                         sb.append(args[i]).append(" ");
                     }
-                    String newmsg = sb.toString();
+                    String newmsg = ChatColor.translateAlternateColorCodes('&', sb.toString());
+
                     if (newmsg.isEmpty()) {
                         newmsg = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", player.getName());
                     }
@@ -150,7 +153,7 @@ public class Manage extends LandlordCommand {
         for (int i = casy; i < args.length; i++) {
             sb.append(args[i]).append(" ");
         }
-        String newmsg = sb.toString();
+        String newmsg = ChatColor.translateAlternateColorCodes('&', sb.toString());
 
         if (newmsg.isEmpty()) {
             newmsg = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", player.getName());
@@ -171,7 +174,8 @@ public class Manage extends LandlordCommand {
         for (int i = casy; i < args.length; i++) {
             sb.append(args[i]).append(" ");
         }
-        String newmsg = sb.toString();
+        String newmsg = ChatColor.translateAlternateColorCodes('&', sb.toString());
+
         if (newmsg.isEmpty()) {
             newmsg = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", player.getName());
         }
