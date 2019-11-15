@@ -68,6 +68,8 @@ public interface IWorldGuardManager {
 
     IOwnedLand[] getSurroundingsOwner(IOwnedLand land, UUID owner);
 
+    Map<Chunk, IOwnedLand> getNearbyLands(Chunk chunk, int offsetX, int offsetZ);
+
     Map<Chunk, IOwnedLand> getNearbyLands(Location loc, int offsetX, int offsetZ);
 
     int getRegionCount(UUID id);

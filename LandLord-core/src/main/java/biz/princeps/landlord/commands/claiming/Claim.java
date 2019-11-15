@@ -18,6 +18,10 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
@@ -359,7 +363,9 @@ public class Claim extends LandlordCommand {
                 // Get adjacent lands of the land, which a player wants to claim.
                 // Only when one of the 4 adjacent is already owned, allow to claim
                 boolean hasNearbyLand = false;
-                for (IOwnedLand adjLand : getSurroundings(chunk)) {
+                IOwnedLand[] surroundings = wg.getSurroundings(chunk);
+                for (int i = 1; i < surroundings.length; i++) {
+                    IOwnedLand adjLand = surroundings[i];
                     if (adjLand != null) {
                         if (adjLand.isOwner(player.getUniqueId())) {
                             hasNearbyLand = true;
@@ -379,36 +385,32 @@ public class Claim extends LandlordCommand {
         return true;
     }
 
-    private IOwnedLand[] getSurroundings(Chunk chunk) {
-        World world = chunk.getWorld();
-        IOwnedLand[] adjLands = new IOwnedLand[4];
-        adjLands[0] = wg.getRegion(world.getChunkAt(chunk.getX() + 1, chunk.getZ()));
-        adjLands[1] = wg.getRegion(world.getChunkAt(chunk.getX() - 1, chunk.getZ()));
-        adjLands[2] = wg.getRegion(world.getChunkAt(chunk.getX(), chunk.getZ() + 1));
-        adjLands[3] = wg.getRegion(world.getChunkAt(chunk.getX(), chunk.getZ() - 1));
-        return adjLands;
-    }
-
     private boolean isGapBetweenLands(Player player, Chunk chunk) {
         if (plugin.getConfig().getBoolean("CommandSettings.Claim.needsGapBetweenOwners")) {
-            // Get adjacent lands of the land, which a player wants to claim.
-            // Only when all of the 4 adj lands are either owned by the player or are free => allow the claim
-            boolean differentOwner = false;
-            for (IOwnedLand adjLand : getSurroundings(chunk)) {
-                if (adjLand != null) {
-                    if (!adjLand.isOwner(player.getUniqueId())) {
-                        differentOwner = true;
-                        break;
-                    }
+            return true;
+        }
+        // Get adjacent lands of the land, which a player wants to claim.
+        // Only when all of the 4 adj lands are either owned by the player or are free => allow the claim
+
+        int radius = plugin.getConfig().getInt("CommandSettings.Claim.customGapRadius");
+
+        boolean differentOwner = false;
+        Map<Chunk, IOwnedLand> nearbyLands = wg.getNearbyLands(chunk, radius, radius);
+
+        for (IOwnedLand adjLand : nearbyLands.values()) {
+            if (adjLand != null) {
+                if (!adjLand.isOwner(player.getUniqueId())) {
+                    differentOwner = true;
+                    break;
                 }
             }
+        }
 
-            if (differentOwner) {
-                // one of the nearby lands is not owned by the player nor its free
-                lm.sendMessage(player, lm.getString("Commands.Claim.needsGap")
-                        .replace("%land%", wg.getLandName(chunk)));
-                return false;
-            }
+        if (differentOwner) {
+            // one of the nearby lands is not owned by the player nor its free
+            lm.sendMessage(player, lm.getString("Commands.Claim.needsGap")
+                    .replace("%land%", wg.getLandName(chunk)));
+            return false;
         }
         return true;
     }

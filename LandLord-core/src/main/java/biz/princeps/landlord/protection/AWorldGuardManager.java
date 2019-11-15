@@ -96,18 +96,22 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
     }
 
     @Override
-    public Map<Chunk, IOwnedLand> getNearbyLands(Location loc, int offsetX, int offsetZ) {
-
+    public Map<Chunk, IOwnedLand> getNearbyLands(Chunk chunk, int offsetX, int offsetZ) {
         Map<Chunk, IOwnedLand> lands = new HashMap<>();
-        int xCoord = loc.getChunk().getX();
-        int zCoord = loc.getChunk().getZ();
+        int xCoord = chunk.getX();
+        int zCoord = chunk.getZ();
         for (int x = xCoord - offsetX; x <= xCoord + offsetX; x++) {
             for (int z = zCoord - offsetZ; z <= zCoord + offsetZ; z++) {
-                Chunk chunk = loc.getWorld().getChunkAt(x, z);
-                lands.put(chunk, this.getRegion(chunk));
+                Chunk chunkA = chunk.getWorld().getChunkAt(x, z);
+                lands.put(chunkA, this.getRegion(chunkA));
             }
         }
         return lands;
+    }
+
+    @Override
+    public Map<Chunk, IOwnedLand> getNearbyLands(Location loc, int offsetX, int offsetZ) {
+        return getNearbyLands(loc.getChunk(), offsetX, offsetZ);
     }
 
     @Override
@@ -247,8 +251,9 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
             owners.add(region.getOwner());
             this.unclaim(region);
         }
-        System.out.println(owners);
-//TODO do this Im to tired to debug this garbage
+        //System.out.println(owners);
+        //TODO do this Im to tired to debug this garbage
+        //TODO here is something wrong, fix this
         for (UUID owner : owners) {
             pl.getPlayerManager().getOffline(owner, player -> {
                 System.out.println(player);

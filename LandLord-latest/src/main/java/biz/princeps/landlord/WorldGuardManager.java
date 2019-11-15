@@ -156,7 +156,6 @@ public class WorldGuardManager extends AWorldGuardManager {
     /**
      * Checks for overlapping regions.
      * Returns false if there is another overlapping region.
-     * TODO figure out the 127 in vector2. My intuition tells me, that its wrong.
      */
     @Override
     public boolean canClaim(Player player, Chunk currChunk) {

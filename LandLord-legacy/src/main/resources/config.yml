@@ -213,6 +213,8 @@ CommandSettings:
     claimOnlyAdjacent: false
     # If this is enabled, there must be one free chunk between two different owners. See https://tinyurl.com/y8xzelga
     needsGapBetweenOwners: false
+    # radius
+    customGapRadius: 1
     # allow to claim a land when there is already another worldguard region
     allowOverlap: false
     # if you use overlapping regions, this value manage the priority of the lands region relative to the others
