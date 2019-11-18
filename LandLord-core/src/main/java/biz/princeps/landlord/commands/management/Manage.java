@@ -120,7 +120,6 @@ public class Manage extends LandlordCommand {
                 case "setgreet":
                     //System.out.println("greet " + Arrays.toString(args));
                     setGreet(player, args, wg.getRegion(player.getLocation().getChunk()), 1);
-
                     break;
                 case "setfarewell":
                     setFarewell(player, args, wg.getRegion(player.getLocation().getChunk()), 1);
@@ -156,8 +155,10 @@ public class Manage extends LandlordCommand {
         String newmsg = ChatColor.translateAlternateColorCodes('&', sb.toString());
 
         if (newmsg.isEmpty()) {
-            newmsg = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", player.getName());
+            newmsg = lm.getRawString("Alerts.defaultGreeting");
         }
+        newmsg = newmsg.replace("%owner%", player.getName());
+
 
         LandManageEvent landManageEvent = new LandManageEvent(player, target,
                 "GREET_MESSAGE", target.getGreetMessage(), newmsg);
@@ -177,8 +178,9 @@ public class Manage extends LandlordCommand {
         String newmsg = ChatColor.translateAlternateColorCodes('&', sb.toString());
 
         if (newmsg.isEmpty()) {
-            newmsg = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", player.getName());
+            newmsg = lm.getRawString("Alerts.defaultFarewell");
         }
+        newmsg = newmsg.replace("%owner%", player.getName());
 
         LandManageEvent landManageEvent = new LandManageEvent(player, target,
                 "FAREWELL_MESSAGE", target.getFarewellMessage(), newmsg);
