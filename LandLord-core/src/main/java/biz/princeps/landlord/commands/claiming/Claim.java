@@ -386,7 +386,7 @@ public class Claim extends LandlordCommand {
     }
 
     private boolean isGapBetweenLands(Player player, Chunk chunk) {
-        if (plugin.getConfig().getBoolean("CommandSettings.Claim.needsGapBetweenOwners")) {
+        if (!plugin.getConfig().getBoolean("CommandSettings.Claim.needsGapBetweenOwners")) {
             return true;
         }
         // Get adjacent lands of the land, which a player wants to claim.
@@ -396,7 +396,6 @@ public class Claim extends LandlordCommand {
 
         boolean differentOwner = false;
         Map<Chunk, IOwnedLand> nearbyLands = wg.getNearbyLands(chunk, radius, radius);
-
         for (IOwnedLand adjLand : nearbyLands.values()) {
             if (adjLand != null) {
                 if (!adjLand.isOwner(player.getUniqueId())) {
