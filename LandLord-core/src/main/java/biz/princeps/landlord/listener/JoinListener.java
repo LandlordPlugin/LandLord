@@ -26,7 +26,7 @@ public class JoinListener extends BasicListener {
         Player p = event.getPlayer();
         plugin.getPlayerManager().getOffline(p.getUniqueId(), (offline) -> {
             if (offline == null) {
-                offline = new LPlayer(p.getUniqueId());
+                offline = new LPlayer(p.getUniqueId(), p.getName(), 0, null, LocalDateTime.now());
             }
             plugin.getPlayerManager().add(offline);
 
