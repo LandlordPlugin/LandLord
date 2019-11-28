@@ -17,6 +17,8 @@ public interface IPlayer {
 
     String getName();
 
+    void setName(String name);
+
     void setHome(Location loc);
 
     void setLastSeen(LocalDateTime now);

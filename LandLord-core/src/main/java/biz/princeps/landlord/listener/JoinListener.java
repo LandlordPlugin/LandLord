@@ -30,6 +30,8 @@ public class JoinListener extends BasicListener {
             }
             plugin.getPlayerManager().add(offline);
 
+            offline.setName(p.getName());
+
             // The next to lines are needed to protect claiming of "inactive" lands although the owner is
             // online right now
             // might just be a rare never happening edge case, but lets be safe
