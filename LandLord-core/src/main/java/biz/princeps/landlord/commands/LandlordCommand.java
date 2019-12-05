@@ -2,6 +2,7 @@ package biz.princeps.landlord.commands;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
+import biz.princeps.landlord.util.JavaUtils;
 import biz.princeps.lib.command.SubCommand;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -68,7 +69,7 @@ public abstract class LandlordCommand extends SubCommand {
      * @return if the player is in a disabled world.
      */
     public boolean isDisabledWorld(Player player) {
-        return isDisabledWorld(player, player.getWorld());
+        return JavaUtils.isDisabledWorld(lm, plugin, player, player.getWorld(), true);
     }
 
     /**
@@ -79,15 +80,7 @@ public abstract class LandlordCommand extends SubCommand {
      * @return if the world is disabled
      */
     public boolean isDisabledWorld(Player player, World world) {
-        List<String> stringList = plugin.getConfig().getStringList("disabled-worlds");
-
-        for (String s : stringList) {
-            if (Pattern.compile(s).matcher(world.getName()).matches()) {
-                lm.sendMessage(player, lm.getString("Disabled-World"));
-                return true;
-            }
-        }
-        return false;
+        return JavaUtils.isDisabledWorld(lm, plugin, player, world, true);
     }
 
 

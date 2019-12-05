@@ -4,6 +4,8 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.events.PlayerBrokeSecureWorldEvent;
+import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.landlord.util.JavaUtils;
 import biz.princeps.lib.PrincepsLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -82,7 +84,8 @@ public class SecureWorldListener extends BasicListener {
         if (p.isOp() || p.hasPermission("landlord.admin.bypass")) {
             return;
         }
-        if (plugin.getConfig().getStringList("disabled-worlds").contains(loc.getWorld().getName())) {
+
+        if (JavaUtils.isDisabledWorld(plugin.getLangManager(), plugin, p, loc.getWorld(), false)) {
             return;
         }
         if (wg.isAllowedInOverlap(p, loc)) {
