@@ -8,8 +8,6 @@
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../testserver/Testserver_1.14.x/start.sh" />
     <option name="PARAMETERS" value="$PROJECT_DIR$/LandLord-latest/target/LandLord-latest-4.0.jar" />
     <module name="" />
-    <method v="2">
-      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="package" />
-    </method>
+    <method v="2" />
   </configuration>
 </component>

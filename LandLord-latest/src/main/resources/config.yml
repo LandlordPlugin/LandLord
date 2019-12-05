@@ -9,6 +9,10 @@ MySQL:
   User: root
   Password: passy
 
+# You can define a list of worlds, in which landlord should be disabled
+# You can use Regex in order to match multiple worlds at the time.
+# https://regexr.com/
+# world_.* matches all worlds that start with "world_"
 disabled-worlds:
   - world_nether
   - world_the_end

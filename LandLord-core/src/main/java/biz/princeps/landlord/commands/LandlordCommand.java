@@ -8,7 +8,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Project: LandLord
@@ -39,24 +41,20 @@ public abstract class LandlordCommand extends SubCommand {
      * @return if the player's location is inside of the world
      */
     public boolean isInsideWorld(Player player) {
-        if (player.getWorld().getWorldBorder().isInside(player.getLocation())) return true;
-
-        lm.sendMessage(player, lm.getString("locOutsideWorld")
-                .replace("%chunk%", plugin.getWGManager().getLandName(player.getChunk()))
-                .replace("%world%", player.getWorld().getName()));
-        return false;
+        return isInsideWorld(player, player.getChunk());
     }
 
     /**
      * Checks if the specified location is inside of the world, in order to avoid claiming outside world.
      *
      * @param player the player to send the message
-     * @param chunk the chunk's location to check if its inside of the world
+     * @param chunk  the chunk's location to check if its inside of the world
      * @return if the location is inside of the world
      */
     public boolean isInsideWorld(Player player, Chunk chunk) {
         //+ 8 enables to create a location at the "center" of the chunk. y location : 100 is a random value
-        if (chunk.getWorld().getWorldBorder().isInside(new Location(chunk.getWorld(), chunk.getX() * 16 + 8, 100, chunk.getZ() * 16 + 8))) return true;
+        if (chunk.getWorld().getWorldBorder().isInside(new Location(chunk.getWorld(), chunk.getX() * 16 + 8, 100, chunk.getZ() * 16 + 8)))
+            return true;
 
         lm.sendMessage(player, lm.getString("locOutsideWorld")
                 .replace("%chunk%", plugin.getWGManager().getLandName(chunk))
@@ -70,11 +68,7 @@ public abstract class LandlordCommand extends SubCommand {
      * @return if the player is in a disabled world.
      */
     public boolean isDisabledWorld(Player player) {
-        if (plugin.getConfig().getStringList("disabled-worlds").contains(player.getWorld().getName())) {
-            lm.sendMessage(player, lm.getString("Disabled-World"));
-            return true;
-        }
-        return false;
+        return isDisabledWorld(player, player.getWorld());
     }
 
     /**
@@ -85,9 +79,13 @@ public abstract class LandlordCommand extends SubCommand {
      * @return if the world is disabled
      */
     public boolean isDisabledWorld(Player player, World world) {
-        if (plugin.getConfig().getStringList("disabled-worlds").contains(world.getName())) {
-            lm.sendMessage(player, lm.getString("Disabled-World"));
-            return true;
+        List<String> stringList = plugin.getConfig().getStringList("disabled-worlds");
+
+        for (String s : stringList) {
+            if (Pattern.compile(s).matcher(world.getName()).matches()) {
+                lm.sendMessage(player, lm.getString("Disabled-World"));
+                return true;
+            }
         }
         return false;
     }
