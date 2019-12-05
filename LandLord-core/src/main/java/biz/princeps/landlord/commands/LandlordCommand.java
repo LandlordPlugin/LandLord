@@ -41,7 +41,7 @@ public abstract class LandlordCommand extends SubCommand {
      * @return if the player's location is inside of the world
      */
     public boolean isInsideWorld(Player player) {
-        return isInsideWorld(player, player.getChunk());
+        return isInsideWorld(player, player.getLocation().getChunk());
     }
 
     /**

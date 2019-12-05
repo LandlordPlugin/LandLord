@@ -5,6 +5,7 @@ import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.landlord.commands.homes.SetHome;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
@@ -311,7 +312,9 @@ public class Claim extends LandlordCommand {
 
         if (Options.enabled_homes() && plugin.getConfig().getBoolean("Homes.enableAutoSetHome", false)) {
             if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null) {
-                Bukkit.dispatchCommand(player, "ll sethome");
+                Bukkit.dispatchCommand(player,
+                        PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
+                                .getCommandString(SetHome.class).substring(1));
             }
         }
 
