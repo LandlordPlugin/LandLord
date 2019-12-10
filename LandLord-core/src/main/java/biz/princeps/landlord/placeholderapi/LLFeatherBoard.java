@@ -1,6 +1,6 @@
 package biz.princeps.landlord.placeholderapi;
 
-import be.maximvdw.placeholderapi.PlaceholderAPI;
+//import be.maximvdw.placeholderapi.PlaceholderAPI;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IPlayer;
@@ -16,7 +16,8 @@ public class LLFeatherBoard {
     }
 
     private void registerPlaceholders(ILandLord pl) {
-
+        pl.getLogger().warning("Featherboard Placeholders do not work. Please tell Maxim from Featherboard to take a look at the MVdWPlaceholderAPI repo.");
+        /*
         PlaceholderAPI.registerPlaceholder(pl.getPlugin(), "ownedlands",
                 e -> {
                     int landcount = wg.getRegionCount(e.getPlayer().getUniqueId());
@@ -56,5 +57,6 @@ public class LLFeatherBoard {
                             pl.getConfig().getDouble("Payback"));
                 }
         );
+         */
     }
 }

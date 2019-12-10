@@ -42,6 +42,8 @@
                             </relocations>
                             <artifactSet>
                                 <includes>
+                                    <include>org.slf4j:slf4j-simple</include>
+                                    <include>org.slf4j:slf4j-api</include>
                                     <include>org.reflections:reflections</include>
                                     <include>org.javassist:javassist</include>
                                     <include>co.aikar:locales</include>

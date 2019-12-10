@@ -42,6 +42,8 @@
                             </relocations>
                             <artifactSet>
                                 <includes>
+                                    <include>org.slf4j:slf4j-simple</include>
+                                    <include>org.slf4j:slf4j-api</include>
                                     <include>org.reflections:reflections</include>
                                     <include>org.javassist:javassist</include>
                                     <include>co.aikar:locales</include>
@@ -115,14 +117,14 @@
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>7.0.0</version>
+            <version>7.0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
             <artifactId>worldguard-bukkit</artifactId>
-            <version>7.0.0</version>
+            <version>7.0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -132,8 +134,5 @@
             <version>4.4.0</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
-
-
 </project>
