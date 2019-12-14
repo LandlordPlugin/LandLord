@@ -72,8 +72,6 @@
         </repository>
     </repositories>
 
-
-
     <dependencies>
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
@@ -82,5 +80,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
 </project>

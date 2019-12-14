@@ -61,8 +61,9 @@ public class LandLord extends ALandLord {
         if (!super.checkDependencies()) return false;
 
         // Dependency stuff
-        if (!Bukkit.getVersion().contains("1.13.2") && !Bukkit.getVersion().contains("1.14")) {
-            haltPlugin("Invalid spigot version detected! LandLord requires 1.13.2/1.14.x");
+        String version = Bukkit.getVersion();
+        if (!version.contains("1.13.2") && !version.contains("1.14") && !version.contains("1.15")) {
+            haltPlugin("Invalid spigot version detected! LandLord requires 1.13.2/1.14.x/1.15.x");
             return false;
         }
 
