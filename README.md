@@ -30,7 +30,6 @@ Compilation
 
 LandLord uses maven as dependency resolver. Execute the maven goal "package" to get a jar, that contains all dependencies.
 The jars will be located in target folder of their respect version (1.13.2+ in latest, 1.12.2 in legacy). 
-Execute setup.sh to install the testservers with all dependencies and runfiles for IntelliJ!
 
 Contribution
 ============
