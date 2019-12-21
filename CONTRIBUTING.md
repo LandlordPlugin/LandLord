@@ -41,7 +41,6 @@ Steps
 -----
 
 1. Clone the repository 
-2. Execute setup.sh for installing the testservers with all dependencies
-3. Testserver is available in the target folders (excluded from git)
-4. Change code while respecting above conventions
-5. Submit a pull-request
+2. Write a run script to copy the built jar into your plugins folder and start the server (or whatever testing env you are using)
+3. Change code while respecting above conventions
+4. Submit a pull-request
