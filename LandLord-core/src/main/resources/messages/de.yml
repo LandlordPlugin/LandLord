@@ -47,6 +47,7 @@ Commands:
     chatMessage: '&aKlicke hier um %amount% Grundstücke zu kaufen! Das kostet %cost%!'
     noLands: '&cIn Ihrem ausgewählten Radius gibt es keine Grundstücke die Sie kaufen könnten!'
     abort: '&cSie haben den Kauf von %amount% Grundstücke abgebrochen!'
+    hugeSize: '&cMulticlaim''s size is too high for the server''s render distance. To avoid making the server lagging, even crashing, please use a value lower than %max_size%!'
   Unclaim:
     notOwn: '&7Dieses Grundstück gehört dir nicht.'
     notOwnFreeLand: '&7Dieses Grundstück gehört dir nicht.'
@@ -401,4 +402,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 22
+version: 23

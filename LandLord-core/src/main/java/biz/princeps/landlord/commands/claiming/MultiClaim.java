@@ -4,13 +4,16 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.landlord.util.JavaUtils;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -56,6 +59,14 @@ public class MultiClaim extends LandlordCommand {
         try {
             MultiClaimMode mode = MultiClaimMode.valueOf(arguments.get()[0].toUpperCase());
             int param = arguments.getInt(1);
+            int maxSize = Bukkit.getViewDistance() + 2;
+
+            // Implementation of this to avoid latencies with MultiClaim, because getChunk methode generates the chunk if is not :/
+            if (param > maxSize) { // +2 for marge value. Unless server has a huge render distance (16 for example), won't cause any troubles
+                lm.sendMessage(player, lm.getString("Commands.MultiClaim.hugeSize")
+                        .replace("%max_size%", maxSize + ""));
+                return;
+            }
 
             Set<Chunk> toClaim = getToClaimChunks(mode, param, player.getLocation());
 
@@ -98,13 +109,14 @@ public class MultiClaim extends LandlordCommand {
 
     private Set<Chunk> getToClaimChunks(MultiClaimMode mode, int param, Location center) {
         Set<Chunk> toClaim = new HashSet<>();
+        int xCenter = center.getChunk().getX();
+        int zCenter = center.getChunk().getZ();
+
         switch (mode) {
             case CIRCULAR:
                 //TODO implement circular multiclaim
                 break;
             case RECTANGULAR:
-                int xCenter = center.getChunk().getX();
-                int zCenter = center.getChunk().getZ();
                 for (int x = xCenter - param; x <= xCenter + param; x++) {
                     for (int z = zCenter - param; z <= zCenter + param; z++) {
                         Chunk chunk = center.getWorld().getChunkAt(x, z);
@@ -114,12 +126,50 @@ public class MultiClaim extends LandlordCommand {
                     }
                 }
                 break;
+            case LINEAR:
+                BlockFace blockFace = JavaUtils.getBlockFace(center.getYaw());
+
+                switch (blockFace) {
+                    case NORTH:
+                        for (int z = zCenter; z >= zCenter - param; z--) {
+                            Chunk chunk = center.getWorld().getChunkAt(xCenter, z);
+                            if (plugin.getWGManager().getRegion(chunk) == null) {
+                                toClaim.add(chunk);
+                            }
+                        }
+                        break;
+                    case EAST:
+                        for (int x = xCenter; x <= xCenter + param; x++) {
+                            Chunk chunk = center.getWorld().getChunkAt(x, zCenter);
+                            if (plugin.getWGManager().getRegion(chunk) == null) {
+                                toClaim.add(chunk);
+                            }
+                        }
+                        break;
+                    case WEST:
+                        for (int x = xCenter; x >= xCenter - param; x--) {
+                            Chunk chunk = center.getWorld().getChunkAt(x, zCenter);
+                            if (plugin.getWGManager().getRegion(chunk) == null) {
+                                toClaim.add(chunk);
+                            }
+                        }
+                        break;
+                    case SOUTH:
+                        for (int z = zCenter; z <= zCenter + param; z++) {
+                            Chunk chunk = center.getWorld().getChunkAt(xCenter, z);
+                            if (plugin.getWGManager().getRegion(chunk) == null) {
+                                toClaim.add(chunk);
+                            }
+                        }
+                        break;
+                }
+                break;
         }
         return toClaim;
     }
 
 
     public enum MultiClaimMode {
-        CIRCULAR, RECTANGULAR
+        CIRCULAR, RECTANGULAR, LINEAR
     }
 }

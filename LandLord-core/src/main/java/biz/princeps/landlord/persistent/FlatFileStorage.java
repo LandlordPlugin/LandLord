@@ -72,7 +72,7 @@ public class FlatFileStorage implements IStorage {
         sec.set("lastlogin", TimeUtil.timeToString(p.getLastSeen()));
 
         if (async) {
-            Bukkit.getScheduler().scheduleAsyncDelayedTask(pl, this::save);
+            Bukkit.getScheduler().runTaskAsynchronously(pl, this::save);
         }
     }
 

@@ -16,11 +16,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Particle;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -107,10 +104,9 @@ public class Claim extends LandlordCommand {
         if (ol == null) {
             double calculatedCost = Options.isVaultEnabled() ? plugin.getCostManager().calculateCost(player.getUniqueId()) : 0;
 
-            String chatDesc = lm.getString("Commands.Claim.confirmation")
+            String Desc = lm.getString("Commands.Claim.confirmation")
                     .replace("%chunk%", landName)
                     .replace("%price%", vault.format(calculatedCost));
-            String guiDesc = chatDesc;
 
             if (!hasMoney(player, calculatedCost, landName, chunk)) {
                 return;
@@ -118,7 +114,7 @@ public class Claim extends LandlordCommand {
 
             // if the player des not have enough money, the claim process is terminated before this line.
             if (plugin.getConfig().getBoolean("ConfirmationDialog.onNormalClaim") && !overrideConfirmations) {
-                PrincepsLib.getConfirmationManager().draw(player, guiDesc, chatDesc,
+                PrincepsLib.getConfirmationManager().draw(player, Desc, Desc,
                         (p) -> {
                             performNormalClaim(player, chunk, calculatedCost, landName);
                             p.closeInventory();
@@ -137,10 +133,9 @@ public class Claim extends LandlordCommand {
                 // Advertised land
                 double calculatedCost = ol.getPrice();
 
-                String chatDesc = lm.getString("Commands.Claim.confirmation")
+                String Desc = lm.getString("Commands.Claim.confirmation")
                         .replace("%chunk%", landName)
                         .replace("%price%", vault.format(calculatedCost));
-                String guiDesc = chatDesc;
 
                 if (!hasMoney(player, calculatedCost, landName, chunk)) {
                     return;
@@ -148,7 +143,7 @@ public class Claim extends LandlordCommand {
 
                 // if the player des not have enough money, the claim process is terminated before this line.
                 if (plugin.getConfig().getBoolean("ConfirmationDialog.onNormalClaim") && !overrideConfirmations) {
-                    PrincepsLib.getConfirmationManager().draw(player, guiDesc, chatDesc,
+                    PrincepsLib.getConfirmationManager().draw(player, Desc, Desc,
                             (p) -> {
                                 performAdvertisedClaim(player, ol);
                                 p.closeInventory();
@@ -180,10 +175,9 @@ public class Claim extends LandlordCommand {
                         double costForBuyer = plugin.getCostManager().calculateCost(player.getUniqueId());
                         double payBackForInactive = plugin.getCostManager().calculateCost(ol.getOwner());
 
-                        String chatDesc = lm.getString("Commands.Claim.confirmation")
+                        String Desc = lm.getString("Commands.Claim.confirmation")
                                 .replace("%chunk%", landName)
                                 .replace("%price%", vault.format(costForBuyer));
-                        String guiDesc = chatDesc;
 
                         String originalOwner = Bukkit.getOfflinePlayer(ol.getOwner()).getName();
 
@@ -192,7 +186,7 @@ public class Claim extends LandlordCommand {
                         }
 
                         if (plugin.getConfig().getBoolean("ConfirmationDialog.onBuyUp") && !overrideConfirmations) {
-                            PrincepsLib.getConfirmationManager().draw(player, guiDesc, chatDesc,
+                            PrincepsLib.getConfirmationManager().draw(player, Desc, Desc,
                                     (p) -> {
                                         handleInactiveClaim(player, ol, costForBuyer, payBackForInactive,
                                                 originalOwner);

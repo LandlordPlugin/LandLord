@@ -1,7 +1,6 @@
 package biz.princeps.landlord.commands.admin;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ClearGUI;
@@ -11,9 +10,6 @@ import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * Project: LandLord
@@ -35,7 +31,7 @@ public class Clear extends LandlordCommand {
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
 
-        if (arguments.size() == 1){
+        if (arguments.size() == 1) {
             // Clear a single player
             String name = arguments.get()[0];
             clearPlayer(name, properties.getCommandSender());

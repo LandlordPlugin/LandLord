@@ -168,7 +168,6 @@ public interface IOwnedLand {
 
     /**
      * Set the priority of a land region (incidence when it is not zero)
-     *
      */
     void initRegionPriority();
 }

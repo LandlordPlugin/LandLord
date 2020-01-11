@@ -47,6 +47,7 @@ Commands:
     chatMessage: '&aClick to confirm the purchase of %amount% lands! This will cost %cost%!'
     noLands: '&cThere are no claimable lands in your selected radius!'
     abort: '&cYou aborted the claim of %amount% lands!'
+    hugeSize: '&cMulticlaim''s size is too high for the server''s render distance. To avoid making the server lagging, even crashing, please use a value lower than %max_size%!'
   Unclaim:
     notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
     notOwnFreeLand: '&7Вы не владелец данного учатска'
@@ -391,4 +392,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 22
+version: 23
