@@ -34,7 +34,7 @@ public class MaterialsManager implements IMaterialsManager {
     }
 
     @Override
-    public ItemStack getWitherSkull(){
+    public ItemStack getWitherSkull() {
         return new ItemStack(Material.WITHER_SKELETON_SKULL);
     }
 

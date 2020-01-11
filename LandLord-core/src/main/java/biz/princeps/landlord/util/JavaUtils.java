@@ -3,8 +3,8 @@ package biz.princeps.landlord.util;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -49,4 +49,19 @@ public class JavaUtils {
         }
         return false;
     }
+
+    public static final BlockFace[] BLOCK_FACES = new BlockFace[]{BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST};
+
+    /**
+     * Original link : https://github.com/bergerhealer/BKCommonLib/blob/master/src/main/java/com/bergerkiller/bukkit/common/utils/FaceUtil.java
+     * <p>
+     * Gets the horizontal Block Face from a given yaw angle
+     *
+     * @param yaw angle
+     * @return The Block Face of the angle
+     */
+    public static BlockFace getBlockFace(float yaw) {
+        return BLOCK_FACES[(Math.round(yaw / 90f) & 0x3)];
+    }
+
 }

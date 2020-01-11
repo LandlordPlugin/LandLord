@@ -29,16 +29,16 @@ public abstract class ACostManager implements ICostManager {
                 this.strategy = new LinearStrategy(plugin.getPlugin(), namespace, free);
                 break;
             case "exponential":
-                this.strategy = new ExponentialStrategy(plugin.getPlugin(), namespace,free);
+                this.strategy = new ExponentialStrategy(plugin.getPlugin(), namespace, free);
                 break;
             case "limited":
-                this.strategy = new LimitedStrategy(plugin.getPlugin(),namespace, free);
+                this.strategy = new LimitedStrategy(plugin.getPlugin(), namespace, free);
                 break;
             case "logarithmic":
-                this.strategy = new LogarithmicStrategy(plugin.getPlugin(),namespace, free);
+                this.strategy = new LogarithmicStrategy(plugin.getPlugin(), namespace, free);
                 break;
             case "sinus":
-                this.strategy = new SinusStrategy(plugin.getPlugin(),namespace, free);
+                this.strategy = new SinusStrategy(plugin.getPlugin(), namespace, free);
                 break;
         }
     }

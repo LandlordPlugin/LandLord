@@ -76,7 +76,7 @@ public class Unfriend extends LandlordCommand {
                     String old = land.getMembersString();
                     land.removeFriend(offline.getUuid());
 
-                    Bukkit.getScheduler().runTask(plugin.getPlugin(),()->{
+                    Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
                         LandManageEvent landManageEvent = new LandManageEvent(player, land,
                                 "FRIENDS", old, land.getMembersString());
                         Bukkit.getPluginManager().callEvent(landManageEvent);

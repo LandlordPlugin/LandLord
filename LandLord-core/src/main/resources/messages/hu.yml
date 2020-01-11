@@ -46,6 +46,7 @@ Commands:
     chatMessage: '&aClick to confirm the purchase of %amount% lands! This will cost %cost%!'
     noLands: '&cThere are no claimable lands in your selected radius!'
     abort: '&cYou aborted the claim of %amount% lands!'
+    hugeSize: '&cMulticlaim''s size is too high for the server''s render distance. To avoid making the server lagging, even crashing, please use a value lower than %max_size%!'
   Unclaim:
     notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
     notOwnFreeLand: '&7Nem a sajátod ennek a darabnak'

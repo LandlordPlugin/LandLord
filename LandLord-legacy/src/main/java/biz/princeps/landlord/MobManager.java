@@ -119,7 +119,7 @@ public class MobManager implements IMobManager {
         }
 
         @Override
-        public String getName(){
+        public String getName() {
             return t.getName().toUpperCase();
         }
     }

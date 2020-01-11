@@ -20,7 +20,7 @@ public class Updater {
         updater = new SpigetUpdate(pl.getPlugin(), 44398);
 
         if (pl.getConfig().getBoolean("checkUpdatesPeriodically", true)) {
-            Bukkit.getScheduler().scheduleAsyncRepeatingTask(pl.getPlugin(), this::checkForUpdate, 0, 20 * 60 * 60 * 24);
+            Bukkit.getScheduler().runTaskTimerAsynchronously(pl.getPlugin(), this::checkForUpdate, 0, 20 * 60 * 60 * 24);
         } else {
             if (pl.getConfig().getBoolean("checkUpdateOnStart", true)) {
                 checkForUpdate();

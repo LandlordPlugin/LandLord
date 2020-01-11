@@ -47,6 +47,7 @@ Commands:
     chatMessage: '&aCliquez pour confirmer votre achat de %amount% terrains ! Cela vous coûtera %cost%'
     noLands: '&cIl n''y a pas de terrain obtensible dans la zone sélectionnée !'
     abort: '&cProtection de %amount% terrains annulée !'
+    hugeSize: '&cLa taille du MultiClaim est trop elevée par rapport à la distance de rendu du serveur. Afin d''éviter de potentielles latences voire un crash, veuillez utiliser une valeur plus faible que %max_size%!'
   Unclaim:
     notOwn: '&7Vous ne possédez pas ce terrain. Il appartient à &c%owner%'
     notOwnFreeLand: '&7Vous ne possédez pas ce terrain !'

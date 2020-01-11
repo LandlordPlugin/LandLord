@@ -4,7 +4,6 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.events.PlayerBrokeSecureWorldEvent;
-import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.util.JavaUtils;
 import biz.princeps.lib.PrincepsLib;
 import org.bukkit.Bukkit;
@@ -105,7 +104,7 @@ public class SecureWorldListener extends BasicListener {
                 plugin.getLangManager().sendMessage(p, plugin.getLangManager().getString("Alerts.tresholdNotReached")
                         .replace("%x%", treshold + ""));
             } else if (display == LandAlerter.LandMessageDisplay.Title) {
-                p.sendTitle(rawString, null);
+                p.sendTitle(rawString, null, 10, 70, 20);
             }
 
             e.setCancelled(true);

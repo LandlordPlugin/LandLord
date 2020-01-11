@@ -46,6 +46,7 @@ Commands:
     guiMessage: 'Claim %amount% lands (%cost%)'
     chatMessage: '&aClick to confirm the purchase of %amount% lands! This will cost %cost%!'
     noLands: '&cThere are no claimable lands in your selected radius!'
+    hugeSize: '&cMulticlaim''s size is too high for the server''s render distance. To avoid making the server lagging, even crashing, please use a value lower than %max_size%!'
     abort: '&cYou aborted the claim of %amount% lands!'
   Unclaim:
     notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
@@ -391,4 +392,4 @@ MaItem:
     - '&l&bin the air:'
     - '&crightclick: &7toggle map'
     - '&cleftclick: &7toggle borders'
-version: 22
+version: 23

@@ -1,9 +1,8 @@
 package biz.princeps.landlord.placeholderapi;
 
 //import be.maximvdw.placeholderapi.PlaceholderAPI;
+
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.IWorldGuardManager;
 
 public class LLFeatherBoard {

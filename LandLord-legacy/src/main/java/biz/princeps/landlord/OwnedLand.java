@@ -25,7 +25,7 @@ import java.util.*;
 public class OwnedLand extends AOwnedLand {
 
     private ProtectedRegion region;
-    private FlagRegistry flagRegistry =  WorldGuardPlugin.inst().getFlagRegistry();
+    private FlagRegistry flagRegistry = WorldGuardPlugin.inst().getFlagRegistry();
 
     public static OwnedLand create(ILandLord pl, ProtectedRegion pr, UUID owner) {
         return new OwnedLand(pl, pr, owner);
