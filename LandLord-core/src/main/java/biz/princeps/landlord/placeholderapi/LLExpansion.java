@@ -71,6 +71,9 @@ public class LLExpansion extends PlaceholderExpansion {
                 return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble(
                         "Payback"));
 
+            case "maxLimitPermission":
+                int maxClaimPermission = pl.getPlayerManager().getMaxClaimPermission(player);
+                return String.valueOf(maxClaimPermission);
         }
         return null;
     }
