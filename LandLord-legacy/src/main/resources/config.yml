@@ -348,7 +348,7 @@ CommandSettings:
     name: clear
     usage: '/land clear - clear a world'
     permissions:
-      - landlord.admin.clearworld
+      - landlord.admin.clear
     aliases:
       - clearworld
 

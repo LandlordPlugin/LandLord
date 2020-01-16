@@ -34,7 +34,8 @@ public class Clear extends LandlordCommand {
         if (arguments.size() == 1) {
             // Clear a single player
             String name = arguments.get()[0];
-            clearPlayer(name, properties.getCommandSender());
+            if (properties.getCommandSender().hasPermission("landlord.admin.clear.player"))
+                clearPlayer(name, properties.getCommandSender());
             return;
         }
 
@@ -42,8 +43,6 @@ public class Clear extends LandlordCommand {
             return;
         }
         Player player = properties.getPlayer();
-
-        if (isDisabledWorld(player)) return;
 
         /*
          * Clear Options:
