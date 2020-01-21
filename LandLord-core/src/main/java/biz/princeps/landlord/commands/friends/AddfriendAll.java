@@ -10,6 +10,7 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Project: LandLord
@@ -55,25 +56,27 @@ public class AddfriendAll extends LandlordCommand {
                         .replace("%player%", name));
             } else if (!player.getUniqueId().equals(offline.getUuid())) {
                 // Success
-                int count = 0;
-                for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
-                    if (!ol.isFriend(offline.getUuid())) {
-                        String oldfriends = ol.getMembersString();
-                        ol.addFriend(offline.getUuid());
-                        count++;
-                        Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                            LandManageEvent landManageEvent = new LandManageEvent(player, ol,
-                                    "FRIENDS", oldfriends, ol.getMembersString());
-                            Bukkit.getPluginManager().callEvent(landManageEvent);
-                        });
+                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+                    int count = 0;
+                    for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
+                        if (!ol.isFriend(offline.getUuid())) {
+                            String oldfriends = ol.getMembersString();
+                            ol.addFriend(offline.getUuid());
+                            count++;
+                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                LandManageEvent landManageEvent = new LandManageEvent(player, ol,
+                                        "FRIENDS", oldfriends, ol.getMembersString());
+                                Bukkit.getPluginManager().callEvent(landManageEvent);
+                            });
+                        }
                     }
-                }
 
-                lm.sendMessage(player, lm.getString("Commands.AddfriendAll.success")
-                        .replace("%player%", name)
-                        .replace("%count%", String.valueOf(count)));
+                    lm.sendMessage(player, lm.getString("Commands.AddfriendAll.success")
+                            .replace("%player%", name)
+                            .replace("%count%", String.valueOf(count)));
 
-                Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
+                    Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
+                });
             } else {
                 lm.sendMessage(player, lm.getString("Commands.Addfriend.alreadyOwn"));
             }

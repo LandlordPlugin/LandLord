@@ -55,30 +55,32 @@ public class UnfriendAll extends LandlordCommand {
                         .replace("%players%", name));
             } else {
                 // Success
-                int count = 0;
-                for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
-                    if (ol.isFriend(offline.getUuid())) {
-                        String oldvalue = ol.getMembersString();
-                        ol.removeFriend(offline.getUuid());
-                        count++;
-                        Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                            LandManageEvent landManageEvent = new LandManageEvent(player, ol,
-                                    "FRIENDS", oldvalue, ol.getMembersString());
-                            Bukkit.getPluginManager().callEvent(landManageEvent);
-                        });
+                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+                    int count = 0;
+                    for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
+                        if (ol.isFriend(offline.getUuid())) {
+                            String oldvalue = ol.getMembersString();
+                            ol.removeFriend(offline.getUuid());
+                            count++;
+                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                LandManageEvent landManageEvent = new LandManageEvent(player, ol,
+                                        "FRIENDS", oldvalue, ol.getMembersString());
+                                Bukkit.getPluginManager().callEvent(landManageEvent);
+                            });
+                        }
                     }
-                }
 
-                if (count > 0) {
-                    lm.sendMessage(player, lm.getString("Commands.UnfriendAll.success")
-                            .replace("%count%", String.valueOf(count))
-                            .replace("%players%", name));
+                    if (count > 0) {
+                        lm.sendMessage(player, lm.getString("Commands.UnfriendAll.success")
+                                .replace("%count%", String.valueOf(count))
+                                .replace("%players%", name));
 
-                    Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
-                } else {
-                    lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noFriend")
-                            .replace("%player%", name));
-                }
+                        Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
+                    } else {
+                        lm.sendMessage(player, lm.getString("Commands.UnfriendAll.noFriend")
+                                .replace("%player%", name));
+                    }
+                });
             }
         });
     }
