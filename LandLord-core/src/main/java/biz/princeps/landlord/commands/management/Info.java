@@ -150,7 +150,7 @@ public class Info extends LandlordCommand {
 
             if (plugin.getConfig().getBoolean("Particles.info")) {
                 wg.highlightLand(chunk, player,
-                        Particle.valueOf(plugin.getConfig().getString("Particles.info.unclaimed").toUpperCase()), 4);
+                        Particle.valueOf(plugin.getConfig().getString("Particles.info.unclaimed").toUpperCase()), 4, false);
             }
         }
     }

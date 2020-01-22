@@ -76,7 +76,7 @@ public class Borders extends LandlordCommand implements Listener {
                     if (counter * refreshRate <= timeout) {
                         if (plugin.getConfig().getBoolean("Particles.borders.enabled")) {
                             wg.highlightLand(p.getLocation().getChunk(), p,
-                                    Particle.valueOf(plugin.getConfig().getString("Particles.borders.particle")), 1);
+                                    Particle.valueOf(plugin.getConfig().getString("Particles.borders.particle")), 1, false);
                         }
                     } else {
                         cancel();

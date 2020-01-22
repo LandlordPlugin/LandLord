@@ -98,7 +98,7 @@ public interface IWorldGuardManager {
 
     boolean isAllowedInOverlap(Player p, Location loc);
 
-    void highlightLand(Chunk chunk, Player p, Particle particle, int amount);
+    void highlightLand(Chunk chunk, Player p, Particle particle, int amount, boolean everyone);
 
     String formatLocation(Chunk chunk);
 

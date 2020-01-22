@@ -152,7 +152,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
     }
 
     @Override
-    public void highlightLand(Chunk chunk, Player p, Particle particle, int amount) {
+    public void highlightLand(Chunk chunk, Player p, Particle particle, int amount, boolean everyone) {
         List<Location> edgeBlocks = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
             for (int ii = -1; ii <= 10; ii++) {
@@ -165,7 +165,12 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         for (Location edgeBlock : edgeBlocks) {
             edgeBlock.setZ(edgeBlock.getBlockZ() + .5);
             edgeBlock.setX(edgeBlock.getBlockX() + .5);
-            PrincepsLib.getStuffManager().spawnParticle(edgeBlock, particle, amount);
+            if (everyone) {
+                PrincepsLib.getStuffManager().spawnPublicParticle(edgeBlock, particle, amount);
+
+            } else {
+                PrincepsLib.getStuffManager().spawnPlayerParticle(p, edgeBlock, particle, amount);
+            }
         }
     }
 
@@ -245,29 +250,29 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         int count = regions.size();
 
         Set<UUID> owners = new HashSet<>();
-        for (IOwnedLand region : Sets.newHashSet(regions)) {
-            System.out.println(region);
+        for (IOwnedLand region : regions) {
             owners.add(region.getOwner());
-            this.unclaim(region);
         }
         //System.out.println(owners);
         //TODO do this Im to tired to debug this garbage
         //TODO here is something wrong, fix this
         for (UUID owner : owners) {
             pl.getPlayerManager().getOffline(owner, player -> {
-                System.out.println(player);
-                for (IOwnedLand region : Sets.newHashSet(regions)) {
-                    System.out.println(region);
-                    if (region.isOwner(player.getUuid())) {
-                        System.out.println("isowner");
-                        if (region.contains(player.getHome())) {
-                            System.out.println("remo");
+                for (IOwnedLand region : regions) {
+                    if (region.isOwner(owner)) {
+                        //System.out.println("isowner");
+                        if (player.getHome() != null && region.contains(player.getHome())) {
+                            //System.out.println("remo");
                             player.setHome(null);
                             pl.getPlayerManager().save(player, true);
                         }
                     }
                 }
             });
+        }
+
+        for (IOwnedLand region : regions) {
+            unclaim(region);
         }
         return count;
     }
