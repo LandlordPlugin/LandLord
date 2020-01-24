@@ -55,20 +55,20 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public String getOwnersString() {
-        Iterator<UUID> it = region.getOwners().getUniqueIds().iterator();
+        Iterator<String> it = region.getOwners().getPlayers().iterator();
         return itToString(it);
     }
 
     @Override
     public String getMembersString() {
-        Iterator<UUID> it = region.getMembers().getUniqueIds().iterator();
+        Iterator<String> it = region.getMembers().getPlayers().iterator();
         return itToString(it);
     }
 
-    private String itToString(Iterator<UUID> it) {
+    private String itToString(Iterator<String> it) {
         StringBuilder sb = new StringBuilder();
         while (it.hasNext()) {
-            sb.append(Bukkit.getOfflinePlayer(it.next()).getName());
+            sb.append(it.next());
             if (it.hasNext())
                 sb.append(", ");
         }
