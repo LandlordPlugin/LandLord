@@ -114,4 +114,12 @@ public interface ILandLord {
      * @return the mob manager
      */
     IMobManager getMobManager();
+
+    /**
+     * Get the reference to the RegenerationManager.
+     * The RegenerationManager is used to regenerate single chunks.
+     *
+     * @return the regeneration manager
+     */
+    IRegenerationManager getRegenerationManager();
 }
