@@ -26,6 +26,7 @@ public class LandLord extends ALandLord {
         this.utilsManager = new UtilsManager();
         this.materialsManager = new MaterialsManager();
         this.mobManager = new MobsManager();
+        this.regenerationManager = new RegenerationManager();
 
         ((WorldGuardManager) worldGuardManager).initCache();
 

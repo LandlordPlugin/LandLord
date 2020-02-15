@@ -2,6 +2,7 @@ package biz.princeps.landlord;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
@@ -29,6 +30,7 @@ public class LandLord extends ALandLord implements Listener {
         this.utilsManager = new UtilsManager();
         this.materialsManager = new MaterialsManager();
         this.mobManager = new MobManager();
+        this.regenerationManager = World::regenerateChunk;
 
         ((WorldGuardManager) worldGuardManager).initCache();
 

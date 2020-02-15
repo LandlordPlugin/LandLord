@@ -44,6 +44,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     protected ICostManager costManager;
     protected IDelimitationManager delimitationManager;
     protected IMobManager mobManager;
+    protected IRegenerationManager regenerationManager;
 
     @Override
     public void onEnable() {
@@ -292,5 +293,10 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     @Override
     public IMobManager getMobManager() {
         return mobManager;
+    }
+
+    @Override
+    public IRegenerationManager getRegenerationManager() {
+        return regenerationManager;
     }
 }
