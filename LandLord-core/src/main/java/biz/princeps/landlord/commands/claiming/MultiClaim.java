@@ -113,7 +113,7 @@ public class MultiClaim extends LandlordCommand {
         int zCenter = center.getChunk().getZ();
 
         switch (mode) {
-            case CIRCULAR:
+            case CIRCULAR: // Based of WorldEdit cylinder region.
                 final double invRadiusX = 1 / (double) param;
                 final double invRadiusZ = 1 / (double) param;
 
