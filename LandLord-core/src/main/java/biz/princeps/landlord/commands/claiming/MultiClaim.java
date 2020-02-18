@@ -114,7 +114,33 @@ public class MultiClaim extends LandlordCommand {
 
         switch (mode) {
             case CIRCULAR:
-                //TODO implement circular multiclaim
+                final double invRadiusX = 1 / (double) param;
+                final double invRadiusZ = 1 / (double) param;
+
+                double nextXn = 0;
+                forX: for (int x = 0; x <= param; ++x) {
+                    final double xn = nextXn;
+                    nextXn = (x + 1) * invRadiusX;
+                    double nextZn = 0;
+
+                    for (int z = 0; z <= param; ++z) {
+                        final double zn = nextZn;
+                        nextZn = (z + 1) * invRadiusZ;
+
+                        double distanceSq = (xn * xn) + (zn * zn);
+                        if (distanceSq > 1) {
+                            if (z == 0) {
+                                break forX;
+                            }
+                            break;
+                        }
+
+                        toClaim.add(center.getWorld().getChunkAt(xCenter + x, zCenter + z));
+                        toClaim.add(center.getWorld().getChunkAt(xCenter - x, zCenter - z));
+                        toClaim.add(center.getWorld().getChunkAt(xCenter + x, zCenter - z));
+                        toClaim.add(center.getWorld().getChunkAt(xCenter - x, zCenter + z));
+                    }
+                }
                 break;
             case RECTANGULAR:
                 for (int x = xCenter - param; x <= xCenter + param; x++) {
@@ -167,7 +193,6 @@ public class MultiClaim extends LandlordCommand {
         }
         return toClaim;
     }
-
 
     public enum MultiClaimMode {
         CIRCULAR, RECTANGULAR, LINEAR
