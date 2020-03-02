@@ -84,7 +84,13 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public UUID getOwner() {
-        return region.getOwners().getUniqueIds().iterator().next();
+        Set<UUID> uniqueIds = region.getOwners().getUniqueIds();
+        if (uniqueIds.size() != 1) {
+            pl.getLogger().warning("The region " + getName() + " is faulty! It does not have an owner or the name matches a ll region");
+            return null;
+        } else {
+            return uniqueIds.iterator().next();
+        }
     }
 
     @Override
