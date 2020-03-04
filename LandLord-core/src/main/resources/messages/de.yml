@@ -1,131 +1,130 @@
 Tag: '&8[&c&l!&8]'
-Disabled-World: '&7Grundstückkauf ist in dieser Welt deaktiviert'
-noPermissions: '&7Keine Erlaubnis'
-locOutsideWorld: '§7You can''t interact with the chunk %chunk% being outside of the world %world%!'
+Disabled-World: '&7Auf dieser Welt kannst du mit LandLord keine Chunks claimen'
+noPermissions: '&7Keine Berechtigung'
+locOutsideWorld: '§7Du kannst mit dem Chunk %chunk% welcher außerhalb der %world% ist nicht interagieren!'
 Commands:
   Claim:
-    success: '&bSie haben erfolgreich das Grundstück %chunk% in Welt %world% gekauft'
-    p2pSuccess: '&bDer Spieler %player% hat dein Grundstück %chunk% in Welt %world% für %price% gekauft!'
-    notEnoughMoney: '&eSie haben nicht genug Geld (%money%) um das Grundstück (%chunk%) zu kaufen!'
-    moneyTook: '&4 %money% wurden für den Kauf des Grundstücks %chunk% abgezogen'
-    alreadyClaimed: '&eDieses Grundstück gehört bereits %owner%'
-    limit: '&eSie müssen erst eine Genehmigung kaufen um neue Grundstücke kaufen zu können (%regions%/%claims%)! Klicke hier um den Laden zu öffnen!'
-    hardcap: '&eSie können nicht mehr Grundstücke als %regions% besitzen!'
-    notAllowed: '&eSie dürfen dieses Grundstück nicht kaufen!'
-    aborted: '&eKauf abgebrochen!'
-    onlyClaimAdjacentChunks: '&cSie dürfen das Grundstück %land% nicht kaufen, weil Sie kein angrenzendes Grundstück besitzen!'
-    needsGap: '&cSie dürfen das Grundstück %land% nicht kaufen, weil es eine Lücke zwischen dem Grundstück von ihnen und dem anderer Spieler geben muss!'
-    boughtUp: '&bSie haben erfolgreich das Grundstück %chunk% von %player% für %price% gekauft'
-    notYetInactive: '&c%owner% ist noch nicht als inaktiv markiert, Sie müssen mindestens %days% Tage mehr warten'
-    confirmation: '&aSind Sie sicher, dass Sie das Grundstück %chunk% für %price% kaufen möchten? Klicken Sie hier, um zu bestätigen'
+    success: '&bDu hast erfolgreich %chunk% in der Welt %world% geclaimt'
+    p2pSuccess: '&bDer Spieler %player% hat deinen Chunk %chunk% in der Welt %world% fuer %price% gekauft!'
+    notEnoughMoney: '&eDu hast nicht genug Geld (%money%) um diesen Chunk zu claimen (%chunk%)'
+    moneyTook: '&4Du hast  %money% fuer den Chunk %chunk% bezahlt'
+    alreadyClaimed: '&eThis chunk is already claimed by %owner%'
+    limit: '&eDu musst dein Limit erst erhoehen (%regions%/%claims%)! Klicken um dein Limit zu erhoehen!'
+    hardcap: '&eDu kannst nicht mehr Land als %regions% besitzen!'
+    notAllowed: '&eDiesen Chunk kannst du nicht claimen!'
+    aborted: '&eAbbruch!'
+    onlyClaimAdjacentChunks: '&cDu kannst diesen Chunk %land% nicht claimen, da du keine angrenzenden besitzt!'
+    needsGap: '&cDu darfst dieses Land %land% nicht claimen, weil eine Luecke zwischen deinen und den Chunks anderer sein muss!'
+    boughtUp: '&bDu hast erfolgreich %chunk% von %player% fuer %price% gekauft'
+    notYetInactive: '&c%owner% is nicht aktiv :) Du musst noch mindestens %days% tage warten'
+    confirmation: '&aBist du sicher das du den Chunk %chunk% fuer %price% claimen moechtest? Zum Bestaetigen hier klicken!'
   Info:
     online: '&bONLINE'
     noLastSeen: '&c-'
     owned:
-      - '&f&lLand&c&lLord &a- Grundstück: Besitz'
-      - '&7Landname&8: &c%landid%'
-      - '&7Besitzer&8: &c%owner%   &7Zuletzt gesehen: &c%lastseen%'
-      - '&7Mitglieder&8: &c%member%'
+      - '&f&lLand&c&lLord &a- Land mit Besitzer'
+      - '&7Land-Name&8: &c%landid%'
+      - '&7Inhaber&8: &c%owner%   &7Zuletzt Online: &c%lastseen%'
+      - '&7Mitglied&8: &c%member%'
     advertised:
-      - '&f&lLand&c&lLord &a- Grundstück: Verkauf'
+      - '&f&lLand&c&lInhaber &a- Beworbenes Land'
       - '&7Landname&8: &c%landid%'
-      - '&7Besitzer&8: &c%owner%   &7Zuletzt gesehen: &c%lastseen%'
-      - '&7Mitglieder&8: &c%member%'
+      - '&7Inhaber&8: &c%owner%   &7Zuletzt online: &c%lastseen%'
+      - '&7Mitglied&8: &c%member%'
       - '&7Preis&8: &c&o%price%'
     inactive:
-      - '&f&lLand&c&lLord &a- Grundstück: Inaktiv'
+      - '&f&lLand&c&lLord &a- Inaktives Land'
       - '&7Landname&8: &c%landid%'
-      - '&7Besitzer&8: &c%owner%   &7Zuletzt gesehen: &c%lastseen%'
-      - '&7Mitglieder&8: &c%member%'
+      - '&7Inhaber&8: &c%owner%   &7Zuletzt online: &c%lastseen%'
+      - '&7Mitglied&8: &c%member%'
       - '&7Preis&8: &c&o%price%'
     free:
-      - '&f&lLand&c&lLord &a- Grundstück: Frei'
+      - '&f&lLand&c&lLord &a- Kostenfreies Land'
       - '&7Landname&8: &c%landid%'
       - '&7&oPreis: &c&o%price%'
   MultiClaim:
-    guiMessage: 'Kaufe %amount% Grundstücke für (%cost%).'
-    chatMessage: '&aKlicke hier um %amount% Grundstücke zu kaufen! Das kostet %cost%!'
-    noLands: '&cIn Ihrem ausgewählten Radius gibt es keine Grundstücke die Sie kaufen könnten!'
-    abort: '&cSie haben den Kauf von %amount% Grundstücke abgebrochen!'
-    hugeSize: '&cMulticlaim''s size is too high for the server''s render distance. To avoid making the server lagging, even crashing, please use a value lower than %max_size%!'
+    guiMessage: 'Claime %amount% Chunks (%cost%)'
+    chatMessage: '&aKlicken um den Kauf von %amount% Chunks zu bestaetigen! Das wird %cost% kosten!'
+    noLands: '&cIn den von dir gewaehlten Radius sind keine claimbaren Chunks verfuegbar!'
+    abort: '&cDu hast das claimen von %amount% Chunks abgebrochen!'
   Unclaim:
-    notOwn: '&7Dieses Grundstück gehört dir nicht.'
-    notOwnFreeLand: '&7Dieses Grundstück gehört dir nicht.'
-    success: '&7Sie haben erfolgreich das Grundstück &c%chunk% &7in Welt &c%world% &7frei gegeben und erhalten &c%money% &7zurück'
+    notOwn: '&7Dieser Chunk gehoert dir nicht. Er gehoert &c%owner%'
+    notOwnFreeLand: '&7Du bist nicht der Chunk-Inhaber'
+    success: '&7Du hast erfolgreich den Chunk &c%chunk% &7in der Welt &c%world% &7verlassen und bekommt &c%money% &7zurueck'
   UnclaimAll:
-    notOwnFreeLand: '&7You do not own any land'
-    success: '&7You successfully unclaimed %amount% chunk(s) &7in world &c%world% &7and got &c%money% &7back'
+    notOwnFreeLand: '&7Dir gehoeren keine Chunks!'
+    success: '&7Du hast %amount% Chunk(s) &7in der Welt &c%world% &7verlassen und hast &c%money% &7zurueck bekommen'
   Listfriends:
-    invalidWorld: '&cDie angegebene Welt existiert nicht!'
-    invalidGeneral: '&cDie eingegebenen Koordinaten sind ungültig!'
-    freeLand: '&cEin nicht beanspruchtes Grundstück hat keine Freundesliste!'
+    invalidWorld: '&cDie eingegebene Welt existiert nicht!'
+    invalidGeneral: '&cDie eingegebenen Koordinaten sind ungueltig!'
+    freeLand: '&cEin Land ohne Besitzer hat keine Freunde!'
     friends: '&aFreunde: %friends%'
-    noFriends: '&cFür dieses Grundstück sind keine Freunde eingetragen.'
+    noFriends: '&cDieses Land hat keine Freunde'
   Addfriend:
-    notOwn: '&7Dieses Grundstück gehört dir nicht.'
+    notOwn: '&7Dir gehoert dieser Chunk nicht, sondern &c%owner%'
     noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
-    success: '&c%players% &7zur Freundesliste dieses Grundstücks hinzugefügt.'
-    alreadyOwn: '&7Der Besitzer kann nicht als Freund eingetragen werden.'
+    success: '&7Du hast erfolreich &c%players% &7zu diesem Land hinzugefuegt'
+    alreadyOwn: '&7Der Inhaber kann kein Mitglied des Landes sein!'
   Unfriend:
-    notOwn: '&7Dieses Grundstück gehört dir nicht.'
+    notOwn: '&7Dir gehoert dieses Land nicht, sondern &c%owner%'
     noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
-    success: '&c%players% &7aus der Freundesliste dieses Grundstücks gelöscht.'
+    success: '&7&c%players% &7vom Land entfernt'
   AddfriendAll:
-    noPlayer: '&7Folgender Spieler konnte nicht gefunden werden&8: &c%player%'
-    success: '&c%player% &7zur Freundesliste von alle &c%count% &7Grundstücke hinzugefügt.'
-    alreadyOwn: '&7Der Besitzer kann nicht als Freund eingetragen werden.'
+    noPlayer: '&7Diese Spieler konnten nicht gefunden werden&8: &c%player%'
+    success: '&7Erfolgreich &c%player% &7zu all den &c%count% &7Arealen die dir gehoeren hinzugefuegt'
+    alreadyOwn: '&7Der Inhaber kann kein Mitglied des Landes sein!'
   UnfriendAll:
     noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
-    success: '&c%players% &7aus der Freundesliste von alle &c%count% &7Grundstücke gelöscht.'
-    noFriend: '&c%player% &7ist in keiner Freundesliste deiner Grundstücke eingetragen.'
+    success: '&7Erfolgreich &c%players% &7von allen &c%count% &7 Arealen, die dir gehoeren, entfernt'
+    noFriend: '&c%player% &7 ist kein Mitglied von einem deiner Areale'
   ListLands:
-    noLands: '&7Sie besitzen keine Grundstücke'
+    noLands: '&7Das Areal gehoert dir nicht!'
     gui:
-      header: '&2%player%s Grundstück'
+      header: '&2%player%s Areale'
       itemname: '&d%name%'
       lore:
         - '&aName: &f%name%'
         - ''
-        - '&aReal Coords: &f%realx%&c/&f%realz%'
+        - '&aEchte Koordinaten: &f%realx%&c/&f%realz%'
         - ''
-        - '&aMembers: &f%members%'
+        - '&aMitglieder: &f%members%'
         - ''
         - '%flags%'
-      flagformat: '&a%flagname%: &8(&fFreunde: &a%friend% &fAlle: &a%all%&8)'
-      manageAll: '&7Alle Grundstücke verwalten'
+      flagformat: '&a%flagname%: &8(&fFriends: &a%friend% &fAll: &a%all%&8)'
+      manageAll: '&7Areale verwalten'
     chat:
-      previous: '&8[&7Vorherige Seite&8]'
-      next: '&8[&7Nächste Seite&8]'
+      previous: '&8[&7Previous&8]'
+      next: '&8[&7Next&8]'
       segment: '&eName: &c%landname% &eMembers: &c%members%'
     noPlayer: '&7Folgender Spieler konnte nicht gefunden werden&8: &c%player%'
   LandMap:
-    disabled: '&7Grundstückskarte ist &cdeaktiviert'
+    disabled: '&7Land-Karte ist &cdeaktiviert'
     header: '&e&m==&r&6&c&lLand&r&e&m=='
-    yours: 'Deins'
+    yours: 'deins'
     friends: 'Freunde'
     others: 'Andere'
   ClearWorld:
     noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
     gui:
-      title: "Freigeben Admin-Menu"
+      title: "Loeschen Menue"
       clearcurrentland:
-        name: "Aktuelles Grundstück freigeben"
-        desc: "Gibt das Grundstück an der aktuellen Position frei"
-        confirm: "Grundstück freigeben?"
-        abort: "&cFreigeben abgebrochen!"
-        success: "&7Grundstück %land% freigegeben!"
+        name: "Aktuelles Areal"
+        desc: "Nur das Areal auf dem du stehst loeschen"
+        confirm: "Moechtest du das Areal wirklich abgeben?"
+        abort: "&cLoesch Aktion abgebrochen!"
+        success: "&Land %land% geloescht"
       clearplayer:
-        name: "Freigeben Spieler"
-        desc: "Gibt alle Grundstücke des Spielers an der aktuellen Position frei"
-        confirm: "Alles von %player% freigeben?"
-        abort: "&cFreigeben abgebrochen!"
-        success: '&c%count% &7Grundstück/e von &c%player% &7freigegeben!'
+        name: "Spieler entfernen"
+        desc: "Loescht alle Areale vom Spieler auf dessen Areal du stehst"
+        confirm: "Spieler-Areale entfernen?"
+        abort: "&cAbbruch!"
+        success: '&7Erfolgreich &c%count% &7Laender vom Spieler &c%player% entfernt'
       clearworld:
-        name: "Freigeben Welt"
-        desc: "Gibt alle Grundstücke innerhalb der Welt in der Sie sich gerade befinden frei! VORSICHT!"
-        confirm: "Alle Grundstücke von Welt %world% freigeben?"
-        abort: "&cFreigeben abgebrochen!"
-        success: '&c%count% &7Grundstück/e in der Welt &c%world% &7freigegeben!'
+        name: "Ganze Welt Loeschen"
+        desc: "Alle Areale in dieser Welt löschen ||VORSICHT!!!!"
+        confirm: "Wirklich Alle Areale dieser Welt loeschen %world%?"
+        abort: "&cLoesch Aktion abgebrochen!"
+        success: '&7Erfolgreich &c%count% &7Areale aus Welt &c%world% entfernt'
   Item:
     noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
   Manage:
@@ -136,133 +135,120 @@ Commands:
     friends:
       title: '&aFreunde'
       description:
-        - 'Klicke Wollblöcke in'
-        - 'dieser Reihe an, um '
-        - 'die Permissions für '
-        - 'Freunde einzustellen.'
+        - 'Hier klicken um Freundes-Berechtigungen einzustellen'
     everyone:
-      title: '&aAlle'
+      title: '&aJeder'
       description:
-        - 'Klicke Wollblöcke in'
-        - 'dieser Reihe an, um '
-        - 'die Permissions für '
-        - 'Alle einzustellen.'
+        - 'Hier klicken um Berechtigungen aller Spieler zu aendern'
     allow: '&aErlauben'
     deny: '&cVerbieten'
     prevArrow: '&aVorherige Seite'
-    nextArrow: '&aNächste Seite'
+    nextArrow: '&aNaechste Seite'
     all:
-      header: '&7Verwalte alle Grundstücke'
-    notOwn: '&7Dieses Grundstück gehört dir nicht.'
-    notOwnFreeLand: '&7Dieses Grundstück gehört dir nicht.'
-    header: '&7Verwalten&8: &c%info%'
-    invalidArguments: '&7Unerlaubte Argumente!'
+      header: '&call Land verwalten'
+    notOwn: '&7Dir gehoert dieser Chunk nicht, sondern &c%owner%'
+    notOwnFreeLand: '&7Nicht dein Chunk!'
+    header: '&c%info%'
+    invalidArguments: '&7Angegebene Argumente sind ungueltig'
     AllowDamage-animals:
-      title: '&cErlaube das Schlagen von Tieren'
+      title: '&cSchaden an tieren erlauben'
       description:
-        - ' &7Schalte die Option um Spielern zu erlauben'
-        - ' &7Deine Tiere in diesem Land zu schlagen.'
+        - ' &7Einstellen ob Spieler'
+        - ' &7Mobs in diesem Chunk hitten koennen'
     AllowRide:
-      title: '&cErlaube das Reiten von Viechern'
+      title: '&cReiten erlauben'
       description:
-        - ' &7Schalte die Option um Spielern zu erlauben'
-        - ' &7Deine Tiere in diesem Land zu reiten.'
+        - ' &7Einstellen ob Spieler'
+        - ' &7auf Einheiten reiten koennen'
     AllowFrosted-ice-form:
-      title: '&cErlaube Eisstiefel'
+      title: '&cEislaeufer erlauben'
       description:
-        - ' &7Schalte die Option um Spielern zu erlauben'
-        - ' &7Eisstiefel in diesem Land zu verwenden.'
+        - ' &7Einstellen ob Spieler Eislaeufer'
+        - ' &7nutzen duerfen'
     AllowBlock-trampling:
-      title: '&cErlaube Block Trampelei'
+      title: '&cPlatttrampeln erlauben'
       description:
-        - ' &7Schalte die Option um Spielern zu erlauben'
-        - ' &7Dein Farmland zu zertrampeln.'
+        - ' &7Erlauben ob Farmland von Spielern'
+        - ' &7plattgetrampelt werden kann'
     AllowPotion-splash:
-      title: '&cErlaube Wurftränke'
+      title: '&cSplash Potions erlauben'
       description:
-        - ' &7Schalte die Option um Spielern zu erlauben'
-        - ' &7Tränke zu werfen..'
+        - ' &7Einstellen ob Splash Potions'
+        - ' &7in diesem Chunk geworfen werden koennen'
     AllowPistons:
-      title: '&cErlaube Pistons'
+      title: '&cPistons erlauben'
       description:
-        - ' &7Schalte die Option um Spielern zu erlauben'
-        - ' &7Pistons zu verwenden.'
+        - ' &7Einstellen ob Spieler'
+        - ' &7Pistons im Chunk nutzen koennen'
     AllowBuild:
       title: '&cBauen erlauben'
       description:
-        - ' &7Anderen Spielern das Bauen'
-        - ' &7erlauben'
-        - ' &7Status&8: &c%var%'
+        - ' &7Einstellen ob'
+        - ' &7bauen im Chunk erlaubt ist'
     AllowInteract:
-      title: '&cBenutzen erlauben'
+      title: '&cInteraktionen erlauben'
       description:
-        - ' &7Das benutzen von Objekten'
-        - ' &7erlauben (z.B. redstone Apparate)'
-        - ' &7Status&8: &c%var%'
+        - ' &7Einstellen ob Interaktionen,'
+        - ' &7mit Objekten wie (e.g. redstone bauten) erlaubt sind'
     AllowChest-access:
-      title: '&cBehälter erlauben'
+      title: '&cZugriff auf Speicher erlauben'
       description:
-        - ' &7Das öffnen von Behältern '
-        - ' &7erlauben (z.B. Truhe)'
-        - ' &7Status&8: &c%var%'
+        - ' &7Einstellen ob Spieler Speicher'
+        - ' &7nutzen kann (z.B. Kisten)'
     AllowCreeper-explosion:
-      title: '&cErlaube Creeper Explosion'
+      title: '&cCreeper Explosionen erlauben'
       description:
-        - ' &7Erlaube Creeper das zerstören'
-        - ' &7von Blöcken (auch Schaden an Spieler)'
-        - ' &7Status&8: &c%var%'
+        - ' &7Einstellen ob Creeper'
+        - ' &7Bloecke zerstoeren koennen'
     AllowPvp:
-      title: '&cErlaube PvP'
+      title: '&cPVP erlauben'
       description:
-        - ' &7Spielern erlauben anderen'
-        - ' &7Spielern Schaden zuzufügen'
-        - ' &7Status&8: &c%var%'
+        - ' &7Einstellen ob Spieler'
+        - ' &7andere Spieler hitten koennen'
     AllowMob-spawning:
-      title: '&cVerwalte NPC spawn'
+      title: '&cMob-Spawning'
       description:
-        - ' &7Das erscheinen von Tiere/Monster'
-        - ' &7auf dem Grundstück erlauben'
+        - ' &7Einstellen ob Mobs auf dem Areal'
+        - ' &7Spawnen duerfen'
       toggleItem:
-        title: 'Spawn %mob%'
+        title: '%mob% spawnen?'
         description:
-          - 'Spawning of %mob%: %value%'
+          - 'Spawning von %mob%: %value%'
         deny: 'verboten'
         allow: 'erlaubt'
     Regenerate:
-      title: '&cRegenerieren'
+      title: '&cRegneration'
       description:
-        - ' &7Regeneriert das Grundstück'
+        - ' &7Land regenerieren'
         - ' &7Cost&8: &c%var%'
-      confirmation: '&Regenerieren kostet &c%cost%'
-      success: '&7Regenerierung des Grundstücks &c%land% &7erfolgreich'
-      abort: '&7Regenerierung des Grundstücks &c%land% &7abgebrochen'
-      notEnoughMoney: '&7Sie haben nicht genug Geld um das Grundstück &c%name% &7zu regenerieren &o(Preis&8&o: &c&o%cost%&7&o)'
+      confirmation: '&7Regenerations kosten &c%cost%'
+      success: '&7Regeneration &c%land% &7erfolgreich'
+      abort: '&7Regeneration abgebrochen &c%land%'
+      notEnoughMoney: '&7Du hast nicht genug Geld um das Land zu regenerieren &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
     SetGreet:
-      title: '&cBegrüßungsnachricht'
+      title: '&cGruss Nachricht'
       description:
-        - ' &7Legt eine Begrüßungsnachricht fest für dieses Grundstück'
-        - ' &7Message&8: &c%var%'
-      clickMsg: '&7Klicke um eine neue Nachricht einzugeben'
-      successful: '&7Die neue Begrüßungsnachricht lautet: %msg%'
+        - ' &7Grussnachricht einstellen'
+      clickMsg: '&7Klicken um Gruss zu erstellen'
+      successful: '&7Grussnachricht auf %msg% gesetzt'
     SetFarewell:
-      title: '&cAbschiedsnachricht'
+      title: '&cTschuss Nachricht'
       description:
-        - ' &7Legt eine Abschiedsnachricht fest für dieses Grundstück'
-        - ' &7Message&8: &c%var%'
-      clickMsg: '&7Klicke um eine neue Nachricht einzugeben'
-      successful: '&7Die neue Abschiedsnachricht lautet: %msg%'
+        - ' &7Verabschiedung einstellen'
+      clickMsg: '&7Abschiedsnachricht einstellen'
+      successful: '&7Abschiedsnachricht auf %msg% gesetzt'
     ManageFriends:
-      title: '&cVerwalte Freunde'
+      title: '&cMitgliederverwaltung'
       description:
-        - ' &7Verwalte die Freundesliste dieses Grundstücks'
+        - ' &7Mitglieder verwalten'
       friendSegment:
-        - ' &7Zuletzt gesehen&8: &c%seen%'
-        - ' &7&oKlicke zum entfernen'
-      unfriend: '&c%player% &7wurde aus der Freundesliste gelöscht'
+        - ' &7Zuletzt online&8: &c%seen%'
+        - ' &7&oZum entfernen klicken'
+      unfriend: '&7 &c%player% ist nun kein Mitglied mehr!'
     Unclaim:
-      title: '&cFreigeben'
+      title: '&cUnclaimen'
       description:
-        - '&7Klicke hier zum freigeben dieses Grundstücks!'
+        - '&7Hier klicken um Areal zu entclaimen!'
       confirmationTitle: '&aFreigegeben %land%'
   Help:
     header: '&f&lLand&c&lLord'
