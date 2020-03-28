@@ -271,7 +271,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
             });
         }
 
-        for (IOwnedLand region : regions) {
+        for (IOwnedLand region : new HashSet<>(regions)) {
             unclaim(region);
         }
         return count;
