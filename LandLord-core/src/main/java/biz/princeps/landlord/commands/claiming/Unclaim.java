@@ -102,6 +102,10 @@ public class Unclaim extends LandlordCommand {
             }
             wg.unclaim(ol.getWorld(), ol.getName());
 
+            if (plugin.getConfig().getBoolean("CommandSettings.Unclaim.regenerate")) {
+                plugin.getRegenerationManager().regenerateChunk(ol.getALocation());
+            }
+
             // remove possible homes
             IPlayer lPlayer = plugin.getPlayerManager().get(ol.getOwner());
             if (lPlayer != null) {

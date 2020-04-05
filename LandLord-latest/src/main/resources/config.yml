@@ -249,6 +249,7 @@ CommandSettings:
   Unclaim:
     name: unclaim
     usage: '/land unclaim - Unclaim the chunk you are standing on'
+    regenerate: true
     permissions:
       - landlord.player.unclaim
     aliases:
