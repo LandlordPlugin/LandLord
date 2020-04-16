@@ -78,6 +78,9 @@ public class UnclaimAll extends LandlordCommand {
                         }
                     }
                     wg.unclaim(ol.getWorld(), ol.getName());
+                    if (plugin.getConfig().getBoolean("CommandSettings.Unclaim.regenerate")) {
+                        plugin.getRegenerationManager().regenerateChunk(ol.getALocation());
+                    }
                     unclaimedLands++;
 
                     // remove possible homes
