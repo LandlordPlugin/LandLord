@@ -52,14 +52,20 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public String getOwnersString() {
-        Iterator<String> it = region.getOwners().getPlayers().iterator();
-        return itToString(it);
+        Set<UUID> itt = region.getOwners().getUniqueIds();
+        Set<String> names = new HashSet<>();
+        // ugly, maybe solve this in the future
+        itt.forEach(u -> names.add(pl.getPlayerManager().getOfflineSync(u).getName()));
+        return itToString(names.iterator());
     }
 
     @Override
     public String getMembersString() {
-        Iterator<String> it = region.getMembers().getPlayers().iterator();
-        return itToString(it);
+        Set<UUID> itt = region.getMembers().getUniqueIds();
+        Set<String> names = new HashSet<>();
+        // ugly, maybe solve this in the future
+        itt.forEach(u -> names.add(pl.getPlayerManager().getOfflineSync(u).getName()));
+        return itToString(names.iterator());
     }
 
     private String itToString(Iterator<String> it) {
