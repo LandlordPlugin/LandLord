@@ -177,13 +177,14 @@ public class AManage extends AbstractGUI {
                                 land != regions.get(0) && flag.getName().equals(llFlag.getName())
                                         && flag.getFriendStatus() != llFlag.getFriendStatus()).forEach(flagii -> {
                                     flagii.toggleFriends();
-                                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                            flagii.getName(), !flagii.getFriendStatus(), flagii.getFriendStatus());
-                                    Bukkit.getPluginManager().callEvent(landManageEvent);
+
+                                    Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                        LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                                flagii.getName(), !flagii.getFriendStatus(), flagii.getFriendStatus());
+                                        Bukkit.getPluginManager().callEvent(landManageEvent);
+                                    });
                                 }
                         )));
-
-
             }
         });
         friend.setName(isFriend ? lm.getRawString("Commands.Manage.allow") : lm.getRawString("Commands.Manage.deny"));
@@ -197,11 +198,14 @@ public class AManage extends AbstractGUI {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () ->
                         regions.forEach(land -> land.getFlags().stream().filter(llFlag ->
                                 land != regions.get(0) && flag.getName().equals(llFlag.getName())
-                                        && flag.getAllStatus() != llFlag.getAllStatus()).forEach(flagii ->{
+                                        && flag.getAllStatus() != llFlag.getAllStatus()).forEach(flagii -> {
                             flagii.toggleAll();
-                            LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                    flagii.getName(), !flagii.getAllStatus(), flagii.getAllStatus());
-                            Bukkit.getPluginManager().callEvent(landManageEvent);
+
+                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                        flagii.getName(), !flagii.getAllStatus(), flagii.getAllStatus());
+                                Bukkit.getPluginManager().callEvent(landManageEvent);
+                            });
                         })));
             }
         });
@@ -252,9 +256,11 @@ public class AManage extends AbstractGUI {
                                 }
                             }
                             if (flag) {
-                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                        null, "REGENERATE", "REGENERATE");
-                                Bukkit.getPluginManager().callEvent(landManageEvent);
+                                Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                            null, "REGENERATE", "REGENERATE");
+                                    Bukkit.getPluginManager().callEvent(landManageEvent);
+                                });
 
                                 plugin.getRegenerationManager().regenerateChunk(land.getALocation());
                                 lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.success")
