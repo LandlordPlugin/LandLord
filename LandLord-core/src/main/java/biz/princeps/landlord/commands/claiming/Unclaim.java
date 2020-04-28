@@ -118,7 +118,7 @@ public class Unclaim extends LandlordCommand {
                 }
             }
 
-            if (plugin.getConfig().getBoolean("Particles.unclaim.enabled")) {
+            if (plugin.getConfig().getBoolean("Particles.unclaim.enabled", false)) {
                 ol.highlightLand(player,
                         Particle.valueOf(plugin.getConfig().getString("Particles.unclaim.particle").toUpperCase()));
             }
