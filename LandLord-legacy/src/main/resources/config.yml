@@ -458,13 +458,13 @@ CommandSettings:
     aliases:
       - adminteleport
 
-  MAItem:
-    name: item
-    usage: '/land item <name> - gives the player the managementitem'
+  AdminClaim:
+    name: adminclaim
+    usage: '/land adminclaim <name> - claims the land for a player'
     permissions:
-      - landlord.player.item
+      - landlord.admin.adminclaim
     aliases:
-      - maitem
+      - admincl
 
 
 
@@ -484,25 +484,6 @@ Flags:
   - 'ride'
   - 'potion-splash'
   - 'pistons'
-
-MaItem:
-  enabled: true
-  item: STICK
-  # define your modes of operation here.
-  # Syntax: clickaction:condition:whatshouldhappen
-  # Available actions:
-  # - leftclickblock, leftclickair, shiftleftclickblock, shiftleftclickair (same for right obv)
-  # Available conditions:
-  # - ownland, otherland, anyland
-  # Available whatshouldhappen:
-  # - info, buy, manage, manageall, togglemap, toggleborders
-  modes:
-    - 'rightclickblock:anyland:info'
-    - 'leftclickblock:anyland:buy'
-    - 'shiftrightclickblock:ownland:manage'
-    - 'shiftleftclickblock:ownland:manageall'
-    - 'rightclickair:anyland:togglemap'
-    - 'leftclickair:anyland:toggleborders'
 
 # These options will be manageable in ll manage
 Manage:

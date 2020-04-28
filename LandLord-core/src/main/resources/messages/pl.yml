@@ -323,6 +323,10 @@ Commands:
     noPlayer: '&eNie można znaleźć gracza %player%'
     noLands: '&eGracz %player% nie posiada żadnych zajętych terenów!'
     guiHeader: 'Tereny gracza %player%'
+  AdminClaim:
+    noPlayer: '&eNo player with the name %player% found!'
+    alreadyOwned: '&eThe land %land% is already owned!'
+    success: '&aSuccess! The land %land% is now owned by %name%!'
 Alerts:
   defaultGreeting: '&7Wkraczasz na teren zajęty przez &e%owner%'
   defaultFarewell: '&7Opuszczanie terenu &e%owner%'

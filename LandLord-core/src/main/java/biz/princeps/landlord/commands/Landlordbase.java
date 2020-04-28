@@ -79,7 +79,6 @@ public class Landlordbase extends MainCommand {
         this.addSubcommand(new Update(pl));
         this.addSubcommand(new AdminTeleport(pl));
         this.addSubcommand(new MultiClaim(pl));
-        this.addSubcommand(new LLItem(pl));
         this.addSubcommand(new Borders(pl));
         this.addSubcommand(new Home(pl));
         this.addSubcommand(new SetHome(pl));

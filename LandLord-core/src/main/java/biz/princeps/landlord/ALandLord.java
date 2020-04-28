@@ -196,12 +196,12 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * Registers special items (left/right click action; nbt data...) with the princepslib protection
      */
     private void setupItems() {
-        PrincepsLib.getItemManager().registerItem(Maitem.NAME, Maitem.class);
+        //PrincepsLib.getItemManager().registerItem(Maitem.NAME, Maitem.class);
     }
 
     /**
      * Registers placeholders with different plugins
-     * TODO add FeatherBoard
+     * TODO add FeatherBoard nop.
      */
     private void setupPlacerholders() {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {

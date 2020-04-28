@@ -316,9 +316,13 @@ Commands:
     activated: '&aVisuelle Effekte für die Grundstücksgrenze aktiviert. Klicken zum deaktivieren!'
     deactivated: '&eVisuelle Effekte für die Grundstücksgrenze deaktiviert.'
   AdminTp:
-    noPlayer: '&eKein Spieler Namens %player% gefunden'
+    noPlayer: '&eKein Spieler namens %player% gefunden'
     noLands: '&eDer Spieler %player% besitzt kein Grundstück!'
     guiHeader: 'Grundstück/e von %player%'
+  AdminClaim:
+    noPlayer: '&eKein Spieler namens %player% gefunden'
+    alreadyOwned: '&eDas Grundstück %land% gehört bereits jemand anderen!'
+    success: 'Erfolg! Das Grundstück %land% gehört nun %name%!'
 Alerts:
   defaultGreeting: '&7Sie betreten das Grundstück von %owner%'
   defaultFarewell: '&7Sie verlassen das Grundstück von %owner%'

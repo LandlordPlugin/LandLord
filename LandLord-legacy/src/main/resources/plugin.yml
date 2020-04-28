@@ -1,5 +1,5 @@
 name: Landlord
-version: 4.308
+version: 4.309
 main: biz.princeps.landlord.LandLord
 author: SpatiumPrinceps
 website: https://www.spigotmc.org/resources/beta-landlord-2.44398/
@@ -40,6 +40,7 @@ permissions:
       landlord.admin.giveclaims: true
       landlord.admin.update: true
       landlord.admin.admintp: true
+      landlord.admin.adminclaim: true
       landlord.limit.override: true
 
   landlord.admin.clear.*:

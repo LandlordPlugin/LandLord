@@ -324,6 +324,10 @@ Commands:
     noPlayer: '&e %player%'
     noLands: '&eThe player %player% does not own any lands!'
     guiHeader: 'Lands of %player%'
+  AdminClaim:
+    noPlayer: '&eNo player with the name %player% found!'
+    alreadyOwned: '&eThe land %land% is already owned!'
+    success: '&aSuccess! The land %land% is now owned by %name%!'
 Alerts:
   defaultGreeting: '&7Now entering claimed land of %owner%'
   defaultFarewell: '&7Leaving claimed land of %owner%'
