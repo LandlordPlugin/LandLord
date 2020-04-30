@@ -34,7 +34,7 @@ public class UtilsManager implements IUtilsManager {
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(p, fakeblock);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException("Cannot send packet " + fakeblock, e);
+            throw new RuntimeException("Cannot send packet " + fakeblock + "! Update ProtocolLib and report back if the error persists!", e);
         }
     }
 }
