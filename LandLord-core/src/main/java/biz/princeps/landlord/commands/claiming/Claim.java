@@ -68,9 +68,9 @@ public class Claim extends LandlordCommand {
         int regionCount = wg.getRegionCount(player.getUniqueId());
 
         // First check, if outer conditions (conditions that are related more to the buyer as individual)
-        // Ckeck for hardcap based on permissions
+        // Check for hardcap based on permissions
         if (!plugin.getConfig().getBoolean("CommandSettings.Claim.allowOverlap", false) &&
-                !wg.canClaim(player, chunk)) {
+                !wg.canClaim(player, chunk) && !(ol != null && plugin.getPlayerManager().isInactiveSync(ol.getOwner()))) {
             lm.sendMessage(player, lm.getString("Commands.Claim.notAllowed"));
             return;
         }
