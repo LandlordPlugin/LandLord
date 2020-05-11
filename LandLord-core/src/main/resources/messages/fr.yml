@@ -321,9 +321,9 @@ Commands:
     noLands: '&eLe joueur %player% ne possède pas de terrains !'
     guiHeader: 'Terrains de %player%:'
   AdminClaim:
-    noPlayer: '&eNo player with the name %player% found!'
-    alreadyOwned: '&eThe land %land% is already owned!'
-    success: '&aSuccess! The land %land% is now owned by %name%!'
+    noPlayer: '&eLe joueur %player% n''a pas pu être trouvé !'
+    alreadyOwned: '&eLe terrain %land% est déjà protégé !'
+    success: '&aSuccès: Le terrain %land% appartient maintenant à %name%'
 Alerts:
   defaultGreeting: '&7Bienvenue sur le terrain de %owner%'
   defaultFarewell: '&7Vous quittez le terrain de %owner%'

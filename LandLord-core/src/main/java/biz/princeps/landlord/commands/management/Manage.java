@@ -148,6 +148,11 @@ public class Manage extends LandlordCommand {
 
 
     private void setGreet(Player player, String[] args, IOwnedLand target, int casy) {
+        if (target == null) {
+            lm.sendMessage(player, lm.getString("Commands.Manage.notOwnFreeLand"));
+            return;
+        }
+
         StringBuilder sb = new StringBuilder();
         for (int i = casy; i < args.length; i++) {
             sb.append(args[i]).append(" ");
@@ -171,6 +176,11 @@ public class Manage extends LandlordCommand {
     }
 
     private void setFarewell(Player player, String[] args, IOwnedLand target, int casy) {
+        if (target == null) {
+            lm.sendMessage(player, lm.getString("Commands.Manage.notOwnFreeLand"));
+            return;
+        }
+
         StringBuilder sb = new StringBuilder();
         for (int i = casy; i < args.length; i++) {
             sb.append(args[i]).append(" ");
