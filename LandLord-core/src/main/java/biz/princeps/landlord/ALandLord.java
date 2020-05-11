@@ -89,7 +89,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
             return false;
         }
         if (getVault() == null) {
-            getLogger().warning("Vault not found! Not all features of landlord are working.");
+            getLogger().info("Vault or an economy provider could no be found. Not all features of landlord are working.");
         }
         return true;
     }
