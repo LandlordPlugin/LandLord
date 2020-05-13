@@ -13,6 +13,10 @@
     <version>4.0</version>
     <packaging>jar</packaging>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -61,6 +65,10 @@
         <repository>
             <id>papermc</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>github-towny</id>
+            <url>https://maven.pkg.github.com/TownyAdvanced/Towny</url>
         </repository>
     </repositories>
 
@@ -112,6 +120,13 @@
             <artifactId>LandLord-api</artifactId>
             <version>4.0.5</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.palmergames.bukkit.towny</groupId>
+            <artifactId>Towny</artifactId>
+            <version>0.96.1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

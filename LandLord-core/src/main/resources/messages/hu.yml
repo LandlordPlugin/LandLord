@@ -377,22 +377,9 @@ Shop:
         - '&cCost: %cost%'
         - '&cOwned: %own%'
     abort: '&cAbort'
-MaItem:
-  itemname: 'LL Maimaitem a végzet'
-  lore:
-    - ''
-    - '&l&fMódok:'
-    - ''
-    - '&l&bvásárolható földek'
-    - '&cjobb klikk: &7info megjelenítés'
-    - '&cbal klikk: &7vásárlás'
-    - ''
-    - '&l&bsaját földön'
-    - '&cjobb klikk: &7info megjelenítés'
-    - '&cshift + jobb klikk: &7kezelés'
-    - '&cshift + bal klikk: &7összes kezelése'
-    - ''
-    - '&l&ba levegőben:'
-    - '&cjobb klikk: &7térkép kapcsolása'
-    - '&cbal klikk: &7határok kapcsolása'
+
+Integrations:
+  Towny:
+    TownyPresent: '&cThere already is a towny region present!!'
+    LLPresent: '&cThere already is a landlord region present!'
 version: 22

@@ -2,7 +2,7 @@ package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.commands.Landlordbase;
-import biz.princeps.landlord.items.Maitem;
+import biz.princeps.landlord.integrations.Towny;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
 import biz.princeps.landlord.listener.MapListener;
@@ -54,7 +54,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         checkWorldNames();
 
         setupConfig();
-        setupPlacerholders();
+        setupIntegrations();
         setupItems();
         setupManagers();
         setupListeners();
@@ -201,14 +201,17 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
 
     /**
      * Registers placeholders with different plugins
-     * TODO add FeatherBoard nop.
+     * TODO add FeatherBoard nop not gonna happen.
      */
-    private void setupPlacerholders() {
+    private void setupIntegrations() {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new LLExpansion(this).register();
         }
         if (Bukkit.getPluginManager().isPluginEnabled("MVdWPlaceholderAPI")) {
             new LLFeatherBoard(this);
+        }
+        if(Bukkit.getPluginManager().isPluginEnabled("Towny")){
+            new Towny(this);
         }
     }
 

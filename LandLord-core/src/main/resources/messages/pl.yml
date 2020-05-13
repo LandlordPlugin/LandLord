@@ -377,22 +377,9 @@ Shop:
         - '&cCost: %cost%'
         - '&cOwned: %own%'
     abort: '&cAbort'
-MaItem:
-  itemname: 'LL Maimaitem Zagłady'
-  lore:
-    - ''
-    - '&l&fMody:'
-    - ''
-    - '&l&bon tereny do kupienia'
-    - '&crightclick: &7wyświetl info'
-    - '&cleftclick: &7kup'
-    - ''
-    - '&l&bon zajęte tereny'
-    - '&crightclick: &7wyświetl info'
-    - '&cshift + rightclick: &7zarządzaj'
-    - '&cshift + leftclick: &7zarządzaj wszystkimi terenami'
-    - ''
-    - '&l&bin the air:'
-    - '&crightclick: &7włącz mapę'
-    - '&cleftclick: &7włącz granice'
+
+Integrations:
+  Towny:
+    TownyPresent: '&cThere already is a towny region present!!'
+    LLPresent: '&cThere already is a landlord region present!'
 version: 23

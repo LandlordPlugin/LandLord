@@ -375,22 +375,9 @@ Shop:
         - '&cCoût: %cost%'
         - '&cPossédé: %own%'
     abort: '&cAnnuler'
-MaItem:
-  itemname: 'Outil LL de malheur'
-  lore:
-    - ''
-    - '&l&fModes:'
-    - ''
-    - '&l&Sur des terres achetables'
-    - '&cClic-Droit: &7Voir les informations'
-    - '&cClic-Gauche: &7Acheter'
-    - ''
-    - '&l&bSur des terres protégées'
-    - '&cClic-Droit: &7show info'
-    - '&cShift + Clic-Droit: &7/manage'
-    - '&cShift + Clic-Gauche: &7/manageall'
-    - ''
-    - '&l&bDans l''air:'
-    - '&cClic-Droit: &7Bascule l''état de la carte'
-    - '&cClic-Gauche: &7Bascule l''état des bordures'
+
+Integrations:
+  Towny:
+    TownyPresent: '&cThere already is a towny region present!!'
+    LLPresent: '&cThere already is a landlord region present!'
 version: 23

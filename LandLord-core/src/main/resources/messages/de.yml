@@ -374,22 +374,8 @@ Shop:
         - '&cOwned: %own%'
     abort: '&cAbort'
 
-MaItem:
-  itemname: 'LL Maimaitem of doomness'
-  lore:
-    - ''
-    - '&l&fModes:'
-    - ''
-    - '&l&bon buyable lands'
-    - '&crightclick: &7show info'
-    - '&cleftclick: &7buy'
-    - ''
-    - '&l&bon own lands'
-    - '&crightclick: &7show info'
-    - '&cshift + rightclick: &7manage'
-    - '&cshift + leftclick: &7manageall'
-    - ''
-    - '&l&bin the air:'
-    - '&crightclick: &7toggle map'
-    - '&cleftclick: &7toggle borders'
+Integrations:
+  Towny:
+    TownyPresent: '&cThere already is a towny region present!!'
+    LLPresent: '&cThere already is a landlord region present!'
 version: 23
