@@ -3,8 +3,8 @@ package biz.princeps.landlord;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.protection.AWorldGuardManager;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -40,8 +40,8 @@ public class WorldGuardManager extends AWorldGuardManager {
         this.wgPlugin = worldGuard;
     }
 
-    static void initFlags(WorldGuardPlugin pl) {
-        FlagRegistry registry = pl.getFlagRegistry();
+    static void initFlags(WorldGuardPlugin wgpl) {
+        FlagRegistry registry = wgpl.getFlagRegistry();
         try {
             // register our flag with the registry
             registry.register(REGION_PRICE_FLAG);

@@ -30,6 +30,7 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.8.2</version>
                 <executions>
@@ -42,34 +43,10 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.3</version>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <serverId>princepsrepo</serverId>
-                    <nexusUrl>http://princeps.biz:8081/nexus/content/repositories/princepsrepo</nexusUrl>
-                    <skipStaging>true</skipStaging>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
     <repositories>
-        <repository>
-            <id>princepsrepo</id>
-            <url>http://princeps.biz:8081/nexus/content/repositories/princepsrepo/</url>
-        </repository>
         <repository>
             <id>papermc</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
