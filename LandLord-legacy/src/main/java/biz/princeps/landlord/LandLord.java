@@ -30,7 +30,12 @@ public class LandLord extends ALandLord implements Listener {
         this.utilsManager = new UtilsManager();
         this.materialsManager = new MaterialsManager();
         this.mobManager = new MobManager();
-        this.regenerationManager = World::regenerateChunk;
+
+        if (getConfig().getString("Regeneration.provider", "default").equalsIgnoreCase("wg") || true) {
+            // there is only the default method available for 1.12.2
+            this.regenerationManager = World::regenerateChunk;
+        }
+
 
         ((WorldGuardManager) worldGuardManager).initCache();
 

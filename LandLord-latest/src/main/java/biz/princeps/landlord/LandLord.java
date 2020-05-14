@@ -4,6 +4,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
+import java.io.File;
+
 /**
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
@@ -26,7 +28,15 @@ public class LandLord extends ALandLord {
         this.utilsManager = new UtilsManager();
         this.materialsManager = new MaterialsManager();
         this.mobManager = new MobsManager();
-        this.regenerationManager = new RegenerationManager();
+
+        if (getConfig().getString("Regeneration.provider", "default").equalsIgnoreCase("wg")) {
+            File folder = new File(getPlugin().getDataFolder(), "chunksaves");
+            folder.mkdir();
+            this.regenerationManager = new WGRegenerator(this);
+            new WGRegenListener(this);
+        } else {
+            this.regenerationManager = new RegenerationManager();
+        }
 
         ((WorldGuardManager) worldGuardManager).initCache();
 

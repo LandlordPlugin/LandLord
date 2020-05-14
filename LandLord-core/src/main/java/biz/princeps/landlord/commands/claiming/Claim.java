@@ -247,7 +247,7 @@ public class Claim extends LandlordCommand {
                 Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
         plugin.getMapManager().updateAll();
 
-        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol);
+        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol, ClaimType.INACTIVE);
         Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> Bukkit.getPluginManager().callEvent(postEvent));
     }
 
@@ -279,7 +279,7 @@ public class Claim extends LandlordCommand {
                 Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
         plugin.getMapManager().updateAll();
 
-        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol);
+        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol, ClaimType.ADVERTISED);
         Bukkit.getPluginManager().callEvent(postEvent);
     }
 
@@ -318,7 +318,7 @@ public class Claim extends LandlordCommand {
 
         plugin.getMapManager().updateAll();
 
-        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, claim);
+        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, claim, ClaimType.FREE_LAND);
         Bukkit.getPluginManager().callEvent(postEvent);
     }
 

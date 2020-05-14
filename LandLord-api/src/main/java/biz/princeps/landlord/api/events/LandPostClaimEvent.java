@@ -1,5 +1,6 @@
 package biz.princeps.landlord.api.events;
 
+import biz.princeps.landlord.api.ClaimType;
 import biz.princeps.landlord.api.IOwnedLand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -18,10 +19,12 @@ public class LandPostClaimEvent extends Event {
 
     private Player player;
     private IOwnedLand land;
+    private ClaimType type;
 
-    public LandPostClaimEvent(Player player, IOwnedLand land) {
+    public LandPostClaimEvent(Player player, IOwnedLand land, ClaimType type) {
         this.player = player;
         this.land = land;
+        this.type = type;
     }
 
     public static HandlerList getHandlerList() {
@@ -47,5 +50,8 @@ public class LandPostClaimEvent extends Event {
         return handlers;
     }
 
+    public ClaimType getClaimType(){
+        return type;
+    }
 
 }

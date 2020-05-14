@@ -69,6 +69,11 @@ Freelands: 1
 # cost for regenerate inside ll manage
 ResetCost: 1000.0
 
+Regeneration:
+  # Providers available: default
+  # default: regenerates the chunk by using the original seed.
+  provider: 'default'
+
 # here you can manage your claims shop.
 Claims:
   # set this to false, if you want to use the traditional permission based system
