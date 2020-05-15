@@ -7,15 +7,15 @@ It is hosted on [spigotmc.org](https://www.spigotmc.org/resources/beta-landlord-
 Maven
 =====
 ```xml
-<repository>
-    <id>princepsrepo</id>
-    <url>http://princeps.biz:8081/nexus/content/repositories/princepsrepo/</url>
-</repository>
+  <repository>
+    <id>gitlab-maven</id>
+    <url>https://gitlab.com/api/v4/projects/6801239/packages/maven</url>
+  </repository>
 
 <dependency>
     <groupId>biz.princeps</groupId>
     <artifactId>LandLord-api</artifactId>
-    <version>4.0.5</version>
+    <version>4.0.6</version>
     <scope>provided</scope>
 </dependency>
 ```
