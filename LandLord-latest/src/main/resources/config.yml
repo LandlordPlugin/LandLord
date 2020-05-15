@@ -73,7 +73,7 @@ Regeneration:
   # Providers available: default, wg
   # default: regenerates the chunk by using the original seed.
   # wg: regenerates by restoring a chunk snapshot, that was taken on claim. Does not work retroactively.
-  provider: 'wg'
+  provider: 'default'
 
 # here you can manage your claims shop.
 Claims:
