@@ -40,10 +40,6 @@
 
     <repositories>
         <repository>
-            <id>princepsrepo</id>
-            <url>http://princeps.biz:8081/nexus/content/repositories/princepsrepo/</url>
-        </repository>
-        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -58,9 +54,10 @@
         <repository>
             <id>inventive-repo</id>
             <url>https://repo.inventivetalent.org/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+        </repository>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/projects/6801255/packages/maven</url>
         </repository>
         <repository>
             <id>papermc</id>
