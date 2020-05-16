@@ -1,5 +1,6 @@
-package biz.princeps.landlord;
+package biz.princeps.landlord.manager;
 
+import biz.princeps.landlord.OwnedLand;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.protection.AWorldGuardManager;
@@ -40,7 +41,7 @@ public class WorldGuardManager extends AWorldGuardManager {
         this.wgPlugin = worldGuard;
     }
 
-    static void initFlags(WorldGuardPlugin wgpl) {
+    public static void initFlags(WorldGuardPlugin wgpl) {
         FlagRegistry registry = wgpl.getFlagRegistry();
         try {
             // register our flag with the registry
@@ -54,7 +55,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     }
 
     //TODO check performance of sync loading
-    void initCache() {
+    public void initCache() {
         for (World world : Bukkit.getWorlds()) {
             RegionManager manager = getRegionManager(world);
             for (ProtectedRegion value : manager.getRegions().values()) {

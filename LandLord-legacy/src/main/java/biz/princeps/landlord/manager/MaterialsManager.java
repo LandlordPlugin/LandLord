@@ -1,4 +1,4 @@
-package biz.princeps.landlord;
+package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.api.IMaterialsManager;
 import org.bukkit.Bukkit;
@@ -11,50 +11,52 @@ import java.util.UUID;
 public class MaterialsManager implements IMaterialsManager {
     @Override
     public Material getSkull() {
-        return Material.LEGACY_SKULL_ITEM;
+        return Material.SKULL_ITEM;
     }
 
     @Override
     public Material getGrass() {
-        return Material.GRASS_BLOCK;
+        return Material.GRASS;
     }
 
     @Override
     public Material getLongGrass() {
-        return Material.LEGACY_LONG_GRASS;
+        return Material.LONG_GRASS;
     }
 
     @Override
     public ItemStack getPlayerHead(UUID owner) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM);
         SkullMeta itemMeta = (SkullMeta) skull.getItemMeta();
-        itemMeta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
+        itemMeta.setOwner(Bukkit.getOfflinePlayer(owner).getName());
         skull.setItemMeta(itemMeta);
         return skull;
     }
 
     @Override
     public ItemStack getWitherSkull() {
-        return new ItemStack(Material.WITHER_SKELETON_SKULL);
+        return new ItemStack(Material.SKULL_ITEM, 1, (short) 1);
     }
 
     @Override
     public ItemStack getLimeWool() {
-        return new ItemStack(Material.LIME_WOOL);
+        return new ItemStack(Material.WOOL, 1, (short) 5);
     }
 
     @Override
     public ItemStack getRedWool() {
-        return new ItemStack(Material.RED_WOOL);
+        return new ItemStack(Material.WOOL, 1, (short) 14);
     }
 
     @Override
     public Material getFireCharge() {
-        return Material.FIRE_CHARGE;
+        return Material.FIREBALL;
     }
 
     @Override
     public ItemStack getGreyStainedGlass() {
-        return new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        return new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7);
     }
+
+
 }

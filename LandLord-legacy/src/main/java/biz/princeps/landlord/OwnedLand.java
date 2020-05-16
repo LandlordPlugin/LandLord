@@ -3,6 +3,7 @@ package biz.princeps.landlord;
 import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMob;
+import biz.princeps.landlord.manager.WorldGuardManager;
 import biz.princeps.landlord.protection.AOwnedLand;
 import com.google.common.collect.Sets;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;

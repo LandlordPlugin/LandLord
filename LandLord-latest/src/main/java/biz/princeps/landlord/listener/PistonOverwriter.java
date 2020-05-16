@@ -1,4 +1,4 @@
-package biz.princeps.landlord;
+package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
@@ -51,7 +51,7 @@ public class PistonOverwriter extends BasicListener {
         if (block == null) {
             return;
         }
-        if (Materials.isPistonBlock(block.getType()) || block.getType() == Material.PISTON_MOVING_PIECE) {
+        if (Materials.isPistonBlock(block.getType()) || block.getType() == Material.MOVING_PISTON) {
             if (sameOwner(block, blocks)) {
                 event.setAllowed(true);
             }

@@ -1,4 +1,4 @@
-package biz.princeps.landlord;
+package biz.princeps.landlord.regenerators;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IRegenerationManager;

@@ -1,4 +1,4 @@
-package biz.princeps.landlord;
+package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.api.IUtilsManager;
 import net.md_5.bungee.api.chat.BaseComponent;

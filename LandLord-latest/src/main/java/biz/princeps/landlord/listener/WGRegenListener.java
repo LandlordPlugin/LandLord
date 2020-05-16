@@ -1,4 +1,4 @@
-package biz.princeps.landlord;
+package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.api.ClaimType;
 import biz.princeps.landlord.api.ILandLord;

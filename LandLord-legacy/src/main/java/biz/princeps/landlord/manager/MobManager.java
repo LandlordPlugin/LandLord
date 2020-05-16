@@ -1,4 +1,4 @@
-package biz.princeps.landlord;
+package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.api.IMob;
 import biz.princeps.landlord.api.IMobManager;
