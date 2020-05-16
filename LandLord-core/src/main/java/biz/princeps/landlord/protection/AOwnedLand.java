@@ -1,5 +1,6 @@
 package biz.princeps.landlord.protection;
 
+import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
@@ -93,4 +94,6 @@ public abstract class AOwnedLand implements IOwnedLand {
     public boolean contains(Location loc) {
         return this.contains(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
+
+    public abstract ILLFlag getFlag(String s);
 }

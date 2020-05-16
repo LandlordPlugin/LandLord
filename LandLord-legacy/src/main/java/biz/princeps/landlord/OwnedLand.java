@@ -149,17 +149,22 @@ public class OwnedLand extends AOwnedLand {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            Flag flag = getFlag(s.toLowerCase());
-            if (flag == null) {
-                pl.getLogger().warning("Invalid worldguard flag found: " + s);
-                continue;
-            }
-            Material mat = Material.valueOf(pl.getConfig()
-                    .getString("Manage." + s.toLowerCase() + ".item"));
-
-            toReturn.add(new LLFlag(region, flag, mat));
+            toReturn.add(getFlag(s));
         }
         return toReturn;
+    }
+
+    @Override
+    public ILLFlag getFlag(String s) {
+        Flag flag = getWGFlag(s.toLowerCase());
+        if (flag == null) {
+            pl.getLogger().warning("Invalid worldguard flag found: " + s);
+
+        }
+        Material mat = Material.valueOf(pl.getConfig()
+                .getString("Manage." + s.toLowerCase() + ".item"));
+
+        return new LLFlag(region, flag, mat);
     }
 
     @Override
@@ -227,13 +232,24 @@ public class OwnedLand extends AOwnedLand {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            Flag flag = getFlag(s.toLowerCase());
+            Flag flag = getWGFlag(s.toLowerCase());
             if (!(flag instanceof StateFlag)) {
                 Bukkit.getLogger().warning("Only stateflags are supported!");
                 return;
             }
             region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
             region.setFlag(flag, StateFlag.State.ALLOW);
+
+            // some combinations are illegal (all true, friends false)
+            if (!pl.getConfig().getBoolean("Manage." + s + ".default.friends", true)) {
+                ILLFlag flag1 = getFlag(s);
+                flag1.toggleFriends();
+            }
+
+            if (pl.getConfig().getBoolean("Manage." + s + ".default.everyone", false)) {
+                ILLFlag flag1 = getFlag(s);
+                flag1.toggleAll();
+            }
         }
         // add other flags
         OfflinePlayer p = Bukkit.getOfflinePlayer(owner);
@@ -264,7 +280,7 @@ public class OwnedLand extends AOwnedLand {
 
         // add missing flags
         for (String s : rawList) {
-            Flag flag = getFlag(s.toLowerCase());
+            Flag flag = getWGFlag(s.toLowerCase());
             if (!region.getFlags().containsKey(flag)) {
                 region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
                 region.setFlag(flag, StateFlag.State.ALLOW);
@@ -289,7 +305,7 @@ public class OwnedLand extends AOwnedLand {
         region.setPriority(pl.getConfig().getInt("Claim.regionPriority"));
     }
 
-    private Flag getFlag(String flagName) {
+    private Flag getWGFlag(String flagName) {
         return DefaultFlag.fuzzyMatchFlag(flagRegistry, flagName);
     }
 }

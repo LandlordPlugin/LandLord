@@ -504,39 +504,72 @@ Manage:
   damage-animals:
     enable: true
     item: LEGACY_RAW_FISH
+    default:
+      friends: true
+      everyone: false
   ride:
     enable: true
     item: SADDLE
+    default:
+      friends: true
+      everyone: false
   frosted-ice-form:
     enable: true
     item: ICE
+    default:
+      friends: true
+      everyone: false
   block-trampling:
     enable: true
     item: DIAMOND_HOE
+    default:
+      friends: true
+      everyone: false
   potion-splash:
     enable: true
     item: SPLASH_POTION
+    default:
+      friends: true
+      everyone: false
   pistons:
     enable: true
     item: STICKY_PISTON
+    default:
+      friends: true
+      everyone: false
   unclaim:
     enable: true
     item: BLAZE_POWDER
   build:
     enable: true
     item: GRASS
+    default:
+      friends: true
+      everyone: false
   interact:
     enable: true
     item: STONE_BUTTON
+    default:
+      friends: true
+      everyone: false
   chest-access:
     enable: true
     item: CHEST
+    default:
+      friends: true
+      everyone: false
   creeper-explosion:
     enable: true
     item: TNT
+    default:
+      friends: true
+      everyone: false
   pvp:
     enable: true
     item: DIAMOND_SWORD
+    default:
+      friends: true
+      everyone: false
   mob-spawning:
     enable: true
     item: LEGACY_MONSTER_EGG
