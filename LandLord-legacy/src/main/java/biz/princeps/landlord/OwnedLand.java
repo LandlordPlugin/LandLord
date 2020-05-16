@@ -246,13 +246,13 @@ public class OwnedLand extends AOwnedLand {
                 .getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
     }
 
-
     @Override
     public void updateFlags(UUID owner) {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         // remove flags, that are no longer required
         for (Flag<?> iWrapperFlag : region.getFlags().keySet()) {
+
             String flagname = iWrapperFlag.getName().toLowerCase().replace("-group", "");
             if (!rawList.contains(flagname) &&
                     !flagname.equals(DefaultFlag.GREET_MESSAGE.getName().toLowerCase()) &&

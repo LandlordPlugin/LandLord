@@ -295,7 +295,7 @@ public class OwnedLand extends AOwnedLand {
 
         // add missing flags
         for (String s : rawList) {
-            Flag flag = getFlag(s.toUpperCase());
+            Flag flag = getFlag(s.toLowerCase());
             if (!region.getFlags().containsKey(flag)) {
                 region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
                 region.setFlag(flag, StateFlag.State.ALLOW);

@@ -154,14 +154,13 @@ public class WorldGuardManager extends AWorldGuardManager {
     /**
      * Checks for overlapping regions.
      * Returns false if there is another overlapping region.
-     * TODO figure out the 127 in vector2. My intuition tells me, that its wrong.
      */
     @Override
     public boolean canClaim(Player player, Chunk currChunk) {
         RegionManager regionManager = getRegionManager(player.getWorld());
         if (regionManager != null) {
             Vector v1 = currChunk.getBlock(0, 0, 0).getLocation().toVector();
-            Vector v2 = currChunk.getBlock(15, 127, 15).getLocation().toVector();
+            Vector v2 = currChunk.getBlock(15, 255, 15).getLocation().toVector();
 
             ProtectedRegion check = new ProtectedCuboidRegion("check",
                     new BlockVector(v1.getX(), v1.getY(), v1.getZ()),
@@ -169,9 +168,7 @@ public class WorldGuardManager extends AWorldGuardManager {
             List<ProtectedRegion> intersects = check
                     .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
             for (ProtectedRegion intersect : intersects) {
-                // check this out, might not work. canBuild was removed in 1.13.1 and Im not sure if isMemberOfAll is
-                // equivalent
-                // 10/26/18 looks like its working:
+
                 if (!regionManager.getApplicableRegions(intersect).isMemberOfAll(wgPlugin.wrapPlayer(player))) {
                     return false;
                 }
@@ -208,7 +205,6 @@ public class WorldGuardManager extends AWorldGuardManager {
     private BlockVector locationToVec(Location loc) {
         return new BlockVector(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
-
 
     @Override
     public boolean isAllowedInOverlap(Player p, Location loc) {
