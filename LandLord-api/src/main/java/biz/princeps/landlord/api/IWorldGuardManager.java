@@ -102,4 +102,5 @@ public interface IWorldGuardManager {
 
     String formatLocation(Chunk chunk);
 
+    void moveUp(World world, int x, int z, int amt);
 }

@@ -216,48 +216,6 @@ public class OwnedLand extends AOwnedLand {
         else return flag.contains(EntityType.REGISTRY.get(mob.getName().toLowerCase()));
     }
 
-    //@Override
-    public Object getFlagValue(String flag) {
-        if (flag == null) return null;
-        Flag wgflag = getWGFlag(flag.toLowerCase());
-        if (wgflag == null) return null;
-        return region.getFlag(wgflag);
-    }
-
-    public void setGroupFlag(String flag) {
-        if (flag == null) return;
-        Flag wgflag = getWGFlag(flag.toLowerCase());
-        if (wgflag == null) return;
-        region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
-
-    }
-
-    //@Override
-    public void setFlagValue(String flag, String grp, Object value) {
-        if (flag == null) return;
-        Flag wgflag = getWGFlag(flag.toLowerCase());
-        if (wgflag == null) return;
-        region.setFlag(wgflag, value);
-        if (grp != null)
-            region.setFlag(wgflag.getRegionGroupFlag(), RegionGroup.valueOf(grp.toUpperCase()));
-    }
-
-    //@Override
-    public void removeFlag(String flag) {
-        if (flag == null) return;
-        Flag wgflag = getWGFlag(flag.toLowerCase());
-        if (wgflag == null) return;
-        region.getFlags().remove(wgflag);
-    }
-
-    //@Override
-    public boolean containsFlag(String flag) {
-        if (flag == null) return false;
-        Flag wgflag = getWGFlag(flag.toLowerCase());
-        if (wgflag == null) return false;
-        return region.getFlags().containsKey(wgflag);
-    }
-
     @Override
     public void initFlags(UUID owner) {
         List<String> rawList = pl.getConfig().getStringList("Flags");

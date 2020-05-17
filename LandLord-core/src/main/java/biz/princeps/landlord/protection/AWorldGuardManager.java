@@ -244,7 +244,6 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         return getRegion(name);
     }
 
-    //TODO checkout if this is a memory leak
     @Override
     public int unclaim(Set<IOwnedLand> regions) {
         int count = regions.size();
@@ -253,9 +252,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         for (IOwnedLand region : regions) {
             owners.add(region.getOwner());
         }
-        //System.out.println(owners);
-        //TODO do this Im to tired to debug this garbage
-        //TODO here is something wrong, fix this
+
         for (UUID owner : owners) {
             pl.getPlayerManager().getOffline(owner, player -> {
                 for (IOwnedLand region : regions) {

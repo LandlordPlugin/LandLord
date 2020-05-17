@@ -4,7 +4,23 @@ import biz.princeps.landlord.OwnedLand;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.protection.AWorldGuardManager;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.function.operation.SetLocatedBlocks;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.RegionOperationException;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -20,9 +36,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -161,25 +182,46 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public boolean canClaim(Player player, Chunk currChunk) {
         RegionManager regionManager = getRegionManager(player.getWorld());
-        if (regionManager != null) {
-            Vector v1 = currChunk.getBlock(0, 0, 0).getLocation().toVector();
-            Vector v2 = currChunk.getBlock(15, 255, 15).getLocation().toVector();
+        if (regionManager == null) {
+            return false;
+        }
+        Vector v1 = currChunk.getBlock(0, 0, 0).getLocation().toVector();
+        Vector v2 = currChunk.getBlock(15, 255, 15).getLocation().toVector();
 
-            ProtectedRegion check = new ProtectedCuboidRegion("check",
-                    BlockVector3.at(v1.getX(), v1.getY(), v1.getZ()),
-                    BlockVector3.at(v2.getX(), v2.getY(), v2.getZ()));
-            List<ProtectedRegion> intersects = check
-                    .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
-            for (ProtectedRegion intersect : intersects) {
-                // check this out, might not work. canBuild was removed in 1.13.1 and Im not sure if isMemberOfAll is
-                // equivalent
-                // 10/26/18 looks like its working:
-                if (!regionManager.getApplicableRegions(intersect).isMemberOfAll(wgPlugin.wrapPlayer(player))) {
-                    return false;
-                }
+        ProtectedRegion check = new ProtectedCuboidRegion("check",
+                BlockVector3.at(v1.getX(), v1.getY(), v1.getZ()),
+                BlockVector3.at(v2.getX(), v2.getY(), v2.getZ()));
+        List<ProtectedRegion> intersects = check
+                .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
+        for (ProtectedRegion intersect : intersects) {
+            // check this out, might not work. canBuild was removed in 1.13.1 and Im not sure if isMemberOfAll is
+            // equivalent
+            // 10/26/18 looks like its working:
+            if (!regionManager.getApplicableRegions(intersect).isMemberOfAll(wgPlugin.wrapPlayer(player))) {
+                return false;
             }
         }
+
         return true;
+    }
+
+    @Override
+    public void moveUp(World world, int x, int z, int amt) {
+        com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
+        Chunk chunk = world.getChunkAt(x, z);
+        Vector v1 = chunk.getBlock(0, 3, 0).getLocation().toVector();
+        Vector v2 = chunk.getBlock(15, 255, 15).getLocation().toVector();
+
+        BlockVector3 b1 = BlockVector3.at(v1.getX(), v1.getY(), v1.getZ());
+        BlockVector3 b2 = BlockVector3.at(v2.getX(), v2.getY(), v2.getZ());
+
+        CuboidRegion region = new CuboidRegion(weWorld, b1, b2);
+
+        try {
+            region.shift(BlockVector3.at(0, amt, 0));
+        } catch (RegionOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

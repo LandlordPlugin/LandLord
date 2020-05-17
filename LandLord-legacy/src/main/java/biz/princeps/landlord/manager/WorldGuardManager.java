@@ -4,6 +4,9 @@ import biz.princeps.landlord.OwnedLand;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.protection.AWorldGuardManager;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.RegionOperationException;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.RegionContainer;
@@ -86,6 +89,32 @@ public class WorldGuardManager extends AWorldGuardManager {
             land.replaceOwner(owner);
             cache.add(land);
             return land;
+        }
+        return null;
+    }
+
+    @Override
+    public void moveUp(World world, int x, int z, int amt) {
+        Chunk chunk = world.getChunkAt(x, z);
+        Vector v1 = chunk.getBlock(0, 3, 0).getLocation().toVector();
+        Vector v2 = chunk.getBlock(15, 255, 15).getLocation().toVector();
+
+        BlockVector b1 = BlockVector.toBlockPoint(v1.getX(), v1.getY(), v1.getZ());
+        BlockVector b2 = BlockVector.toBlockPoint(v2.getX(), v2.getY(), v2.getZ());
+
+        CuboidRegion region = new CuboidRegion(getWGWorld(world.getName()), b1, b2);
+        try {
+            region.shift(BlockVector.toBlockPoint(0, amt, 0));
+        } catch (RegionOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public com.sk89q.worldedit.world.World getWGWorld(String name) {
+        for (com.sk89q.worldedit.world.World world : WorldEdit.getInstance().getServer().getWorlds()) {
+            if (world.getName().equals(name)) {
+                return world;
+            }
         }
         return null;
     }
