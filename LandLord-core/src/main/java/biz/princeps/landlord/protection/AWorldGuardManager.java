@@ -113,6 +113,8 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         return getNearbyLands(loc.getChunk(), offsetX, offsetZ);
     }
 
+    public abstract void moveUp(World world, int x, int z, int amt);
+
     @Override
     public Set<IOwnedLand> getRegions(UUID id) {
         Set<IOwnedLand> set = new HashSet<>();
@@ -273,5 +275,4 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         }
         return count;
     }
-
 }
