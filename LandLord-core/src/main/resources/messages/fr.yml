@@ -378,6 +378,6 @@ Shop:
 
 Integrations:
   Towny:
-    TownyPresent: '&cThere already is a towny region present!!'
-    LLPresent: '&cThere already is a landlord region present!'
+    TownyPresent: '&cUne région Towny est déjà présente !'
+    LLPresent: '&cUne région LandLord est déjà présente !'
 version: 23
