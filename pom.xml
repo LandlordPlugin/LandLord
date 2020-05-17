@@ -24,11 +24,11 @@
     <distributionManagement>
         <repository>
             <id>gitlab-maven</id>
-            <url>https://gitlab.com/api/v4/projects/12274503/packages/maven</url>
+            <url>https://gitlab.com/api/v4/projects/6801239/packages/maven</url>
         </repository>
         <snapshotRepository>
             <id>gitlab-maven</id>
-            <url>https://gitlab.com/api/v4/projects/12274503/packages/maven</url>
+            <url>https://gitlab.com/api/v4/projects/6801239/packages/maven</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
