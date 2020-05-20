@@ -87,6 +87,7 @@ public class Landlordbase extends MainCommand {
         this.addSubcommand(new Clear(pl));
         this.addSubcommand(new LandMap(pl));
         this.addSubcommand(new Reload(pl));
+        this.addSubcommand(new Regenerate(pl));
     }
 
     @Override

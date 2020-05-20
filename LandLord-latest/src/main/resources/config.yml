@@ -73,7 +73,7 @@ Regeneration:
   # Providers available: default, wg
   # default: regenerates the chunk by using the original seed.
   # wg: regenerates by restoring a chunk snapshot, that was taken on claim. Does not work retroactively.
-  provider: 'default'
+  provider: 'wg'
 
 # here you can manage your claims shop.
 Claims:
@@ -252,10 +252,18 @@ CommandSettings:
     aliases:
       - i
 
+  Regenerate:
+    name: regenerate
+    usage: '/land regenerate - Regenerates the land you are standing on'
+    permissions:
+      - landlord.player.regenerate
+    aliases:
+      - regen
+
   Unclaim:
     name: unclaim
     usage: '/land unclaim - Unclaim the chunk you are standing on'
-    regenerate: true
+    regenerate: false
     permissions:
       - landlord.player.unclaim
     aliases:
@@ -490,17 +498,23 @@ Flags:
 
 # These options will be manageable in ll manage
 Manage:
-  friends:
-    enable: true
-  regenerate:
-    enable: true
-    item: BARRIER
+  commands:
+    Regenerate:
+      enable: true
+      cmd: 'll regenerate %land%'
+      item: BARRIER
+    Unclaim:
+      enable: true
+      cmd: 'll unclaim %land%'
+      item: BLAZE_POWDER
   setgreet:
     enable: true
     item: BAKED_POTATO
   setfarewell:
     enable: true
     item: CARROT_ON_A_STICK
+  friends:
+    enable: true
   damage-animals:
     enable: true
     item: LEGACY_RAW_FISH
@@ -537,9 +551,6 @@ Manage:
     default:
       friends: true
       everyone: false
-  unclaim:
-    enable: true
-    item: BLAZE_POWDER
   build:
     enable: true
     item: GRASS

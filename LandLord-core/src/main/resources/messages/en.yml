@@ -48,6 +48,12 @@ Commands:
     noLands: '&cThere are no claimable lands in your selected radius!'
     hugeSize: '&cMulticlaim''s size is too high for the server''s render distance. To avoid making the server lagging, even crashing, please use a value lower than %max_size%!'
     abort: '&cYou aborted the claim of %amount% lands!'
+  Regenerate:
+    notOwn: '&7You do not own this chunk. You cannot regenerate a free land!'
+    success: '&7Regenerating land &c%land% &7successful'
+    abort: '&7Aborted regeneration for land &c%land%'
+    notEnoughMoney: '&7You dont have enough money to regenerate the land &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
+    confirmation: '&7Regeneration cost &c%cost%'
   Unclaim:
     notOwn: '&7You do not own this chunk. It is owned by &c%owner%'
     notOwnFreeLand: '&7You do not own this chunk'
@@ -217,15 +223,6 @@ Commands:
           - 'Spawning of %mob%: %value%'
         deny: 'deny'
         allow: 'allow'
-    Regenerate:
-      title: '&cRegneration'
-      description:
-        - ' &7Regenerate your land'
-        - ' &7Cost&8: &c%var%'
-      confirmation: '&7Regeneration cost &c%cost%'
-      success: '&7Regenerating land &c%land% &7successful'
-      abort: '&7Aborted regeneration for land &c%land%'
-      notEnoughMoney: '&7You dont have enough money to regenerate the land &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
     SetGreet:
       title: '&cGreeting Message'
       description:
@@ -253,6 +250,12 @@ Commands:
       description:
         - '&7Click here to unclaim this chunk!'
       confirmationTitle: '&aUnclaiming %land%'
+    Regenerate:
+      title: '&cRegneration'
+      description:
+        - ' &7Regenerate your land'
+        - ' &7Cost&8: &c%regencost%'
+      confirmation: '&7Regeneration cost &c%cost%'
   Help:
     header: '&f&lLand&c&lLord'
     admins:

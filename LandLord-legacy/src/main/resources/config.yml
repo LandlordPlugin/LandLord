@@ -254,6 +254,14 @@ CommandSettings:
     aliases:
       - i
 
+  Regenerate:
+    name: regenerate
+    usage: '/land regenerate - Regenerates the land you are standing on'
+    permissions:
+      - landlord.player.regenerate
+    aliases:
+      - regen
+
   Unclaim:
     name: unclaim
     usage: '/land unclaim - Unclaim the chunk you are standing on'
@@ -492,11 +500,17 @@ Flags:
 
 # These options will be manageable in ll manage
 Manage:
+  commands:
+    Regenerate:
+      enable: true
+      cmd: 'll regenerate %land%'
+      item: BARRIER
+    Unclaim:
+      enable: true
+      cmd: 'll unclaim %land%'
+      item: BLAZE_POWDER
   friends:
     enable: true
-  regenerate:
-    enable: true
-    item: BARRIER
   setgreet:
     enable: true
     item: BAKED_POTATO
@@ -539,9 +553,6 @@ Manage:
     default:
       friends: true
       everyone: false
-  unclaim:
-    enable: true
-    item: BLAZE_POWDER
   build:
     enable: true
     item: GRASS

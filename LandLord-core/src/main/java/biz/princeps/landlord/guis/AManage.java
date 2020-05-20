@@ -17,6 +17,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -222,66 +223,6 @@ public class AManage extends AbstractGUI {
         int position = 36;
         IOwnedLand land = regions.get(0);
 
-
-        // Reminder: Regenerate is not implemented in Manageall, cos it might cos some trouble. Calculating costs
-        // might be a bit tedious
-        if (plugin.getConfig().getBoolean("Manage.regenerate.enable") &&
-                regions.size() == 1 &&
-                player.hasPermission("landlord.player.manage.regenerate") &&
-                !Bukkit.getServer().getVersion().contains("1.14")) {
-            List<String> regenerateDesc = lm.getStringList("Commands.Manage.Regenerate.description");
-            double cost = plugin.getConfig().getDouble("ResetCost");
-            String costString = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "-1");
-
-            Icon icon = new Icon(new ItemStack(Material.BARRIER));
-            icon.setLore(formatList(regenerateDesc, "%var%", costString));
-            icon.setName(lm.getRawString("Commands.Manage.Regenerate.title"));
-            icon.addClickAction((p) -> {
-                if (!land.isOwner(player.getUniqueId())) {
-                    return;
-                }
-                ConfirmationGUI confi = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Regenerate" +
-                        ".confirmation")
-                        .replace("%cost%", costString),
-                        (p1) -> {
-                            boolean flag = true;
-                            if (Options.isVaultEnabled()) {
-                                if (plugin.getVaultManager().hasBalance(player.getUniqueId(), cost)) {
-                                    plugin.getVaultManager().take(player.getUniqueId(), cost);
-                                } else {
-                                    lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.notEnoughMoney")
-                                            .replace("%cost%", costString)
-                                            .replace("%name%", land.getName()));
-                                    flag = false;
-                                }
-                            }
-                            if (flag) {
-                                Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                            null, "REGENERATE", "REGENERATE");
-                                    Bukkit.getPluginManager().callEvent(landManageEvent);
-                                });
-
-                                plugin.getRegenerationManager().regenerateChunk(land.getALocation());
-                                lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.success")
-                                        .replace("%land%", land.getName()));
-                                display();
-                            }
-
-                        }, (p2) -> {
-                    lm.sendMessage(player, lm.getString("Commands.Manage.Regenerate.abort")
-                            .replace("%land%", land.getName()));
-                    display();
-                }, this);
-
-                confi.setConfirm(lm.getRawString("Confirmation.accept"));
-                confi.setDecline(lm.getRawString("Confirmation.decline"));
-
-                confi.display();
-
-            });
-            this.setIcon(position++, icon);
-        }
         String managecmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
                 .getCommandString(Manage.class);
         // Set greet icon
@@ -382,35 +323,26 @@ public class AManage extends AbstractGUI {
             this.setIcon(position++, icon);
         }
 
+        ConfigurationSection cs = plugin.getConfig().getConfigurationSection("Manage.commands");
+        Set<String> keys = cs.getKeys(false);
+        for (String key : keys) {
+            //System.out.println(plugin.getConfig().getBoolean("Manage.commands." + key + ".enable") + " " + player.hasPermission("landlord.player.manage." + key) + " " + regions.size());
+            // Config: Manage.commands.x
+            // Language manager: Commands.Manage.x
+            if (plugin.getConfig().getBoolean("Manage.commands." + key + ".enable") &&
+                    player.hasPermission("landlord.player.manage." + key) &&
+                    regions.size() == 1) {
+                List<String> descri = lm.getStringList("Commands.Manage." + key + ".description");
+                double cost = plugin.getConfig().getDouble("ResetCost");
+                String costString = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "-1");
 
-        // unclaim
-        if (plugin.getConfig().getBoolean("Manage.unclaim.enable") &&
-                player.hasPermission("landlord.player.manage.unclaim")) {
-            Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.unclaim.item"))));
-            icon.setName(lm.getRawString("Commands.Manage.Unclaim.title"));
-            icon.setLore(lm.getStringList("Commands.Manage.Unclaim.description"));
-            icon.addClickAction(((p) -> {
-                ConfirmationGUI gui = new ConfirmationGUI(p, lm.getRawString("Commands.Manage.Unclaim" +
-                        ".confirmationTitle").replace("%land%", land.getName()),
-                        (p1) -> {
-                            if (regions.size() > 1) {
-                                Bukkit.dispatchCommand(p, PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
-                                        .getCommandString(UnclaimAll.class).substring(1));
-                            } else {
-                                Bukkit.dispatchCommand(p, PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
-                                        .getCommandString(Unclaim.class).substring(1) + " " + land.getName());
-                            }
-                            p.closeInventory();
-                        },
-                        (p1) -> {
-                            p.closeInventory();
-                            display();
-                        }, this);
-                gui.setConfirm(lm.getRawString("Confirmation.accept"));
-                gui.setDecline(lm.getRawString("Confirmation.decline"));
-                gui.display();
-            }));
-            this.setIcon(position++, icon);
+                Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.commands." + key + ".item"))));
+                icon.setLore(formatList(formatList(descri, "%regencost%", costString), "%land%", land.getName()));
+                icon.setName(lm.getRawString("Commands.Manage." + key + ".title"));
+                icon.addClickAction((p) -> Bukkit.dispatchCommand(player, plugin.getConfig().getString("Manage.commands." + key + ".cmd").replace("%land%", land.getName())));
+
+                this.setIcon(position++, icon);
+            }
         }
 
         // spawn management
