@@ -47,6 +47,12 @@ Commands:
     chatMessage: '&aKlicken um den Kauf von %amount% Chunks zu bestaetigen! Das wird %cost% kosten!'
     noLands: '&cIn den von dir gewaehlten Radius sind keine claimbaren Chunks verfuegbar!'
     abort: '&cDu hast das claimen von %amount% Chunks abgebrochen!'
+  Regenerate:
+    notOwn: '&7You do not own this chunk. You cannot regenerate a free land!'
+    success: '&7Regenerating land &c%land% &7successful'
+    abort: '&7Aborted regeneration for land &c%land%'
+    notEnoughMoney: '&7You dont have enough money to regenerate the land &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
+    confirmation: '&7Regeneration cost &c%cost%'
   Unclaim:
     notOwn: '&7Dieser Chunk gehoert dir nicht. Er gehoert &c%owner%'
     notOwnFreeLand: '&7Du bist nicht der Chunk-Inhaber'
@@ -216,15 +222,6 @@ Commands:
           - 'Spawning von %mob%: %value%'
         deny: 'verboten'
         allow: 'erlaubt'
-    Regenerate:
-      title: '&cRegneration'
-      description:
-        - ' &7Land regenerieren'
-        - ' &7Cost&8: &c%var%'
-      confirmation: '&7Regenerations kosten &c%cost%'
-      success: '&7Regeneration &c%land% &7erfolgreich'
-      abort: '&7Regeneration abgebrochen &c%land%'
-      notEnoughMoney: '&7Du hast nicht genug Geld um das Land zu regenerieren &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
     SetGreet:
       title: '&cGruss Nachricht'
       description:
@@ -250,6 +247,12 @@ Commands:
       description:
         - '&7Hier klicken um Areal zu entclaimen!'
       confirmationTitle: '&aFreigegeben %land%'
+    Regenerate:
+      title: '&cRegneration'
+      description:
+        - ' &7Regenerate your land'
+        - ' &7Cost&8: &c%regencost%'
+      confirmation: '&7Regeneration cost &c%cost%'
   Help:
     header: '&f&lLand&c&lLord'
     admins:

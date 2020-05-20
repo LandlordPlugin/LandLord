@@ -48,6 +48,12 @@ Commands:
     noLands: '&cIl n''y a pas de terrain obtensible dans la zone sélectionnée !'
     abort: '&cProtection de %amount% terrains annulée !'
     hugeSize: '&cLa taille du MultiClaim est trop élevée par rapport à la distance de rendu du serveur. Afin d''éviter de potentielles latences voire un crash, veuillez utiliser une valeur plus faible que %max_size% !'
+  Regenerate:
+    notOwn: '&7You do not own this chunk. You cannot regenerate a free land!'
+    success: '&7Regenerating land &c%land% &7successful'
+    abort: '&7Aborted regeneration for land &c%land%'
+    notEnoughMoney: '&7You dont have enough money to regenerate the land &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
+    confirmation: '&7Regeneration cost &c%cost%'
   Unclaim:
     notOwn: '&7Vous ne possédez pas ce terrain. Il appartient à &c%owner%'
     notOwnFreeLand: '&7Vous ne possédez pas ce terrain !'
@@ -218,15 +224,6 @@ Commands:
           - 'Apparition de %mob%: %value%'
         deny: 'Interdite'
         allow: 'Autorisée'
-    Regenerate:
-      title: '&cRegénération'
-      description:
-        - ' &7Regénère votre terrain.'
-        - ' &7Coût&8: &c%var%'
-      confirmation: '&7Coût de Regénération &c%cost%'
-      success: '&7Regénération du terrain &c%land% &7effectuée avec succès !'
-      abort: '&7Annulation de la regénération du terrain &c%land%'
-      notEnoughMoney: '&7Vous n''avez pas assez d''argent pour regénérer le terrain &c%name% &7&o(Coût&8&o: &c&o%cost%&7&o) !'
     SetGreet:
       title: '&cMessage de bienvenue'
       description:
@@ -254,6 +251,13 @@ Commands:
       description:
         - '&7Cliquez ici pour libérer ce terrain !'
       confirmationTitle: '&aLibérer le terrain %land% &a?'
+    Regenerate:
+      title: '&cRegneration'
+      description:
+        - ' &7Regenerate your land'
+        - ' &7Cost&8: &c%regencost%'
+      confirmation: '&7Regeneration cost &c%cost%'
+
   Help:
     header: '&f&lLand&c&lLord'
     admins:

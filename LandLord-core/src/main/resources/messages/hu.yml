@@ -47,6 +47,12 @@ Commands:
     noLands: '&cThere are no claimable lands in your selected radius!'
     abort: '&cYou aborted the claim of %amount% lands!'
     hugeSize: '&cMulticlaim''s size is too high for the server''s render distance. To avoid making the server lagging, even crashing, please use a value lower than %max_size%!'
+  Regenerate:
+    notOwn: '&7You do not own this chunk. You cannot regenerate a free land!'
+    success: '&7Regenerating land &c%land% &7successful'
+    abort: '&7Aborted regeneration for land &c%land%'
+    notEnoughMoney: '&7You dont have enough money to regenerate the land &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
+    confirmation: '&7Regeneration cost &c%cost%'
   Unclaim:
     notOwn: '&7Nem a sajátod ennek a darabnak. A tulajdonosa &c%owner%'
     notOwnFreeLand: '&7Nem a sajátod ennek a darabnak'
@@ -221,15 +227,6 @@ Commands:
           - 'Idézés %mob%: %value%'
         deny: 'deny'
         allow: 'allow'
-    Regenerate:
-      title: '&cRegenerálás'
-      description:
-        - ' &7Regenerálja a földet'
-        - ' &7Ára&8: &c%var%'
-      confirmation: '&7Regenerálás költség &c%cost%'
-      success: '&7A föld regenerálása &c%land% &7sikeres'
-      abort: '&7Megszakítva a regeneráció &c%land%&7 földön'
-      notEnoughMoney: '&7Nincs elég pénzed a föld regenerálásához &c%name% &7&o(Ára&8&o: &c&o%cost%&7&o)'
     SetGreet:
       title: '&cÜdvözlő üzenet'
       description:
@@ -257,6 +254,12 @@ Commands:
       description:
         - '&7Kattints a visszaigényléshez ebben a darabban!'
       confirmationTitle: '&aA föld %land% visszaigénylése'
+    Regenerate:
+      title: '&cRegneration'
+      description:
+        - ' &7Regenerate your land'
+        - ' &7Cost&8: &c%regencost%'
+      confirmation: '&7Regeneration cost &c%cost%'
   Help:
     header: '&f&lLand&c&lLord'
     admins:

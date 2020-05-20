@@ -48,6 +48,12 @@ Commands:
     noLands: '&cThere are no claimable lands in your selected radius!'
     abort: '&cYou aborted the claim of %amount% lands!'
     hugeSize: '&cMulticlaim''s size is too high for the server''s render distance. To avoid making the server lagging, even crashing, please use a value lower than %max_size%!'
+  Regenerate:
+    notOwn: '&7You do not own this chunk. You cannot regenerate a free land!'
+    success: '&7Regenerating land &c%land% &7successful'
+    abort: '&7Aborted regeneration for land &c%land%'
+    notEnoughMoney: '&7You dont have enough money to regenerate the land &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
+    confirmation: '&7Regeneration cost &c%cost%'
   Unclaim:
     notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
     notOwnFreeLand: '&7Вы не владелец данного учатска'
@@ -222,15 +228,6 @@ Commands:
           - 'Спавнить из %mob%: %value%'
         deny: 'deny'
         allow: 'allow'
-    Regenerate:
-      title: '&cВосстановление'
-      description:
-        - ' &7Восстановление вашей земли'
-        - ' &7Стоимость&8: &c%var%'
-      confirmation: '&7Стоимость восстановления &c%cost%'
-      success: '&7Восстановление земли &c%land% &7успешно'
-      abort: '&7Прерванная восстановление земли &c%land%'
-      notEnoughMoney: '&7У вас недостаточно денег для восстановления земли &c%name% &7&o(Cost&8&o: &c&o%cost%&7&o)'
     SetGreet:
       title: '&cСообщение "Приветствие"'
       description:
@@ -258,6 +255,12 @@ Commands:
       description:
         - '&7Нажмите, чтобы разрегистрировать этот участок!'
       confirmationTitle: '&aРазрегистрация %land%'
+    Regenerate:
+      title: '&cRegneration'
+      description:
+        - ' &7Regenerate your land'
+        - ' &7Cost&8: &c%regencost%'
+      confirmation: '&7Regeneration cost &c%cost%'
   Help:
     header: '&f&lLand&c&lLord'
     admins:
