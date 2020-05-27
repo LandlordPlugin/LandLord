@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class WGRegenerator implements IRegenerationManager {
 
-    private ILandLord plugin;
+    private final ILandLord plugin;
 
     public WGRegenerator(ILandLord plugin) {
         this.plugin = plugin;

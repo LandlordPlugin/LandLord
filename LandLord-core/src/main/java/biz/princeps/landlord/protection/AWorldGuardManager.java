@@ -4,12 +4,10 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.lib.PrincepsLib;
-import com.google.common.collect.Sets;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Project: LandLord
@@ -18,8 +16,8 @@ import java.util.stream.Collectors;
  */
 public abstract class AWorldGuardManager implements IWorldGuardManager {
 
-    protected LandCache cache = new LandCache();
-    protected ILandLord pl;
+    protected final LandCache cache = new LandCache();
+    protected final ILandLord pl;
 
     public AWorldGuardManager(ILandLord pl) {
         this.pl = pl;
@@ -124,9 +122,11 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
             for (World world : Bukkit.getWorlds()) {
                 // Only count enabled worlds
                 if (!worlds.contains(world.getName())) {
-                    set.addAll(getRegions(id, world)
-                            .stream().filter(r -> isLLRegion(r.getName()))
-                            .collect(Collectors.toSet()));
+                    for (IOwnedLand region : getRegions(id, world)) {
+                        if (!isLLRegion(region.getName())) continue;
+
+                        set.add(region);
+                    }
                 }
             }
         }

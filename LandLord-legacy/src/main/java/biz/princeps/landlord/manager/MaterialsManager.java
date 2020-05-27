@@ -28,7 +28,7 @@ public class MaterialsManager implements IMaterialsManager {
     public ItemStack getPlayerHead(UUID owner) {
         ItemStack skull = new ItemStack(Material.SKULL_ITEM);
         SkullMeta itemMeta = (SkullMeta) skull.getItemMeta();
-        itemMeta.setOwner(Bukkit.getOfflinePlayer(owner).getName());
+        itemMeta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
         skull.setItemMeta(itemMeta);
         return skull;
     }

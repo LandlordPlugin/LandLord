@@ -19,8 +19,8 @@ import java.util.Objects;
  */
 public class DelimitationManager implements IDelimitationManager {
 
-    private ILandLord plugin;
-    private Map<BlockVector, Material> pattern;
+    private final ILandLord plugin;
+    private final Map<BlockVector, Material> pattern;
 
     public DelimitationManager(ILandLord plugin) {
         this.plugin = plugin;
@@ -95,7 +95,7 @@ public class DelimitationManager implements IDelimitationManager {
 
                 if (mat != null) {
                     int highestY = chunk.getWorld().getHighestBlockYAt(chunk.getX() * 16 + x, chunk.getZ() * 16 + z);
-                    if(highestY < 0) highestY = 0;
+                    if (highestY < 0) highestY = 0;
                     Block b = chunk.getBlock(x, highestY, z);
 
                     while (b.getType() != Material.AIR &&
@@ -116,7 +116,8 @@ public class DelimitationManager implements IDelimitationManager {
 
     public static class BlockVector {
 
-        private int x, z;
+        private final int x;
+        private final int z;
 
         public BlockVector(int x, int z) {
             this.x = x;

@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 
 public class LLExpansion extends PlaceholderExpansion {
 
-    private ILandLord pl;
-    private IWorldGuardManager wg;
+    private final ILandLord pl;
+    private final IWorldGuardManager wg;
 
     public LLExpansion(ILandLord pl) {
         this.pl = pl;

@@ -17,8 +17,8 @@ import org.bukkit.entity.Player;
  */
 public abstract class AOwnedLand implements IOwnedLand {
 
-    protected World world;
-    protected ILandLord pl;
+    protected final World world;
+    protected final ILandLord pl;
 
     public AOwnedLand(ILandLord pl, World world) {
         this.world = world;

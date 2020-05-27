@@ -5,6 +5,7 @@ import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.persistent.LPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -21,7 +22,7 @@ public class JoinListener extends BasicListener {
         super(plugin);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerLoginEvent event) {
         Player p = event.getPlayer();
         plugin.getPlayerManager().getOffline(p.getUniqueId(), (offline) -> {
@@ -41,7 +42,7 @@ public class JoinListener extends BasicListener {
         });
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onDisconnect(PlayerQuitEvent event) {
         Player p = event.getPlayer();
         IPlayer lp = plugin.getPlayerManager().get(p.getUniqueId());

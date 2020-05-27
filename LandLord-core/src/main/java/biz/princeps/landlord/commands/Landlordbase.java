@@ -20,6 +20,7 @@ import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +41,7 @@ import java.util.List;
  */
 public class Landlordbase extends MainCommand {
 
-    private ILandLord pl;
+    private final ILandLord pl;
 
     public Landlordbase(ILandLord pl) {
         super(pl.getConfig().getString("CommandSettings.Main.name"),
@@ -130,11 +131,15 @@ public class Landlordbase extends MainCommand {
 
                     if (subcmd instanceof GiveClaims) {
                         tabReturn.add("<amount>");
-                        Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
+                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                            tabReturn.add(onlinePlayer.getName());
+                        }
                     }
 
                     if (subcmd instanceof AdminTeleport) {
-                        Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
+                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                            tabReturn.add(onlinePlayer.getName());
+                        }
                     }
 
                     if (subcmd instanceof LandMap) {
@@ -145,10 +150,15 @@ public class Landlordbase extends MainCommand {
                     if (subcmd instanceof Addfriend || subcmd instanceof AddfriendAll ||
                             subcmd instanceof Unfriend || subcmd instanceof UnfriendAll) {
                         if (args[1].isEmpty()) {
-                            Bukkit.getOnlinePlayers().forEach(p -> tabReturn.add(p.getName()));
+                            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                                tabReturn.add(onlinePlayer.getName());
+                            }
                         } else {
-                            Bukkit.getOnlinePlayers().stream()
-                                    .filter(p -> p.getName().startsWith(args[1])).forEach(p -> tabReturn.add(p.getName()));
+                            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                                if (!onlinePlayer.getName().startsWith(args[1])) continue;
+
+                                tabReturn.add(onlinePlayer.getName());
+                            }
                         }
                         return tabReturn;
                     }

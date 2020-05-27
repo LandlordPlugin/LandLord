@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
  */
 public class ListFriends extends LandlordCommand {
 
-    private IWorldGuardManager wg;
+    private final IWorldGuardManager wg;
 
     public ListFriends(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Listfriends.name"),

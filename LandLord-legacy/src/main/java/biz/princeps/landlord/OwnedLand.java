@@ -7,7 +7,10 @@ import biz.princeps.landlord.manager.WorldGuardManager;
 import biz.princeps.landlord.protection.AOwnedLand;
 import com.google.common.collect.Sets;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.*;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.RegionGroup;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
@@ -25,8 +28,8 @@ import java.util.*;
  */
 public class OwnedLand extends AOwnedLand {
 
-    private ProtectedRegion region;
-    private FlagRegistry flagRegistry = WorldGuardPlugin.inst().getFlagRegistry();
+    private final ProtectedRegion region;
+    private final FlagRegistry flagRegistry = WorldGuardPlugin.inst().getFlagRegistry();
 
     public static OwnedLand create(ILandLord pl, ProtectedRegion pr, UUID owner) {
         return new OwnedLand(pl, pr, owner);
@@ -56,7 +59,9 @@ public class OwnedLand extends AOwnedLand {
         Set<UUID> itt = region.getOwners().getUniqueIds();
         Set<String> names = new HashSet<>();
         // ugly, maybe solve this in the future
-        itt.forEach(u -> names.add(pl.getPlayerManager().getOfflineSync(u).getName()));
+        for (UUID uuid : itt) {
+            names.add(pl.getPlayerManager().getOfflineSync(uuid).getName());
+        }
         return itToString(names.iterator());
     }
 
@@ -65,7 +70,9 @@ public class OwnedLand extends AOwnedLand {
         Set<UUID> itt = region.getMembers().getUniqueIds();
         Set<String> names = new HashSet<>();
         // ugly, maybe solve this in the future
-        itt.forEach(u -> names.add(pl.getPlayerManager().getOfflineSync(u).getName()));
+        for (UUID uuid : itt) {
+            names.add(pl.getPlayerManager().getOfflineSync(uuid).getName());
+        }
         return itToString(names.iterator());
     }
 

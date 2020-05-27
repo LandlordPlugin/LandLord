@@ -5,9 +5,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class LinearStrategy implements ICostStrategy {
 
-    private JavaPlugin plugin;
-    private int free;
-    private String namespace;
+    private final JavaPlugin plugin;
+    private final int free;
+    private final String namespace;
 
     public LinearStrategy(JavaPlugin plugin, String namespace, int free) {
         this.plugin = plugin;

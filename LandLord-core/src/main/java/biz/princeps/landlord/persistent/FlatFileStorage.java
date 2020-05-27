@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 
 public class FlatFileStorage implements IStorage {
 
-    private JavaPlugin pl;
+    private final JavaPlugin pl;
 
     private File customConfigFile;
     private FileConfiguration customConfig;

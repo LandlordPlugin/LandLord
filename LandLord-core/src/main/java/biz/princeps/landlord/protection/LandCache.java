@@ -8,9 +8,9 @@ import java.util.*;
 
 public class LandCache {
 
-    private Map<String, IOwnedLand> indexLandname = new HashMap<>();
-    private Map<UUID, Set<IOwnedLand>> indexPlayer = new HashMap<>();
-    private Map<World, Set<IOwnedLand>> indexWorld = new HashMap<>();
+    private final Map<String, IOwnedLand> indexLandname = new HashMap<>();
+    private final Map<UUID, Set<IOwnedLand>> indexPlayer = new HashMap<>();
+    private final Map<World, Set<IOwnedLand>> indexWorld = new HashMap<>();
 
     public void add(IOwnedLand land) {
         if (land == null) {

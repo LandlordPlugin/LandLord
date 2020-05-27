@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
  */
 public class Unclaim extends LandlordCommand {
 
-    private IWorldGuardManager wg;
+    private final IWorldGuardManager wg;
 
     public Unclaim(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Unclaim.name"),

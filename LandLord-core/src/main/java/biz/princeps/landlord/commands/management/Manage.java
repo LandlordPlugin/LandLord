@@ -22,7 +22,7 @@ import org.bukkit.entity.Player;
  */
 public class Manage extends LandlordCommand {
 
-    private IWorldGuardManager wg;
+    private final IWorldGuardManager wg;
 
     public Manage(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Manage.name"),

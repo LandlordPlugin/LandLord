@@ -13,9 +13,9 @@ import java.util.UUID;
  */
 public class MapManager implements IMapManager {
 
-    private HashMap<UUID, LandMap> mapList;
-    private ILandLord pl;
-    private MapConstants constants;
+    private final HashMap<UUID, LandMap> mapList;
+    private final ILandLord pl;
+    private final MapConstants constants;
 
     public MapManager(ILandLord pl) {
         super();

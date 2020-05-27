@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
  */
 public class Advertise extends LandlordCommand {
 
-    private IWorldGuardManager wg;
+    private final IWorldGuardManager wg;
 
     public Advertise(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Advertise.name"),

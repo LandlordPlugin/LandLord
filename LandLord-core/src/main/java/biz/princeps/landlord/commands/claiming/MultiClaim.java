@@ -21,7 +21,7 @@ import java.util.Set;
 
 public class MultiClaim extends LandlordCommand {
 
-    private Claim claim = new Claim(plugin, true);
+    private final Claim claim = new Claim(plugin, true);
 
     public MultiClaim(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.MultiClaim.name"),
@@ -93,7 +93,9 @@ public class MultiClaim extends LandlordCommand {
                             .replace("%cost%", formattedCost),
                     (p) -> {
                         // on accept
-                        toClaim.forEach(cl -> claim.onClaim(player, cl));
+                        for (Chunk chunk : toClaim) {
+                            claim.onClaim(player, chunk);
+                        }
                         p.closeInventory();
                     },
                     (p) -> {
@@ -113,12 +115,13 @@ public class MultiClaim extends LandlordCommand {
         int zCenter = center.getChunk().getZ();
 
         switch (mode) {
-            case CIRCULAR: // Based of WorldEdit cylinder region.
+            case CIRCULAR: // Based on WorldEdit cylinder region.
                 final double invRadiusX = 1 / (double) param;
                 final double invRadiusZ = 1 / (double) param;
 
                 double nextXn = 0;
-                forX: for (int x = 0; x <= param; ++x) {
+                forX:
+                for (int x = 0; x <= param; ++x) {
                     final double xn = nextXn;
                     nextXn = (x + 1) * invRadiusX;
                     double nextZn = 0;

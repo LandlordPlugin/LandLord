@@ -6,15 +6,8 @@ import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
-import biz.princeps.lib.gui.MultiPagedGUI;
-import biz.princeps.lib.gui.simple.Icon;
 import com.google.common.collect.Sets;
-import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.Set;
 
 /**
  * Project: LandLord

@@ -17,9 +17,9 @@ public class LandPostClaimEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private Player player;
-    private IOwnedLand land;
-    private ClaimType type;
+    private final Player player;
+    private final IOwnedLand land;
+    private final ClaimType type;
 
     public LandPostClaimEvent(Player player, IOwnedLand land, ClaimType type) {
         this.player = player;
@@ -50,7 +50,7 @@ public class LandPostClaimEvent extends Event {
         return handlers;
     }
 
-    public ClaimType getClaimType(){
+    public ClaimType getClaimType() {
         return type;
     }
 

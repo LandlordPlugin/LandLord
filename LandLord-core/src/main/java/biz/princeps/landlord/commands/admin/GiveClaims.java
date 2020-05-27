@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
  */
 public class GiveClaims extends LandlordCommand {
 
-    private IVaultManager vault = plugin.getVaultManager();
+    private final IVaultManager vault = plugin.getVaultManager();
 
     public GiveClaims(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.GiveClaims.name"),

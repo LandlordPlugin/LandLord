@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class LangManager implements ILangManager {
 
-    private ILandLord pl;
-    private String filename;
+    private final ILandLord pl;
+    private final String filename;
     private FileConfiguration msg;
 
     public LangManager(ILandLord pl, String lang) {

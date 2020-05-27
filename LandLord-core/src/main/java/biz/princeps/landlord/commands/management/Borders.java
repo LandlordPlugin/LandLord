@@ -5,7 +5,6 @@ import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.commands.Landlordbase;
-import biz.princeps.landlord.listener.BasicListener;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
@@ -15,6 +14,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,8 +30,8 @@ import java.util.UUID;
  */
 public class Borders extends LandlordCommand implements Listener {
 
-    private HashMap<UUID, BukkitTask> tasks;
-    private IWorldGuardManager wg;
+    private final HashMap<UUID, BukkitTask> tasks;
+    private final IWorldGuardManager wg;
 
     public Borders(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Borders.name"),
@@ -69,7 +69,7 @@ public class Borders extends LandlordCommand implements Listener {
             int refreshRate = plugin.getConfig().getInt("Borders.refreshRate");
             this.tasks.put(p.getUniqueId(), new BukkitRunnable() {
                 int counter = 0;
-                int timeout = plugin.getConfig().getInt("Borders.timeout");
+                final int timeout = plugin.getConfig().getInt("Borders.timeout");
 
                 @Override
                 public void run() {
@@ -91,7 +91,7 @@ public class Borders extends LandlordCommand implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onDisconnect(PlayerQuitEvent e) {
         BukkitTask bukkitTask = this.tasks.get(e.getPlayer().getUniqueId());
         if (bukkitTask != null) {

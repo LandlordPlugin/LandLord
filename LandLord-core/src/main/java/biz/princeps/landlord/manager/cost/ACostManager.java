@@ -12,9 +12,9 @@ import biz.princeps.landlord.api.ILandLord;
  */
 public abstract class ACostManager implements ICostManager {
 
-    protected ILandLord plugin;
-    protected ICostStrategy strategy;
-    protected int free;
+    protected final ILandLord plugin;
+    protected final ICostStrategy strategy;
+    protected final int free;
 
     public ACostManager(ILandLord plugin, int free, String namespace) {
         this.plugin = plugin;

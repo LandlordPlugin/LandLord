@@ -12,13 +12,7 @@ import biz.princeps.lib.gui.ConfirmationGUI;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-
-import java.time.LocalDateTime;
-import java.util.Iterator;
-import java.util.List;
 
 
 /**
@@ -28,7 +22,7 @@ import java.util.List;
  */
 public class Regenerate extends LandlordCommand {
 
-    private IWorldGuardManager wg;
+    private final IWorldGuardManager wg;
 
     public Regenerate(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Regenerate.name"),
@@ -94,10 +88,8 @@ public class Regenerate extends LandlordCommand {
                             player.closeInventory();
                         }
 
-                    }, (p2) -> {
-                lm.sendMessage(player, lm.getString("Commands.Regenerate.abort")
-                        .replace("%land%", finalLand.getName()));
-            }, null);
+                    }, (p2) -> lm.sendMessage(player, lm.getString("Commands.Regenerate.abort")
+                    .replace("%land%", finalLand.getName())), null);
 
             confi.setConfirm(lm.getRawString("Confirmation.accept"));
             confi.setDecline(lm.getRawString("Confirmation.decline"));

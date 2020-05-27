@@ -3,7 +3,6 @@ package biz.princeps.landlord.listener;
 import biz.princeps.landlord.api.ClaimType;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
-import biz.princeps.landlord.listener.BasicListener;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;

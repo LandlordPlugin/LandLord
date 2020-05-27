@@ -22,7 +22,7 @@ import java.util.Set;
  */
 public class UnclaimAll extends LandlordCommand {
 
-    private IWorldGuardManager wg;
+    private final IWorldGuardManager wg;
 
     public UnclaimAll(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.UnclaimAll.name"),

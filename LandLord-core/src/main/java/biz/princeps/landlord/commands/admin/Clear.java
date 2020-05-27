@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
  */
 public class Clear extends LandlordCommand {
 
-    private IWorldGuardManager wg;
+    private final IWorldGuardManager wg;
 
     public Clear(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Clear.name"),

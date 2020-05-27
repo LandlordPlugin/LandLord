@@ -3,8 +3,6 @@ package biz.princeps.landlord.guis;
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.Landlordbase;
-import biz.princeps.landlord.commands.claiming.Unclaim;
-import biz.princeps.landlord.commands.claiming.UnclaimAll;
 import biz.princeps.landlord.commands.friends.Unfriend;
 import biz.princeps.landlord.commands.management.Manage;
 import biz.princeps.lib.PrincepsLib;
@@ -28,14 +26,14 @@ import java.util.*;
 
 public class AManage extends AbstractGUI {
 
-    private List<IOwnedLand> regions;
-    private ILangManager lm;
-    private ILandLord plugin;
+    private final List<IOwnedLand> regions;
+    private final ILangManager lm;
+    private final ILandLord plugin;
     private int flagPage = 0;
 
-    private Set<String> toggleMobs;
+    private final Set<String> toggleMobs;
 
-    private IMaterialsManager mats;
+    private final IMaterialsManager mats;
 
     AManage(ILandLord pl, Player player, String header, List<IOwnedLand> land) {
         super(player, 45, header);
@@ -173,19 +171,22 @@ public class AManage extends AbstractGUI {
             if (flag.toggleFriends()) {
                 refresh();
                 //Avoid lag with lots of lands
-                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () ->
-                        regions.forEach(land -> land.getFlags().stream().filter(llFlag ->
-                                land != regions.get(0) && flag.getName().equals(llFlag.getName())
-                                        && flag.getFriendStatus() != llFlag.getFriendStatus()).forEach(flagii -> {
-                                    flagii.toggleFriends();
+                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+                    for (IOwnedLand land : regions.subList(1, regions.size())) {
+                        for (ILLFlag landFlag : land.getFlags()) {
+                            if (!flag.getName().equals(landFlag.getName())
+                                    || flag.getFriendStatus() == landFlag.getFriendStatus()) continue;
 
-                                    Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                        LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                                flagii.getName(), !flagii.getFriendStatus(), flagii.getFriendStatus());
-                                        Bukkit.getPluginManager().callEvent(landManageEvent);
-                                    });
-                                }
-                        )));
+                            landFlag.toggleFriends();
+
+                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                        landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
+                                Bukkit.getPluginManager().callEvent(landManageEvent);
+                            });
+                        }
+                    }
+                });
             }
         });
         friend.setName(isFriend ? lm.getRawString("Commands.Manage.allow") : lm.getRawString("Commands.Manage.deny"));
@@ -196,18 +197,22 @@ public class AManage extends AbstractGUI {
             if (flag.toggleAll()) {
                 refresh();
                 //Avoid lag with lots of lands
-                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () ->
-                        regions.forEach(land -> land.getFlags().stream().filter(llFlag ->
-                                land != regions.get(0) && flag.getName().equals(llFlag.getName())
-                                        && flag.getAllStatus() != llFlag.getAllStatus()).forEach(flagii -> {
-                            flagii.toggleAll();
+                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+                    for (IOwnedLand land : regions.subList(1, regions.size())) {
+                        for (ILLFlag landFlag : land.getFlags()) {
+                            if (!flag.getName().equals(landFlag.getName())
+                                    || flag.getAllStatus() == landFlag.getAllStatus()) continue;
+
+                            landFlag.toggleAll();
 
                             Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
                                 LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                        flagii.getName(), !flagii.getAllStatus(), flagii.getAllStatus());
+                                        landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
                                 Bukkit.getPluginManager().callEvent(landManageEvent);
                             });
-                        })));
+                        }
+                    }
+                });
             }
         });
         all.setName(isAll ? lm.getRawString("Commands.Manage.allow") : lm.getRawString("Commands.Manage.deny"));
@@ -285,6 +290,7 @@ public class AManage extends AbstractGUI {
 
             String rawTitle = lm.getRawString("Commands.Manage.ManageFriends.unfriend");
 
+            //TODO should run this async as before, servers have a big lag spike caused by heads loading :/
             //Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () ->
             for (UUID id : friends) {
                 OfflinePlayer op = Bukkit.getOfflinePlayer(id);
@@ -378,8 +384,11 @@ public class AManage extends AbstractGUI {
                         //Avoid lag with lots of lands
                         land.toggleMob(m);
                         Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-                            regions.stream().filter(region -> region != land && region.isMobDenied(m) != land.isMobDenied(m))
-                                    .forEach(ownedLand -> ownedLand.toggleMob(m));
+                            for (IOwnedLand region : regions.subList(1, regions.size())) {
+                                if (region.isMobDenied(m) == region.isMobDenied(m)) continue;
+
+                                region.toggleMob(m);
+                            }
                             mob.setLore(formatList(formatList(lore, "%value%", formatMobState(land.isMobDenied(m))),
                                     "%mob%", m.getNiceName()));
                             //Make allowed mobs icon more distinctive
@@ -417,7 +426,9 @@ public class AManage extends AbstractGUI {
 
     private List<String> formatList(List<String> list, String toReplace, String newValue) {
         List<String> newList = new ArrayList<>();
-        list.forEach(s -> newList.add(s.replace(toReplace, newValue)));
+        for (String s : list) {
+            newList.add(s.replace(toReplace, newValue));
+        }
         return newList;
     }
 
@@ -438,10 +449,10 @@ public class AManage extends AbstractGUI {
                 lastseen = "NaN";
             }
         }
-        stringList.forEach(s -> {
+        for (String s : stringList) {
             String ss = s.replace("%seen%", lastseen);
             toReturn.add(ss);
-        });
+        }
 
         return toReturn;
     }
