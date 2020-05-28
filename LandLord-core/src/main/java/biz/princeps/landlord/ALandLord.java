@@ -7,7 +7,10 @@ import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
 import biz.princeps.landlord.listener.MapListener;
 import biz.princeps.landlord.listener.SecureWorldListener;
-import biz.princeps.landlord.manager.*;
+import biz.princeps.landlord.manager.DelimitationManager;
+import biz.princeps.landlord.manager.LPlayerManager;
+import biz.princeps.landlord.manager.LangManager;
+import biz.princeps.landlord.manager.VaultManager;
 import biz.princeps.landlord.manager.cost.LandCostManager;
 import biz.princeps.landlord.manager.map.MapManager;
 import biz.princeps.landlord.persistent.LPlayer;
@@ -20,6 +23,8 @@ import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -151,13 +156,15 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * Retrieve the LPlayer objects for all online players (in case of reload) and insert them into the PlayerManager
      */
     private void setupPlayers() {
-        Bukkit.getOnlinePlayers().forEach(p -> getPlayerManager().getOffline(p.getUniqueId(), (offline) -> {
-            if (offline == null) {
-                this.getPlayerManager().add(new LPlayer(p.getUniqueId()));
-            } else {
-                this.getPlayerManager().add(offline);
-            }
-        }));
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            getPlayerManager().getOffline(onlinePlayer.getUniqueId(), (offline) -> {
+                if (offline == null) {
+                    this.getPlayerManager().add(new LPlayer(onlinePlayer.getUniqueId()));
+                } else {
+                    this.getPlayerManager().add(offline);
+                }
+            });
+        }
     }
 
     /**
@@ -185,10 +192,15 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      */
     private void checkWorldNames() {
         if (!getConfig().getBoolean("DisableStartupWorldWarning")) {
-            Bukkit.getWorlds().stream().filter(w -> Pattern.compile("[^A-Za-z0-9_-]+").matcher(w.getName()).find())
-                    .forEach(w -> getLogger().warning(
-                            "Found an invalid world name (" + w.getName() + ")! LandLord will not work in this " +
-                                    "world!"));
+            final Pattern pattern = Pattern.compile("[^A-Za-z0-9_-]+");
+
+            for (World world : Bukkit.getWorlds()) {
+                if (!pattern.matcher(world.getName()).find()) continue;
+
+                getLogger().warning(
+                        "Found an invalid world name (" + world.getName() + ")! LandLord will not work in this " +
+                                "world!");
+            }
         }
     }
 
@@ -210,7 +222,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         if (Bukkit.getPluginManager().isPluginEnabled("MVdWPlaceholderAPI")) {
             new LLFeatherBoard(this);
         }
-        if(Bukkit.getPluginManager().isPluginEnabled("Towny")){
+        if (Bukkit.getPluginManager().isPluginEnabled("Towny")) {
             new Towny(this);
         }
     }

@@ -22,9 +22,9 @@ public class PlayerBrokeSecureWorldEvent extends Event implements Cancellable {
 
     private boolean isCancelled;
 
-    private Player player;
-    private Block block;
-    private Cancellable cancellable;
+    private final Player player;
+    private final Block block;
+    private final Cancellable cancellable;
 
     public PlayerBrokeSecureWorldEvent(Player player, Block block, Cancellable cancellable) {
         this.player = player;

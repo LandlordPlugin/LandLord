@@ -7,11 +7,26 @@ import org.bukkit.configuration.file.FileConfiguration;
  * String arrays on demand. So this class builds them once and then provides them via getter methods.
  */
 public class MapConstants {
-    private String b1, b2, mi, ar;
-    private String[][] s, ssw, sw, wsw,
-            w, wnw, nw, nnw,
-            n, nne, ne, ene,
-            e, ese, se, sse;
+    private final String b1;
+    private final String b2;
+    private final String mi;
+    private final String ar;
+    private final String[][] s;
+    private final String[][] ssw;
+    private final String[][] sw;
+    private final String[][] wsw;
+    private final String[][] w;
+    private final String[][] wnw;
+    private final String[][] nw;
+    private final String[][] nnw;
+    private final String[][] n;
+    private final String[][] nne;
+    private final String[][] ne;
+    private final String[][] ene;
+    private final String[][] e;
+    private final String[][] ese;
+    private final String[][] se;
+    private final String[][] sse;
 
     public MapConstants(FileConfiguration config) {
         b1 = config.getString("CommandSettings.Map.symbols.background1");

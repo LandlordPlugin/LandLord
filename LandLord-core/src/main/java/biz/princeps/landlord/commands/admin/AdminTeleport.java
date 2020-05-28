@@ -56,15 +56,17 @@ public class AdminTeleport extends LandlordCommand {
                     MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
                             lm.getRawString("Commands.AdminTp.guiHeader").replace("%player%", target));
 
-                    lands.forEach(land -> landGui.addIcon(new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()))
-                            .setName(land.getName())
-                            .addClickAction((p) -> {
-                                        Location toTp = land.getALocation();
-                                        sender.teleport(toTp);
-                                        land.highlightLand(sender, Particle.VILLAGER_HAPPY);
-                                    }
-                            )
-                    ));
+                    for (IOwnedLand land : lands) {
+                        landGui.addIcon(new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()))
+                                .setName(land.getName())
+                                .addClickAction((p) -> {
+                                            Location toTp = land.getALocation();
+                                            sender.teleport(toTp);
+                                            land.highlightLand(sender, Particle.VILLAGER_HAPPY);
+                                        }
+                                )
+                        );
+                    }
                     landGui.display();
                 } else {
                     lm.sendMessage(sender, lm.getString("Commands.AdminTp.noLands").replace("%player%", target));

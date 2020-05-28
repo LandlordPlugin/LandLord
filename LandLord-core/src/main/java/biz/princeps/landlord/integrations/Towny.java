@@ -12,8 +12,8 @@ import org.bukkit.event.EventHandler;
 
 public class Towny extends BasicListener {
 
-    private TownyAPI towny;
-    private ILandLord pl;
+    private final TownyAPI towny;
+    private final ILandLord pl;
 
     public Towny(ILandLord pl) {
         super(pl);

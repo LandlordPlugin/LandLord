@@ -7,7 +7,7 @@ import biz.princeps.landlord.api.IWorldGuardManager;
 
 public class LLFeatherBoard {
 
-    private IWorldGuardManager wg;
+    private final IWorldGuardManager wg;
 
     public LLFeatherBoard(ILandLord pl) {
         this.wg = pl.getWGManager();

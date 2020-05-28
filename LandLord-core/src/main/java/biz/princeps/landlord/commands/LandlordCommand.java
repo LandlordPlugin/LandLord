@@ -24,8 +24,8 @@ import java.util.Set;
  */
 public abstract class LandlordCommand extends SubCommand {
 
-    protected ILandLord plugin;
-    protected ILangManager lm;
+    protected final ILandLord plugin;
+    protected final ILangManager lm;
 
     public LandlordCommand(ILandLord plugin, String name, String usage, Set<String> permissions, Set<String> aliases) {
         super(name, usage, permissions, aliases);

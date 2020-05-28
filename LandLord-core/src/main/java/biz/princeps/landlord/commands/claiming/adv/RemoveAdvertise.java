@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
  */
 public class RemoveAdvertise extends LandlordCommand {
 
-    private IWorldGuardManager wg;
+    private final IWorldGuardManager wg;
 
     public RemoveAdvertise(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.RemoveAdvertise.name"),

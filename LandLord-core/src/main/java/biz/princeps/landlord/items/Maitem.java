@@ -24,10 +24,10 @@ public class Maitem extends AbstractItem {
     // 19-05-02 I must have been on drugs when I wrote that comment lmao.
 
     public static final String NAME = "maitem";
-    private ItemStack STACK;
-    private ArrayList<ItemClickAction> clickActions = new ArrayList<>();
+    private final ItemStack STACK;
+    private final ArrayList<ItemClickAction> clickActions = new ArrayList<>();
 
-    private ILandLord plugin;
+    private final ILandLord plugin;
 
     public Maitem(ILandLord pl) {
         super(NAME, new ItemStack(Material.valueOf(pl.getConfig().getString("MaItem.item"))), true, false);
@@ -180,9 +180,9 @@ public class Maitem extends AbstractItem {
 
     static class ItemClickAction {
 
-        private ClickedAtCondition activation;
-        private ClickCondition condition;
-        private ClickResult result;
+        private final ClickedAtCondition activation;
+        private final ClickCondition condition;
+        private final ClickResult result;
 
         public ItemClickAction(ClickedAtCondition activation, ClickCondition condition, ClickResult result) {
             this.activation = activation;

@@ -19,8 +19,8 @@ public class LandPreClaimEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
 
-    private Player player;
-    private Chunk land;
+    private final Player player;
+    private final Chunk land;
 
     public LandPreClaimEvent(Player player, Chunk land) {
         this.player = player;

@@ -12,8 +12,8 @@ import org.inventivetalent.update.spiget.comparator.VersionComparator;
  * Date: 12/04/18
  */
 public class Updater {
-    private ILandLord pl;
-    private SpigetUpdate updater;
+    private final ILandLord pl;
+    private final SpigetUpdate updater;
 
     public Updater(ILandLord pl) {
         this.pl = pl;

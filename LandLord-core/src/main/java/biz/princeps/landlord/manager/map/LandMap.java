@@ -17,13 +17,19 @@ import java.util.Map;
  */
 public class LandMap {
 
-    private ILandLord plugin;
-    private IWorldGuardManager wg;
-    private MapConstants cons;
-    private long refreshRate;
-    private String friendsSymbol, ownSymbol, foreignSymbol, header, yours, friends, others;
+    private final ILandLord plugin;
+    private final IWorldGuardManager wg;
+    private final MapConstants cons;
+    private final long refreshRate;
+    private final String friendsSymbol;
+    private final String ownSymbol;
+    private final String foreignSymbol;
+    private final String header;
+    private final String yours;
+    private final String friends;
+    private final String others;
 
-    private Player mapViewer;
+    private final Player mapViewer;
     private SimpleScoreboard scoreboard;
     private Chunk currChunk;
     private String currDir;

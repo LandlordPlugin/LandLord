@@ -8,6 +8,7 @@ import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collection;
@@ -47,7 +48,9 @@ public class Update extends LandlordCommand {
             issuer.sendMessage("§8[§c§l!§8] §fStarting to update lands...");
 
             Collection<IOwnedLand> regions = new HashSet<>();
-            Bukkit.getWorlds().forEach(w -> regions.addAll(plugin.getWGManager().getRegions(w)));
+            for (World world : Bukkit.getWorlds()) {
+                regions.addAll(plugin.getWGManager().getRegions(world));
+            }
 
             for (IOwnedLand region : regions) {
                 // update flags
@@ -66,7 +69,9 @@ public class Update extends LandlordCommand {
             sender.sendMessage("§8[§c§l!§8] §fStarting to reset lands... Please wait :)");
 
             Collection<IOwnedLand> regions = new HashSet<>();
-            Bukkit.getWorlds().forEach(w -> regions.addAll(plugin.getWGManager().getRegions(w)));
+            for (World world : Bukkit.getWorlds()) {
+                regions.addAll(plugin.getWGManager().getRegions(world));
+            }
 
             for (IOwnedLand region : regions) {
                 // reset flags

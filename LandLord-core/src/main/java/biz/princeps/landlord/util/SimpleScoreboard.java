@@ -17,9 +17,9 @@ public class SimpleScoreboard {
 
     private Scoreboard scoreboard;
 
-    private String title;
-    private List<String> scores;
-    private Player player;
+    private final String title;
+    private final List<String> scores;
+    private final Player player;
     private BukkitRunnable runnable;
 
     /**

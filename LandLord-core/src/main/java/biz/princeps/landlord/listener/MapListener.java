@@ -5,6 +5,7 @@ import biz.princeps.landlord.api.IMapManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -12,19 +13,19 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class MapListener extends BasicListener {
 
-    private IMapManager mapManager;
+    private final IMapManager mapManager;
 
     public MapListener(ILandLord pl) {
         super(pl);
         this.mapManager = pl.getMapManager();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void playerLeave(PlayerQuitEvent event) {
         mapManager.removeMap(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void playerWorldChange(PlayerChangedWorldEvent event) {
         mapManager.removeMap(event.getPlayer());
     }
@@ -34,12 +35,12 @@ public class MapListener extends BasicListener {
      *
      * @param event that was triggered
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void playerTeleportKeepMap(PlayerTeleportEvent event) {
         handleMapRefresh(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void playerRespawn(PlayerRespawnEvent event) {
         handleMapRefresh(event.getPlayer());
     }

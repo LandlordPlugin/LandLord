@@ -15,7 +15,7 @@ import java.util.UUID;
  */
 public class VaultManager implements IVaultManager {
 
-    private Economy economy;
+    private final Economy economy;
 
     public VaultManager(Economy economy) {
         this.economy = economy;

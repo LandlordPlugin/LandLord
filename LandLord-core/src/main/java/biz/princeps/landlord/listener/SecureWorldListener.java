@@ -26,9 +26,9 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
  */
 public class SecureWorldListener extends BasicListener {
 
-    private LandAlerter.LandMessageDisplay display;
-    private int treshold;
-    private IWorldGuardManager wg;
+    private final LandAlerter.LandMessageDisplay display;
+    private final int treshold;
+    private final IWorldGuardManager wg;
 
     public SecureWorldListener(ILandLord pl) {
         super(pl);

@@ -14,7 +14,7 @@ import java.io.*;
  */
 public class ConfigUtil {
 
-    private ILandLord pl;
+    private final ILandLord pl;
 
     public ConfigUtil(ILandLord pl) {
         this.pl = pl;

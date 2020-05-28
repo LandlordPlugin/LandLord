@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
  */
 public abstract class BasicListener implements Listener {
 
-    protected ILandLord plugin;
+    protected final ILandLord plugin;
 
     public BasicListener(ILandLord plugin) {
         this.plugin = plugin;

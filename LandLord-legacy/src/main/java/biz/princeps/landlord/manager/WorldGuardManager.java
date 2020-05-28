@@ -4,11 +4,11 @@ import biz.princeps.landlord.OwnedLand;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.protection.AWorldGuardManager;
+import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.RegionOperationException;
 import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -26,7 +26,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -37,7 +36,7 @@ import java.util.stream.Collectors;
 public class WorldGuardManager extends AWorldGuardManager {
     public static final DoubleFlag REGION_PRICE_FLAG = new DoubleFlag("region-price");
 
-    private WorldGuardPlugin wgPlugin;
+    private final WorldGuardPlugin wgPlugin;
 
     public WorldGuardManager(ILandLord pl, WorldGuardPlugin worldGuard) {
         super(pl);
@@ -133,7 +132,12 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public Set<IOwnedLand> getRegions(UUID id, World world) {
         Set<IOwnedLand> lands = cache.getLands(id);
-        return lands.stream().filter(l -> l.getWorld().equals(world)).collect(Collectors.toSet());
+        for (IOwnedLand land : lands) {
+            if (land.getWorld() != world) continue;
+
+            lands.add(land);
+        }
+        return lands;
     }
 
     @Override
@@ -144,28 +148,30 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public Set<IOwnedLand> getRegions() {
         Set<IOwnedLand> lands = new HashSet<>();
-        Bukkit.getWorlds().forEach(w -> lands.addAll(cache.getLands(w)));
+        for (World world : Bukkit.getWorlds()) {
+            lands.addAll(cache.getLands(world));
+        }
         return lands;
     }
 
     @Override
     public Set<?> getAllWGRegions(World world) {
         Map<String, ProtectedRegion> regions = new HashMap<>(getRegionManager(world).getRegions());
-        getRegionManager(world).getRegions().keySet().forEach(r -> {
+        for (String r : getRegionManager(world).getRegions().keySet()) {
             if (isLLRegion(r)) {
                 regions.remove(r);
             }
-        });
+        }
         return new HashSet<>(regions.values());
     }
 
     @Override
     public Set<?> getAllWGRegions() {
         Set<ProtectedRegion> set = new HashSet<>();
-        Bukkit.getWorlds().forEach(w -> {
-            Set<?> allWGRegions = getAllWGRegions(w);
+        for (World world : Bukkit.getWorlds()) {
+            Set<?> allWGRegions = getAllWGRegions(world);
             set.addAll(((Set<ProtectedRegion>) allWGRegions));
-        });
+        }
         return set;
     }
 

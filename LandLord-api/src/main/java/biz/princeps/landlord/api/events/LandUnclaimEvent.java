@@ -18,8 +18,8 @@ public class LandUnclaimEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
 
-    private Player player;
-    private IOwnedLand land;
+    private final Player player;
+    private final IOwnedLand land;
 
     public LandUnclaimEvent(Player player, IOwnedLand land) {
         this.player = player;

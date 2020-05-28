@@ -1,6 +1,9 @@
 package biz.princeps.landlord.guis;
 
-import biz.princeps.landlord.api.*;
+import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.ILangManager;
+import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
@@ -16,9 +19,9 @@ import java.util.UUID;
 
 public class ClearGUI extends AbstractGUI {
 
-    private ILandLord plugin;
-    private ILangManager lm;
-    private IWorldGuardManager wg;
+    private final ILandLord plugin;
+    private final ILangManager lm;
+    private final IWorldGuardManager wg;
 
     public ClearGUI(ILandLord pl, Player player) {
         super(player, 9, pl.getLangManager().getRawString("Commands.ClearWorld.gui.title"));
@@ -39,7 +42,7 @@ public class ClearGUI extends AbstractGUI {
         int pos = 0;
         if (land != null) {
 
-            if (!player.hasPermission("landlord.admin.clear.land")) {
+            if (player.hasPermission("landlord.admin.clear.land")) {
                 // Only clear this land
                 Icon i1 = new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()));
                 i1.setName(lm.getRawString("Commands.ClearWorld.gui.clearcurrentland.name"));
@@ -61,7 +64,7 @@ public class ClearGUI extends AbstractGUI {
             }
 
             // Clear all for owner of current land
-            if (!player.hasPermission("landlord.admin.clear.player")) {
+            if (player.hasPermission("landlord.admin.clear.player")) {
                 Icon i2 = new Icon(plugin.getMaterialsManager().getPlayerHead(land.getOwner()));
                 i2.setName(lm.getRawString("Commands.ClearWorld.gui.clearplayer.name"));
                 i2.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearplayer.desc").split("\\|")));
@@ -106,6 +109,7 @@ public class ClearGUI extends AbstractGUI {
     }
 
     private void clearLand(IOwnedLand land) {
+        //TODO We already check during menu creation, it's enough, this check is useless ?
         if (!player.hasPermission("landlord.admin.clear.land")) {
             lm.sendMessage(player, lm.getString("noPermissions"));
         }
@@ -116,6 +120,7 @@ public class ClearGUI extends AbstractGUI {
     }
 
     private void clearWorld(World world) {
+        //TODO We already check during menu creation, it's enough, this check is useless ?
         if (!player.hasPermission("landlord.admin.clear.world")) {
             lm.sendMessage(player, lm.getString("noPermissions"));
         }
@@ -131,6 +136,7 @@ public class ClearGUI extends AbstractGUI {
     }
 
     private void clearPlayer(UUID id) {
+        //TODO We already check during menu creation, it's enough, this check is useless ?
         if (!player.hasPermission("landlord.admin.clear.player")) {
             lm.sendMessage(player, lm.getString("noPermissions"));
         }

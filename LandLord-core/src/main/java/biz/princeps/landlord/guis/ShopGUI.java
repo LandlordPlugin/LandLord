@@ -21,12 +21,12 @@ import java.util.List;
  */
 public class ShopGUI extends AbstractGUI {
 
-    private ILandLord pl;
-    private ClaimsCostManager costManager;
-    private ILangManager lm;
+    private final ILandLord pl;
+    private final ClaimsCostManager costManager;
+    private final ILangManager lm;
 
-    private IMaterialsManager mats;
-    private IVaultManager vault;
+    private final IMaterialsManager mats;
+    private final IVaultManager vault;
 
     private int delta = 0;
     private double cost = 0;
@@ -256,7 +256,9 @@ public class ShopGUI extends AbstractGUI {
 
     private List<String> replaceLore(List<String> list, String toReplace, String newValue) {
         List<String> newList = new ArrayList<>();
-        list.forEach(s -> newList.add(s.replace(toReplace, newValue)));
+        for (String s : list) {
+            newList.add(s.replace(toReplace, newValue));
+        }
         return newList;
     }
 }

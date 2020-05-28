@@ -9,11 +9,11 @@ import org.bukkit.Material;
 
 public class LLFlag implements ILLFlag {
 
-    private ProtectedRegion pr;
+    private final ProtectedRegion pr;
 
     private boolean friendStatus, allStatus;
-    private Flag flag;
-    private Material mat;
+    private final Flag flag;
+    private final Material mat;
 
 
     public LLFlag(ProtectedRegion pr, Flag flag, Material mat) {
@@ -68,15 +68,13 @@ public class LLFlag implements ILLFlag {
                 // now: 11
                 this.friendStatus = true;
                 pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.ALL);
-                pr.setFlag(flag, StateFlag.State.ALLOW);
-                return true;
             } else {
                 // now 10
                 this.friendStatus = true;
                 pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
-                pr.setFlag(flag, StateFlag.State.ALLOW);
-                return true;
             }
+            pr.setFlag(flag, StateFlag.State.ALLOW);
+            return true;
         }
     }
 
@@ -89,13 +87,12 @@ public class LLFlag implements ILLFlag {
                 // still allow friends
                 pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
                 pr.setFlag(flag, StateFlag.State.ALLOW);
-                return true;
             } else {
                 // deny everyone
                 pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_OWNERS);
                 pr.setFlag(flag, StateFlag.State.DENY);
-                return true;
             }
+            return true;
         } else {
             if (friendStatus) {
                 this.allStatus = true;

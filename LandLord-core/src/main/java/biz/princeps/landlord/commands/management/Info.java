@@ -1,6 +1,9 @@
 package biz.princeps.landlord.commands.management;
 
-import biz.princeps.landlord.api.*;
+import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
@@ -23,8 +26,11 @@ import java.util.List;
  */
 public class Info extends LandlordCommand {
 
-    private String free, owned, advertised, inactive;
-    private IWorldGuardManager wg;
+    private final String free;
+    private final String owned;
+    private final String advertised;
+    private final String inactive;
+    private final IWorldGuardManager wg;
 
     public Info(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Info.name"),

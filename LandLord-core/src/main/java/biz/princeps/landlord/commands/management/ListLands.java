@@ -1,5 +1,6 @@
 package biz.princeps.landlord.commands.management;
 
+import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IPlayer;
@@ -84,98 +85,103 @@ public class ListLands extends LandlordCommand {
     }
 
     private void onListLands(Player sender, IPlayer target, int page) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+            List<IOwnedLand> lands = new ArrayList<>(plugin.getWGManager().getRegions(target.getUuid()));
 
-        List<IOwnedLand> lands = new ArrayList<>(plugin.getWGManager().getRegions(target.getUuid()));
-
-        if (lands.size() == 0) {
-            lm.sendMessage(sender, plugin.getLangManager().getString("Commands.ListLands.noLands"));
-            return;
-        }
-
-        String mode = plugin.getConfig().getString("CommandSettings.ListLands.mode");
-
-        if (mode.equals("gui")) {
-            MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
-                    plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
-                            .replace("%player%", target.getName()));
-
-            for (IOwnedLand land : lands) {
-                List<String> loreRaw = plugin.getLangManager().getStringList("Commands.ListLands.gui.lore");
-                List<String> lore = new ArrayList<>();
-
-                for (String s : loreRaw) {
-                    if (s.contains("%flags%")) {
-                        String flagFormat = lm.getRawString("Commands.ListLands.gui.flagformat");
-                        //       flagformat: '&a%flagname%: &f%flagvalue%'
-
-                        land.getFlags().forEach((flag) -> lore.add(flagFormat
-                                .replace("%flagname%", flag.getName())
-                                .replace("%friend%", this.formatState(flag.getFriendStatus()))
-                                .replace("%all%", this.formatState(flag.getAllStatus()))));
-                    } else {
-                        lore.add(s.replace("%name%", land.getName())
-                                .replace("%realx%", String.valueOf(land.getChunk().getX() * 16))
-                                .replace("%realz%", String.valueOf(land.getChunk().getZ() * 16))
-                                .replace("%members%", land.getMembersString())
-                        );
-                    }
-                }
-
-                Icon icon = new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()));
-                icon.setName(lm.getRawString("Commands.ListLands.gui.itemname")
-                        .replace("%name%", land.getName()));
-                icon.setLore(lore);
-                icon.addClickAction((p) -> {
-                    boolean hasPerm = false;
-                    for (String s : Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Manage.permissions"))) {
-                        if (p.hasPermission(s)) {
-                            hasPerm = true;
-                            break;
-                        }
-                    }
-                    if (hasPerm) {
-                        ManageGui manageGUI = new ManageGui(plugin, sender, landGui, land);
-                        manageGUI.display();
-                    }
-                });
-
-
-                landGui.addIcon(icon);
+            if (lands.size() == 0) {
+                lm.sendMessage(sender, plugin.getLangManager().getString("Commands.ListLands.noLands"));
+                return;
             }
 
-            //TODO Not working due to https://gitlab.com/princeps/PrincepsLib/blob/master/src/main/java/biz/princeps/lib/gui/MultiPagedGUI.java#L92
-            landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
-                    .setName(lm.getRawString("Commands.ListLands.gui.manageAll"))
-                    .addClickAction((p) -> {
-                        ManageGuiAll manageGUIAll = new ManageGuiAll(plugin, sender, landGui, lands);
-                        manageGUIAll.display();
-                    }));
+            String mode = plugin.getConfig().getString("CommandSettings.ListLands.mode");
 
-            landGui.display();
+            if (mode.equals("gui")) {
+                MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
+                        plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
+                                .replace("%player%", target.getName()));
 
-        } else {
-            // Chat based system
+                for (IOwnedLand land : lands) {
+                    List<String> loreRaw = plugin.getLangManager().getStringList("Commands.ListLands.gui.lore");
+                    List<String> lore = new ArrayList<>();
 
-            List<String> formatted = new ArrayList<>();
+                    for (String s : loreRaw) {
+                        if (s.contains("%flags%")) {
+                            String flagFormat = lm.getRawString("Commands.ListLands.gui.flagformat");
+                            //       flagformat: '&a%flagname%: &f%flagvalue%'
 
-            String segment = lm.getRawString("Commands.ListLands.chat.segment");
+                            for (ILLFlag flag : land.getFlags()) {
+                                lore.add(flagFormat
+                                        .replace("%flagname%", flag.getName())
+                                        .replace("%friend%", this.formatState(flag.getFriendStatus()))
+                                        .replace("%all%", this.formatState(flag.getAllStatus())));
+                            }
+                        } else {
+                            lore.add(s.replace("%name%", land.getName())
+                                    .replace("%realx%", String.valueOf(land.getChunk().getX() * 16))
+                                    .replace("%realz%", String.valueOf(land.getChunk().getZ() * 16))
+                                    .replace("%members%", land.getMembersString())
+                            );
+                        }
+                    }
 
-            lands.forEach(land -> formatted.add(segment.replace("%landname%", land.getName())
-                    .replace("%members%", land.getMembersString())));
+                    Icon icon = new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()));
+                    icon.setName(lm.getRawString("Commands.ListLands.gui.itemname")
+                            .replace("%name%", land.getName()));
+                    icon.setLore(lore);
+                    icon.addClickAction((p) -> {
+                        boolean hasPerm = false;
+                        for (String s : Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Manage.permissions"))) {
+                            if (p.hasPermission(s)) {
+                                hasPerm = true;
+                                break;
+                            }
+                        }
+                        if (hasPerm) {
+                            ManageGui manageGUI = new ManageGui(plugin, sender, landGui, land);
+                            manageGUI.display();
+                        }
+                    });
 
-            String prev = lm.getRawString("Commands.ListLands.chat.previous");
-            String next = lm.getRawString("Commands.ListLands.chat.next");
+
+                    landGui.addIcon(icon);
+                }
+
+                //TODO Not working due to https://gitlab.com/princeps/PrincepsLib/blob/master/src/main/java/biz/princeps/lib/gui/MultiPagedGUI.java#L92
+                landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
+                        .setName(lm.getRawString("Commands.ListLands.gui.manageAll"))
+                        .addClickAction((p) -> {
+                            ManageGuiAll manageGUIAll = new ManageGuiAll(plugin, sender, landGui, lands);
+                            manageGUIAll.display();
+                        }));
+
+                if (sender.isValid()) Bukkit.getScheduler().runTask(plugin.getPlugin(), landGui::display);
+            } else {
+                // Chat based system
+
+                List<String> formatted = new ArrayList<>();
+
+                String segment = lm.getRawString("Commands.ListLands.chat.segment");
+
+                for (IOwnedLand land : lands) {
+                    formatted.add(segment.replace("%landname%", land.getName())
+                            .replace("%members%", land.getMembersString()));
+                }
+
+                String prev = lm.getRawString("Commands.ListLands.chat.previous");
+                String next = lm.getRawString("Commands.ListLands.chat.next");
 
 
-            MultiPagedMessage message = new MultiPagedMessage(PrincepsLib.getCommandManager()
-                    .getCommand(Landlordbase.class).getCommandString(ListLands.class),
-                    plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
-                            .replace("%player%", target.getName()),
-                    plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
-                    formatted, prev, next, page);
+                MultiPagedMessage message = new MultiPagedMessage(PrincepsLib.getCommandManager()
+                        .getCommand(Landlordbase.class).getCommandString(ListLands.class),
+                        plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
+                                .replace("%player%", target.getName()),
+                        plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
+                        formatted, prev, next, page);
 
-            plugin.getUtilsManager().sendBasecomponent(sender, message.create());
-        }
+                if (sender.isValid())
+                    Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> plugin.getUtilsManager().sendBasecomponent(sender, message.create()));
+            }
+        });
     }
 
     private String formatState(boolean bool) {

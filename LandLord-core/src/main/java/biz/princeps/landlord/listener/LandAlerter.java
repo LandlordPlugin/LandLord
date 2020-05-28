@@ -36,13 +36,13 @@ import java.util.UUID;
  */
 public class LandAlerter extends BasicListener {
 
-    private ILandLord pl;
-    private IWorldGuardManager wg;
-    private HashMap<UUID, ChunkCoords> currentLands;
-    private HashMap<UUID, ChunkCoords> previousLands;
+    private final ILandLord pl;
+    private final IWorldGuardManager wg;
+    private final HashMap<UUID, ChunkCoords> currentLands;
+    private final HashMap<UUID, ChunkCoords> previousLands;
     // We need to update the player position separately bc spigot or worldguard sends the greeting message before actually
     // transferring the player to the teleported location
-    private LandMessageDisplay type;
+    private final LandMessageDisplay type;
 
     /**
      * such a mess, but I cant think of a less intrusive way.
@@ -60,7 +60,7 @@ public class LandAlerter extends BasicListener {
         type = LandMessageDisplay.valueOf(pl.getConfig().getString("LandMessage"));
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(pl.getPlugin(), PacketType.Play.Server.CHAT) {
-            private JSONParser parser = new JSONParser();
+            private final JSONParser parser = new JSONParser();
 
             @Override
             public void onPacketSending(PacketEvent event) {
@@ -199,7 +199,7 @@ public class LandAlerter extends BasicListener {
         return sb.toString();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onMove(PlayerMoveEvent e) {
 
         Player p = e.getPlayer();
@@ -267,9 +267,9 @@ public class LandAlerter extends BasicListener {
     }
 
     static class ChunkCoords {
-        int x;
-        int z;
-        World world;
+        final int x;
+        final int z;
+        final World world;
 
         public ChunkCoords(World world, int x, int z) {
             this.x = x;

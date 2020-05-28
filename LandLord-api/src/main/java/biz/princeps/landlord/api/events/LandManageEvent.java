@@ -17,11 +17,11 @@ public class LandManageEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private Player player;
-    private IOwnedLand land;
-    private String flagChanged;
-    private Object oldValue;
-    private Object newValue;
+    private final Player player;
+    private final IOwnedLand land;
+    private final String flagChanged;
+    private final Object oldValue;
+    private final Object newValue;
 
 
     public LandManageEvent(Player player, IOwnedLand land, String flagChanged, Object oldValue, Object newValue) {

@@ -12,7 +12,7 @@ import java.util.Collection;
 public class MobManager implements IMobManager {
 
 
-    static Collection<IMob> MOBS = new ArrayList<>();
+    static final Collection<IMob> MOBS = new ArrayList<>();
     public static final Mob ELDER_GUARDIAN = new Mob(EntityType.ELDER_GUARDIAN, 4);
     public static final Mob WITHER_SKELETON = new Mob(EntityType.WITHER_SKELETON, 5);
     public static final Mob STRAY = new Mob(EntityType.STRAY, 6);
@@ -81,8 +81,8 @@ public class MobManager implements IMobManager {
 
     public static class Mob implements IMob {
 
-        EntityType t;
-        int egg;
+        final EntityType t;
+        final int egg;
 
 
         Mob(EntityType t, int egg) {

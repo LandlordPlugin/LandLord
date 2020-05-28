@@ -22,10 +22,10 @@ import java.util.function.Consumer;
  */
 public class LPlayerManager implements IPlayerManager {
 
-    private Map<UUID, IPlayer> players;
+    private final Map<UUID, IPlayer> players;
 
-    private ILandLord plugin;
-    private IStorage stor;
+    private final ILandLord plugin;
+    private final IStorage stor;
 
 
     public LPlayerManager(ILandLord pl) {

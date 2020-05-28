@@ -12,7 +12,7 @@ import java.util.Collection;
 
 public class MobsManager implements IMobManager {
 
-    private static Collection<IMob> MOBS = new ArrayList<>();
+    private static final Collection<IMob> MOBS = new ArrayList<>();
 
     public MobsManager() {
         // Based on protocol version got with ProtocolLib
@@ -125,8 +125,8 @@ public class MobsManager implements IMobManager {
 
     public static class Mob implements IMob {
 
-        EntityType t;
-        Material egg;
+        final EntityType t;
+        final Material egg;
 
         Mob(EntityType t, Material egg) {
             this.t = t;

@@ -27,9 +27,9 @@ import java.util.Map;
  */
 public class Claim extends LandlordCommand {
 
-    private boolean overrideConfirmations;
-    private IWorldGuardManager wg;
-    private IVaultManager vault;
+    private final boolean overrideConfirmations;
+    private final IWorldGuardManager wg;
+    private final IVaultManager vault;
 
     public Claim(ILandLord pl, boolean overrideConfirmations) {
         super(pl, pl.getConfig().getString("CommandSettings.Claim.name"),
