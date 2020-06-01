@@ -58,6 +58,7 @@ Commands:
     notOwn: '&7Vous ne possédez pas ce terrain. Il appartient à &c%owner%'
     notOwnFreeLand: '&7Vous ne possédez pas ce terrain !'
     success: '&7Vous avez libéré le terrain &c%chunk% &7dans le monde &c%world% &7et avez récupéré &c%money%'
+    confirm: '&cConfirm unclaim of land %land%'
   UnclaimAll:
     notOwnFreeLand: '&7Vous ne possédez pas de terrain !'
     success: '&7Vous avez libéré %amount% terrain(s) &7dans le monde &c%world% &7et avez récupéré &c%money%'

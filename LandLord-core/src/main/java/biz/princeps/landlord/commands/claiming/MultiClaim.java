@@ -83,27 +83,32 @@ public class MultiClaim extends LandlordCommand {
             }
 
             String formattedCost = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "");
-
-            PrincepsLib.getConfirmationManager().draw(player,
-                    lm.getRawString("Commands.MultiClaim.guiMessage")
-                            .replace("%amount%", toClaim.size() + "")
-                            .replace("%cost%", formattedCost),
-                    lm.getString("Commands.MultiClaim.chatMessage")
-                            .replace("%amount%", toClaim.size() + "")
-                            .replace("%cost%", formattedCost),
-                    (p) -> {
-                        // on accept
-                        for (Chunk chunk : toClaim) {
-                            claim.onClaim(player, chunk);
-                        }
-                        p.closeInventory();
-                    },
-                    (p) -> {
-                        // on decline
-                        lm.sendMessage(p, lm.getString("Commands.MultiClaim.abort")
-                                .replace("%amount%", toClaim.size() + ""));
-                        p.closeInventory();
-                    }, confirmcmd);
+            if (plugin.getConfig().getBoolean("ConfirmationDialog.onMultiClaim")) {
+                PrincepsLib.getConfirmationManager().draw(player,
+                        lm.getRawString("Commands.MultiClaim.guiMessage")
+                                .replace("%amount%", toClaim.size() + "")
+                                .replace("%cost%", formattedCost),
+                        lm.getString("Commands.MultiClaim.chatMessage")
+                                .replace("%amount%", toClaim.size() + "")
+                                .replace("%cost%", formattedCost),
+                        (p) -> {
+                            // on accept
+                            for (Chunk chunk : toClaim) {
+                                claim.onClaim(player, chunk);
+                            }
+                            p.closeInventory();
+                        },
+                        (p) -> {
+                            // on decline
+                            lm.sendMessage(p, lm.getString("Commands.MultiClaim.abort")
+                                    .replace("%amount%", toClaim.size() + ""));
+                            p.closeInventory();
+                        }, confirmcmd);
+            } else {
+                for (Chunk chunk : toClaim) {
+                    claim.onClaim(player, chunk);
+                }
+            }
         } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ex) {
             properties.sendUsage();
         }

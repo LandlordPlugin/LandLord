@@ -57,6 +57,7 @@ Commands:
     notOwn: '&7Dieser Chunk gehoert dir nicht. Er gehoert &c%owner%'
     notOwnFreeLand: '&7Du bist nicht der Chunk-Inhaber'
     success: '&7Du hast erfolgreich den Chunk &c%chunk% &7in der Welt &c%world% &7verlassen und bekommt &c%money% &7zurueck'
+    confirm: '&cConfirm unclaim of land %land%'
   UnclaimAll:
     notOwnFreeLand: '&7Dir gehoeren keine Chunks!'
     success: '&7Du hast %amount% Chunk(s) &7in der Welt &c%world% &7verlassen und hast &c%money% &7zurueck bekommen'

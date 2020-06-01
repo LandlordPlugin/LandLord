@@ -58,6 +58,7 @@ Commands:
     notOwn: '&7Вы не владелец данного участка. Им владеет &c%owner%'
     notOwnFreeLand: '&7Вы не владелец данного учатска'
     success: '&7Вы успешно разрегестрировали &c%chunk% &7в мире &c%world% &7и получили &c%money% &7назад'
+    confirm: '&cConfirm unclaim of land %land%'
   UnclaimAll:
     notOwnFreeLand: '&7You do not own any land'
     success: '&7You successfully unclaimed %amount% chunk(s) &7in world &c%world% &7and got &c%money% &7back'

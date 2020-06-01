@@ -58,6 +58,7 @@ Commands:
     notOwn: '&7Ten teren nie nalaży do ciebie. Należy on do &c%owner%'
     notOwnFreeLand: '&7Nie jesteś właścicielem tego terenu'
     success: '&7Wlaśnie sprzedałeś swój chunk &c%chunk% &7w świecie &c%world% &7I dostałeś &c%money% &7z powrotem'
+    confirm: '&cConfirm unclaim of land %land%'
   UnclaimAll:
     notOwnFreeLand: '&7You do not own any land'
     success: '&7You successfully unclaimed %amount% chunk(s) &7in world &c%world% &7and got &c%money% &7back'
