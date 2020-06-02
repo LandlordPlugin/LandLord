@@ -83,7 +83,8 @@ public class Unclaim extends LandlordCommand {
 
         if (!event.isCancelled()) {
             if (plugin.getConfig().getBoolean("ConfirmationDialog.onUnclaim")) {
-                String guiMsg = lm.getRawString("Commands.Unclaim.confirm");
+                String guiMsg = lm.getRawString("Commands.Unclaim.confirm")
+                        .replace("%land%", chunkname);
                 boolean finalIsAdmin = isAdmin;
                 PrincepsLib.getConfirmationManager().drawGUI(player, guiMsg,
                         (p) -> {
