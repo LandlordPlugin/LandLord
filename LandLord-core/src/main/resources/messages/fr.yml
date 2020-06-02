@@ -17,7 +17,7 @@ Commands:
     needsGap: '&cVous ne pouvez pas protéger le terrain %land%, parce qu''il doit y avoir un espace libre entre vos terrains et ceux des autres !'
     boughtUp: '&bVous venez d''acheter le terrain %chunk% à %player% pour %price%'
     notYetInactive: '&c%owner% n''est pas encore inactif :) Vous allez devoir attendre au moins %days% jours de plus !'
-    confirmation: '&aÊtes vous certain de vouloir protéger le terrain %chunk% pour %price% ? Cliquez ici pour confirmer.'
+    confirmation: '&aProtéger le terrain %chunk% (%price%) ?'
   Info:
     online: '&bEN LIGNE'
     noLastSeen: '&c-'
@@ -58,7 +58,7 @@ Commands:
     notOwn: '&7Vous ne possédez pas ce terrain. Il appartient à &c%owner%'
     notOwnFreeLand: '&7Vous ne possédez pas ce terrain !'
     success: '&7Vous avez libéré le terrain &c%chunk% &7dans le monde &c%world% &7et avez récupéré &c%money%'
-    confirm: '&cConfirm unclaim of land %land%'
+    confirmation: '&aLibérer le terrain %chunk% (%price%) ?'
   UnclaimAll:
     notOwnFreeLand: '&7Vous ne possédez pas de terrain !'
     success: '&7Vous avez libéré %amount% terrain(s) &7dans le monde &c%world% &7et avez récupéré &c%money%'
