@@ -62,6 +62,7 @@ Commands:
   UnclaimAll:
     notOwnFreeLand: '&7You do not own any land'
     success: '&7You successfully unclaimed %amount% chunk(s) &7in world &c%world% &7and got &c%money% &7back'
+    confirm: '&cConfirm unclaim of your lands in all worlds'
   Listfriends:
     invalidWorld: '&cThe entered world does not exist!'
     invalidGeneral: '&cThe entered coordinates are invalid!'

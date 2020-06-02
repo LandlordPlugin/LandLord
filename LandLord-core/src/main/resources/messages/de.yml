@@ -61,6 +61,7 @@ Commands:
   UnclaimAll:
     notOwnFreeLand: '&7Dir gehoeren keine Chunks!'
     success: '&7Du hast %amount% Chunk(s) &7in der Welt &c%world% &7verlassen und hast &c%money% &7zurueck bekommen'
+    confirm: '&cConfirm unclaim of your lands in all worlds'
   Listfriends:
     invalidWorld: '&cDie eingegebene Welt existiert nicht!'
     invalidGeneral: '&cDie eingegebenen Koordinaten sind ungueltig!'

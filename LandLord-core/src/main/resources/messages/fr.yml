@@ -62,6 +62,7 @@ Commands:
   UnclaimAll:
     notOwnFreeLand: '&7Vous ne possédez pas de terrain !'
     success: '&7Vous avez libéré %amount% terrain(s) &7dans le monde &c%world% &7et avez récupéré &c%money%'
+    confirm: '&aLibérer tous vos terrains dans tous les mondes ?'
   Listfriends:
     invalidWorld: '&cLe monde spécifié n''existe pas !'
     invalidGeneral: '&cLes coordonnées spécifiées sont invalides !'
