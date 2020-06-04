@@ -3,6 +3,7 @@ package biz.princeps.landlord.commands.claiming;
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
@@ -41,6 +42,22 @@ public class UnclaimAll extends LandlordCommand {
 
         Player player = properties.getPlayer();
 
+        if (plugin.getConfig().getBoolean("ConfirmationDialog.onUnclaimAll")) {
+            String guiMsg = lm.getRawString("Commands.UnclaimAll.confirm");
+
+            PrincepsLib.getConfirmationManager().drawGUI(player, guiMsg,
+                    (p) -> {
+                        performUnclaimAll(player);
+                        player.closeInventory();
+                    },
+                    (p2) -> player.closeInventory(), null);
+        } else {
+            performUnclaimAll(player);
+        }
+    }
+
+    //TODO an unclaim all with a world option whould be convenient
+    public void performUnclaimAll(Player player) {
         for (World world : Bukkit.getWorlds()) {
             Set<IOwnedLand> landsOfPlayer = new HashSet<>(plugin.getWGManager().getRegions(player.getUniqueId(), world));
 
@@ -58,24 +75,22 @@ public class UnclaimAll extends LandlordCommand {
 
                 if (!event.isCancelled()) {
                     double payback = -1;
-                    if (ol.isOwner(player.getUniqueId())) {
-                        int regionCount = wg.getRegionCount(player.getUniqueId());
-                        int freeLands = plugin.getConfig().getInt("Freelands");
+                    int regionCount = wg.getRegionCount(player.getUniqueId());
+                    int freeLands = plugin.getConfig().getInt("Freelands");
 
-                        // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);
+                    // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);
 
-                        if (Options.isVaultEnabled()) {
-                            if (regionCount <= freeLands) {
-                                payback = 0;
-                            } else {
-                                payback = plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble("Payback");
-                                // System.out.println(payback);
-                                if (payback > 0) {
-                                    plugin.getVaultManager().give(player.getUniqueId(), payback);
-                                }
+                    if (Options.isVaultEnabled()) {
+                        if (regionCount <= freeLands) {
+                            payback = 0;
+                        } else {
+                            payback = plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble("Payback");
+                            // System.out.println(payback);
+                            if (payback > 0) {
+                                plugin.getVaultManager().give(player.getUniqueId(), payback);
                             }
-                            totalPayBack += payback;
                         }
+                        totalPayBack += payback;
                     }
                     Location location = ol.getALocation();
                     wg.unclaim(ol.getWorld(), ol.getName());
@@ -106,4 +121,5 @@ public class UnclaimAll extends LandlordCommand {
             plugin.getMapManager().updateAll();
         }
     }
+
 }

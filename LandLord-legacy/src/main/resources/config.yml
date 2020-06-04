@@ -149,6 +149,7 @@ ConfirmationDialog:
   onBuyUp: true
   multiClaim: true
   onUnclaim: false
+  onUnclaimAll: true
 
 # You can enable/disable the particles for particular events here
 Particles:
