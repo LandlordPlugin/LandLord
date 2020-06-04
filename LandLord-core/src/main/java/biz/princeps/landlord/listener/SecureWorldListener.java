@@ -41,7 +41,6 @@ public class SecureWorldListener extends BasicListener {
     public void onBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
         IOwnedLand land = wg.getRegion(e.getBlock().getLocation());
-
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlock(), e);
             Bukkit.getPluginManager().callEvent(event);
@@ -87,9 +86,12 @@ public class SecureWorldListener extends BasicListener {
         if (JavaUtils.isDisabledWorld(plugin.getLangManager(), plugin, p, loc.getWorld(), false)) {
             return;
         }
+        /* This causes blocks to be breakable from within a claimed land in the wilderness
         if (wg.isAllowedInOverlap(p, loc)) {
             return;
         }
+        */
+
         if (land != null) {
             return;
         }

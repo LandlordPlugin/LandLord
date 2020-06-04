@@ -38,9 +38,8 @@ public class LandLord extends ALandLord implements Listener {
 
         if (getConfig().getString("Regeneration.provider", "default").equalsIgnoreCase("wg")) {
             // there is only the default method available for 1.12.2
-            this.regenerationManager = World::regenerateChunk;
         }
-
+        this.regenerationManager = World::regenerateChunk;
 
         ((WorldGuardManager) worldGuardManager).initCache();
 

@@ -77,9 +77,10 @@ public class UnclaimAll extends LandlordCommand {
                             totalPayBack += payback;
                         }
                     }
+                    Location location = ol.getALocation();
                     wg.unclaim(ol.getWorld(), ol.getName());
                     if (plugin.getConfig().getBoolean("CommandSettings.Unclaim.regenerate", false)) {
-                        plugin.getRegenerationManager().regenerateChunk(ol.getALocation());
+                        plugin.getRegenerationManager().regenerateChunk(location);
                     }
                     unclaimedLands++;
 
