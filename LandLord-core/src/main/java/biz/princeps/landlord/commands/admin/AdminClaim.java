@@ -30,6 +30,7 @@ public class AdminClaim extends LandlordCommand {
         }
 
         Player sender = properties.getPlayer();
+
         String target;
         try {
             target = arguments.get(0);
@@ -38,7 +39,7 @@ public class AdminClaim extends LandlordCommand {
             return;
         }
 
-        IOwnedLand land = plugin.getWGManager().getRegion(sender.getChunk());
+        IOwnedLand land = plugin.getWGManager().getRegion(sender.getLocation().getChunk());
 
         plugin.getPlayerManager().getOffline(target, (offline) -> {
             if (offline == null) {
