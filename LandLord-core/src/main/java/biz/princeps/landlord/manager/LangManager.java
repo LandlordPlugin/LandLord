@@ -99,7 +99,7 @@ public class LangManager implements ILangManager {
 
     @Override
     public void sendMessage(CommandSender player, String msg) {
-        if (msg.isEmpty() || msg.equals("null")) return;
+        if (msg.isEmpty() || msg.contains("%null%")) return;
         if (msg.equals("MISSING STRING") && pl.getConfig().getBoolean("CommandSettings.Main.enableMissingStringWarning")) {
             player.sendMessage("§cThe string you are looking for does not exist. Please check the log for further information!");
         } else {
