@@ -385,7 +385,7 @@ public class AManage extends AbstractGUI {
                         land.toggleMob(m);
                         Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
                             for (IOwnedLand region : regions.subList(1, regions.size())) {
-                                if (region.isMobDenied(m) == region.isMobDenied(m)) continue;
+                                if (region.isMobDenied(m) == land.isMobDenied(m)) continue;
 
                                 region.toggleMob(m);
                             }

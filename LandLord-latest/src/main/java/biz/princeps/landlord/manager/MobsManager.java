@@ -2,7 +2,7 @@ package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.api.IMob;
 import biz.princeps.landlord.api.IMobManager;
-import com.comphenix.protocol.utility.MinecraftProtocolVersion;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -13,19 +13,23 @@ import java.util.Collection;
 public class MobsManager implements IMobManager {
 
     private static final Collection<IMob> MOBS = new ArrayList<>();
+    final int currentMineCraftVersion;
 
     public MobsManager() {
-        // Based on protocol version got with ProtocolLib
-        final int currentProtocolVersion = MinecraftProtocolVersion.getCurrentVersion();
+        currentMineCraftVersion = Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].replaceAll("[v_R]", ""));
 
         registerDefaultEntities();
 
-        if (currentProtocolVersion >= 477) {
+        if (currentMineCraftVersion >= 1141) {
             register1_14Entities();
         }
 
-        if (currentProtocolVersion >= 573) {
+        if (currentMineCraftVersion >= 1151) {
             register1_15Entities();
+        }
+
+        if (currentMineCraftVersion >= 1161) {
+            register1_16Entities();
         }
     }
 
@@ -49,7 +53,6 @@ public class MobsManager implements IMobManager {
         final Mob ZOMBIE = new Mob(EntityType.ZOMBIE, Material.ZOMBIE_SPAWN_EGG);
         final Mob SLIME = new Mob(EntityType.SLIME, Material.SLIME_SPAWN_EGG);
         final Mob GHAST = new Mob(EntityType.GHAST, Material.GHAST_SPAWN_EGG);
-        final Mob PIG_ZOMBIE = new Mob(EntityType.PIG_ZOMBIE, Material.ZOMBIE_PIGMAN_SPAWN_EGG);
         final Mob ENDERMAN = new Mob(EntityType.ENDERMAN, Material.ENDERMAN_SPAWN_EGG);
         final Mob CAVE_SPIDER = new Mob(EntityType.CAVE_SPIDER, Material.CAVE_SPIDER_SPAWN_EGG);
         final Mob SILVERFISH = new Mob(EntityType.SILVERFISH, Material.SILVERFISH_SPAWN_EGG);
@@ -80,6 +83,11 @@ public class MobsManager implements IMobManager {
         final Mob DROWNED = new Mob(EntityType.DROWNED, Material.DROWNED_SPAWN_EGG);
         final Mob DOLPHIN = new Mob(EntityType.DOLPHIN, Material.DOLPHIN_SPAWN_EGG);
         final Mob MUSHROOM_COW = new Mob(EntityType.MUSHROOM_COW, Material.MOOSHROOM_SPAWN_EGG);
+
+        // PIG_ZOMBIE still exists in 1.15.2-
+        if (currentMineCraftVersion <= 1151) {
+            final Mob PIG_ZOMBIE = new Mob(EntityType.valueOf("PIG_ZOMBIE"), Material.valueOf("ZOMBIE_PIGMAN_SPAWN_EGG"));
+        }
     }
 
     private void register1_14Entities() {
@@ -96,6 +104,15 @@ public class MobsManager implements IMobManager {
     private void register1_15Entities() {
         // 1.15's entities
         final Mob BEE = new Mob(EntityType.BEE, Material.BEE_SPAWN_EGG);
+    }
+
+    private void register1_16Entities() {
+        // 1.16's entities
+        final Mob HOGLIN = new Mob(EntityType.HOGLIN, Material.HOGLIN_SPAWN_EGG);
+        final Mob PIGLIN = new Mob(EntityType.PIGLIN, Material.PIGLIN_SPAWN_EGG);
+        final Mob STRIDER = new Mob(EntityType.STRIDER, Material.STRIDER_SPAWN_EGG);
+        final Mob ZOGLIN = new Mob(EntityType.ZOGLIN, Material.ZOGLIN_SPAWN_EGG);
+        final Mob ZOMBIFIED_PIGLIN = new Mob(EntityType.ZOMBIFIED_PIGLIN, Material.ZOMBIFIED_PIGLIN_SPAWN_EGG);
     }
 
     @Override

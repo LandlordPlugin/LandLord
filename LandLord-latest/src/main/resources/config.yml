@@ -643,6 +643,12 @@ Manage:
       - PILLAGER
       - RAVAGER
       - FOX
+      - BEE
+      - HOGLIN
+      - PIGLIN
+      - STRIDER
+      - ZOGLIN
+      - ZOMBIFIED_PIGLIN
 
 
 # Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
