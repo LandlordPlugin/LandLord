@@ -11,6 +11,7 @@ cache:
 deploy:jdk8:
   stage: deploy
   script:
+    - mvn clean install
     - mvn $MAVEN_CLI_OPTS deploy
   only:
     - master
