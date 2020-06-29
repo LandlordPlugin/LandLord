@@ -63,10 +63,6 @@
             <id>papermc</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
-        <repository>
-            <id>github-towny</id>
-            <url>https://maven.pkg.github.com/TownyAdvanced/Towny</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -120,9 +116,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.palmergames.bukkit.towny</groupId>
+            <groupId>com.github.TownyAdvanced</groupId>
             <artifactId>Towny</artifactId>
-            <version>0.96.1.0</version>
+            <version>0.96.1.11</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
