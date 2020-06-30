@@ -2,6 +2,7 @@ package biz.princeps.landlord;
 
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.landlord.integrations.LLLuckPerms;
 import biz.princeps.landlord.integrations.Towny;
 import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandAlerter;
@@ -225,6 +226,10 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         if (Bukkit.getPluginManager().isPluginEnabled("Towny")) {
             new Towny(this);
         }
+        if (Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
+            new LLLuckPerms(this);
+        }
+
     }
 
     /**
