@@ -39,9 +39,10 @@ public class LLLuckPerms {
             } else {
                 contextConsumer.accept("land", region.getName());
                 if (region.isOwner(p.getUniqueId())) {
-                    contextConsumer.accept("land_own", "yes");
-                } else if (region.isFriend(p.getUniqueId())) {
-                    contextConsumer.accept("land_befriended", "yes");
+                    contextConsumer.accept("land", "own");
+                }
+                if (region.isFriend(p.getUniqueId())) {
+                    contextConsumer.accept("land", "befriended");
                 }
             }
         }
@@ -50,8 +51,8 @@ public class LLLuckPerms {
         public ContextSet estimatePotentialContexts() {
             ImmutableContextSet.Builder builder = ImmutableContextSet.builder();
             builder.add("land", "wilderness");
-            builder.add("land_own", "yes");
-            builder.add("land_befriended", "yes");
+            builder.add("land", "own");
+            builder.add("land", "befriended");
 
             return builder.build();
         }
