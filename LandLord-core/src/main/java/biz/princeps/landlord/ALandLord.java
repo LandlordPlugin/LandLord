@@ -4,10 +4,7 @@ import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.integrations.LLLuckPerms;
 import biz.princeps.landlord.integrations.Towny;
-import biz.princeps.landlord.listener.JoinListener;
-import biz.princeps.landlord.listener.LandAlerter;
-import biz.princeps.landlord.listener.MapListener;
-import biz.princeps.landlord.listener.SecureWorldListener;
+import biz.princeps.landlord.listener.*;
 import biz.princeps.landlord.manager.DelimitationManager;
 import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.manager.LangManager;
@@ -239,7 +236,12 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     private void setupListeners() {
         new JoinListener(this);
         new MapListener(this);
-        new LandAlerter(this);
+
+        if (Bukkit.getVersion().contains("1.16")) {
+            new LandAlerter_1_16(this);
+        } else {
+            new LandAlerter(this);
+        }
 
         if (getConfig().getBoolean("SecureWorld.enable")) {
             new SecureWorldListener(this);
