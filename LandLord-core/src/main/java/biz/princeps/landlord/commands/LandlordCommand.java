@@ -81,5 +81,13 @@ public abstract class LandlordCommand extends SubCommand {
         return JavaUtils.isDisabledWorld(lm, plugin, player, world, true);
     }
 
-
+    /**
+     * Checks if the world is disabled and sends a message to the player if the world is disabled.
+     *
+     * @param world  the world to check if its disabled
+     * @return if the world is disabled
+     */
+    public boolean isDisabledWorld(World world) {
+        return JavaUtils.isDisabledWorld(lm, plugin, null, world, false);
+    }
 }

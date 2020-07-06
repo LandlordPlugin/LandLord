@@ -59,6 +59,11 @@ public class UnclaimAll extends LandlordCommand {
     //TODO an unclaim all with a world option whould be convenient
     public void performUnclaimAll(Player player) {
         for (World world : Bukkit.getWorlds()) {
+
+            if (isDisabledWorld(world)) {
+                continue;
+            }
+
             Set<IOwnedLand> landsOfPlayer = new HashSet<>(plugin.getWGManager().getRegions(player.getUniqueId(), world));
 
             if (landsOfPlayer.isEmpty()) {
