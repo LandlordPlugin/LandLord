@@ -39,10 +39,14 @@ public class LLExpansion extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String s) {
+        int maxClaimPermission = pl.getPlayerManager().getMaxClaimPermission(player);
+        int landcount = wg.getRegionCount(player.getUniqueId());
+        IOwnedLand region = wg.getRegion(player.getLocation());
+
+
         switch (s) {
 
             case "ownedlands":
-                int landcount = wg.getRegionCount(player.getUniqueId());
                 return String.valueOf(landcount);
 
             case "claims":
@@ -55,7 +59,6 @@ public class LLExpansion extends PlaceholderExpansion {
                 return String.valueOf(player1.getClaims());
 
             case "currentLandOwner":
-                IOwnedLand region = wg.getRegion(player.getLocation());
                 if (region != null) {
                     return region.getOwnersString();
                 }
@@ -72,8 +75,18 @@ public class LLExpansion extends PlaceholderExpansion {
                         "Payback"));
 
             case "maxLimitPermission":
-                int maxClaimPermission = pl.getPlayerManager().getMaxClaimPermission(player);
                 return String.valueOf(maxClaimPermission);
+
+            case "remainingFreeLands":
+                int freelands = pl.getConfig().getInt("Freelands");
+
+                if (landcount <= freelands) {
+                    return String.valueOf((Math.min(maxClaimPermission, freelands)) - landcount);
+                } else {
+                    return "0";
+                }
+
+
         }
         return null;
     }
