@@ -60,7 +60,7 @@ public class OwnedLand extends AOwnedLand {
         Set<String> names = new HashSet<>();
         // ugly, maybe solve this in the future
         for (UUID uuid : itt) {
-            names.add(pl.getPlayerManager().getOfflineSync(uuid).getName());
+            names.add(Bukkit.getOfflinePlayer(uuid).getName());
         }
         return itToString(names.iterator());
     }
@@ -71,7 +71,7 @@ public class OwnedLand extends AOwnedLand {
         Set<String> names = new HashSet<>();
         // ugly, maybe solve this in the future
         for (UUID uuid : itt) {
-            names.add(pl.getPlayerManager().getOfflineSync(uuid).getName());
+            names.add(Bukkit.getOfflinePlayer(uuid).getName());
         }
         return itToString(names.iterator());
     }
