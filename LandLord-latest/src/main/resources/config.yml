@@ -273,7 +273,7 @@ CommandSettings:
 
   UnclaimAll:
     name: unclaimall
-    usage: '/land unclaimall - Unclaims all your lands'
+    usage: '/land unclaimall <world> - Unclaims all your lands'
     permissions:
       - landlord.player.unclaim
     aliases:

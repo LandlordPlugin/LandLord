@@ -12,7 +12,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -35,31 +37,43 @@ public class UnclaimAll extends LandlordCommand {
 
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
-
         if (properties.isConsole()) {
             return;
         }
 
         Player player = properties.getPlayer();
+        List<World> worlds;
+
+        if (arguments.size() == 1) {
+            String worldName = arguments.get(0);
+            World world = Bukkit.getWorld(worldName);
+
+            if (world == null) {
+                lm.sendMessage(player, lm.getString("Commands.UnclaimAll.invalidWorld"));
+                return;
+            } else {
+                worlds = Collections.singletonList(world);
+            }
+        } else {
+            worlds = Bukkit.getWorlds();
+        }
 
         if (plugin.getConfig().getBoolean("ConfirmationDialog.onUnclaimAll")) {
             String guiMsg = lm.getRawString("Commands.UnclaimAll.confirm");
 
             PrincepsLib.getConfirmationManager().drawGUI(player, guiMsg,
                     (p) -> {
-                        performUnclaimAll(player);
+                        performUnclaimAll(player, worlds);
                         player.closeInventory();
                     },
                     (p2) -> player.closeInventory(), null);
         } else {
-            performUnclaimAll(player);
+            performUnclaimAll(player, worlds);
         }
     }
 
-    //TODO an unclaim all with a world option whould be convenient
-    public void performUnclaimAll(Player player) {
-        for (World world : Bukkit.getWorlds()) {
-
+    public void performUnclaimAll(Player player, List<World> worlds) {
+        for (World world : worlds) {
             if (isDisabledWorld(world)) {
                 continue;
             }

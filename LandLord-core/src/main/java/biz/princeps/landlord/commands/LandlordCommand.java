@@ -84,7 +84,7 @@ public abstract class LandlordCommand extends SubCommand {
     /**
      * Checks if the world is disabled and sends a message to the player if the world is disabled.
      *
-     * @param world  the world to check if its disabled
+     * @param world the world to check if its disabled
      * @return if the world is disabled
      */
     public boolean isDisabledWorld(World world) {

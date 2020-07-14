@@ -131,8 +131,8 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<IOwnedLand> getRegions(UUID id, World world) {
-        Set<IOwnedLand> lands = cache.getLands(id);
-        for (IOwnedLand land : lands) {
+        Set<IOwnedLand> lands = new HashSet<>();
+        for (IOwnedLand land : cache.getLands(id)) {
             if (land.getWorld() != world) continue;
 
             lands.add(land);
@@ -183,7 +183,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public void unclaim(World world, String regionname) {
         this.cache.remove(regionname);
-        getRegionManager(world).removeRegion(regionname);
+        Bukkit.getScheduler().runTaskAsynchronously(pl.getPlugin(), () -> getRegionManager(world).removeRegion(regionname));
     }
 
     /**
