@@ -59,7 +59,8 @@ Commands:
     success: '&7Sikeresen mentesítetted &c%chunk%&7 darabot &c%world%&7 világban &c%money% &7és kaptál vissza'
     confirm: '&cConfirm unclaim of land %land%'
   UnclaimAll:
-    notOwnFreeLand: '&7You do not own any land'
+    invalidWorld: '&cThe entered world does not exist!'
+    notOwnFreeLand: '&cYou do not own any land!'
     success: '&7You successfully unclaimed %amount% chunk(s) &7in world &c%world% &7and got &c%money% &7back'
     confirm: '&cConfirm unclaim of your lands in all worlds'
   Listfriends:

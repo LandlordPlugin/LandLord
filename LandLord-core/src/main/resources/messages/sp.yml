@@ -60,7 +60,8 @@ Commands:
     success: '&7Ustes ha abandonado el chunk &c%chunk% &7en el mundo &c%world% &7y ha recibido &c$%money% &7de vuelta'
     confirm: '&cConfirm unclaim of land %land%'
   UnclaimAll:
-    notOwnFreeLand: '&7You do not own any land'
+    invalidWorld: '&cThe entered world does not exist!'
+    notOwnFreeLand: '&cYou do not own any land!'
     success: '&7You successfully unclaimed %amount% chunk(s) &7in world &c%world% &7and got &c%money% &7back'
     confirm: '&cConfirm unclaim of your lands in all worlds'
   Listfriends:

@@ -19,6 +19,7 @@ import biz.princeps.lib.command.SubCommand;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -135,17 +136,20 @@ public class Landlordbase extends MainCommand {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             tabReturn.add(onlinePlayer.getName());
                         }
+                        return tabReturn;
                     }
 
                     if (subcmd instanceof AdminTeleport) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             tabReturn.add(onlinePlayer.getName());
                         }
+                        return tabReturn;
                     }
 
                     if (subcmd instanceof LandMap) {
                         tabReturn.add("on");
                         tabReturn.add("off");
+                        return tabReturn;
                     }
 
                     if (subcmd instanceof Addfriend || subcmd instanceof AddfriendAll ||
@@ -167,6 +171,13 @@ public class Landlordbase extends MainCommand {
                     if (subcmd instanceof MultiClaim) {
                         for (MultiClaim.MultiClaimMode value : MultiClaim.MultiClaimMode.values()) {
                             tabReturn.add(value.name());
+                        }
+                        return tabReturn;
+                    }
+
+                    if (subcmd instanceof UnclaimAll) {
+                        for (World world : Bukkit.getWorlds()) {
+                            tabReturn.add(world.getName());
                         }
                         return tabReturn;
                     }

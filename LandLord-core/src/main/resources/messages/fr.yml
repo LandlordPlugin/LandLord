@@ -60,7 +60,8 @@ Commands:
     success: '&7Vous avez libéré le terrain &c%chunk% &7dans le monde &c%world% &7et avez récupéré &c%money%'
     confirm: '&aLibérer le terrain %land% ?'
   UnclaimAll:
-    notOwnFreeLand: '&7Vous ne possédez pas de terrain !'
+    invalidWorld: '&cLe monde spécifié n''existe pas !'
+    notOwnFreeLand: '&cVous ne possédez pas de terrain !'
     success: '&7Vous avez libéré %amount% terrain(s) &7dans le monde &c%world% &7et avez récupéré &c%money%'
     confirm: '&aLibérer tous vos terrains dans tous les mondes ?'
   Listfriends:
