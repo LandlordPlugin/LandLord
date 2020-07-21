@@ -85,8 +85,6 @@ public abstract class AOwnedLand implements IOwnedLand {
         int z = wg.getZ(getName());
 
         if (w != null && x != Integer.MIN_VALUE && z != Integer.MIN_VALUE) {
-            if (!w.isChunkLoaded(x, z))
-                w.loadChunk(x, z);
             return w.getChunkAt(x, z);
         }
         return null;

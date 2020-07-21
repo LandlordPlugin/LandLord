@@ -2,6 +2,7 @@ Tag: '&8[&c&l!&8]'
 Disabled-World: '&7Auf dieser Welt kannst du mit LandLord keine Chunks claimen'
 noPermissions: '&7Keine Berechtigung'
 locOutsideWorld: '§7Du kannst mit dem Chunk %chunk% welcher außerhalb der %world% ist nicht interagieren!'
+pleaseWait: '&7Please Wait...'
 Commands:
   Claim:
     success: '&bDu hast erfolgreich %chunk% in der Welt %world% geclaimt'
