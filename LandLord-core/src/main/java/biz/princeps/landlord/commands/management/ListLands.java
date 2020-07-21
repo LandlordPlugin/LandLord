@@ -98,7 +98,17 @@ public class ListLands extends LandlordCommand {
             if (mode.equals("gui")) {
                 MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
                         plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
-                                .replace("%player%", target.getName()));
+                                .replace("%player%", target.getName())) {
+                    @Override
+                    protected void generateStaticIcons() {
+                        setIcon(52, new Icon(new ItemStack(Material.BEACON))
+                                .setName(lm.getRawString("Commands.ListLands.gui.manageAll"))
+                                .addClickAction((p) -> {
+                                    ManageGuiAll manageGUIAll = new ManageGuiAll(plugin, sender, this, lands);
+                                    manageGUIAll.display();
+                                }));
+                    }
+                };
 
                 for (IOwnedLand land : lands) {
                     List<String> loreRaw = plugin.getLangManager().getStringList("Commands.ListLands.gui.lore");
@@ -145,14 +155,6 @@ public class ListLands extends LandlordCommand {
 
                     landGui.addIcon(icon);
                 }
-
-                //TODO Not working due to https://gitlab.com/princeps/PrincepsLib/blob/master/src/main/java/biz/princeps/lib/gui/MultiPagedGUI.java#L92
-                landGui.setIcon(52, new Icon(new ItemStack(Material.BEACON))
-                        .setName(lm.getRawString("Commands.ListLands.gui.manageAll"))
-                        .addClickAction((p) -> {
-                            ManageGuiAll manageGUIAll = new ManageGuiAll(plugin, sender, landGui, lands);
-                            manageGUIAll.display();
-                        }));
 
                 if (sender.isValid()) Bukkit.getScheduler().runTask(plugin.getPlugin(), landGui::display);
             } else {

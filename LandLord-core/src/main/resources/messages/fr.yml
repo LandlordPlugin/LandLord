@@ -2,6 +2,7 @@ Tag: '&8[&c&l!&8]'
 Disabled-World: '&7Vous ne pouvez pas protéger dans ce monde !'
 noPermissions: '&7Vous n''avez pas la permission de faire ça !'
 locOutsideWorld: '§7Vous ne pouvez pas interagir avec le chunk %chunk% étant en dehors du monde %world% !'
+pleaseWait: '&7Veuillez Patienter...'
 Commands:
   Claim:
     success: '&bVous possédez désormais le terrain %chunk%'

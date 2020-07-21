@@ -6,6 +6,7 @@ import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.commands.friends.Unfriend;
 import biz.princeps.landlord.commands.management.Manage;
 import biz.princeps.lib.PrincepsLib;
+import biz.princeps.lib.crossversion.MaterialProxy;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
@@ -290,8 +291,6 @@ public class AManage extends AbstractGUI {
 
             String rawTitle = lm.getRawString("Commands.Manage.ManageFriends.unfriend");
 
-            //TODO should run this async as before, servers have a big lag spike caused by heads loading :/
-            //Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () ->
             for (UUID id : friends) {
                 OfflinePlayer op = Bukkit.getOfflinePlayer(id);
                 Icon friend = new Icon(mats.getPlayerHead(id));
@@ -323,8 +322,13 @@ public class AManage extends AbstractGUI {
                 });
                 friendsGui.addIcon(friend);
             }
-            //;
-            icon.addClickAction((p) -> friendsGui.display());
+            final int friendPosition = position;
+            icon.addClickAction((p) -> {
+                friendsGui.generateAsync().display();
+                this.setIcon(friendPosition, new Icon(MaterialProxy.CLOCK.crossVersion()).setName(
+                        lm.getRawString("pleaseWait")
+                ));
+            });
 
             this.setIcon(position++, icon);
         }
