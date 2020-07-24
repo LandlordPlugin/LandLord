@@ -1,7 +1,7 @@
 name: Landlord
 version: ${ll.version}
 main: biz.princeps.landlord.LandLord
-author: SpatiumPrinceps
+  [SpatiumPrinceps, Aurelien30000]
 website: https://www.spigotmc.org/resources/beta-landlord-2.44398/
 depend: [WorldGuard, ProtocolLib]
 softdepend: [Vault, PlaceholderAPI, MVdWPlaceholderAPI, Towny]
