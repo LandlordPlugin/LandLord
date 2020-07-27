@@ -75,7 +75,7 @@ public class LandLord extends ALandLord implements Listener {
 
         // Dependency stuff
         if (!Bukkit.getVersion().contains("1.12.2")) {
-            haltPlugin("Invalid spigot version detected! LandLord requires 1.12.2");
+            haltPlugin("Invalid Spigot version detected! LandLord requires 1.12.2, use Latest version for 1.13.2+!");
             return false;
         }
 
