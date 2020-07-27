@@ -7,8 +7,8 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
@@ -52,7 +52,7 @@ public class WGRegenerator implements IRegenerationManager {
         File file = new File(new File(plugin.getPlugin().getDataFolder(), "chunksaves"), landName);
 
         if (file.exists()) {
-            ClipboardFormat format = ClipboardFormats.findByFile(file);
+            ClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
 
             try (EditSession editSession = worldEdit.getEditSessionFactory().getEditSession(weWorld, -1);
                  ClipboardReader reader = format.getReader(new FileInputStream(file))) {
