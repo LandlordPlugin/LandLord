@@ -237,11 +237,11 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         name += "_";
 
         // x coord
-        int x = (int) Math.floor(loc.getX() >> 4);
+        int x = loc.getBlockX() >> 4;
         name += x;
         name += "_";
         // z coord
-        int z = (int) Math.floor(loc.getZ() >> 4);
+        int z = loc.getBlockZ() >> 4;
         name += z;
         return getRegion(name);
     }
