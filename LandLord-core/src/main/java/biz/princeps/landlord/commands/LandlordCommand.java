@@ -52,7 +52,7 @@ public abstract class LandlordCommand extends SubCommand {
      */
     public boolean isInsideWorld(Player player, Chunk chunk) {
         //+ 8 enables to create a location at the "center" of the chunk. y location : 100 is a random value
-        if (chunk.getWorld().getWorldBorder().isInside(new Location(chunk.getWorld(), chunk.getX() * 16 + 8, 100, chunk.getZ() * 16 + 8)))
+        if (chunk.getWorld().getWorldBorder().isInside(new Location(chunk.getWorld(), chunk.getX() << 4 + 8, 100, chunk.getZ() << 4 + 8)))
             return true;
 
         lm.sendMessage(player, lm.getString("locOutsideWorld")

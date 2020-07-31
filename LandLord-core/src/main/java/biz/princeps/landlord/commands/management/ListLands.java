@@ -127,8 +127,8 @@ public class ListLands extends LandlordCommand {
                             }
                         } else {
                             lore.add(s.replace("%name%", land.getName())
-                                    .replace("%realx%", String.valueOf(land.getChunk().getX() * 16))
-                                    .replace("%realz%", String.valueOf(land.getChunk().getZ() * 16))
+                                    .replace("%realx%", String.valueOf(land.getChunk().getX() << 4))
+                                    .replace("%realz%", String.valueOf(land.getChunk().getZ() << 4))
                                     .replace("%members%", land.getMembersString())
                             );
                         }
