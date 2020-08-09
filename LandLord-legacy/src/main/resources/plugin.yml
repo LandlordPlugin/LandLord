@@ -59,6 +59,7 @@ permissions:
       landlord.player.manage.setfarewell: true
       landlord.player.manage.unclaim: true
       landlord.player.manage.mob-spawning: true
+      landlord.player.manage.mob-spawning.*: true
       landlord.player.manage.damage-animals: true
       landlord.player.manage.ride: true
       landlord.player.manage.frosted-ice-form: true
