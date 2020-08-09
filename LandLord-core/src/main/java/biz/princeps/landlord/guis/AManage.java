@@ -372,7 +372,7 @@ public class AManage extends AbstractGUI {
                 String titleMob = lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title");
                 for (IMob m : plugin.getMobManager().values()) {
                     // Skip mob if its not in the list, because that means this mob should not be manageable
-                    if (!toggleMobs.contains(m.getName())) {
+                    if (!toggleMobs.contains(m.getName()) || !player.hasPermission(m.getPermission())) {
                         continue;
                     }
 
