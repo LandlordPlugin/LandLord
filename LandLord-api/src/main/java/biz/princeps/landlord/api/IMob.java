@@ -27,6 +27,13 @@ public interface IMob {
     EntityType getType();
 
     /**
+     * Gets the permission associated to this mob.
+     *
+     * @return a bukkit permission
+     */
+    String getPermission();
+
+    /**
      * Gets a nicely formatted name of the mob.
      * Example: "Zombie Villager" instead of ZOMBIE_VILLAGER
      *

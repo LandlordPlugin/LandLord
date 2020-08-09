@@ -288,7 +288,7 @@ public class LandAlerter_1_16 extends BasicListener {
         }
 
         public Location getLocation() {
-            return new Location(world, x * 16, 0, z * 16);
+            return new Location(world, x << 4, 0, z << 4);
         }
 
         @Override

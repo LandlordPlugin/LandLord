@@ -83,11 +83,13 @@ public class MobManager implements IMobManager {
 
         final EntityType t;
         final int egg;
-
+        final String permission;
 
         Mob(EntityType t, int egg) {
             this.t = t;
             this.egg = egg;
+            this.permission = "landlord.player.manage.mob-spawning." + t.name();
+
             MOBS.add(this);
         }
 
@@ -99,6 +101,10 @@ public class MobManager implements IMobManager {
         @Override
         public ItemStack getEgg() {
             return new ItemStack(Material.MONSTER_EGG, 1, (short) egg);
+        }
+
+        public String getPermission() {
+            return permission;
         }
 
         @Override

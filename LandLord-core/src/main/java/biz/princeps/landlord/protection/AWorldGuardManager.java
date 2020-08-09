@@ -142,7 +142,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
     public String formatLocation(Chunk chunk) {
         String configString = pl.getConfig().getString("locationFormat");
 
-        int x, z, chunkX = chunk.getX() * 16, chunkZ = chunk.getZ() * 16;
+        int x, z, chunkX = chunk.getX() << 4, chunkZ = chunk.getZ() << 4;
         x = chunkX + 8;
         z = chunkZ + 8;
 
@@ -237,11 +237,11 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         name += "_";
 
         // x coord
-        int x = (int) Math.floor(loc.getX() / 16);
+        int x = loc.getBlockX() >> 4;
         name += x;
         name += "_";
         // z coord
-        int z = (int) Math.floor(loc.getZ() / 16);
+        int z = loc.getBlockZ() >> 4;
         name += z;
         return getRegion(name);
     }

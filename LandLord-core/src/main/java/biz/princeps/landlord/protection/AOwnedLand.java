@@ -68,7 +68,7 @@ public abstract class AOwnedLand implements IOwnedLand {
 
         int x = wg.getX(getName());
         int z = wg.getZ(getName());
-        return new Location(world, x * 16, world.getHighestBlockYAt(x * 16, z * 16) + 1, z * 16);
+        return new Location(world, x << 4, world.getHighestBlockYAt(x << 4, z << 4) + 1, z << 4);
 
     }
 
