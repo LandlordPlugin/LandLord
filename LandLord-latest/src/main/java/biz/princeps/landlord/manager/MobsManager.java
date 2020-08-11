@@ -31,6 +31,10 @@ public class MobsManager implements IMobManager {
         if (currentMineCraftVersion >= 1161) {
             register1_16Entities();
         }
+
+        if (currentMineCraftVersion >= 1162) {
+            register1_16_2Entities();
+        }
     }
 
     private void registerDefaultEntities() {
@@ -113,6 +117,11 @@ public class MobsManager implements IMobManager {
         final Mob STRIDER = new Mob(EntityType.STRIDER, Material.STRIDER_SPAWN_EGG);
         final Mob ZOGLIN = new Mob(EntityType.ZOGLIN, Material.ZOGLIN_SPAWN_EGG);
         final Mob ZOMBIFIED_PIGLIN = new Mob(EntityType.ZOMBIFIED_PIGLIN, Material.ZOMBIFIED_PIGLIN_SPAWN_EGG);
+    }
+
+    private void register1_16_2Entities() {
+        // 1.16.2's entities
+        final Mob PIGLIN_BRUTE = new Mob(EntityType.PIGLIN_BRUTE, Material.PIGLIN_BRUTE_SPAWN_EGG);
     }
 
     @Override
