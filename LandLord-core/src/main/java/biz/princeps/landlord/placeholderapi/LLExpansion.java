@@ -62,6 +62,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 if (region != null) {
                     return region.getOwnersString();
                 }
+                return "∅";
 
             case "currentLandName":
                 return wg.getLandName(player.getLocation().getChunk());
