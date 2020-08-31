@@ -35,10 +35,12 @@ public class Home extends LandlordCommand {
                 lm.getRawString("Commands.Home.countdown"),
                 plugin.getConfig().getBoolean("Homes.spawnParticles"));
 
+        int delay = plugin.getConfig().getInt("Homes.delay");
         for (String mainAlias : plugin.getConfig().getStringList("CommandSettings.Main.aliases")) {
             for (String homeAlias : plugin.getConfig().getStringList("CommandSettings.Home.aliases")) {
-                delayManager.delayCommand("/" + mainAlias + " " + homeAlias, plugin.getConfig().getInt("Homes.delay"));
+                delayManager.delayCommand("/" + mainAlias + " " + homeAlias, delay);
             }
+            delayManager.delayCommand("/"+ mainAlias + " " + plugin.getConfig().getString("CommandSettings.Home.name"), delay);
         }
     }
 
