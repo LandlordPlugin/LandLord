@@ -70,6 +70,7 @@ public class Update extends LandlordCommand {
 
             Collection<IOwnedLand> regions = new HashSet<>();
             for (World world : Bukkit.getWorlds()) {
+                if(isDisabledWorld(world)) continue;
                 regions.addAll(plugin.getWGManager().getRegions(world));
             }
 
