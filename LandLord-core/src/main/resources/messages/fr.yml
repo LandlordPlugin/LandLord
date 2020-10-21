@@ -217,6 +217,21 @@ Commands:
       description:
         - ' &7Bascule la possibilité aux joueurs de'
         - ' &7se frapper entre eux sur ce terrain.'
+    AllowSpread-flags:
+      title: '&cPropager les paramètres.'
+      description:
+        - ' &7Propage les paramètres parmi'
+        - ' &7vos terrains gérés.'
+    AllowSpread-mobs:
+      title: '&cPropager le spawn des montres.'
+      description:
+        - ' &7Propage le spawn des montres'
+        - ' &7parmi vos terrains gérés.'
+    AllowSpread-friends:
+      title: '&cPropager les amis'
+      description:
+        - ' &7Propage les amis parmi'
+        - ' &7vos terrains gérés.'
     AllowMob-spawning:
       title: '&cGestion du spawn de monstres.'
       description:
@@ -388,4 +403,5 @@ Integrations:
   Towny:
     TownyPresent: '&cUne région Towny est déjà présente !'
     LLPresent: '&cUne région LandLord est déjà présente !'
-version: 23
+
+version: 24

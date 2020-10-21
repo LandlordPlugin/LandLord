@@ -285,9 +285,44 @@ public class AManage extends AbstractGUI {
             icon.setLore(lm.getStringList("Commands.Manage.ManageFriends.description"));
 
             Set<UUID> friends = land.getFriends();
-            MultiPagedGUI friendsGui = new MultiPagedGUI(player, (int) Math.ceil((double) friends.size() / 9.0),
+            final boolean canSpread = plugin.getConfig().getBoolean("Manage.spread-friends.enable") &&
+                    player.hasPermission("landlord.player.manage.spreadfriends") && regions.size() > 1;
+            MultiPagedGUI friendsGui = new MultiPagedGUI(player, (int) Math.ceil((double) (friends.size() + (canSpread ? 1 : 0)) / 9.0),
                     lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
             };
+
+            if (canSpread) {
+                String spreadTitle = lm.getRawString("Commands.Manage.AllowSpread-friends.title");
+                Material material = Material.valueOf(plugin.getConfig().getString("Manage.spread-friends" + ".item"));
+                Icon spreadIcon = new Icon(new ItemStack(material));
+                spreadIcon.setName(spreadTitle);
+                spreadIcon.setLore(lm.getStringList("Commands.Manage.AllowSpread-friends.description"));
+
+                spreadIcon.addClickAction((p) -> {
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+                        final Set<UUID> defaultFriends = land.getFriends();
+
+                        for (IOwnedLand region : regions.subList(1, regions.size())) {
+                            final String oldfriends = region.getMembersString();
+
+                            for (UUID landFriend : region.getFriends()) {
+                                if (!land.isFriend(landFriend)) region.removeFriend(landFriend);
+                            }
+                            for (UUID defaultFriend : defaultFriends) {
+                                if (!region.isFriend(defaultFriend)) region.addFriend(defaultFriend);
+                            }
+
+                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                LandManageEvent landManageEvent = new LandManageEvent(player, region,
+                                        "FRIENDS", oldfriends, region.getMembersString());
+                                Bukkit.getPluginManager().callEvent(landManageEvent);
+                            });
+                        }
+                    });
+                });
+
+                friendsGui.addIcon(spreadIcon);
+            }
 
             String rawTitle = lm.getRawString("Commands.Manage.ManageFriends.unfriend");
 
@@ -369,6 +404,31 @@ public class AManage extends AbstractGUI {
                 List<String> lore = lm.getStringList("Commands.Manage.AllowMob-spawning.toggleItem.description");
 
                 MultiPagedGUI gui = new MultiPagedGUI(p, 5, title, icons, this);
+
+                if (plugin.getConfig().getBoolean("Manage.spread-mobs.enable") &&
+                        player.hasPermission("landlord.player.manage.spreadmobs") && regions.size() > 1) {
+                    String spreadTitle = lm.getRawString("Commands.Manage.AllowSpread-mobs.title");
+                    Material material = Material.valueOf(plugin.getConfig().getString("Manage.spread-mobs" + ".item"));
+                    Icon spreadIcon = new Icon(new ItemStack(material));
+                    spreadIcon.setName(spreadTitle);
+                    spreadIcon.setLore(lm.getStringList("Commands.Manage.AllowSpread-mobs.description"));
+
+                    spreadIcon.addClickAction((p2) -> {
+                        for (IMob m : plugin.getMobManager().values()) {
+                            // Skip mob if its not in the list, because that means this mob should not be manageable
+                            if (!toggleMobs.contains(m.getName()) || !player.hasPermission(m.getPermission())) {
+                                continue;
+                            }
+
+                            for (IOwnedLand region : regions.subList(1, regions.size())) {
+                                if (land.isMobDenied(m) != region.isMobDenied(m)) region.toggleMob(m);
+                            }
+                        }
+                    });
+
+                    gui.addIcon(spreadIcon);
+                }
+
                 String titleMob = lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title");
                 for (IMob m : plugin.getMobManager().values()) {
                     // Skip mob if its not in the list, because that means this mob should not be manageable
@@ -401,7 +461,55 @@ public class AManage extends AbstractGUI {
                         });
                     });
                 }
+
                 gui.display();
+            });
+
+            this.setIcon(position++, icon);
+        }
+
+        if (plugin.getConfig().getBoolean("Manage.spread-flags.enable") &&
+                player.hasPermission("landlord.player.manage.spreadflags") && regions.size() > 1) {
+            String title = lm.getRawString("Commands.Manage.AllowSpread-flags.title");
+            Material material = Material.valueOf(plugin.getConfig().getString("Manage.spread-flags" + ".item"));
+            Icon icon = new Icon(new ItemStack(material));
+            icon.setName(title);
+            icon.setLore(lm.getStringList("Commands.Manage.AllowSpread-flags.description"));
+
+            icon.addClickAction((p) -> {
+                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+                    for (int flagI = 0; flagI < land.getFlags().size(); flagI++) {
+                        final ILLFlag defaultFlag = land.getFlags().get(flagI);
+
+                        for (IOwnedLand region : regions.subList(1, regions.size())) {
+                            final ILLFlag landFlag = region.getFlags().get(flagI);
+
+                            if (defaultFlag.getFriendStatus() != landFlag.getFriendStatus()) {
+                                landFlag.toggleFriends();
+
+                                Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                            landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
+                                    Bukkit.getPluginManager().callEvent(landManageEvent);
+                                });
+                            }
+                            if (defaultFlag.getAllStatus() != landFlag.getAllStatus()) {
+                                landFlag.toggleAll();
+
+                                Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                            landFlag.getName(), !landFlag.getAllStatus(), landFlag.getAllStatus());
+                                    Bukkit.getPluginManager().callEvent(landManageEvent);
+                                });
+                            }
+                        }
+                    }
+
+                    for (IOwnedLand region : regions) {
+                        region.setFarewellMessage(land.getFarewellMessage());
+                        region.setGreetMessage(land.getGreetMessage());
+                    }
+                });
             });
 
             this.setIcon(position++, icon);

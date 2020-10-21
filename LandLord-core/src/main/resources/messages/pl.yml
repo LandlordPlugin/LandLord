@@ -221,6 +221,21 @@ Commands:
         - ' &7włącza/wyłącza możliwośc'
         - ' &7PVP na prywatnym terenie'
         - ' &7Status&8: &c%var%'
+    AllowSpread-flags:
+      title: '&cSpread flag values'
+      description:
+        - ' &7Spread flag values'
+        - ' &7over managed lands'
+    AllowSpread-mobs:
+      title: '&cSpread mob spawn ability'
+      description:
+        - ' &7Spread mob spawn ability'
+        - ' &7over managed lands'
+    AllowSpread-friends:
+      title: '&cSpread friends'
+      description:
+        - ' &7Spread friends over'
+        - ' &7managed lands'
     AllowMob-spawning:
       title: '&cZmień opcje spawnowania mobów'
       description:
@@ -390,4 +405,4 @@ Integrations:
   Towny:
     TownyPresent: '&cThere already is a towny region present!'
     LLPresent: '&cThere already is a landlord region present!'
-version: 23
+version: 24

@@ -40,7 +40,7 @@ public class Home extends LandlordCommand {
             for (String homeAlias : plugin.getConfig().getStringList("CommandSettings.Home.aliases")) {
                 delayManager.delayCommand("/" + mainAlias + " " + homeAlias, delay);
             }
-            delayManager.delayCommand("/"+ mainAlias + " " + plugin.getConfig().getString("CommandSettings.Home.name"), delay);
+            delayManager.delayCommand("/" + mainAlias + " " + plugin.getConfig().getString("CommandSettings.Home.name"), delay);
         }
     }
 
