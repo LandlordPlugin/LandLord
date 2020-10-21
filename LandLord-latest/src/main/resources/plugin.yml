@@ -72,6 +72,9 @@ permissions:
       landlord.player.manage.chest-access: true
       landlord.player.manage.creeper-explosion: true
       landlord.player.manage.pvp: true
+      landlord.player.manage.spreadflags: true
+      landlord.player.manage.spreadmobs: true
+      landlord.player.manage.spreadfriends: true
 
   landlord.use:
     description: required to use any Landlord commands
