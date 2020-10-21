@@ -586,6 +586,15 @@ Manage:
     default:
       friends: true
       everyone: false
+  spread-flags:
+    enable: true
+    item: BOW
+  spread-mobs:
+    enable: true
+    item: BOW
+  spread-friends:
+    enable: true
+    item: BOW
   mob-spawning:
     enable: true
     item: MONSTER_EGG
@@ -638,4 +647,4 @@ Manage:
 EnableMetrics: true
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 28
+version: 29

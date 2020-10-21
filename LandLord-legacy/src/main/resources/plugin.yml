@@ -1,10 +1,10 @@
 name: Landlord
 version: ${ll.version}
 main: biz.princeps.landlord.LandLord
-authors: [SpatiumPrinceps, Aurelien30000]
+authors: [ SpatiumPrinceps, Aurelien30000 ]
 website: https://www.spigotmc.org/resources/beta-landlord-2.44398/
-depend: [WorldGuard, ProtocolLib]
-softdepend: [Vault, PlaceholderAPI, MVdWPlaceholderAPI, Towny]
+depend: [ WorldGuard, ProtocolLib ]
+softdepend: [ Vault, PlaceholderAPI, MVdWPlaceholderAPI, Towny ]
 
 permissions:
   landlord.*:
@@ -71,6 +71,9 @@ permissions:
       landlord.player.manage.chest-access: true
       landlord.player.manage.creeper-explosion: true
       landlord.player.manage.pvp: true
+      landlord.player.manage.spreadflags: true
+      landlord.player.manage.spreadmobs: true
+      landlord.player.manage.spreadfriends: true
 
   landlord.use:
     description: required to use any Landlord commands
@@ -238,4 +241,16 @@ permissions:
 
   landlord.player.manage.pvp:
     description: manage pvp
+    default: true
+
+  landlord.player.manage.spreadflags:
+    description: Spread flag options
+    default: true
+
+  landlord.player.manage.spreadmobs:
+    description: Spread mob options
+    default: true
+
+  landlord.player.manage.spreadfriends:
+    description: Spread friend options
     default: true
