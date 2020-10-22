@@ -149,6 +149,7 @@ ConfirmationDialog:
   onMultiClaim: true
   onUnclaim: false
   onUnclaimAll: true
+  onMultiUnclaim: true
 
 # You can enable/disable the particles for particular events here
 Particles:
@@ -240,12 +241,79 @@ CommandSettings:
 
   MultiClaim:
     name: multiclaim
-    usage: 'Usage: /land multiclaim <option> <parameter>'
+    usage: 'Usage: /land multiclaim <mode> <radius>'
     permissions:
       - landlord.player.multiclaim
     aliases:
-      - mc
+      - mclaim
       - mcl
+      - multibuy
+      - mbuy
+
+  MultiUnclaim:
+    name: multiunclaim
+    usage: 'Usage: /land multiunclaim <mode> <radius>'
+    permissions:
+      - landlord.player.unclaim
+    aliases:
+      - munclaim
+      - muc
+      - multisell
+      - ms
+
+  MultiAddfriend:
+    name: multiaddfriend
+    usage: 'Usage: /land multiaddfriend <mode> <radius> <name>'
+    permissions:
+      - landlord.player.own
+    aliases:
+      - multifriendadd
+      - multiaddmember
+      - mfriendadd
+      - maddmember
+
+  MultiRemovefriend:
+    name: multiremovefriend
+    usage: 'Usage: /land multiremovefriend <mode> <radius> <name>'
+    permissions:
+      - landlord.player.own
+    aliases:
+      - multifriendremove
+      - mfriendremove
+      - multiunfriend
+      - munfriend
+      - multifrienddelete
+      - mfrienddelete
+      - multideletefriend
+      - mdeletefriend
+      - multiremovefriend
+      - mremovefriend
+
+  MultiListLands:
+    name: multilist
+    usage: '/land multilist <mode> <radius>'
+    permissions:
+      - landlord.player.own
+    aliases:
+      - multilistlands
+      - mlistlands
+      - multilandlist
+      - mlandlist
+    enable: true
+    # gui or chat
+    mode: gui
+    # How many lands should be displayed per page?
+    landsPerPage: 15
+
+  MultiManage:
+    name: multimanage
+    usage: '/land multimanage <mode> <radius>'
+    permissions:
+      - landlord.player.manage
+    aliases:
+      - mmanage
+      - multimng
+      - mmng
 
   Info:
     name: info
@@ -666,4 +734,4 @@ Manage:
 EnableMetrics: true
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 29
+version: 30

@@ -5,13 +5,19 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
+import biz.princeps.landlord.commands.MultiMode;
 import biz.princeps.landlord.guis.ManageGui;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
+import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Project: LandLord
@@ -73,56 +79,35 @@ public class Manage extends LandlordCommand {
             // land manage <allCommands>
             switch (args[0]) {
                 case "setgreetall":
-                    StringBuilder sb1 = new StringBuilder();
-                    for (int i = 1; i < args.length; i++) {
-                        sb1.append(args[i]).append(" ");
-                    }
-                    String newmsg1 = ChatColor.translateAlternateColorCodes('&', sb1.toString());
-
-                    if (newmsg1.isEmpty()) {
-                        newmsg1 = lm.getRawString("Alerts.defaultGreeting").replace("%owner%", player.getName());
-                    }
-
-                    for (IOwnedLand region : wg.getRegions(player.getUniqueId())) {
-                        LandManageEvent landManageEvent = new LandManageEvent(player, region,
-                                "GREET_MESSAGE", region.getGreetMessage(), newmsg1);
-                        Bukkit.getPluginManager().callEvent(landManageEvent);
-
-                        region.setGreetMessage(newmsg1);
-                    }
-
-                    lm.sendMessage(player, lm.getString("Commands.Manage.SetGreet.successful")
-                            .replace("%msg%", newmsg1));
-
+                    setGreet(player, args, new ArrayList<>(wg.getRegions(player.getUniqueId())), 1);
                     break;
                 case "setfarewellall":
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 1; i < args.length; i++) {
-                        sb.append(args[i]).append(" ");
-                    }
-                    String newmsg = ChatColor.translateAlternateColorCodes('&', sb.toString());
-
-                    if (newmsg.isEmpty()) {
-                        newmsg = lm.getRawString("Alerts.defaultFarewell").replace("%owner%", player.getName());
-                    }
-                    for (IOwnedLand region : wg.getRegions(player.getUniqueId())) {
-                        LandManageEvent landManageEvent = new LandManageEvent(player, region,
-                                "FAREWELL_MESSAGE", region.getFarewellMessage(), newmsg);
-                        Bukkit.getPluginManager().callEvent(landManageEvent);
-
-                        region.setFarewellMessage(newmsg);
-                    }
-
-                    lm.sendMessage(player, lm.getString("Commands.Manage.SetFarewell.successful")
-                            .replace("%msg%", newmsg));
-
+                    setFarewell(player, args, new ArrayList<>(wg.getRegions(player.getUniqueId())), 1);
                     break;
                 case "setgreet":
                     //System.out.println("greet " + Arrays.toString(args));
-                    setGreet(player, args, wg.getRegion(player.getLocation().getChunk()), 1);
+                    setGreet(player, args, Collections.singletonList(wg.getRegion(player.getLocation())), 1);
                     break;
                 case "setfarewell":
-                    setFarewell(player, args, wg.getRegion(player.getLocation().getChunk()), 1);
+                    setFarewell(player, args, Collections.singletonList(wg.getRegion(player.getLocation())), 1);
+                    break;
+                case "multisetgreet":
+                    try {
+                        final MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
+                        final int radius = arguments.getInt(2);
+
+                        setGreet(player, args, new ArrayList<>(mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg)), 3);
+                    } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ignored) {
+                    }
+                    break;
+                case "multisetfarewell":
+                    try {
+                        final MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
+                        final int radius = arguments.getInt(2);
+
+                        setFarewell(player, args, new ArrayList<>(mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg)), 3);
+                    } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ignored) {
+                    }
                     break;
                 default:
                     try {
@@ -130,11 +115,11 @@ public class Manage extends LandlordCommand {
 
                         switch (args[1]) {
                             case "setgreet":
-                                setGreet(player, args, target, 2);
+                                setGreet(player, args, Collections.singletonList(target), 2);
                                 break;
 
                             case "setfarewell":
-                                setFarewell(player, args, target, 2);
+                                setFarewell(player, args, Collections.singletonList(target), 2);
                                 break;
                         }
 
@@ -147,8 +132,8 @@ public class Manage extends LandlordCommand {
     }
 
 
-    private void setGreet(Player player, String[] args, IOwnedLand target, int casy) {
-        if (target == null) {
+    private void setGreet(Player player, String[] args, List<IOwnedLand> lands, int casy) {
+        if (lands.size() == 0 || lands.get(0) == null) {
             lm.sendMessage(player, lm.getString("Commands.Manage.notOwnFreeLand"));
             return;
         }
@@ -164,19 +149,20 @@ public class Manage extends LandlordCommand {
         }
         newmsg = newmsg.replace("%owner%", player.getName());
 
+        for (IOwnedLand region : lands) {
+            LandManageEvent landManageEvent = new LandManageEvent(player, region,
+                    "GREET_MESSAGE", region.getGreetMessage(), newmsg);
+            Bukkit.getPluginManager().callEvent(landManageEvent);
 
-        LandManageEvent landManageEvent = new LandManageEvent(player, target,
-                "GREET_MESSAGE", target.getGreetMessage(), newmsg);
-        Bukkit.getPluginManager().callEvent(landManageEvent);
-
-        target.setGreetMessage(newmsg);
+            region.setGreetMessage(newmsg);
+        }
 
         lm.sendMessage(player, lm.getString("Commands.Manage.SetGreet.successful")
                 .replace("%msg%", newmsg));
     }
 
-    private void setFarewell(Player player, String[] args, IOwnedLand target, int casy) {
-        if (target == null) {
+    private void setFarewell(Player player, String[] args, List<IOwnedLand> lands, int casy) {
+        if (lands.size() == 0 || lands.get(0) == null) {
             lm.sendMessage(player, lm.getString("Commands.Manage.notOwnFreeLand"));
             return;
         }
@@ -192,12 +178,16 @@ public class Manage extends LandlordCommand {
         }
         newmsg = newmsg.replace("%owner%", player.getName());
 
-        LandManageEvent landManageEvent = new LandManageEvent(player, target,
-                "FAREWELL_MESSAGE", target.getFarewellMessage(), newmsg);
-        Bukkit.getPluginManager().callEvent(landManageEvent);
+        for (IOwnedLand region : lands) {
+            LandManageEvent landManageEvent = new LandManageEvent(player, region,
+                    "FAREWELL_MESSAGE", region.getFarewellMessage(), newmsg);
+            Bukkit.getPluginManager().callEvent(landManageEvent);
 
-        target.setFarewellMessage(newmsg);
+            region.setFarewellMessage(newmsg);
+        }
+
         lm.sendMessage(player, lm.getString("Commands.Manage.SetFarewell.successful")
                 .replace("%msg%", newmsg));
     }
+
 }

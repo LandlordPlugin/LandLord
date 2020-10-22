@@ -1,12 +1,10 @@
 package biz.princeps.landlord.commands.management;
 
-import biz.princeps.landlord.api.ILLFlag;
-import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.IPlayer;
+import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.commands.ManageMode;
+import biz.princeps.landlord.commands.MultiMode;
 import biz.princeps.landlord.guis.ManageGui;
 import biz.princeps.landlord.guis.ManageGuiAll;
 import biz.princeps.lib.PrincepsLib;
@@ -25,18 +23,16 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Project: LandLord
- * Created by Alex D. (SpatiumPrinceps)
- * Date: 18/7/17
- */
-public class ListLands extends LandlordCommand {
+public class MultiListLands extends LandlordCommand {
 
-    public ListLands(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.ListLands.name"),
-                pl.getConfig().getString("CommandSettings.ListLands.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ListLands.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ListLands.aliases")));
+    private final IWorldGuardManager wg;
+
+    public MultiListLands(ILandLord pl) {
+        super(pl, pl.getConfig().getString("CommandSettings.MultiListLands.name"),
+                pl.getConfig().getString("CommandSettings.MultiListLands.usage"),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiListLands.permissions")),
+                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiListLands.aliases")));
+        this.wg = plugin.getWGManager();
     }
 
     @Override
@@ -44,27 +40,30 @@ public class ListLands extends LandlordCommand {
         if (properties.isPlayer()) {
             String target = null;
             int page = 0;
+            MultiMode mode;
+            int radius;
             try {
-                // check arguments for different sub sub commands like /ll list <name> <pagenr>
+                // check arguments for different sub sub commands like /ll list <mode> <radius> <name> <pagenr>
                 switch (arguments.size()) {
-                    case 2:
-                        target = arguments.get(0);
-                        page = arguments.getInt(1);
+                    case 4:
+                        target = arguments.get(2);
+                        page = arguments.getInt(3);
                         break;
-                    case 1:
-                        target = arguments.get(0);
-                        break;
-                    case 0:
+                    case 3:
+                        target = arguments.get(2);
                         break;
                 }
 
+                mode = MultiMode.valueOf(arguments.get()[0].toUpperCase());
+                radius = arguments.getInt(1);
             } catch (ArgumentsOutOfBoundsException ignored) {
                 properties.sendUsage();
+                return;
             }
 
             // Want to know own lands
             if (target == null) {
-                onListLands(properties.getPlayer(),
+                onListLands(properties.getPlayer(), mode, radius,
                         plugin.getPlayerManager().get(properties.getPlayer().getUniqueId()), page);
             } else if (properties.getPlayer().hasPermission("landlord.admin.list")) {
                 // Admin, Other lands, need to lookup their names
@@ -74,50 +73,54 @@ public class ListLands extends LandlordCommand {
                 plugin.getPlayerManager().getOffline(Bukkit.getOfflinePlayer(target).getUniqueId(), (lPlayer) -> {
                     if (lPlayer == null) {
                         // Failure
-                        properties.getPlayer().sendMessage(lm.getString("Commands.ListLands.noPlayer")
+                        properties.getPlayer().sendMessage(lm.getString("Commands.MultiListLands.noPlayer")
                                 .replace("%player%", finalTarget));
                     } else {
                         // Success
-                        onListLands(properties.getPlayer(), lPlayer, finalPage);
+                        onListLands(properties.getPlayer(), mode, radius, lPlayer, finalPage);
                     }
                 });
             }
         }
     }
 
-    private void onListLands(Player sender, IPlayer target, int page) {
+    private void onListLands(Player sender, MultiMode mode, int radius, IPlayer target, int page) {
+        if (isDisabledWorld(sender)) {
+            return;
+        }
+
         Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-            List<IOwnedLand> lands = new ArrayList<>(plugin.getWGManager().getRegions(target.getUuid()));
+            List<IOwnedLand> lands = new ArrayList<>(mode.getLandsOf(radius, sender.getLocation(), target.getUuid(), wg));
 
             if (lands.size() == 0) {
-                lm.sendMessage(sender, plugin.getLangManager().getString("Commands.ListLands.noLands"));
+                lm.sendMessage(sender, plugin.getLangManager().getString("Commands.MultiListLands.noLands"));
                 return;
             }
 
-            String mode = plugin.getConfig().getString("CommandSettings.ListLands.mode");
+            String confirmMode = plugin.getConfig().getString("CommandSettings.MultiListLands.mode");
 
-            if (mode.equals("gui")) {
+            if (confirmMode.equals("gui")) {
                 MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
-                        plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
+                        plugin.getLangManager().getRawString("Commands.MultiListLands.gui.header")
                                 .replace("%player%", target.getName())) {
                     @Override
                     protected void generateStaticIcons() {
                         setIcon(52, new Icon(new ItemStack(Material.BEACON))
-                                .setName(lm.getRawString("Commands.ListLands.gui.manageAll"))
+                                .setName(lm.getRawString("Commands.MultiListLands.gui.multiManage"))
                                 .addClickAction((p) -> {
-                                    ManageGuiAll manageGUIAll = new ManageGuiAll(plugin, sender, this, lands, ManageMode.ALL, null, -1);
+                                    ManageGuiAll manageGUIAll = new ManageGuiAll(plugin, sender, this, lands, ManageMode.MULTI, mode, radius);
                                     manageGUIAll.display();
                                 }));
                     }
                 };
 
                 for (IOwnedLand land : lands) {
-                    List<String> loreRaw = plugin.getLangManager().getStringList("Commands.ListLands.gui.lore");
+                    List<String> loreRaw = plugin.getLangManager().getStringList("Commands.MultiListLands.gui.lore");
                     List<String> lore = new ArrayList<>();
 
                     for (String s : loreRaw) {
                         if (s.contains("%flags%")) {
-                            String flagFormat = lm.getRawString("Commands.ListLands.gui.flagformat");
+                            String flagFormat = lm.getRawString("Commands.MultiListLands.gui.flagformat");
                             //       flagformat: '&a%flagname%: &f%flagvalue%'
 
                             for (ILLFlag flag : land.getFlags()) {
@@ -136,7 +139,7 @@ public class ListLands extends LandlordCommand {
                     }
 
                     Icon icon = new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()));
-                    icon.setName(lm.getRawString("Commands.ListLands.gui.itemname")
+                    icon.setName(lm.getRawString("Commands.MultiListLands.gui.itemname")
                             .replace("%name%", land.getName()));
                     icon.setLore(lore);
                     icon.addClickAction((p) -> {
@@ -163,22 +166,22 @@ public class ListLands extends LandlordCommand {
 
                 List<String> formatted = new ArrayList<>();
 
-                String segment = lm.getRawString("Commands.ListLands.chat.segment");
+                String segment = lm.getRawString("Commands.MultiListLands.chat.segment");
 
                 for (IOwnedLand land : lands) {
                     formatted.add(segment.replace("%landname%", land.getName())
                             .replace("%members%", land.getMembersString()));
                 }
 
-                String prev = lm.getRawString("Commands.ListLands.chat.previous");
-                String next = lm.getRawString("Commands.ListLands.chat.next");
+                String prev = lm.getRawString("Commands.MultiListLands.chat.previous");
+                String next = lm.getRawString("Commands.MultiListLands.chat.next");
 
 
                 MultiPagedMessage message = new MultiPagedMessage(PrincepsLib.getCommandManager()
                         .getCommand(Landlordbase.class).getCommandString(ListLands.class),
-                        plugin.getLangManager().getRawString("Commands.ListLands.gui.header")
+                        plugin.getLangManager().getRawString("Commands.MultiListLands.gui.header")
                                 .replace("%player%", target.getName()),
-                        plugin.getConfig().getInt("CommandSettings.ListLands.landsPerPage"),
+                        plugin.getConfig().getInt("CommandSettings.MultiListLands.landsPerPage"),
                         formatted, prev, next, page);
 
                 if (sender.isValid())

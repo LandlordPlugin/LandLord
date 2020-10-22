@@ -48,7 +48,40 @@ Commands:
     chatMessage: '&aCliquez pour confirmer votre achat de %amount% terrains ! Cela vous coûtera %cost%'
     noLands: '&cIl n''y a pas de terrain obtensible dans la zone sélectionnée !'
     abort: '&cProtection de %amount% terrains annulée !'
-    hugeSize: '&cLa taille du MultiClaim est trop élevée par rapport à la distance de rendu du serveur. Afin d''éviter de potentielles latences voire un crash, veuillez utiliser une valeur plus faible que %max_size% !'
+    hugeSize: '&cLa taille du MultiClaim est trop élevée par rapport à la distance de rendu du serveur. Afin d''éviter de potentielles latences voire un crash, veuillez utiliser une valeur plus petite que %max_size% !'
+  MultiUnclaim:
+    confirm: '&aLibérer le(s) terrain(s) sélectionné(s) ?'
+    hugeSize: '&cLa taille du MultiUnclaim est trop élevée par rapport à la distance de rendu du serveur. Afin d''éviter de potentielles latences voire un crash, veuillez utiliser une valeur plus petite que %max_size% !'
+    notOwnFreeLand: '&cVous ne possédez pas de terrain !'
+    success: '&7Vous avez libéré %amount% terrain(s) sélectionné(s) &7et avez récupéré &c%money%'
+  MultiAddfriend:
+    noPlayer: '&7Le joueur suivant n''a pas été trouvé &8: &c%player%'
+    success: '&7Vous avez ajouté &c%player% &7aux &c%count% &7terrains que vous avez sélectionné(s).'
+    alreadyOwn: '&7Vous ne pouvez pas ajouter le propriétaire en tant que membre !'
+  MultiUnfriend:
+    noPlayer: '&7Les joueurs suivants n''ont pas été trouvés&8: &c%players%'
+    success: '&7Vous avez retiré &c%players% &7des &c%count% &7terrains que vous avez sélectionné(s).'
+    noFriend: '&c%player% &7n''est ami sur aucun de vos terrains sélectionnés.'
+  MultiListLands:
+    noLands: '&7Vous ne possédez aucun terrain au sein de la sélection.'
+    gui:
+      header: 'Terrains de &2%player%:'
+      itemname: '&d%name%'
+      lore:
+        - '&aNom: &f%name%'
+        - ''
+        - '&aCoordonnées: &f%realx%&c/&f%realz%'
+        - ''
+        - '&aMembre(s): &f%members%'
+        - ''
+        - '%flags%'
+      flagformat: '&a%flagname%: &8(&fAmis: &a%friend% &fTout le monde: &a%all%&8)'
+      multiManage: '&7Gérer vos terrains sélectionnés.'
+    chat:
+      previous: '&8[&7Précédent&8]'
+      next: '&8[&7Suivant&8]'
+      segment: '&eNom: &c%landname% &eMembre(s): &c%members%'
+    noPlayer: '&7Le joueur suivant n''a pas été trouvé&8: &c%player%'
   Regenerate:
     notOwn: '&7Vous ne possédez pas ce terrain. Vous ne pouvez pas régénérer un terrain libre !'
     success: '&7Régénération du terrain &c%land% &7effectuée avec succès !'
@@ -157,6 +190,8 @@ Commands:
     nextArrow: '&aPage suivante'
     all:
       header: '&7Gestion de&8 &ctous vos terrains.'
+    multi:
+      header: '&7Gestion de&8 &cvos terrains sélectionnés.'
     notOwn: '&7Vous ne possédez pas ce terrain. Il appartient à &c%owner%'
     notOwnFreeLand: '&7Vous ne possédez pas ce terrain !'
     header: '&7Gestion&8: &c%info%'
@@ -221,17 +256,17 @@ Commands:
       title: '&cPropager les paramètres.'
       description:
         - ' &7Propage les paramètres parmi'
-        - ' &7vos terrains gérés.'
+        - ' &7vos terrains sélectionnés.'
     AllowSpread-mobs:
       title: '&cPropager le spawn des montres.'
       description:
         - ' &7Propage le spawn des montres'
-        - ' &7parmi vos terrains gérés.'
+        - ' &7parmi vos terrains sélectionnés.'
     AllowSpread-friends:
       title: '&cPropager les amis'
       description:
         - ' &7Propage les amis parmi'
-        - ' &7vos terrains gérés.'
+        - ' &7vos terrains sélectionnés.'
     AllowMob-spawning:
       title: '&cGestion du spawn de monstres.'
       description:
@@ -285,14 +320,21 @@ Commands:
     players:
       - '&c/land &8- &7Affiche les commandes.'
       - '&c/land claim &8- &7Protège le terrain dans lequel vous vous trouvez.'
+      - '&c/land multiclaim <mode> <rayon> &8- &7Protège plusieurs terrains en même temps.'
       - '&c/land unclaim &8- &7Libère le terrain dans lequel vous vous trouvez.'
+      - '&c/land multiunclaim <mode> <rayon> &8- &7Libère plusieurs terrains en même temps.'
       - '&c/land addfriend <player> &8- &7Ajoute un joueur comme ami à votre terrain.'
       - '&c/land unfriend <player> &8- &7Retire un joueur comme ami à votre terrain.'
+      - '&c/land multiaddfriend <mode> <rayon> <player> &8- &7Ajoute un joueur comme ami à plusieurs terrains en même temps.'
+      - '&c/land multiunfriend <mode> <rayon> <player> &8- &7Retire un joueur comme ami de plusieurs terrains en même temps.'
       - '&c/land friendall <player> &8- &7Ajoute un joueur comme ami à tous vos terrains détenus.'
       - '&c/land unfriendall <player> &8- &7Retire un joueur comme ami à tous vos terrains détenus.'
       - '&c/land friends &8- &7Montre les amis du terrain sur lequel vous vous trouvez.'
       - '&c/land manage &8- &7Gère le terrain sur lequel vous vous trouvez.'
+      - '&c/land multimanage <mode> <rayon> &8- &7Gère plusieurs terrains en même temps.'
+      - '&c/land manageall &8- &7Gère tous vos terrains détenus.'
       - '&c/land list &8- &7Liste tous vos terrains détenus.'
+      - '&c/land multilist <mode> <rayon> &8- &7Liste plusieurs terrains en même temps.'
       - '&c/land info &8- &7Montre les infos générales du terrain sur lequel vous vous trouvez.'
       - '&c/land map &8- &7Affiche ou retire la carte des terrains.'
       - '&c/land shop &8- &7Ouvre le magasin des terrains.'
@@ -404,4 +446,4 @@ Integrations:
     TownyPresent: '&cUne région Towny est déjà présente !'
     LLPresent: '&cUne région LandLord est déjà présente !'
 
-version: 24
+version: 25

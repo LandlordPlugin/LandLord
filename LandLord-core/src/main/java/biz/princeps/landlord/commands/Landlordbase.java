@@ -50,7 +50,6 @@ public class Landlordbase extends MainCommand {
                 pl.getConfig().getString("CommandSettings.Main.usage"),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Main.permissions")),
                 pl.getConfig().getStringList("CommandSettings.Main.aliases").toArray(new String[]{}));
-
         this.pl = pl;
         reloadCommands();
     }
@@ -91,6 +90,11 @@ public class Landlordbase extends MainCommand {
         this.addSubcommand(new LandMap(pl));
         this.addSubcommand(new Reload(pl));
         this.addSubcommand(new Regenerate(pl));
+        this.addSubcommand(new MultiUnclaim(pl));
+        this.addSubcommand(new MultiAddfriend(pl));
+        this.addSubcommand(new MultiRemovefriend(pl));
+        this.addSubcommand(new MultiListLands(pl));
+        this.addSubcommand(new MultiManage(pl));
     }
 
     @Override
@@ -168,9 +172,11 @@ public class Landlordbase extends MainCommand {
                         return tabReturn;
                     }
 
-                    if (subcmd instanceof MultiClaim) {
-                        for (MultiClaim.MultiClaimMode value : MultiClaim.MultiClaimMode.values()) {
-                            tabReturn.add(value.name());
+                    if (subcmd instanceof MultiClaim || subcmd instanceof MultiUnclaim ||
+                            subcmd instanceof MultiAddfriend || subcmd instanceof MultiRemovefriend ||
+                            subcmd instanceof MultiListLands || subcmd instanceof MultiManage) {
+                        for (MultiMode multiMode : MultiMode.values()) {
+                            tabReturn.add(multiMode.name());
                         }
                         return tabReturn;
                     }
@@ -190,6 +196,22 @@ public class Landlordbase extends MainCommand {
                     if (subcmd instanceof GiveClaims) {
                         tabReturn.add("<amount>");
                         tabReturn.add("<price>");
+                        return tabReturn;
+                    }
+
+                    if (subcmd instanceof MultiAddfriend || subcmd instanceof MultiRemovefriend) {
+                        if (args[2].isEmpty()) {
+                            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                                tabReturn.add(onlinePlayer.getName());
+                            }
+                        } else {
+                            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                                if (!onlinePlayer.getName().startsWith(args[2])) continue;
+
+                                tabReturn.add(onlinePlayer.getName());
+                            }
+                        }
+                        return tabReturn;
                     }
                 }
             }
@@ -216,7 +238,6 @@ public class Landlordbase extends MainCommand {
      */
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
-
         if (properties.isConsole()) return;
 
         ILangManager lm = pl.getLangManager();

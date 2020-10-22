@@ -48,6 +48,39 @@ Commands:
     chatMessage: '&aKlicken um den Kauf von %amount% Chunks zu bestaetigen! Das wird %cost% kosten!'
     noLands: '&cIn den von dir gewaehlten Radius sind keine claimbaren Chunks verfuegbar!'
     abort: '&cDu hast das claimen von %amount% Chunks abgebrochen!'
+  MultiUnclaim:
+    confirm: '&cConfirm unclaim of your selected lands'
+    hugeSize: '&cMultiunclaim''s size is too high for the server''s render distance. To avoid making the server lagging, even crashing, please use a value lower than %max_size%!'
+    notOwnFreeLand: '&cYou do not own any land!'
+    success: '&7You successfully unclaimed %amount% selected chunk(s) &7and got &c%money% &7back'
+  MultiAddfriend:
+    noPlayer: '&7Could not find the player &8: &c%player%'
+    success: '&7Successfully added &c%player% &7to all &c%count% &7selected lands'
+    alreadyOwn: '&7You cannot add the owner as a member'
+  MultiUnfriend:
+    noPlayer: '&7Could not find following players&8: &c%players%'
+    success: '&7Successfully removed &c%players% &7from all &c%count% &7selected lands'
+    noFriend: '&c%player% &7is not a friend on any of your selected lands'
+  MultiListLands:
+    noLands: '&7You do not own any land in the selection'
+    gui:
+      header: '&2%player%s lands'
+      itemname: '&d%name%'
+      lore:
+        - '&aName: &f%name%'
+        - ''
+        - '&aReal Coords: &f%realx%&c/&f%realz%'
+        - ''
+        - '&aMembers: &f%members%'
+        - ''
+        - '%flags%'
+      flagformat: '&a%flagname%: &8(&fFriends: &a%friend% &fAll: &a%all%&8)'
+      multiManage: '&7Manage selected lands'
+    chat:
+      previous: '&8[&7Previous&8]'
+      next: '&8[&7Next&8]'
+      segment: '&eName: &c%landname% &eMembers: &c%members%'
+    noPlayer: '&7Could not find following player&8: &c%player%'
   Regenerate:
     notOwn: '&7You do not own this chunk. You cannot regenerate a free land!'
     success: '&7Regenerating land &c%land% &7successful'
@@ -156,6 +189,8 @@ Commands:
     nextArrow: '&aNaechste Seite'
     all:
       header: '&call Land verwalten'
+    multi:
+      header: '&7Managing&8 &cselected lands'
     notOwn: '&7Dir gehoert dieser Chunk nicht, sondern &c%owner%'
     notOwnFreeLand: '&7Nicht dein Chunk!'
     header: '&c%info%'
@@ -219,17 +254,17 @@ Commands:
       title: '&cSpread flag values'
       description:
         - ' &7Spread flag values'
-        - ' &7over managed lands'
+        - ' &7over selected lands'
     AllowSpread-mobs:
       title: '&cSpread mob spawn ability'
       description:
         - ' &7Spread mob spawn ability'
-        - ' &7over managed lands'
+        - ' &7over selected lands'
     AllowSpread-friends:
       title: '&cSpread friends'
       description:
         - ' &7Spread friends over'
-        - ' &7managed lands'
+        - ' &7selected lands'
     AllowMob-spawning:
       title: '&cMob-Spawning'
       description:
@@ -282,15 +317,21 @@ Commands:
     players:
       - '&c/land &8- &7Zeigt die Befehle'
       - '&c/land claim &8- &7Kauft das Grundstück an der aktuellen Position'
-      - '&c/land multiclaim &8- &7Kauft mehrere Grundstücke auf einmal'
+      - '&c/land multiclaim <mode> <radius> &8- &7Kauft mehrere Grundstücke auf einmal'
       - '&c/land unclaim &8- &7Das Grundstück an der aktuellen Position wird freigegeben'
+      - '&c/land multiunclaim <mode> <radius> &8- &7Unclaims multiple lands at once'
       - '&c/land addfriend <Spielername> &8- &7Fügt ein Spieler der Freundesliste des Grundstücks hinzu'
       - '&c/land unfriend <Spielername> &8- &7Löscht ein Spieler aus der Freundesliste des Grundstücks'
+      - '&c/land multiaddfriend <mode> <radius> <player> &8- &7Add a player as a friend to multiple lands at once'
+      - '&c/land multiunfriend <mode> <radius> <player> &8- &7Remove a player as a friend from multiple lands at once'
       - '&c/land friendall <Spielername> &8- &7Fügt ein Spieler der Freundesliste aller Grundstücke hinzu die aktuell im Besitz sind'
       - '&c/land unfriendall <Spielername> &8- &7Löscht ein Spieler aus der Freundesliste aller Grundstücke die aktuell im Besitz sind'
       - '&c/land friends &8- &7Zeigt die Freundesliste des Grundstücks an der aktuellen Position'
       - '&c/land manage &8- &7Verwaltet das Grundstück an der aktuellen Position in einer Benutzeroberfläsche'
+      - '&c/land multimanage <mode> <radius> &8- &7Manage multiple lands at once'
+      - '&c/land manageall &8- &7Manage all of your currently owned lands'
       - '&c/land list &8- &7Zeigt eine Liste der Grundstücke'
+      - '&c/land multilist <mode> <radius> &8- &7List multiple lands at once'
       - '&c/land info &8- &7Zeigt Informationen zu dem Grundstück an der aktuellen Position'
       - '&c/land map &8- &7Ein/Aus der Grundstückskarte'
       - '&c/land shop &8- &7Öffnet den Laden für Grundstück Genehmigungen'
@@ -400,4 +441,4 @@ Integrations:
   Towny:
     TownyPresent: '&cThere already is a towny region present!'
     LLPresent: '&cThere already is a landlord region present!'
-version: 24
+version: 25
