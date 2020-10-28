@@ -15,7 +15,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public class LLLuckPerms {
 
     private LuckPerms api;
-    private ILandLord pl;
+    private final ILandLord pl;
 
 
     public LLLuckPerms(ALandLord aLandLord) {

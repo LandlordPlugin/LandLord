@@ -49,7 +49,6 @@ public class ListFriends extends LandlordCommand {
     }
 
     private void onListFriends(Player player, String landname) {
-
         if (isDisabledWorld(player)) return;
 
         if (landname == null) {

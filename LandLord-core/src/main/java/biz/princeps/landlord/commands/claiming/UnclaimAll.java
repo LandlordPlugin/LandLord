@@ -93,7 +93,7 @@ public class UnclaimAll extends LandlordCommand {
                 Bukkit.getServer().getPluginManager().callEvent(event);
 
                 if (!event.isCancelled()) {
-                    double payback = -1;
+                    double payback;
                     int regionCount = wg.getRegionCount(player.getUniqueId());
                     int freeLands = plugin.getConfig().getInt("Freelands");
 

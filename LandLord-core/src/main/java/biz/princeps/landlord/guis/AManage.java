@@ -3,6 +3,8 @@ package biz.princeps.landlord.guis;
 import biz.princeps.landlord.api.*;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.landlord.commands.ManageMode;
+import biz.princeps.landlord.commands.MultiMode;
 import biz.princeps.landlord.commands.friends.Unfriend;
 import biz.princeps.landlord.commands.management.Manage;
 import biz.princeps.lib.PrincepsLib;
@@ -36,22 +38,32 @@ public class AManage extends AbstractGUI {
 
     private final IMaterialsManager mats;
 
-    AManage(ILandLord pl, Player player, String header, List<IOwnedLand> land) {
+    private final ManageMode manageMode;
+    private final MultiMode multiMode;
+    private final int radius;
+
+    AManage(ILandLord pl, Player player, String header, List<IOwnedLand> land, ManageMode manageMode, MultiMode multiMode, int radius) {
         super(player, 45, header);
         this.plugin = pl;
         this.regions = land;
         this.lm = plugin.getLangManager();
         this.toggleMobs = new HashSet<>(pl.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
         this.mats = pl.getMaterialsManager();
+        this.manageMode = manageMode;
+        this.multiMode = multiMode;
+        this.radius = radius;
     }
 
-    AManage(ILandLord pl, Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land) {
+    AManage(ILandLord pl, Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land, ManageMode manageMode, MultiMode multiMode, int radius) {
         super(player, 54, header, landGui);
         this.regions = land;
         this.plugin = pl;
         this.lm = plugin.getLangManager();
         this.toggleMobs = new HashSet<>(pl.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
         this.mats = pl.getMaterialsManager();
+        this.manageMode = manageMode;
+        this.multiMode = multiMode;
+        this.radius = radius;
     }
 
     @Override
@@ -244,11 +256,18 @@ public class AManage extends AbstractGUI {
                 p.closeInventory();
                 ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetGreet.clickMsg"));
 
-                if (regions.size() > 1) {
-                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setgreetall "));
-                } else {
-                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setgreet "));
+                switch (manageMode) {
+                    case ALL:
+                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setgreetall "));
+                        break;
+                    case MULTI:
+                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " multisetgreet " + multiMode + " " + radius));
+                        break;
+                    case ONE:
+                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setgreet "));
+                        break;
                 }
+
                 plugin.getUtilsManager().sendBasecomponent(p, builder.create());
             }));
             this.setIcon(position++, icon);
@@ -267,11 +286,19 @@ public class AManage extends AbstractGUI {
             icon.addClickAction(((p) -> {
                 p.closeInventory();
                 ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetFarewell.clickMsg"));
-                if (regions.size() > 1) {
-                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setfarewellall "));
-                } else {
-                    builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setfarewell "));
+
+                switch (manageMode) {
+                    case ALL:
+                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setfarewellall "));
+                        break;
+                    case MULTI:
+                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " multisetfarewell " + multiMode + " " + radius));
+                        break;
+                    case ONE:
+                        builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, managecmd + " setfarewell "));
+                        break;
                 }
+
                 plugin.getUtilsManager().sendBasecomponent(p, builder.create());
             }));
             this.setIcon(position++, icon);
@@ -286,43 +313,43 @@ public class AManage extends AbstractGUI {
 
             Set<UUID> friends = land.getFriends();
             final boolean canSpread = plugin.getConfig().getBoolean("Manage.spread-friends.enable") &&
-                    player.hasPermission("landlord.player.manage.spreadfriends") && regions.size() > 1;
-            MultiPagedGUI friendsGui = new MultiPagedGUI(player, (int) Math.ceil((double) (friends.size() + (canSpread ? 1 : 0)) / 9.0),
+                    player.hasPermission("landlord.player.manage.spreadfriends") && manageMode != ManageMode.ONE;
+            MultiPagedGUI friendsGui = new MultiPagedGUI(player, (int) Math.ceil((double) friends.size() / 9.0),
                     lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
+                @Override
+                protected void generateStaticIcons() {
+                    if (canSpread) {
+                        String spreadTitle = lm.getRawString("Commands.Manage.AllowSpread-friends.title");
+                        Material material = Material.valueOf(plugin.getConfig().getString("Manage.spread-friends" + ".item"));
+                        Icon spreadIcon = new Icon(new ItemStack(material));
+                        spreadIcon.setName(spreadTitle);
+                        spreadIcon.setLore(lm.getStringList("Commands.Manage.AllowSpread-friends.description"));
+
+                        spreadIcon.addClickAction((p) -> Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+                            final Set<UUID> defaultFriends = land.getFriends();
+
+                            for (IOwnedLand region : regions.subList(1, regions.size())) {
+                                final String oldfriends = region.getMembersString();
+
+                                for (UUID landFriend : region.getFriends()) {
+                                    if (!land.isFriend(landFriend)) region.removeFriend(landFriend);
+                                }
+                                for (UUID defaultFriend : defaultFriends) {
+                                    if (!region.isFriend(defaultFriend)) region.addFriend(defaultFriend);
+                                }
+
+                                Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                    LandManageEvent landManageEvent = new LandManageEvent(player, region,
+                                            "FRIENDS", oldfriends, region.getMembersString());
+                                    Bukkit.getPluginManager().callEvent(landManageEvent);
+                                });
+                            }
+                        }));
+
+                        this.setIcon((int) Math.ceil((double) friends.size() / 9.0) + 1, spreadIcon);
+                    }
+                }
             };
-
-            if (canSpread) {
-                String spreadTitle = lm.getRawString("Commands.Manage.AllowSpread-friends.title");
-                Material material = Material.valueOf(plugin.getConfig().getString("Manage.spread-friends" + ".item"));
-                Icon spreadIcon = new Icon(new ItemStack(material));
-                spreadIcon.setName(spreadTitle);
-                spreadIcon.setLore(lm.getStringList("Commands.Manage.AllowSpread-friends.description"));
-
-                spreadIcon.addClickAction((p) -> {
-                    Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-                        final Set<UUID> defaultFriends = land.getFriends();
-
-                        for (IOwnedLand region : regions.subList(1, regions.size())) {
-                            final String oldfriends = region.getMembersString();
-
-                            for (UUID landFriend : region.getFriends()) {
-                                if (!land.isFriend(landFriend)) region.removeFriend(landFriend);
-                            }
-                            for (UUID defaultFriend : defaultFriends) {
-                                if (!region.isFriend(defaultFriend)) region.addFriend(defaultFriend);
-                            }
-
-                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                LandManageEvent landManageEvent = new LandManageEvent(player, region,
-                                        "FRIENDS", oldfriends, region.getMembersString());
-                                Bukkit.getPluginManager().callEvent(landManageEvent);
-                            });
-                        }
-                    });
-                });
-
-                friendsGui.addIcon(spreadIcon);
-            }
 
             String rawTitle = lm.getRawString("Commands.Manage.ManageFriends.unfriend");
 
@@ -376,7 +403,7 @@ public class AManage extends AbstractGUI {
             // Language manager: Commands.Manage.x
             if (plugin.getConfig().getBoolean("Manage.commands." + key + ".enable") &&
                     player.hasPermission("landlord.player.manage." + key) &&
-                    regions.size() == 1) {
+                    manageMode == ManageMode.ONE) {
                 List<String> descri = lm.getStringList("Commands.Manage." + key + ".description");
                 double cost = plugin.getConfig().getDouble("ResetCost");
                 String costString = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "-1");
@@ -403,31 +430,34 @@ public class AManage extends AbstractGUI {
                 List<Icon> icons = new ArrayList<>();
                 List<String> lore = lm.getStringList("Commands.Manage.AllowMob-spawning.toggleItem.description");
 
-                MultiPagedGUI gui = new MultiPagedGUI(p, 5, title, icons, this);
+                MultiPagedGUI gui = new MultiPagedGUI(p, 5, title, icons, this) {
+                    @Override
+                    protected void generateStaticIcons() {
+                        if (plugin.getConfig().getBoolean("Manage.spread-mobs.enable") &&
+                                player.hasPermission("landlord.player.manage.spreadmobs") && manageMode != ManageMode.ONE) {
+                            String spreadTitle = lm.getRawString("Commands.Manage.AllowSpread-mobs.title");
+                            Material material = Material.valueOf(plugin.getConfig().getString("Manage.spread-mobs" + ".item"));
+                            Icon spreadIcon = new Icon(new ItemStack(material));
+                            spreadIcon.setName(spreadTitle);
+                            spreadIcon.setLore(lm.getStringList("Commands.Manage.AllowSpread-mobs.description"));
 
-                if (plugin.getConfig().getBoolean("Manage.spread-mobs.enable") &&
-                        player.hasPermission("landlord.player.manage.spreadmobs") && regions.size() > 1) {
-                    String spreadTitle = lm.getRawString("Commands.Manage.AllowSpread-mobs.title");
-                    Material material = Material.valueOf(plugin.getConfig().getString("Manage.spread-mobs" + ".item"));
-                    Icon spreadIcon = new Icon(new ItemStack(material));
-                    spreadIcon.setName(spreadTitle);
-                    spreadIcon.setLore(lm.getStringList("Commands.Manage.AllowSpread-mobs.description"));
+                            spreadIcon.addClickAction((p2) -> {
+                                for (IMob m : plugin.getMobManager().values()) {
+                                    // Skip mob if its not in the list, because that means this mob should not be manageable
+                                    if (!toggleMobs.contains(m.getName()) || !player.hasPermission(m.getPermission())) {
+                                        continue;
+                                    }
 
-                    spreadIcon.addClickAction((p2) -> {
-                        for (IMob m : plugin.getMobManager().values()) {
-                            // Skip mob if its not in the list, because that means this mob should not be manageable
-                            if (!toggleMobs.contains(m.getName()) || !player.hasPermission(m.getPermission())) {
-                                continue;
-                            }
+                                    for (IOwnedLand region : regions.subList(1, regions.size())) {
+                                        if (land.isMobDenied(m) != region.isMobDenied(m)) region.toggleMob(m);
+                                    }
+                                }
+                            });
 
-                            for (IOwnedLand region : regions.subList(1, regions.size())) {
-                                if (land.isMobDenied(m) != region.isMobDenied(m)) region.toggleMob(m);
-                            }
+                            this.setIcon(46, spreadIcon);
                         }
-                    });
-
-                    gui.addIcon(spreadIcon);
-                }
+                    }
+                };
 
                 String titleMob = lm.getRawString("Commands.Manage.AllowMob-spawning.toggleItem.title");
                 for (IMob m : plugin.getMobManager().values()) {
@@ -469,48 +499,46 @@ public class AManage extends AbstractGUI {
         }
 
         if (plugin.getConfig().getBoolean("Manage.spread-flags.enable") &&
-                player.hasPermission("landlord.player.manage.spreadflags") && regions.size() > 1) {
+                player.hasPermission("landlord.player.manage.spreadflags") && manageMode != ManageMode.ONE) {
             String title = lm.getRawString("Commands.Manage.AllowSpread-flags.title");
             Material material = Material.valueOf(plugin.getConfig().getString("Manage.spread-flags" + ".item"));
             Icon icon = new Icon(new ItemStack(material));
             icon.setName(title);
             icon.setLore(lm.getStringList("Commands.Manage.AllowSpread-flags.description"));
 
-            icon.addClickAction((p) -> {
-                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-                    for (int flagI = 0; flagI < land.getFlags().size(); flagI++) {
-                        final ILLFlag defaultFlag = land.getFlags().get(flagI);
+            icon.addClickAction((p) -> Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+                for (int flagI = 0; flagI < land.getFlags().size(); flagI++) {
+                    final ILLFlag defaultFlag = land.getFlags().get(flagI);
 
-                        for (IOwnedLand region : regions.subList(1, regions.size())) {
-                            final ILLFlag landFlag = region.getFlags().get(flagI);
+                    for (IOwnedLand region : regions.subList(1, regions.size())) {
+                        final ILLFlag landFlag = region.getFlags().get(flagI);
 
-                            if (defaultFlag.getFriendStatus() != landFlag.getFriendStatus()) {
-                                landFlag.toggleFriends();
+                        if (defaultFlag.getFriendStatus() != landFlag.getFriendStatus()) {
+                            landFlag.toggleFriends();
 
-                                Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                            landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
-                                    Bukkit.getPluginManager().callEvent(landManageEvent);
-                                });
-                            }
-                            if (defaultFlag.getAllStatus() != landFlag.getAllStatus()) {
-                                landFlag.toggleAll();
+                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                        landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
+                                Bukkit.getPluginManager().callEvent(landManageEvent);
+                            });
+                        }
+                        if (defaultFlag.getAllStatus() != landFlag.getAllStatus()) {
+                            landFlag.toggleAll();
 
-                                Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                    LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                            landFlag.getName(), !landFlag.getAllStatus(), landFlag.getAllStatus());
-                                    Bukkit.getPluginManager().callEvent(landManageEvent);
-                                });
-                            }
+                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
+                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                        landFlag.getName(), !landFlag.getAllStatus(), landFlag.getAllStatus());
+                                Bukkit.getPluginManager().callEvent(landManageEvent);
+                            });
                         }
                     }
+                }
 
-                    for (IOwnedLand region : regions) {
-                        region.setFarewellMessage(land.getFarewellMessage());
-                        region.setGreetMessage(land.getGreetMessage());
-                    }
-                });
-            });
+                for (IOwnedLand region : regions) {
+                    region.setFarewellMessage(land.getFarewellMessage());
+                    region.setGreetMessage(land.getGreetMessage());
+                }
+            }));
 
             this.setIcon(position++, icon);
         }
