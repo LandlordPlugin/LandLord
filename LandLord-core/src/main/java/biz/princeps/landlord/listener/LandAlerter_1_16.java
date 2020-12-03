@@ -70,7 +70,7 @@ public class LandAlerter_1_16 extends BasicListener {
                 if (Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3].split("_")[1]) < 12) {
                     if (packet.getBytes().getValues().get(0) != 1)
                         return;
-                } else if (!packet.getChatTypes().getValues().contains(EnumWrappers.ChatType.CHAT)) {
+                } else if (packet.getChatTypes().getValues().contains(EnumWrappers.ChatType.GAME_INFO)) {
                     //System.out.println("interrupt");
                     return;
                 }
