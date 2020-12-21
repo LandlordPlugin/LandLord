@@ -66,6 +66,7 @@ public class Claim extends LandlordCommand {
                 .getCommandString(Landlordbase.Confirm.class);
 
         int regionCount = wg.getRegionCount(player.getUniqueId());
+        int worldRegionCount = wg.getRegionCount(player.getUniqueId(), player.getWorld());
 
         // First check, if outer conditions (conditions that are related more to the buyer as individual)
         // Check for hardcap based on permissions
@@ -85,7 +86,7 @@ public class Claim extends LandlordCommand {
         }
 
         // Ckeck for adjacent claims
-        if (!isAdjacentLandOwned(player, chunk, regionCount)) {
+        if (!isAdjacentLandOwned(player, chunk, worldRegionCount)) {
             return;
         }
 
