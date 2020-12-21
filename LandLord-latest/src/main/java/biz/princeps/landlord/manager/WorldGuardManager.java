@@ -26,13 +26,17 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 
 /**
- * Project: LandLord
- * Created by Alex D. (SpatiumPrinceps)
- * Date: 06-05-19
+ * Project: LandLord Created by Alex D. (SpatiumPrinceps) Date: 06-05-19
  */
 public class WorldGuardManager extends AWorldGuardManager {
 
@@ -164,8 +168,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     }
 
     /**
-     * Checks for overlapping regions.
-     * Returns false if there is another overlapping region.
+     * Checks for overlapping regions. Returns false if there is another overlapping region.
      */
     @Override
     public boolean canClaim(Player player, Chunk currChunk) {
@@ -214,12 +217,24 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     /**
      * @param id the uuid of the player to get the region count for
+     *
      * @return the region count
      */
     @Override
     public int getRegionCount(UUID id) {
         if (cache.getLands(id) == null) return 0;
         return cache.getLands(id).size();
+    }
+
+    /**
+     * @param id the uuid of the player to get the region count for
+     *
+     * @return the region count
+     */
+    @Override
+    public int getRegionCount(UUID id, World world) {
+        if (cache.getLands(id) == null) return 0;
+        return (int) cache.getLands(id).stream().filter(l -> l.getWorld().equals(world)).count();
     }
 
     @Override

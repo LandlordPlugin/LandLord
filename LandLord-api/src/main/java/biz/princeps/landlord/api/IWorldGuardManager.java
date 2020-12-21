@@ -74,6 +74,8 @@ public interface IWorldGuardManager {
 
     int getRegionCount(UUID id);
 
+    int getRegionCount(UUID id, World world);
+
     int getRegionCount(World w);
 
     void unclaim(IOwnedLand land);
