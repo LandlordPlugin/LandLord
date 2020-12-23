@@ -7,13 +7,13 @@ might not get approved, if there are major problems.
 - We are using IntelliJs autoformat feature. In addition to that there are certain requirements:
     * Please do not leave out curly braces in one liner!
     * Please do not use enters in front of curly braces!
-- Wrap code to 120 column limit (standard in intellij)  
+- Wrap code to 120 column limit (standard in intellij)
 - Always comment your code.
 - Do not put multiple changes into one commit!
 - You may want to create feature branches for larger projects.
 - Discuss larger changes with the team before working for nothing
 - Please make sure to pull termination conditions to the front:  
-    **bad:**
+  **bad:**
     ```
     if(land.isFriend(uuid)) {
         if(weirdList.contains(uuid)) {
@@ -23,7 +23,7 @@ might not get approved, if there are major problems.
         }
     }
     ```
-    **good:**
+  **good:**
     ```
     if (!land.isFriend(uuid)) {
         return;
@@ -36,11 +36,12 @@ might not get approved, if there are major problems.
     }
     // ...
     ```
-    
+
 Steps
 -----
 
-1. Clone the repository 
-2. Write a run script to copy the built jar into your plugins folder and start the server (or whatever testing env you are using)
+1. Clone the repository
+2. Write a run script to copy the built jar into your plugins folder and start the server (or whatever testing env you
+   are using)
 3. Change code while respecting above conventions
 4. Submit a pull-request

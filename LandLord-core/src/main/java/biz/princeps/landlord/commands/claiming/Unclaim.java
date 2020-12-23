@@ -114,7 +114,7 @@ public class Unclaim extends LandlordCommand {
                     payback = plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble("Payback");
                     // System.out.println(payback);
                     if (payback > 0) {
-                        plugin.getVaultManager().give(player.getUniqueId(), payback);
+                        plugin.getVaultManager().give(player, payback);
                     }
                 }
             }

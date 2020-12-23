@@ -66,8 +66,8 @@ public class Regenerate extends LandlordCommand {
                     (p1) -> {
                         boolean flag = true;
                         if (Options.isVaultEnabled()) {
-                            if (plugin.getVaultManager().hasBalance(player.getUniqueId(), cost)) {
-                                plugin.getVaultManager().take(player.getUniqueId(), cost);
+                            if (plugin.getVaultManager().hasBalance(player, cost)) {
+                                plugin.getVaultManager().take(player, cost);
                             } else {
                                 lm.sendMessage(player, lm.getString("Commands.Regenerate.notEnoughMoney")
                                         .replace("%cost%", costString)

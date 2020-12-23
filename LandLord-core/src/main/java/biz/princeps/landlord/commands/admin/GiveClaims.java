@@ -56,9 +56,9 @@ public class GiveClaims extends LandlordCommand {
                 Player player = Bukkit.getPlayer(target);
                 if (player != null) {
                     if (checkPermission(player, amount)) {
-                        if (vault.hasBalance(player.getUniqueId(), cost)) {
+                        if (vault.hasBalance(player, cost)) {
 
-                            vault.take(player.getUniqueId(), cost);
+                            vault.take(player, cost);
                             lm.sendMessage(player, plugin.getLangManager().getString("Shop.success")
                                     .replace("%number%", amount + "")
                                     .replace("%cost%", vault.format(cost)));

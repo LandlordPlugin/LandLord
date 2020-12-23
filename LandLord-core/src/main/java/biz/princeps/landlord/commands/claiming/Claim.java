@@ -215,7 +215,7 @@ public class Claim extends LandlordCommand {
 
     private boolean hasMoney(Player player, double costForBuyer, String landName, Chunk chunk) {
         if (Options.isVaultEnabled()) {
-            if (vault.hasBalance(player.getUniqueId(), costForBuyer)) {
+            if (vault.hasBalance(player, costForBuyer)) {
                 // Enough money
                 return true;
             } else {
@@ -233,8 +233,8 @@ public class Claim extends LandlordCommand {
 
     private void handleInactiveClaim(Player player, IOwnedLand ol, double costForBuyer, double payBackForInactive,
                                      String originalOwner) {
-        vault.take(player.getUniqueId(), costForBuyer);
-        vault.give(ol.getOwner(), payBackForInactive);
+        vault.take(player, costForBuyer);
+        vault.give(ol.getOwner(), payBackForInactive, player.getWorld());
 
         ol.replaceOwner(player.getUniqueId());
         lm.sendMessage(player, lm.getString("Commands.Claim.boughtUp")
@@ -256,8 +256,8 @@ public class Claim extends LandlordCommand {
     private void performAdvertisedClaim(Player player, IOwnedLand ol) {
         Chunk chunk = ol.getChunk();
 
-        vault.take(player.getUniqueId(), ol.getPrice());
-        vault.give(ol.getOwner(), ol.getPrice());
+        vault.take(player, ol.getPrice());
+        vault.give(ol.getOwner(), ol.getPrice(), player.getWorld());
         Player pp = Bukkit.getPlayer(ol.getOwner());
 
         ol.replaceOwner(player.getUniqueId());
@@ -286,7 +286,7 @@ public class Claim extends LandlordCommand {
 
     private void performNormalClaim(Player player, Chunk chunk, double calculatedCost, String landName) {
         if (Options.isVaultEnabled() && calculatedCost > 0) {
-            vault.take(player.getUniqueId(), calculatedCost);
+            vault.take(player, calculatedCost);
             lm.sendMessage(player, lm.getString("Commands.Claim.moneyTook")
                     .replace("%money%", vault.format(calculatedCost))
                     .replace("%chunk%", landName)
