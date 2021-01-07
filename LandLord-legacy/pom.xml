@@ -44,29 +44,6 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <relocations>
-                                <relocation>
-                                    <pattern>org.reflections</pattern>
-                                    <shadedPattern>biz.princeps.lib.org.reflections</shadedPattern>
-                                </relocation>
-                            </relocations>
-                            <artifactSet>
-                                <includes>
-                                    <include>org.slf4j:slf4j-simple</include>
-                                    <include>org.slf4j:slf4j-api</include>
-                                    <include>org.reflections:reflections</include>
-                                    <include>org.javassist:javassist</include>
-                                    <include>co.aikar:locales</include>
-                                    <include>co.aikar:minecraft-timings</include>
-                                    <include>biz.princeps:LandLord-core</include>
-                                    <include>biz.princeps:LandLord-api</include>
-                                    <include>biz.princeps:PrincepsLib</include>
-                                    <include>org.inventivetalent.spiget-update:bukkit</include>
-                                    <include>com.zaxxer:HikariCP</include>
-                                </includes>
-                            </artifactSet>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

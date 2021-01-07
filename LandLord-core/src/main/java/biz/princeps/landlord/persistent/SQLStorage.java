@@ -3,7 +3,6 @@ package biz.princeps.landlord.persistent;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.IStorage;
 import biz.princeps.lib.storage.Datastorage;
-import biz.princeps.lib.storage_old.DatabaseType;
 import biz.princeps.lib.util.SpigotUtil;
 import biz.princeps.lib.util.TimeUtil;
 import org.bukkit.Bukkit;
@@ -19,7 +18,7 @@ public class SQLStorage extends Datastorage implements IStorage {
     private static final int CURRENT_VERSION = 4;
 
     public SQLStorage(JavaPlugin plugin) {
-        super(plugin.getLogger(), DatabaseType.MySQL,
+        super(plugin.getLogger(),
                 plugin.getConfig().getString("MySQL.Hostname"),
                 plugin.getConfig().getString("MySQL.Port"),
                 plugin.getConfig().getString("MySQL.User"),
