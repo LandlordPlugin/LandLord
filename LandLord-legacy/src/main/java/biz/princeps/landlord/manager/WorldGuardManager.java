@@ -3,6 +3,7 @@ package biz.princeps.landlord.manager;
 import biz.princeps.landlord.OwnedLand;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.tuple.Pair;
 import biz.princeps.landlord.protection.AWorldGuardManager;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.WorldEdit;
@@ -77,8 +78,9 @@ public class WorldGuardManager extends AWorldGuardManager {
      */
     @Override
     public IOwnedLand claim(Chunk chunk, UUID owner) {
-        Location down = chunk.getBlock(0, 0, 0).getLocation();
-        Location upper = chunk.getBlock(15, 255, 15).getLocation();
+        Pair<Integer, Integer> boundaries = calcClaimHeightBoundaries(chunk);
+        Location down = chunk.getBlock(0, boundaries.getLeft(), 0).getLocation();
+        Location upper = chunk.getBlock(15, boundaries.getRight(), 15).getLocation();
 
         BlockVector vec1 = locationToVec(down);
         BlockVector vec2 = locationToVec(upper);
