@@ -6,6 +6,9 @@ import biz.princeps.landlord.manager.MobManager;
 import biz.princeps.landlord.manager.UtilsManager;
 import biz.princeps.landlord.manager.WorldGuardManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.session.SessionManager;
+import com.sk89q.worldguard.session.handler.FarewellFlag;
+import com.sk89q.worldguard.session.handler.GreetingFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.Listener;
@@ -40,6 +43,11 @@ public class LandLord extends ALandLord implements Listener {
             // there is only the default method available for 1.12.2
         }
         this.regenerationManager = World::regenerateChunk;
+
+        SessionManager sessionManager = WorldGuardPlugin.inst().getSessionManager();
+        sessionManager.registerHandler(new LandSessionHandler.Factory((WorldGuardManager) worldGuardManager), null);
+        sessionManager.unregisterHandler(GreetingFlag.FACTORY);
+        sessionManager.unregisterHandler(FarewellFlag.FACTORY);
 
         ((WorldGuardManager) worldGuardManager).initCache();
 

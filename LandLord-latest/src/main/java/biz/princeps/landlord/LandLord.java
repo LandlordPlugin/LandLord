@@ -8,7 +8,11 @@ import biz.princeps.landlord.manager.UtilsManager;
 import biz.princeps.landlord.manager.WorldGuardManager;
 import biz.princeps.landlord.regenerators.RegenerationManager;
 import biz.princeps.landlord.regenerators.WGRegenerator;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.session.SessionManager;
+import com.sk89q.worldguard.session.handler.FarewellFlag;
+import com.sk89q.worldguard.session.handler.GreetingFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -46,6 +50,10 @@ public class LandLord extends ALandLord {
             this.regenerationManager = new RegenerationManager();
         }
 
+        SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
+        sessionManager.registerHandler(new LandSessionHandler.Factory((WorldGuardManager) worldGuardManager), null);
+        sessionManager.unregisterHandler(GreetingFlag.FACTORY);
+        sessionManager.unregisterHandler(FarewellFlag.FACTORY);
         ((WorldGuardManager) worldGuardManager).initCache();
 
         super.onEnable();

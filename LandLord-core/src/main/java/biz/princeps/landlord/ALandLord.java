@@ -236,12 +236,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     private void setupListeners() {
         new JoinListener(this);
         new MapListener(this);
-
-        if (Bukkit.getVersion().contains("1.16")) {
-            new LandAlerter_1_16(this);
-        } else {
-            new LandAlerter(this);
-        }
+        new LandChangeListener(this);
 
         if (getConfig().getBoolean("SecureWorld.enable")) {
             new SecureWorldListener(this);
