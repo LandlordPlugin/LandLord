@@ -772,4 +772,4 @@ ClaimHeight:
 EnableMetrics: true
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 31
+version: 32
