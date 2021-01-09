@@ -1,13 +1,28 @@
 package biz.princeps.landlord.protection;
 
+import biz.princeps.landlord.api.ClaimHeightDefinition;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.api.tuple.Pair;
 import biz.princeps.lib.PrincepsLib;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.ChunkSnapshot;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Project: LandLord
@@ -111,6 +126,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         return getNearbyLands(loc.getChunk(), offsetX, offsetZ);
     }
 
+    @Override
     public abstract void moveUp(World world, int x, int z, int amt);
 
     @Override
@@ -180,12 +196,13 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
      * Return the surrounding protected regions of a location.
      *
      * @param ploc the location
+     *
      * @return an array of size 5 containing the region of the location itsself and all the surrounding regions
      */
     @Override
     public IOwnedLand[] getSurroundings(Location ploc) {
         if (ploc == null) return new IOwnedLand[0];
-        return new IOwnedLand[]{
+        return new IOwnedLand[] {
                 getRegion(ploc),
                 getRegion(ploc.clone().add(16, 0, 0)),
                 getRegion(ploc.clone().add(0, 0, 16)),
@@ -275,4 +292,72 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         }
         return count;
     }
+
+    @Override
+    public Pair<Integer, Integer> calcClaimHeightBoundaries(Chunk chunk) {
+        ClaimHeightDefinition boundaryMethod = ClaimHeightDefinition.parse(pl.getConfig().getString("ClaimHeight.method"));
+
+        // We will use the full and default behaviour as default value.
+        if (boundaryMethod == null) {
+            boundaryMethod = ClaimHeightDefinition.FULL;
+        }
+
+        int maxHeight = chunk.getWorld().getMaxHeight() - 1;
+
+        // Full is the default behaviour.
+        // This will claim the whole chunk.
+        if (boundaryMethod == ClaimHeightDefinition.FULL) {
+            return Pair.of(0, maxHeight);
+        }
+
+        int bottomY = pl.getConfig().getInt("ClaimHeight.bottomY", 0);
+        int topY = pl.getConfig().getInt("ClaimHeight.topY", maxHeight);
+
+        // Fixed is the simple claim behaviour.
+        // We want to handle this first.
+        if (boundaryMethod == ClaimHeightDefinition.FIXED) {
+            return Pair.of(Math.max(0, bottomY), Math.min(topY, maxHeight));
+        }
+
+        // Lets find all highest points in the chunk.
+        List<Integer> points = new ArrayList<>();
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                points.add(chunk.getWorld().getHighestBlockYAt((chunk.getX() << 4) + x, (chunk.getZ() << 4) + z));
+            }
+        }
+
+        // Get the center based on the boundary Method
+        int center = boundaryMethod.getCenter(points);
+
+        bottomY = center + bottomY;
+        topY = center + topY;
+
+
+        if (pl.getConfig().getBoolean("ClaimHeight.appendOversize")) {
+            // We append the oversize which reach out of the world on the top or the bottom if it fits.
+            // We throw oversize away if we would exceed the world height limit on both ends.
+            if (topY > maxHeight) {
+                bottomY -= topY - maxHeight;
+                topY = maxHeight;
+                if (bottomY < 0) {
+                    bottomY = 0;
+                }
+            }
+
+            if (bottomY < 0) {
+                topY += Math.abs(bottomY);
+                bottomY = 0;
+                if (topY > maxHeight) {
+                    topY = maxHeight;
+                }
+            }
+        } else {
+            // Just clamp this stuff.
+            bottomY = Math.max(bottomY, 0);
+            topY = Math.min(topY, maxHeight);
+        }
+        return Pair.of(bottomY, topY);
+    }
+
 }

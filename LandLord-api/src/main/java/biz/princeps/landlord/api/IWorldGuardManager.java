@@ -1,5 +1,6 @@
 package biz.princeps.landlord.api;
 
+import biz.princeps.landlord.api.tuple.Pair;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -105,4 +106,16 @@ public interface IWorldGuardManager {
     String formatLocation(Chunk chunk);
 
     void moveUp(World world, int x, int z, int amt);
+
+    /**
+     * Calculates the chunk height boundaries.
+     * <p>
+     * These boundaries are defined by the {@link ClaimHeightDefinition}.
+     *
+     * @param chunk chunk of which the claim height should be calculated
+     *
+     * @return A pair of two integers. The {@link Pair#getLeft()} defines the lower claim boundary. The {@link
+     * Pair#getRight()} defines the upper claim boundary
+     */
+    public Pair<Integer, Integer> calcClaimHeightBoundaries(Chunk chunk);
 }

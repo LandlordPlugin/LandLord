@@ -729,9 +729,36 @@ Manage:
       - ZOGLIN
       - ZOMBIFIED_PIGLIN
 
+# Define how the claim height should be defined.
+ClaimHeight:
+  # Choose the method which should be used to define the claim Y dimensions
+  # FULL - Use the full chunk from 0 to max height - 1
+  # FIXED - Use the minY and maxY value as the fixed size
+  # The now following methods are relativ. This means that we will substract the minY from it and add the maxY on it to define the height.
+  # We use the highest block of each coordinate in the chunk. This means that we will use 16x16 blocks.
+  # LOWEST - We use the lowest block in the chunk.
+  # HIGHEST - We use the highest block in the chunk.
+  # AVERAGE - We use the average block height of the chunk.
+  # MEDIAN - We use the median of the block height in the chunk
+  method: FULL
+  # If you choose FULL this wont matter.
+  # If you choose FIXED this will be the bottom and top y value.
+  # If you use some of the relative methods this will act as an offset.
+  # This also means that the values will be added on the corresponding values.
+  # If you want to move the bottom down you have to insert a negative value.
+  # example for relative settings:
+  # bottomY: -30
+  # topY: 60
+  # fixed settings:
+  bottomY: 0
+  topY: 255
+  # If you use something else than FULL or FIXED it can happen that the region would exceed the world limit.
+  # If you set this to true we will add the oversize on the other end.
+  # This means that if your claim would exceed the world limit on the top by 10 blocks, we add 10 blocks at the bottom of your region.
+  appendOversize: false
 
 # Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
 EnableMetrics: true
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 30
+version: 31
