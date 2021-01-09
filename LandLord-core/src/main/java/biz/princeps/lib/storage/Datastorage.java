@@ -1,7 +1,6 @@
 package biz.princeps.lib.storage;
 
 import biz.princeps.lib.PrincepsLib;
-import com.mysql.cj.jdbc.MysqlDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,15 +28,18 @@ public class Datastorage {
         this.logger = logger;
         this.pl = PrincepsLib.getPluginInstance();
 
-        HikariConfig config = new HikariConfig();
-        config.setDataSourceClassName(MysqlDataSource.class.getName());
-        config.addDataSourceProperty("serverName", hostname);
-        config.addDataSourceProperty("port", port);
-        config.addDataSourceProperty("user", username);
-        config.addDataSourceProperty("password", password);
-        config.addDataSourceProperty("databaseName", database);
+        final HikariConfig hikariConfig = new HikariConfig();
 
-        ds = new HikariDataSource(config);
+        hikariConfig.setMaximumPoolSize(10);
+        hikariConfig.setJdbcUrl("jdbc:mysql://" + hostname + ":" + port + "/" + database);
+        hikariConfig.setUsername(username);
+        hikariConfig.setPassword(password);
+        hikariConfig.setMaxLifetime(600000L);
+        hikariConfig.setIdleTimeout(300000L);
+        hikariConfig.setLeakDetectionThreshold(300000L);
+        hikariConfig.setConnectionTimeout(10000L);
+
+        ds = new HikariDataSource(hikariConfig);
         setupDatabase();
     }
 

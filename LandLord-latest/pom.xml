@@ -44,6 +44,20 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.slf4j:slf4j-simple</include>
+                                    <include>org.slf4j:slf4j-api</include>
+                                    <include>biz.princeps:LandLord-core</include>
+                                    <include>biz.princeps:LandLord-api</include>
+                                    <include>biz.princeps:PrincepsLib</include>
+                                    <include>org.inventivetalent.spiget-update:bukkit</include>
+                                    <include>com.zaxxer:HikariCP</include>
+                                    <include>io.github.bananapuncher714:nbteditor</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

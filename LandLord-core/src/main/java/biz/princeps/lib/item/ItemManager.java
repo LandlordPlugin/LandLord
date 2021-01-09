@@ -44,7 +44,7 @@ public class ItemManager {
         try {
             Material material = Material.valueOf(string.toUpperCase());
             return new ItemStack(material);
-        }catch(NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             return null;
         }
     }

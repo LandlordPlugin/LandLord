@@ -7,17 +7,17 @@ public class TranslateableStrings {
 
     private final Map<String, String> strings;
 
-    public TranslateableStrings(){
+    public TranslateableStrings() {
         strings = new HashMap<>();
         strings.put("Confirmation.accept", "&bAccept!");
         strings.put("Confirmation.decline", "&eDecline!");
     }
 
-    public void setString(String path, String string){
+    public void setString(String path, String string) {
         strings.replace(path, string);
     }
 
-    public String get(String path){
+    public String get(String path) {
         return strings.get(path);
     }
 }

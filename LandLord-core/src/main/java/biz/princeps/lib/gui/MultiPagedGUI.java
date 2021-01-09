@@ -72,7 +72,8 @@ public class MultiPagedGUI extends AbstractGUI {
         return filtered;
     }
 
-    protected void generateStaticIcons() {}
+    protected void generateStaticIcons() {
+    }
 
     /**
      * Creates the site which is needed next
@@ -84,7 +85,7 @@ public class MultiPagedGUI extends AbstractGUI {
         for (int i = 0; i < rowsPerSite * 9; i++) {
             if (i + rowsPerSite * siteNumber * 9 < icons.size()) {
                 this.setIcon(i, icons.get(i + rowsPerSite * siteNumber * 9));
-               // int erg = i + rowsPerSite * siteNumber * 9;
+                // int erg = i + rowsPerSite * siteNumber * 9;
             } else {
                 this.setIcon(i, new Icon(new ItemStack(Material.AIR)));
             }
