@@ -6,23 +6,10 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.tuple.Pair;
 import biz.princeps.lib.PrincepsLib;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.ChunkSnapshot;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Particle;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Project: LandLord
@@ -196,13 +183,12 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
      * Return the surrounding protected regions of a location.
      *
      * @param ploc the location
-     *
      * @return an array of size 5 containing the region of the location itsself and all the surrounding regions
      */
     @Override
     public IOwnedLand[] getSurroundings(Location ploc) {
         if (ploc == null) return new IOwnedLand[0];
-        return new IOwnedLand[] {
+        return new IOwnedLand[]{
                 getRegion(ploc),
                 getRegion(ploc.clone().add(16, 0, 0)),
                 getRegion(ploc.clone().add(0, 0, 16)),

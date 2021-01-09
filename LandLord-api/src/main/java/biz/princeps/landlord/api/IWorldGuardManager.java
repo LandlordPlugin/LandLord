@@ -113,7 +113,6 @@ public interface IWorldGuardManager {
      * These boundaries are defined by the {@link ClaimHeightDefinition}.
      *
      * @param chunk chunk of which the claim height should be calculated
-     *
      * @return A pair of two integers. The {@link Pair#getLeft()} defines the lower claim boundary. The {@link
      * Pair#getRight()} defines the upper claim boundary
      */

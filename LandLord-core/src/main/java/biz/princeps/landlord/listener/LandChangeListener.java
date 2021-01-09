@@ -2,10 +2,8 @@ package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.events.LandChangeEvent;
-import biz.princeps.lib.PrincepsLib;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.chat.TextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,7 +31,8 @@ public class LandChangeListener extends BasicListener {
                 break;
             case Disabled:
             default:
-                sendMessage = (message, player) -> {};
+                sendMessage = (message, player) -> {
+                };
         }
     }
 

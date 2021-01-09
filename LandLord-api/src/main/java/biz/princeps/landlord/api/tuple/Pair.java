@@ -1,6 +1,6 @@
 package biz.princeps.landlord.api.tuple;
 
-public final class Pair<T,V> {
+public final class Pair<T, V> {
     private final T left;
     private final V right;
 
@@ -9,8 +9,8 @@ public final class Pair<T,V> {
         this.right = right;
     }
 
-    public static <T,V> Pair<T,V> of(T left, V right){
-        return new Pair<>(left,right);
+    public static <T, V> Pair<T, V> of(T left, V right) {
+        return new Pair<>(left, right);
     }
 
     public T getLeft() {
