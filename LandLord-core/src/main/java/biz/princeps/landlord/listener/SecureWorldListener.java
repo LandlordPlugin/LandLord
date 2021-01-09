@@ -26,7 +26,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
  */
 public class SecureWorldListener extends BasicListener {
 
-    private final LandAlerter.LandMessageDisplay display;
+    private final MessageDisplay display;
     private final int treshold;
     private final IWorldGuardManager wg;
 
@@ -34,7 +34,7 @@ public class SecureWorldListener extends BasicListener {
         super(pl);
         this.treshold = plugin.getConfig().getInt("SecureWorld.threshold");
         this.wg = pl.getWGManager();
-        this.display = LandAlerter.LandMessageDisplay.valueOf(plugin.getConfig().getString("SecureWorld.displayWarning"));
+        this.display = MessageDisplay.valueOf(plugin.getConfig().getString("SecureWorld.displayWarning"));
     }
 
     @EventHandler
@@ -98,12 +98,12 @@ public class SecureWorldListener extends BasicListener {
         if (landcount < treshold) {
             String rawString = plugin.getLangManager().getRawString("Alerts.tresholdNotReached")
                     .replace("%x%", treshold + "");
-            if (display == LandAlerter.LandMessageDisplay.ActionBar) {
+            if (display == MessageDisplay.ActionBar) {
                 PrincepsLib.getStuffManager().sendActionBar(p, rawString);
-            } else if (display == LandAlerter.LandMessageDisplay.Chat) {
+            } else if (display == MessageDisplay.Chat) {
                 plugin.getLangManager().sendMessage(p, plugin.getLangManager().getString("Alerts.tresholdNotReached")
                         .replace("%x%", treshold + ""));
-            } else if (display == LandAlerter.LandMessageDisplay.Title) {
+            } else if (display == MessageDisplay.Title) {
                 p.sendTitle(rawString, null, 10, 70, 20);
             }
 
