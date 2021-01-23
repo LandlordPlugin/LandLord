@@ -56,7 +56,7 @@ public class MultiRemovefriend extends LandlordCommand {
         }
 
         if (name == null || name.isEmpty()) {
-            lm.sendMessage(player, lm.getString("Commands.MultiUnfriend.noPlayer")
+            lm.sendMessage(player, lm.getString(player, "Commands.MultiUnfriend.noPlayer")
                     .replace("%players%", "?"));
             return;
         }
@@ -64,7 +64,7 @@ public class MultiRemovefriend extends LandlordCommand {
         plugin.getPlayerManager().getOffline(name, (offline) -> {
             if (offline == null) {
                 // Failure
-                lm.sendMessage(player, lm.getString("Commands.MultiUnfriend.noPlayer")
+                lm.sendMessage(player, lm.getString(player, "Commands.MultiUnfriend.noPlayer")
                         .replace("%players%", name));
             } else {
                 // Success
@@ -84,13 +84,13 @@ public class MultiRemovefriend extends LandlordCommand {
                     }
 
                     if (count > 0) {
-                        lm.sendMessage(player, lm.getString("Commands.MultiUnfriend.success")
+                        lm.sendMessage(player, lm.getString(player, "Commands.MultiUnfriend.success")
                                 .replace("%count%", String.valueOf(count))
                                 .replace("%players%", name));
 
                         Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
                     } else {
-                        lm.sendMessage(player, lm.getString("Commands.MultiUnfriend.noFriend")
+                        lm.sendMessage(player, lm.getString(player, "Commands.MultiUnfriend.noFriend")
                                 .replace("%player%", name));
                     }
                 });

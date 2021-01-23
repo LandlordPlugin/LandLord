@@ -117,7 +117,7 @@ public class GiveClaims extends LandlordCommand {
 
         if (player != null && player.isOnline() && lPlayer != null) {
             lPlayer.addClaims(amount);
-            lm.sendMessage(player, lm.getString("Commands.GiveClaims.success")
+            lm.sendMessage(player, lm.getString(player, "Commands.GiveClaims.success")
                     .replace("%amount%", String.valueOf(amount)));
         } else {
             plugin.getPlayerManager().getOffline(target, (offline) -> {
@@ -127,12 +127,12 @@ public class GiveClaims extends LandlordCommand {
                     OfflinePlayer op = Bukkit.getOfflinePlayer(offline.getUuid());
 
                     if (op.isOnline()) {
-                        lm.sendMessage(op.getPlayer(), lm.getString("Commands.GiveClaims.success").replace("%amount%",
+                        lm.sendMessage(op.getPlayer(), lm.getString(op.getPlayer(), "Commands.GiveClaims.success").replace("%amount%",
                                 String.valueOf(amount)));
                     }
                 } else {
                     if (issuer.getPlayer() != null) {
-                        lm.sendMessage(issuer.getPlayer(), lm.getString("Commands.GiveClaims.noPlayer"));
+                        lm.sendMessage(issuer.getPlayer(), lm.getString(issuer.getPlayer(), "Commands.GiveClaims.noPlayer"));
                     }
                 }
             });

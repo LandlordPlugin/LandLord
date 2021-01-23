@@ -46,13 +46,13 @@ public class Addfriend extends LandlordCommand {
 
         if (land != null) {
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.modifyfriends")) {
-                lm.sendMessage(player, lm.getString("Commands.Addfriend.notOwn")
+                lm.sendMessage(player, lm.getString(player, "Commands.Addfriend.notOwn")
                         .replace("%owner%", land.getOwnersString()));
                 return;
             }
 
             if (playerName == null) {
-                lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
+                lm.sendMessage(player, lm.getString(player, "Commands.Addfriend.noPlayer")
                         .replace("%players%", "?"));
                 return;
             }
@@ -60,7 +60,7 @@ public class Addfriend extends LandlordCommand {
             plugin.getPlayerManager().getOffline(playerName, (offline) -> {
                 if (offline == null) {
                     // Failure
-                    lm.sendMessage(player, lm.getString("Commands.Addfriend.noPlayer")
+                    lm.sendMessage(player, lm.getString(player, "Commands.Addfriend.noPlayer")
                             .replace("%players%", playerName));
                 } else if (!land.isOwner(offline.getUuid())) {
                     // Success
@@ -73,14 +73,14 @@ public class Addfriend extends LandlordCommand {
                         Bukkit.getPluginManager().callEvent(landManageEvent);
                     });
 
-                    lm.sendMessage(player, lm.getString("Commands.Addfriend.success")
+                    lm.sendMessage(player, lm.getString(player, "Commands.Addfriend.success")
                             .replace("%players%", playerName));
 
                     // lets delay it, because we cant be sure, that the requests are done when executing this piece
                     // of code
                     Bukkit.getScheduler().runTaskLater(plugin.getPlugin(), plugin.getMapManager()::updateAll, 60L);
                 } else {
-                    lm.sendMessage(player, lm.getString("Commands.Addfriend.alreadyOwn"));
+                    lm.sendMessage(player, lm.getString(player, "Commands.Addfriend.alreadyOwn"));
                 }
             });
         }

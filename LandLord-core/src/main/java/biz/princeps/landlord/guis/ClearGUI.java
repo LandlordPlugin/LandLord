@@ -55,7 +55,7 @@ public class ClearGUI extends AbstractGUI {
                                 a.closeInventory();
                             },
                             (d) -> {
-                                lm.sendMessage(d, lm.getString("Commands.ClearWorld.gui.clearcurrentland.abort"));
+                                lm.sendMessage(d, lm.getString(player, "Commands.ClearWorld.gui.clearcurrentland.abort"));
                                 d.closeInventory();
                             }, this);
                     confirm.display();
@@ -76,7 +76,7 @@ public class ClearGUI extends AbstractGUI {
                                 a.closeInventory();
                             },
                             (d) -> {
-                                lm.sendMessage(d, lm.getString("Commands.ClearWorld.gui.clearplayer.abort"));
+                                lm.sendMessage(d, lm.getString(player, "Commands.ClearWorld.gui.clearplayer.abort"));
                                 d.closeInventory();
                             }, this);
                     confirm.display();
@@ -99,7 +99,7 @@ public class ClearGUI extends AbstractGUI {
                             a.closeInventory();
                         },
                         (d) -> {
-                            lm.sendMessage(d, lm.getString("Commands.ClearWorld.gui.clearworld.abort"));
+                            lm.sendMessage(d, lm.getString(player, "Commands.ClearWorld.gui.clearworld.abort"));
                             d.closeInventory();
                         }, this);
                 confirm.display();
@@ -111,24 +111,24 @@ public class ClearGUI extends AbstractGUI {
     private void clearLand(IOwnedLand land) {
         //TODO We already check during menu creation, it's enough, this check is useless ?
         if (!player.hasPermission("landlord.admin.clear.land")) {
-            lm.sendMessage(player, lm.getString("noPermissions"));
+            lm.sendMessage(player, lm.getString(player, "noPermissions"));
         }
 
         wg.unclaim(Sets.newHashSet(land));
-        lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearcurrentland.success")
+        lm.sendMessage(player, lm.getString(player, "Commands.ClearWorld.gui.clearcurrentland.success")
                 .replace("%land%", land.getName()));
     }
 
     private void clearWorld(World world) {
         //TODO We already check during menu creation, it's enough, this check is useless ?
         if (!player.hasPermission("landlord.admin.clear.world")) {
-            lm.sendMessage(player, lm.getString("noPermissions"));
+            lm.sendMessage(player, lm.getString(player, "noPermissions"));
         }
 
         Set<IOwnedLand> regions = wg.getRegions(world);
         int count = wg.unclaim(regions);
 
-        lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearworld.success")
+        lm.sendMessage(player, lm.getString(player, "Commands.ClearWorld.gui.clearworld.success")
                 .replace("%count%", String.valueOf(count))
                 .replace("%world%", world.getName()));
 
@@ -138,20 +138,20 @@ public class ClearGUI extends AbstractGUI {
     private void clearPlayer(UUID id) {
         //TODO We already check during menu creation, it's enough, this check is useless ?
         if (!player.hasPermission("landlord.admin.clear.player")) {
-            lm.sendMessage(player, lm.getString("noPermissions"));
+            lm.sendMessage(player, lm.getString(player, "noPermissions"));
         }
 
         plugin.getPlayerManager().getOffline(id, (lPlayer) -> {
             if (lPlayer == null) {
                 // Failure
-                lm.sendMessage(player, lm.getString("Commands.ClearWorld.noPlayer")
+                lm.sendMessage(player, lm.getString(player, "Commands.ClearWorld.noPlayer")
                         .replace("%players%", id.toString()));
             } else {
                 // Success
                 Set<IOwnedLand> regions = wg.getRegions(lPlayer.getUuid());
                 int amt = wg.unclaim(regions);
 
-                lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearplayer.success")
+                lm.sendMessage(player, lm.getString(player, "Commands.ClearWorld.gui.clearplayer.success")
                         .replace("%count%", String.valueOf(amt))
                         .replace("%player%", lPlayer.getName()));
 

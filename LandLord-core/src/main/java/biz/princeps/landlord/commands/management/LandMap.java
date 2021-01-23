@@ -46,7 +46,7 @@ public class LandMap extends LandlordCommand {
         if (Options.enabled_map())
             plugin.getMapManager().toggleMap(player);
         else {
-            lm.sendMessage(player, lm.getString("Commands.LandMap.disabled"));
+            lm.sendMessage(player, lm.getString(player, "Commands.LandMap.disabled"));
         }
 
     }
@@ -55,7 +55,7 @@ public class LandMap extends LandlordCommand {
         if (isDisabledWorld(player)) return;
 
         if (!Options.enabled_map()) {
-            lm.sendMessage(player, lm.getString("Commands.LandMap.disabled"));
+            lm.sendMessage(player, lm.getString(player, "Commands.LandMap.disabled"));
             return;
         }
 

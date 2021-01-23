@@ -52,25 +52,25 @@ public class ListFriends extends LandlordCommand {
         if (isDisabledWorld(player)) return;
 
         if (landname == null) {
-            lm.sendMessage(player, lm.getString("Commands.Listfriends.freeLand"));
+            lm.sendMessage(player, lm.getString(player, "Commands.Listfriends.freeLand"));
             return;
         }
         if (!wg.isLLRegion(landname)) {
-            lm.sendMessage(player, lm.getString("Commands.Listfriends.invalidGeneral"));
+            lm.sendMessage(player, lm.getString(player, "Commands.Listfriends.invalidGeneral"));
             return;
         }
 
         IOwnedLand land = wg.getRegion(landname);
 
         if (land == null) {
-            lm.sendMessage(player, lm.getString("Commands.Listfriends.freeLand"));
+            lm.sendMessage(player, lm.getString(player, "Commands.Listfriends.freeLand"));
             return;
         }
         if (land.getFriends().size() > 0)
-            lm.sendMessage(player, lm.getString("Commands.Listfriends.friends")
+            lm.sendMessage(player, lm.getString(player, "Commands.Listfriends.friends")
                     .replace("%friends%", land.getMembersString()));
         else {
-            lm.sendMessage(player, lm.getString("Commands.Listfriends.noFriends"));
+            lm.sendMessage(player, lm.getString(player, "Commands.Listfriends.noFriends"));
         }
 
     }

@@ -207,7 +207,7 @@ public class ShopGUI extends AbstractGUI {
         abort.setName(lm.getRawString("Shop.gui.abort"));
         abort.addClickAction((p) -> {
             p.closeInventory();
-            lm.sendMessage(p, lm.getString("Shop.abort"));
+            lm.sendMessage(p, lm.getString(player, "Shop.abort"));
         });
         this.setIcon(45, abort);
 
@@ -219,7 +219,7 @@ public class ShopGUI extends AbstractGUI {
                             lm.getStringList("Shop.gui.error.lore"), "%cost%", vault.format(cost)),
                     "%own%", "" + vault.format(vault.getBalance(player))
             ));
-            error.addClickAction((p) -> lm.sendMessage(player, lm.getString("Shop.notEnoughMoney")
+            error.addClickAction((p) -> lm.sendMessage(player, lm.getString(player, "Shop.notEnoughMoney")
                     .replace("%number%", String.valueOf(delta))
                     .replace("%cost%", vault.format(cost))));
             this.setIcon(53, error);
@@ -230,7 +230,7 @@ public class ShopGUI extends AbstractGUI {
                 if (delta > 0) {
                     vault.take(p, cost);
                     pl.getPlayerManager().get(p.getUniqueId()).addClaims(delta);
-                    lm.sendMessage(p, lm.getString("Shop.successBuy")
+                    lm.sendMessage(p, lm.getString(p, "Shop.successBuy")
                             .replace("%number%", String.valueOf(delta))
                             .replace("%cost%", vault.format(cost)));
                 } else {
@@ -238,7 +238,7 @@ public class ShopGUI extends AbstractGUI {
                     // delta is negative, so it will subtract
                     pl.getPlayerManager().get(p.getUniqueId()).addClaims(delta);
 
-                    lm.sendMessage(p, lm.getString("Shop.successSell")
+                    lm.sendMessage(p, lm.getString(p, "Shop.successSell")
                             .replace("%number%", String.valueOf(-1 * delta))
                             .replace("%cost%", vault.format(-1 * cost)));
                 }

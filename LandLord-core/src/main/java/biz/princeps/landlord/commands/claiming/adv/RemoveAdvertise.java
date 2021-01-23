@@ -49,7 +49,7 @@ public class RemoveAdvertise extends LandlordCommand {
         }
 
         if (ownedLand == null) {
-            lm.sendMessage(player, lm.getString("Commands.Advertise.notOwnFreeLand"));
+            lm.sendMessage(player, lm.getString(player, "Commands.Advertise.notOwnFreeLand"));
             return;
         }
         if (isDisabledWorld(player, ownedLand.getWorld())) {
@@ -57,19 +57,19 @@ public class RemoveAdvertise extends LandlordCommand {
         }
 
         if (!ownedLand.isOwner(player.getUniqueId())) {
-            lm.sendMessage(player, lm.getString("Commands.Advertise.notOwn")
+            lm.sendMessage(player, lm.getString(player, "Commands.Advertise.notOwn")
                     .replace("%owner%", ownedLand.getOwnersString()));
             return;
         }
 
         if (ownedLand.getPrice() == -1) {
-            lm.sendMessage(player, lm.getString("Commands.RemoveAdvertise.noAdvertise")
+            lm.sendMessage(player, lm.getString(player, "Commands.RemoveAdvertise.noAdvertise")
                     .replace("%landname%", ownedLand.getName()));
             return;
         }
 
         ownedLand.setPrice(-1);
-        lm.sendMessage(player, lm.getString("Commands.RemoveAdvertise.success")
+        lm.sendMessage(player, lm.getString(player, "Commands.RemoveAdvertise.success")
                 .replace("%landname%", landname));
     }
 }

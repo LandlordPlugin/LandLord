@@ -59,7 +59,7 @@ public class Borders extends LandlordCommand implements Listener {
 
         if (tasks.get(p.getUniqueId()) == null) {
 
-            ComponentBuilder cp = new ComponentBuilder(lm.getString("Commands.Borders.activated")).event(
+            ComponentBuilder cp = new ComponentBuilder(lm.getString(p, "Commands.Borders.activated")).event(
                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, PrincepsLib.getCommandManager()
                             .getCommand(Landlordbase.class).getCommandString(Borders.class))
             );
@@ -99,7 +99,7 @@ public class Borders extends LandlordCommand implements Listener {
                 }
             }.runTaskTimer(plugin.getPlugin(), 0, refreshRate * 20L));
         } else {
-            lm.sendMessage(p, lm.getString("Commands.Borders.deactivated"));
+            lm.sendMessage(p, lm.getString(p, "Commands.Borders.deactivated"));
             tasks.get(p.getUniqueId()).cancel();
             tasks.remove(p.getUniqueId());
         }

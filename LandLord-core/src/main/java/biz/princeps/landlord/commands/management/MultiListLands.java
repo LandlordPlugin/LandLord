@@ -70,10 +70,10 @@ public class MultiListLands extends LandlordCommand {
 
                 String finalTarget = target;
                 int finalPage = page;
-                plugin.getPlayerManager().getOffline(Bukkit.getOfflinePlayer(target).getUniqueId(), (lPlayer) -> {
+                plugin.getPlayerManager().getOffline(target, (lPlayer) -> {
                     if (lPlayer == null) {
                         // Failure
-                        properties.getPlayer().sendMessage(lm.getString("Commands.MultiListLands.noPlayer")
+                        properties.getPlayer().sendMessage(lm.getString(properties.getPlayer(), "Commands.MultiListLands.noPlayer")
                                 .replace("%player%", finalTarget));
                     } else {
                         // Success

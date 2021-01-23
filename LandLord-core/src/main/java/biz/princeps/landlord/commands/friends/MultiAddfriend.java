@@ -56,7 +56,7 @@ public class MultiAddfriend extends LandlordCommand {
         }
 
         if (name == null || name.isEmpty()) {
-            lm.sendMessage(player, lm.getString("Commands.MultiAddfriend.noPlayer")
+            lm.sendMessage(player, lm.getString(player, "Commands.MultiAddfriend.noPlayer")
                     .replace("%player%", "?"));
             return;
         }
@@ -64,7 +64,7 @@ public class MultiAddfriend extends LandlordCommand {
         plugin.getPlayerManager().getOffline(name, (offline) -> {
             if (offline == null) {
                 // Failure
-                lm.sendMessage(player, lm.getString("Commands.MultiAddfriend.noPlayer")
+                lm.sendMessage(player, lm.getString(player, "Commands.MultiAddfriend.noPlayer")
                         .replace("%player%", name));
             } else if (!player.getUniqueId().equals(offline.getUuid())) {
                 // Success
@@ -83,14 +83,14 @@ public class MultiAddfriend extends LandlordCommand {
                         }
                     }
 
-                    lm.sendMessage(player, lm.getString("Commands.MultiAddfriend.success")
+                    lm.sendMessage(player, lm.getString(player, "Commands.MultiAddfriend.success")
                             .replace("%player%", name)
                             .replace("%count%", String.valueOf(count)));
 
                     Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
                 });
             } else {
-                lm.sendMessage(player, lm.getString("Commands.MultiAddfriend.alreadyOwn"));
+                lm.sendMessage(player, lm.getString(player, "Commands.MultiAddfriend.alreadyOwn"));
             }
         });
     }

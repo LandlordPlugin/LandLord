@@ -48,7 +48,7 @@ public class AdminTeleport extends LandlordCommand {
         plugin.getPlayerManager().getOffline(target, (offline) -> {
             if (offline == null) {
                 // Failure
-                lm.sendMessage(sender, lm.getString("Commands.AdminTp.noPlayer").replace("%player%", target));
+                lm.sendMessage(sender, lm.getString(sender, "Commands.AdminTp.noPlayer").replace("%player%", target));
             } else {
                 // Success
                 Set<IOwnedLand> lands = plugin.getWGManager().getRegions(offline.getUuid());
@@ -69,7 +69,7 @@ public class AdminTeleport extends LandlordCommand {
                     }
                     landGui.display();
                 } else {
-                    lm.sendMessage(sender, lm.getString("Commands.AdminTp.noLands").replace("%player%", target));
+                    lm.sendMessage(sender, lm.getString(sender, "Commands.AdminTp.noLands").replace("%player%", target));
                 }
             }
         });

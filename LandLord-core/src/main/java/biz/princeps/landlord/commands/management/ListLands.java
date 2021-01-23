@@ -71,10 +71,10 @@ public class ListLands extends LandlordCommand {
 
                 String finalTarget = target;
                 int finalPage = page;
-                plugin.getPlayerManager().getOffline(Bukkit.getOfflinePlayer(target).getUniqueId(), (lPlayer) -> {
+                plugin.getPlayerManager().getOffline(target, (lPlayer) -> {
                     if (lPlayer == null) {
                         // Failure
-                        properties.getPlayer().sendMessage(lm.getString("Commands.ListLands.noPlayer")
+                        properties.getPlayer().sendMessage(lm.getString(properties.getPlayer(), "Commands.ListLands.noPlayer")
                                 .replace("%player%", finalTarget));
                     } else {
                         // Success

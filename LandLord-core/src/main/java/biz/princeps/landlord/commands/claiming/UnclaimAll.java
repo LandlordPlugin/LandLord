@@ -49,7 +49,7 @@ public class UnclaimAll extends LandlordCommand {
             World world = Bukkit.getWorld(worldName);
 
             if (world == null) {
-                lm.sendMessage(player, lm.getString("Commands.UnclaimAll.invalidWorld"));
+                lm.sendMessage(player, lm.getString(player, "Commands.UnclaimAll.invalidWorld"));
                 return;
             } else {
                 worlds = Collections.singletonList(world);
@@ -81,7 +81,7 @@ public class UnclaimAll extends LandlordCommand {
             Set<IOwnedLand> landsOfPlayer = new HashSet<>(plugin.getWGManager().getRegions(player.getUniqueId(), world));
 
             if (landsOfPlayer.isEmpty()) {
-                lm.sendMessage(player, lm.getString("Commands.UnclaimAll.notOwnFreeLand") + " (" + world.getName() + ")");
+                lm.sendMessage(player, lm.getString(player, "Commands.UnclaimAll.notOwnFreeLand") + " (" + world.getName() + ")");
                 continue;
             }
 
@@ -124,7 +124,7 @@ public class UnclaimAll extends LandlordCommand {
                         Location home = lPlayer.getHome();
                         if (home != null) {
                             if (ol.contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
-                                lm.sendMessage(player, lm.getString("Commands.SetHome.removed"));
+                                lm.sendMessage(player, lm.getString(player, "Commands.SetHome.removed"));
                                 plugin.getPlayerManager().get(ol.getOwner()).setHome(null);
                             }
                         }
@@ -132,7 +132,7 @@ public class UnclaimAll extends LandlordCommand {
                 }
             }
 
-            lm.sendMessage(player, lm.getString("Commands.UnclaimAll.success")
+            lm.sendMessage(player, lm.getString(player, "Commands.UnclaimAll.success")
                     .replace("%amount%", "" + unclaimedLands)
                     .replace("%world%", "" + world.getName())
                     .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultManager().format(totalPayBack) : "-eco disabled-")));

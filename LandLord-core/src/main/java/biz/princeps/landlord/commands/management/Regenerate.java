@@ -69,7 +69,7 @@ public class Regenerate extends LandlordCommand {
                             if (plugin.getVaultManager().hasBalance(player, cost)) {
                                 plugin.getVaultManager().take(player, cost);
                             } else {
-                                lm.sendMessage(player, lm.getString("Commands.Regenerate.notEnoughMoney")
+                                lm.sendMessage(player, lm.getString(player, "Commands.Regenerate.notEnoughMoney")
                                         .replace("%cost%", costString)
                                         .replace("%name%", finalLand.getName()));
                                 flag = false;
@@ -83,12 +83,12 @@ public class Regenerate extends LandlordCommand {
                             });
 
                             plugin.getRegenerationManager().regenerateChunk(finalLand.getALocation());
-                            lm.sendMessage(player, lm.getString("Commands.Regenerate.success")
+                            lm.sendMessage(player, lm.getString(player, "Commands.Regenerate.success")
                                     .replace("%land%", finalLand.getName()));
                             player.closeInventory();
                         }
 
-                    }, (p2) -> lm.sendMessage(player, lm.getString("Commands.Regenerate.abort")
+                    }, (p2) -> lm.sendMessage(player, lm.getString(player, "Commands.Regenerate.abort")
                     .replace("%land%", finalLand.getName())), null);
 
             confi.setConfirm(lm.getRawString("Confirmation.accept"));

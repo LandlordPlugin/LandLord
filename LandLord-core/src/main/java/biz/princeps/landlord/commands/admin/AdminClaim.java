@@ -44,14 +44,14 @@ public class AdminClaim extends LandlordCommand {
         plugin.getPlayerManager().getOffline(target, (offline) -> {
             if (offline == null) {
                 // Failure
-                lm.sendMessage(sender, lm.getString("Commands.AdminClaim.noPlayer").replace("%player%", target));
+                lm.sendMessage(sender, lm.getString(sender, "Commands.AdminClaim.noPlayer").replace("%player%", target));
             } else {
                 // Success
                 if (land != null) {
-                    lm.sendMessage(sender, lm.getString("Commands.AdminClaim.alreadyOwned").replace("%land%", land.getName()));
+                    lm.sendMessage(sender, lm.getString(sender, "Commands.AdminClaim.alreadyOwned").replace("%land%", land.getName()));
                 } else {
                     IOwnedLand land2 = plugin.getWGManager().claim(sender.getChunk(), offline.getUuid());
-                    lm.sendMessage(sender, lm.getString("Commands.AdminClaim.success").replace("%land%", land2.getName()).replace("%name%", target));
+                    lm.sendMessage(sender, lm.getString(sender, "Commands.AdminClaim.success").replace("%land%", land2.getName()).replace("%name%", target));
                 }
             }
         });

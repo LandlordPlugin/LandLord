@@ -62,12 +62,12 @@ public class Manage extends LandlordCommand {
             }
 
             if (land == null) {
-                lm.sendMessage(player, lm.getString("Commands.Manage.notOwnFreeLand"));
+                lm.sendMessage(player, lm.getString(player, "Commands.Manage.notOwnFreeLand"));
                 return;
             }
 
             if (!land.isOwner(player.getUniqueId()) && !player.hasPermission("landlord.admin.manage")) {
-                lm.sendMessage(player, lm.getString("Commands.Manage.notOwn")
+                lm.sendMessage(player, lm.getString(player, "Commands.Manage.notOwn")
                         .replace("%owner%", land.getOwnersString()));
                 return;
             }
@@ -124,7 +124,7 @@ public class Manage extends LandlordCommand {
                         }
 
                     } catch (IndexOutOfBoundsException e) {
-                        lm.sendMessage(player, lm.getString("Commands.manage.invalidArguments"));
+                        lm.sendMessage(player, lm.getString(player, "Commands.manage.invalidArguments"));
                     }
                     break;
             }
@@ -134,7 +134,7 @@ public class Manage extends LandlordCommand {
 
     private void setGreet(Player player, String[] args, List<IOwnedLand> lands, int casy) {
         if (lands.size() == 0 || lands.get(0) == null) {
-            lm.sendMessage(player, lm.getString("Commands.Manage.notOwnFreeLand"));
+            lm.sendMessage(player, lm.getString(player, "Commands.Manage.notOwnFreeLand"));
             return;
         }
 
@@ -157,13 +157,13 @@ public class Manage extends LandlordCommand {
             region.setGreetMessage(newmsg);
         }
 
-        lm.sendMessage(player, lm.getString("Commands.Manage.SetGreet.successful")
+        lm.sendMessage(player, lm.getString(player, "Commands.Manage.SetGreet.successful")
                 .replace("%msg%", newmsg));
     }
 
     private void setFarewell(Player player, String[] args, List<IOwnedLand> lands, int casy) {
         if (lands.size() == 0 || lands.get(0) == null) {
-            lm.sendMessage(player, lm.getString("Commands.Manage.notOwnFreeLand"));
+            lm.sendMessage(player, lm.getString(player, "Commands.Manage.notOwnFreeLand"));
             return;
         }
 
@@ -186,7 +186,7 @@ public class Manage extends LandlordCommand {
             region.setFarewellMessage(newmsg);
         }
 
-        lm.sendMessage(player, lm.getString("Commands.Manage.SetFarewell.successful")
+        lm.sendMessage(player, lm.getString(player, "Commands.Manage.SetFarewell.successful")
                 .replace("%msg%", newmsg));
     }
 
