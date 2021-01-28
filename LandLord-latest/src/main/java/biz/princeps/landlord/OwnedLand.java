@@ -277,6 +277,17 @@ public class OwnedLand extends AOwnedLand {
             if (!region.getFlags().containsKey(flag)) {
                 region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
                 region.setFlag(flag, StateFlag.State.ALLOW);
+
+                // some combinations are illegal (all true, friends false)
+                if (!pl.getConfig().getBoolean("Manage." + s + ".default.friends", true)) {
+                    ILLFlag flag1 = getFlag(s);
+                    flag1.toggleFriends();
+                }
+
+                if (pl.getConfig().getBoolean("Manage." + s + ".default.everyone", false)) {
+                    ILLFlag flag1 = getFlag(s);
+                    flag1.toggleAll();
+                }
             }
         }
         // add other flags
