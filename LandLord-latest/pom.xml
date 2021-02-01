@@ -6,12 +6,11 @@
     <parent>
         <artifactId>LandLord</artifactId>
         <groupId>biz.princeps</groupId>
-        <version>4.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>LandLord-latest</artifactId>
     <packaging>jar</packaging>
-    <version>${ll.version}</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,6 +38,7 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.1</version>
                 <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
                     <relocations>
                         <relocation>
                             <pattern>de.eldoria.eldoutilities</pattern>
@@ -114,14 +114,14 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>biz.princeps</groupId>
             <artifactId>LandLord-core</artifactId>
-            <version>4.0</version>
+            <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
 

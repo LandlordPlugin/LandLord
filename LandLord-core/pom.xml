@@ -2,15 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>LandLord</artifactId>
         <groupId>biz.princeps</groupId>
-        <version>4.0</version>
+        <version>${revision}</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>LandLord-core</artifactId>
-    <version>4.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -71,8 +70,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -123,7 +122,7 @@
         <dependency>
             <groupId>biz.princeps</groupId>
             <artifactId>LandLord-api</artifactId>
-            <version>4.0.8</version>
+            <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -146,6 +145,13 @@
             <artifactId>EldoUtilitiesCore</artifactId>
             <version>1.7.3</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
+            <version>1.5.25</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
