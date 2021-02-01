@@ -1,5 +1,7 @@
 package biz.princeps.landlord;
 
+import biz.princeps.landlord.commands.Debug;
+import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.listener.PistonOverwriter;
 import biz.princeps.landlord.listener.WGRegenListener;
 import biz.princeps.landlord.manager.MaterialsManager;
@@ -8,11 +10,13 @@ import biz.princeps.landlord.manager.UtilsManager;
 import biz.princeps.landlord.manager.WorldGuardManager;
 import biz.princeps.landlord.regenerators.RegenerationManager;
 import biz.princeps.landlord.regenerators.WGRegenerator;
+import biz.princeps.lib.PrincepsLib;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.session.SessionManager;
 import com.sk89q.worldguard.session.handler.FarewellFlag;
 import com.sk89q.worldguard.session.handler.GreetingFlag;
+import de.eldoria.eldoutilities.core.EldoUtilities;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -28,6 +32,7 @@ public class LandLord extends ALandLord {
     @Override
     public void onLoad() {
         WorldGuardManager.initFlags();
+        super.onLoad();
     }
 
     @Override
@@ -59,6 +64,7 @@ public class LandLord extends ALandLord {
         super.onEnable();
 
         new PistonOverwriter(this);
+
     }
 
 
@@ -89,6 +95,8 @@ public class LandLord extends ALandLord {
 
         // Dependency stuff
         String version = Bukkit.getVersion();
+
+
         if (!version.contains("1.13.2") && !version.contains("1.14") && !version.contains("1.15") && !version.contains("1.16")) {
             haltPlugin("Invalid Spigot version detected! LandLord latest requires 1.13.2/1.14.x/1.15.x/1.16.x, use Legacy version for 1.12.2!");
             return false;

@@ -26,6 +26,7 @@ public class LandLord extends ALandLord implements Listener {
         if (getWorldGuard() != null) {
             WorldGuardManager.initFlags(getWorldGuard());
         }
+        super.onLoad();
     }
 
     @Override
