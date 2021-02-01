@@ -7,11 +7,11 @@
     <groupId>biz.princeps</groupId>
     <artifactId>LandLord</artifactId>
     <packaging>pom</packaging>
-    <version>4.0</version>
+    <version>${revision}</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <ll.version>4.348</ll.version>
+        <revision>4.349</revision>
     </properties>
 
     <modules>

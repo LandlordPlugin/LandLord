@@ -1,5 +1,5 @@
 name: Landlord
-version: ${ll.version}
+version: ${revision}
 main: biz.princeps.landlord.LandLord
 authors: [ SpatiumPrinceps, Aurelien30000, SirYwell, RainbowDashLabs ]
 website: https://www.spigotmc.org/resources/beta-landlord-2.44398/

@@ -22,6 +22,7 @@ import biz.princeps.landlord.util.Metrics;
 import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
+import de.eldoria.eldoutilities.core.EldoUtilities;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -53,7 +54,14 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     protected IRegenerationManager regenerationManager;
 
     @Override
+    public void onLoad() {
+        EldoUtilities.preWarm(this);
+    }
+
+    @Override
     public void onEnable() {
+        EldoUtilities.ignite(this);
+
         Options.setConfig(this.getConfig(), getVault() != null);
         setupPrincepsLib();
 
@@ -113,6 +121,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     /**
      * @return the javaplugin instance
      */
+    @Override
     public JavaPlugin getPlugin() {
         return this;
     }
@@ -133,6 +142,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * <p>
      * Here we are :shrug:
      */
+    @Override
     public void setupPrincepsLib() {
         PrincepsLib.setPluginInstance(this);
         PrincepsLib.getConfirmationManager().setState(ConfirmationManager.STATE.valueOf(getConfig().getString(

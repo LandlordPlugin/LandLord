@@ -50,7 +50,7 @@ public class AdminClaim extends LandlordCommand {
                 if (land != null) {
                     lm.sendMessage(sender, lm.getString(sender, "Commands.AdminClaim.alreadyOwned").replace("%land%", land.getName()));
                 } else {
-                    IOwnedLand land2 = plugin.getWGManager().claim(sender.getChunk(), offline.getUuid());
+                    IOwnedLand land2 = plugin.getWGManager().claim(sender.getLocation().getChunk(), offline.getUuid());
                     lm.sendMessage(sender, lm.getString(sender, "Commands.AdminClaim.success").replace("%land%", land2.getName()).replace("%name%", target));
                 }
             }
