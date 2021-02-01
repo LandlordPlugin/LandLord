@@ -95,6 +95,7 @@ public class Landlordbase extends MainCommand {
         this.addSubcommand(new MultiRemovefriend(pl));
         this.addSubcommand(new MultiListLands(pl));
         this.addSubcommand(new MultiManage(pl));
+        this.addSubcommand(new Debug(pl.getPlugin()));
     }
 
     @Override
@@ -299,6 +300,4 @@ public class Landlordbase extends MainCommand {
             properties.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
         }
     }
-
-
 }
