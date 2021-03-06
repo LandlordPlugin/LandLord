@@ -7,7 +7,6 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 /**

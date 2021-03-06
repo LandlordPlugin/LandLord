@@ -10,7 +10,6 @@
     <version>${revision}</version>
 
     <properties>
-        <revision>4.348</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
