@@ -43,7 +43,7 @@ public class JavaUtils {
         for (String s : stringList) {
             if (Pattern.compile(s).matcher(world.getName()).matches()) {
                 if (message)
-                    lm.sendMessage(player, lm.getString("Disabled-World"));
+                    lm.sendMessage(player, lm.getString(player, "Disabled-World"));
                 return true;
             }
         }

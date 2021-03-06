@@ -30,6 +30,10 @@ DisableStartupWorldWarning: false
 # you can play around with the formula here: https://www.geogebra.org/m/S6uSGV7c
 Economy:
   enable: true
+  # This option overrides worldBalance, only use it if you have a different currency for each world.
+  playerWorldBased: false
+  # Only change this value if you need a specific world balance for Landlord's transactions, it applies in every world.
+  worldBalance: 'default'
 
 # Available are: LINEAR, EXPONENTIAL, LOGARITHMIC, SINUS, LIMITED
 Growth:
@@ -119,9 +123,14 @@ locationFormat: '%world% - (%x%|%z%)'
 # Secures the world in which landlord is active. This means, players wont be able to destroy anything in free lands
 SecureWorld:
   enable: true
+  # Put here world names you want to be affected by the secure system. Leave empty for all.
+  worlds:
+    - world_nether
+    - world_the_end
   # If player reach this treshold (amount of ownedlands) they will be able to build in the normal world)
   # This way you can allow your veteran players to be able to build pathes and commonly used stuff in the world, but prevent newbies from griefing
   threshold: 10
+  perWorld: true
   # Where to display the warning that you are not to allowed in free lands until x lands has been reached: ActionBar, Chat, Title, Disabled
   displayWarning: ActionBar
 
@@ -168,7 +177,9 @@ Particles:
     inactive: DRIP_LAVA
   borders:
     enabled: true
-    particle: DRIP_LAVA
+    unclaimed: DRIP_LAVA
+    claimed: DRIP_WATER
+    inactive: DRIP_LAVA
 
 # -----------        Map Stuff        ------------
 Map:
@@ -742,4 +753,4 @@ ClaimHeight:
 EnableMetrics: true
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 31
+version: 32

@@ -43,7 +43,7 @@ public class AddfriendAll extends LandlordCommand {
         }
 
         if (name == null || name.isEmpty()) {
-            lm.sendMessage(player, lm.getString("Commands.AddfriendAll.noPlayer")
+            lm.sendMessage(player, lm.getString(player, "Commands.AddfriendAll.noPlayer")
                     .replace("%player%", "?"));
             return;
         }
@@ -51,7 +51,7 @@ public class AddfriendAll extends LandlordCommand {
         plugin.getPlayerManager().getOffline(name, (offline) -> {
             if (offline == null) {
                 // Failure
-                lm.sendMessage(player, lm.getString("Commands.AddfriendAll.noPlayer")
+                lm.sendMessage(player, lm.getString(player, "Commands.AddfriendAll.noPlayer")
                         .replace("%player%", name));
             } else if (!player.getUniqueId().equals(offline.getUuid())) {
                 // Success
@@ -70,14 +70,14 @@ public class AddfriendAll extends LandlordCommand {
                         }
                     }
 
-                    lm.sendMessage(player, lm.getString("Commands.AddfriendAll.success")
+                    lm.sendMessage(player, lm.getString(player, "Commands.AddfriendAll.success")
                             .replace("%player%", name)
                             .replace("%count%", String.valueOf(count)));
 
                     Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
                 });
             } else {
-                lm.sendMessage(player, lm.getString("Commands.Addfriend.alreadyOwn"));
+                lm.sendMessage(player, lm.getString(player, "Commands.Addfriend.alreadyOwn"));
             }
         });
     }

@@ -84,7 +84,7 @@ public class MultiUnclaim extends LandlordCommand {
 
         // Implementation of this to avoid latencies with MultiUnclaim, because getChunk methode generates the chunk if is not :/
         if (radius > maxSize) { // +2 for marge value. Unless server has a huge render distance (16 for example), won't cause any trouble
-            lm.sendMessage(player, lm.getString("Commands.MultiUnclaim.hugeSize")
+            lm.sendMessage(player, lm.getString(player, "Commands.MultiUnclaim.hugeSize")
                     .replace("%max_size%", maxSize + ""));
             return;
         }
@@ -92,7 +92,7 @@ public class MultiUnclaim extends LandlordCommand {
         final Set<IOwnedLand> toUnclaim = mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg);
 
         if (toUnclaim.isEmpty()) {
-            lm.sendMessage(player, lm.getString("Commands.MultiUnclaim.notOwnFreeLand"));
+            lm.sendMessage(player, lm.getString(player, "Commands.MultiUnclaim.notOwnFreeLand"));
             return;
         }
 
@@ -117,7 +117,7 @@ public class MultiUnclaim extends LandlordCommand {
                         payback = plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble("Payback");
                         // System.out.println(payback);
                         if (payback > 0) {
-                            plugin.getVaultManager().give(player.getUniqueId(), payback);
+                            plugin.getVaultManager().give(player, payback);
                         }
                     }
                     totalPayBack += payback;
@@ -135,7 +135,7 @@ public class MultiUnclaim extends LandlordCommand {
                     Location home = lPlayer.getHome();
                     if (home != null) {
                         if (ol.contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
-                            lm.sendMessage(player, lm.getString("Commands.SetHome.removed"));
+                            lm.sendMessage(player, lm.getString(player, "Commands.SetHome.removed"));
                             plugin.getPlayerManager().get(ol.getOwner()).setHome(null);
                         }
                     }
@@ -143,7 +143,7 @@ public class MultiUnclaim extends LandlordCommand {
             }
         }
 
-        lm.sendMessage(player, lm.getString("Commands.MultiUnclaim.success")
+        lm.sendMessage(player, lm.getString(player, "Commands.MultiUnclaim.success")
                 .replace("%amount%", "" + unclaimedLands)
                 .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultManager().format(totalPayBack) : "-eco disabled-")));
 

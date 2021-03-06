@@ -55,7 +55,7 @@ public abstract class LandlordCommand extends SubCommand {
         if (chunk.getWorld().getWorldBorder().isInside(new Location(chunk.getWorld(), (chunk.getX() << 4) + 8, 100, (chunk.getZ() << 4) + 8)))
             return true;
 
-        lm.sendMessage(player, lm.getString("locOutsideWorld")
+        lm.sendMessage(player, lm.getString(player, "locOutsideWorld")
                 .replace("%chunk%", plugin.getWGManager().getLandName(chunk))
                 .replace("%world%", chunk.getWorld().getName()));
         return false;

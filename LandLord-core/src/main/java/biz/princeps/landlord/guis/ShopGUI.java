@@ -207,19 +207,19 @@ public class ShopGUI extends AbstractGUI {
         abort.setName(lm.getRawString("Shop.gui.abort"));
         abort.addClickAction((p) -> {
             p.closeInventory();
-            lm.sendMessage(p, lm.getString("Shop.abort"));
+            lm.sendMessage(p, lm.getString(player, "Shop.abort"));
         });
         this.setIcon(45, abort);
 
-        if (vault.getBalance(player.getUniqueId()) < cost) {
+        if (vault.getBalance(player) < cost) {
             Icon error = new Icon(Skulls.REDEXCLAMATIONMARK.getSkull(pl));
             error.setName(lm.getRawString("Shop.gui.error.name"));
             error.setLore(replaceLore(
                     replaceLore(
                             lm.getStringList("Shop.gui.error.lore"), "%cost%", vault.format(cost)),
-                    "%own%", "" + vault.format(vault.getBalance(player.getUniqueId()))
+                    "%own%", "" + vault.format(vault.getBalance(player))
             ));
-            error.addClickAction((p) -> lm.sendMessage(player, lm.getString("Shop.notEnoughMoney")
+            error.addClickAction((p) -> lm.sendMessage(player, lm.getString(player, "Shop.notEnoughMoney")
                     .replace("%number%", String.valueOf(delta))
                     .replace("%cost%", vault.format(cost))));
             this.setIcon(53, error);
@@ -228,17 +228,17 @@ public class ShopGUI extends AbstractGUI {
             Icon confirm = new Icon(Skulls.CONFIRM.getSkull(pl));
             confirm.addClickAction((p) -> {
                 if (delta > 0) {
-                    vault.take(p.getUniqueId(), cost);
+                    vault.take(p, cost);
                     pl.getPlayerManager().get(p.getUniqueId()).addClaims(delta);
-                    lm.sendMessage(p, lm.getString("Shop.successBuy")
+                    lm.sendMessage(p, lm.getString(p, "Shop.successBuy")
                             .replace("%number%", String.valueOf(delta))
                             .replace("%cost%", vault.format(cost)));
                 } else {
-                    vault.give(p.getUniqueId(), cost * -1);
+                    vault.give(p, cost * -1);
                     // delta is negative, so it will subtract
                     pl.getPlayerManager().get(p.getUniqueId()).addClaims(delta);
 
-                    lm.sendMessage(p, lm.getString("Shop.successSell")
+                    lm.sendMessage(p, lm.getString(p, "Shop.successSell")
                             .replace("%number%", String.valueOf(-1 * delta))
                             .replace("%cost%", vault.format(-1 * cost)));
                 }

@@ -254,7 +254,7 @@ public class AManage extends AbstractGUI {
             icon.setLore(formatList(greetDesc, "%var%", currentGreet));
             icon.addClickAction(((p) -> {
                 p.closeInventory();
-                ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetGreet.clickMsg"));
+                ComponentBuilder builder = new ComponentBuilder(lm.getString(player, "Commands.Manage.SetGreet.clickMsg"));
 
                 switch (manageMode) {
                     case ALL:
@@ -285,7 +285,7 @@ public class AManage extends AbstractGUI {
             icon.setLore(formatList(farewellDesc, "%var%", currentFarewell));
             icon.addClickAction(((p) -> {
                 p.closeInventory();
-                ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Manage.SetFarewell.clickMsg"));
+                ComponentBuilder builder = new ComponentBuilder(lm.getString(player, "Commands.Manage.SetFarewell.clickMsg"));
 
                 switch (manageMode) {
                     case ALL:

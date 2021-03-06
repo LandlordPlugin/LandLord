@@ -33,7 +33,7 @@ public class LandMap extends LandlordCommand {
         } else if (arguments.size() == 1) {
             // on/off
             String arg = arguments.get()[0];
-            if (arg.toLowerCase().equals("on") || arg.toLowerCase().equals("off")) {
+            if (arg.equalsIgnoreCase("on") || arg.equalsIgnoreCase("off")) {
                 onToggleLandMap(properties.getPlayer(), arg.toLowerCase());
             }
         }
@@ -46,7 +46,7 @@ public class LandMap extends LandlordCommand {
         if (Options.enabled_map())
             plugin.getMapManager().toggleMap(player);
         else {
-            lm.sendMessage(player, lm.getString("Commands.LandMap.disabled"));
+            lm.sendMessage(player, lm.getString(player, "Commands.LandMap.disabled"));
         }
 
     }
@@ -55,7 +55,7 @@ public class LandMap extends LandlordCommand {
         if (isDisabledWorld(player)) return;
 
         if (!Options.enabled_map()) {
-            lm.sendMessage(player, lm.getString("Commands.LandMap.disabled"));
+            lm.sendMessage(player, lm.getString(player, "Commands.LandMap.disabled"));
             return;
         }
 

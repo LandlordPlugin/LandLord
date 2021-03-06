@@ -26,13 +26,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -137,7 +131,7 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<IOwnedLand> getRegions(UUID id, World world) {
-        Set<IOwnedLand> lands = new HashSet<>();
+        final Set<IOwnedLand> lands = new HashSet<>();
         for (IOwnedLand land : cache.getLands(id)) {
             if (land.getWorld() != world) continue;
 
@@ -153,7 +147,7 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<IOwnedLand> getRegions() {
-        Set<IOwnedLand> lands = new HashSet<>();
+        final Set<IOwnedLand> lands = new HashSet<>();
         for (World world : Bukkit.getWorlds()) {
             lands.addAll(cache.getLands(world));
         }
@@ -162,7 +156,7 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<?> getAllWGRegions(World world) {
-        Map<String, ProtectedRegion> regions = new HashMap<>(getRegionManager(world).getRegions());
+        final Map<String, ProtectedRegion> regions = new HashMap<>(getRegionManager(world).getRegions());
         for (String r : getRegionManager(world).getRegions().keySet()) {
             if (isLLRegion(r)) {
                 regions.remove(r);
@@ -173,9 +167,9 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<?> getAllWGRegions() {
-        Set<ProtectedRegion> set = new HashSet<>();
+        final Set<ProtectedRegion> set = new HashSet<>();
         for (World world : Bukkit.getWorlds()) {
-            Set<?> allWGRegions = getAllWGRegions(world);
+            final Set<?> allWGRegions = getAllWGRegions(world);
             set.addAll(((Set<ProtectedRegion>) allWGRegions));
         }
         return set;
@@ -219,13 +213,12 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     /**
      * @param id the uuid of the player to get the region count for
-     *
      * @return the region count
      */
     @Override
     public int getRegionCount(UUID id) {
-        if (cache.getLands(id) == null) return 0;
-        return cache.getLands(id).size();
+        final Set<IOwnedLand> lands = cache.getLands(id);
+        return lands == null ? 0 : lands.size();
     }
 
     @Override
@@ -235,8 +228,8 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public int getRegionCount(World w) {
-        if (cache.getLands(w) == null) return 0;
-        return cache.getLands(w).size();
+        final Set<IOwnedLand> lands = cache.getLands(w);
+        return lands == null ? 0 : lands.size();
     }
 
     private RegionContainer getRegionContainer() {

@@ -1,6 +1,7 @@
 package biz.princeps.landlord.api;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -22,6 +23,19 @@ public interface ILangManager {
      * @return the string
      */
     String getString(String path);
+
+    /**
+     * Returns the parsed string for a specific path. Also appends the tag in front of the string like
+     * [Tag] I am a cool string from the config
+     * with
+     * Tag = [Tag]
+     * path points to "I am a ..."
+     *
+     * @param player the player to parse some placeholders
+     * @param path   the path
+     * @return the string
+     */
+    String getString(Player player, String path);
 
     /**
      * Gets the tag defined in the lang file (Tag)

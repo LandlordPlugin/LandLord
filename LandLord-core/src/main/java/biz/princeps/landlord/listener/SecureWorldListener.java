@@ -8,12 +8,17 @@ import biz.princeps.landlord.util.JavaUtils;
 import biz.princeps.lib.PrincepsLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Project: LandLord
@@ -27,11 +32,16 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 public class SecureWorldListener extends BasicListener {
 
     private final MessageDisplay display;
+    private final Set<String> worlds;
     private final int treshold;
     private final IWorldGuardManager wg;
 
     public SecureWorldListener(ILandLord pl) {
         super(pl);
+        this.worlds = new HashSet<>(plugin.getConfig().getStringList("SecureWorld.worlds"));
+        if (worlds.isEmpty()) {
+            worlds.addAll(Bukkit.getWorlds().stream().map(World::getName).collect(Collectors.toSet()));
+        }
         this.treshold = plugin.getConfig().getInt("SecureWorld.threshold");
         this.wg = pl.getWGManager();
         this.display = MessageDisplay.valueOf(plugin.getConfig().getString("SecureWorld.displayWarning"));
@@ -93,7 +103,12 @@ public class SecureWorldListener extends BasicListener {
         if (land != null) {
             return;
         }
-        int landcount = wg.getRegionCount(p.getUniqueId());
+        if (!worlds.contains(loc.getWorld().getName())) {
+            return;
+        }
+        final int landcount = plugin.getConfig().getBoolean("SecureWord.perWorld") ?
+                wg.getRegionCount(p.getUniqueId(), loc.getWorld()) :
+                wg.getRegionCount(p.getUniqueId());
 
         if (landcount < treshold) {
             String rawString = plugin.getLangManager().getRawString("Alerts.tresholdNotReached")

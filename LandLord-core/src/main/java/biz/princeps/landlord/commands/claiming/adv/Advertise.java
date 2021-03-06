@@ -67,7 +67,7 @@ public class Advertise extends LandlordCommand {
         }
 
         if (iOwnedLand == null) {
-            lm.sendMessage(player, lm.getString("Commands.Advertise.notOwnFreeLand"));
+            lm.sendMessage(player, lm.getString(player, "Commands.Advertise.notOwnFreeLand"));
             return;
         }
 
@@ -76,14 +76,14 @@ public class Advertise extends LandlordCommand {
         }
 
         if (!iOwnedLand.isOwner(player.getUniqueId())) {
-            lm.sendMessage(player, lm.getString("Commands.Advertise.notOwn").replace("%owner%",
+            lm.sendMessage(player, lm.getString(player, "Commands.Advertise.notOwn").replace("%owner%",
                     iOwnedLand.getOwnersString()));
             return;
         }
 
         iOwnedLand.setPrice(price);
 
-        lm.sendMessage(player, lm.getString("Commands.Advertise.success")
+        lm.sendMessage(player, lm.getString(player, "Commands.Advertise.success")
                 .replace("%landname%", iOwnedLand.getName())
                 .replace("%price%", price + ""));
     }

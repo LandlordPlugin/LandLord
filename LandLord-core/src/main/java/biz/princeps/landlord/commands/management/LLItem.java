@@ -48,9 +48,9 @@ public class LLItem extends LandlordCommand {
 
         if (targetingPlayer == null) {
             if (properties.isPlayer()) {
-                lm.sendMessage(properties.getPlayer(), lm.getString("Commands.Item.noPlayer").replace("%player%", target));
+                lm.sendMessage(properties.getPlayer(), lm.getString(properties.getPlayer(), "Commands.Item.noPlayer").replace("%player%", target));
             } else {
-                properties.sendMessage(lm.getString("Commands.Item.noPlayer").replace("%player%", target));
+                properties.sendMessage(lm.getString(properties.getPlayer(), "Commands.Item.noPlayer").replace("%player%", target));
             }
             return;
         }

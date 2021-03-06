@@ -7,7 +7,6 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 /**
@@ -45,14 +44,14 @@ public class AdminClaim extends LandlordCommand {
         plugin.getPlayerManager().getOffline(target, (offline) -> {
             if (offline == null) {
                 // Failure
-                lm.sendMessage(sender, lm.getString("Commands.AdminClaim.noPlayer").replace("%player%", target));
+                lm.sendMessage(sender, lm.getString(sender, "Commands.AdminClaim.noPlayer").replace("%player%", target));
             } else {
                 // Success
                 if (land != null) {
-                    lm.sendMessage(sender, lm.getString("Commands.AdminClaim.alreadyOwned").replace("%land%", land.getName()));
+                    lm.sendMessage(sender, lm.getString(sender, "Commands.AdminClaim.alreadyOwned").replace("%land%", land.getName()));
                 } else {
                     IOwnedLand land2 = plugin.getWGManager().claim(sender.getLocation().getChunk(), offline.getUuid());
-                    lm.sendMessage(sender, lm.getString("Commands.AdminClaim.success").replace("%land%", land2.getName()).replace("%name%", target));
+                    lm.sendMessage(sender, lm.getString(sender, "Commands.AdminClaim.success").replace("%land%", land2.getName()).replace("%name%", target));
                 }
             }
         });

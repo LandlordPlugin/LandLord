@@ -300,4 +300,5 @@ public class Landlordbase extends MainCommand {
             properties.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
         }
     }
+
 }

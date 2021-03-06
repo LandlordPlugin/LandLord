@@ -193,7 +193,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         this.lPlayerManager = new LPlayerManager(this);
         this.mapManager = new MapManager(this);
         this.costManager = new LandCostManager(this);
-        this.vaultManager = new VaultManager(getVault());
+        this.vaultManager = new VaultManager(this, getVault());
         this.delimitationManager = new DelimitationManager(this);
     }
 

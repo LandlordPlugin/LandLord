@@ -51,7 +51,7 @@ public class Unclaim extends LandlordCommand {
             chunkname = wg.getLandName(chunk);
         } else {
             if (!wg.isLLRegion(chunkname)) {
-                lm.sendMessage(player, lm.getString("Commands.Unclaim.notOwnFreeLand"));
+                lm.sendMessage(player, lm.getString(player, "Commands.Unclaim.notOwnFreeLand"));
                 return;
             }
 
@@ -61,7 +61,7 @@ public class Unclaim extends LandlordCommand {
         if (isDisabledWorld(player, wg.getWorld(chunkname))) return;
 
         if (ol == null) {
-            lm.sendMessage(player, lm.getString("Commands.Unclaim.notOwnFreeLand"));
+            lm.sendMessage(player, lm.getString(player, "Commands.Unclaim.notOwnFreeLand"));
             return;
         }
 
@@ -69,7 +69,7 @@ public class Unclaim extends LandlordCommand {
         boolean isAdmin = false;
         if (!player.hasPermission("landlord.admin.unclaim")) {
             if (!ol.isOwner(player.getUniqueId())) {
-                lm.sendMessage(player, lm.getString("Commands.Unclaim.notOwn")
+                lm.sendMessage(player, lm.getString(player, "Commands.Unclaim.notOwn")
                         .replace("%owner%", ol.getOwnersString()));
                 return;
             }
@@ -114,7 +114,7 @@ public class Unclaim extends LandlordCommand {
                     payback = plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble("Payback");
                     // System.out.println(payback);
                     if (payback > 0) {
-                        plugin.getVaultManager().give(player.getUniqueId(), payback);
+                        plugin.getVaultManager().give(player, payback);
                     }
                 }
             }
@@ -131,7 +131,7 @@ public class Unclaim extends LandlordCommand {
             Location home = lPlayer.getHome();
             if (home != null) {
                 if (ol.contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
-                    lm.sendMessage(player, lm.getString("Commands.SetHome.removed"));
+                    lm.sendMessage(player, lm.getString(player, "Commands.SetHome.removed"));
                     plugin.getPlayerManager().get(ol.getOwner()).setHome(null);
                 }
             }
@@ -142,7 +142,7 @@ public class Unclaim extends LandlordCommand {
                     Particle.valueOf(plugin.getConfig().getString("Particles.unclaim.particle").toUpperCase()));
         }
 
-        lm.sendMessage(player, lm.getString("Commands.Unclaim.success")
+        lm.sendMessage(player, lm.getString(player, "Commands.Unclaim.success")
                 .replace("%chunk%", ol.getName())
                 .replace("%location%", wg.formatLocation(ol.getChunk()))
                 .replace("%world%", ol.getWorld().getName())

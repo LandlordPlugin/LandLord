@@ -1,6 +1,7 @@
 package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -46,7 +47,6 @@ public class Borders extends LandlordCommand implements Listener {
 
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
-
         if (properties.isConsole()) {
             return;
         }
@@ -59,7 +59,7 @@ public class Borders extends LandlordCommand implements Listener {
 
         if (tasks.get(p.getUniqueId()) == null) {
 
-            ComponentBuilder cp = new ComponentBuilder(lm.getString("Commands.Borders.activated")).event(
+            ComponentBuilder cp = new ComponentBuilder(lm.getString(p, "Commands.Borders.activated")).event(
                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, PrincepsLib.getCommandManager()
                             .getCommand(Landlordbase.class).getCommandString(Borders.class))
             );
@@ -75,17 +75,31 @@ public class Borders extends LandlordCommand implements Listener {
                 public void run() {
                     if (counter * refreshRate <= timeout) {
                         if (plugin.getConfig().getBoolean("Particles.borders.enabled")) {
-                            wg.highlightLand(p.getLocation().getChunk(), p,
-                                    Particle.valueOf(plugin.getConfig().getString("Particles.borders.particle")), 1, false);
+                            final IOwnedLand ownedLand = wg.getRegion(p.getLocation());
+
+                            if (ownedLand == null) {
+                                wg.highlightLand(p.getLocation().getChunk(), p,
+                                        Particle.valueOf(plugin.getConfig().getString("Particles.borders.unclaimed")), 1, false);
+                            } else {
+                                plugin.getPlayerManager().getOffline(ownedLand.getOwner(), (owner) -> {
+                                    if (plugin.getPlayerManager().isInactive(owner.getLastSeen())) {
+                                        wg.highlightLand(p.getLocation().getChunk(), p,
+                                                Particle.valueOf(plugin.getConfig().getString("Particles.borders.inactive")), 1, false);
+                                    } else {
+                                        wg.highlightLand(p.getLocation().getChunk(), p,
+                                                Particle.valueOf(plugin.getConfig().getString("Particles.borders.claimed")), 1, false);
+                                    }
+                                });
+                            }
                         }
                     } else {
                         cancel();
                         counter++;
                     }
                 }
-            }.runTaskTimer(plugin.getPlugin(), 0, refreshRate * 20));
+            }.runTaskTimer(plugin.getPlugin(), 0, refreshRate * 20L));
         } else {
-            lm.sendMessage(p, lm.getString("Commands.Borders.deactivated"));
+            lm.sendMessage(p, lm.getString(p, "Commands.Borders.deactivated"));
             tasks.get(p.getUniqueId()).cancel();
             tasks.remove(p.getUniqueId());
         }

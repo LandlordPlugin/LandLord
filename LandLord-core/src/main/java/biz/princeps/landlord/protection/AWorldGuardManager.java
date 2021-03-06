@@ -172,7 +172,6 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
             edgeBlock.setX(edgeBlock.getBlockX() + .5);
             if (everyone) {
                 PrincepsLib.getStuffManager().spawnPublicParticle(edgeBlock, particle, amount);
-
             } else {
                 PrincepsLib.getStuffManager().spawnPlayerParticle(p, edgeBlock, particle, amount);
             }

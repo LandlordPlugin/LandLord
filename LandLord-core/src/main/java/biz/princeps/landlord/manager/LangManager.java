@@ -4,12 +4,15 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.util.ConfigUtil;
 import com.google.common.collect.Lists;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +29,7 @@ public class LangManager implements ILangManager {
     private final ILandLord pl;
     private final String filename;
     private FileConfiguration msg;
+    private final boolean parsePlaceholders;
 
     public LangManager(ILandLord pl, String lang) {
         this.pl = pl;
@@ -33,6 +37,7 @@ public class LangManager implements ILangManager {
         reload();
         new ConfigUtil(pl).handleConfigUpdate(pl.getPlugin().getDataFolder() + "/" + filename, "/" + filename);
         reload();
+        parsePlaceholders = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
     }
 
     @Override
@@ -55,15 +60,19 @@ public class LangManager implements ILangManager {
 
     @Override
     public String getString(String path) {
+        return getString(null, path);
+    }
+
+    @Override
+    public String getString(Player player, String path) {
         String message = msg.getString(path);
         if (message == null) {
             pl.getLogger().warning("Your language file " + filename + " seems to miss string '" + path + "'");
             return "MISSING STRING";
         } else {
-            return ChatColor.translateAlternateColorCodes('&', getTag() + " " + message);
+            return ChatColor.translateAlternateColorCodes('&', getTag() + " " + (parsePlaceholders ? PlaceholderAPI.setPlaceholders(player, message) : message));
         }
     }
-
 
     @Override
     public String getTag() {

@@ -39,13 +39,14 @@ public class LLExpansion extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String s) {
+        if (player == null) {
+            return null;
+        }
         int maxClaimPermission = pl.getPlayerManager().getMaxClaimPermission(player);
         int landcount = wg.getRegionCount(player.getUniqueId());
         IOwnedLand region = wg.getRegion(player.getLocation());
 
-
         switch (s) {
-
             case "ownedlands":
                 return String.valueOf(landcount);
 
@@ -86,9 +87,9 @@ public class LLExpansion extends PlaceholderExpansion {
                 } else {
                     return "0";
                 }
-
-
         }
+
         return null;
     }
+
 }

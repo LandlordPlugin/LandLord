@@ -62,7 +62,7 @@ public class Home extends LandlordCommand {
     private void onHome(Properties props, String targetPlayer) {
         Player player = props.getPlayer();
         if (!Options.enabled_homes()) {
-            lm.sendMessage(player, lm.getString("Commands.SetHome.disabled"));
+            lm.sendMessage(player, lm.getString(player, "Commands.SetHome.disabled"));
             return;
         }
 
@@ -71,17 +71,17 @@ public class Home extends LandlordCommand {
             teleport(toGo, player, player.getName());
         } else {
             if (!player.hasPermission("landlord.player.homeother")) {
-                lm.sendMessage(player, lm.getString("noPermissions"));
+                lm.sendMessage(player, lm.getString(player, "noPermissions"));
                 return;
             }
 
             plugin.getPlayerManager().getOffline(targetPlayer, (offline) -> {
                 if (offline == null) {
-                    lm.sendMessage(player, lm.getString("Commands.Home.otherNoHome"));
+                    lm.sendMessage(player, lm.getString(player, "Commands.Home.otherNoHome"));
                 } else {
                     Location home = offline.getHome();
                     if (home == null) {
-                        lm.sendMessage(player, lm.getString("Commands.Home.otherNoHome"));
+                        lm.sendMessage(player, lm.getString(player, "Commands.Home.otherNoHome"));
                         return;
                     }
 
@@ -97,15 +97,15 @@ public class Home extends LandlordCommand {
     private void teleport(Location toGo, Player player, String playerHome) {
         double cost = plugin.getConfig().getDouble("Homes.teleportCost");
         if (Options.isVaultEnabled()) {
-            if (!plugin.getVaultManager().hasBalance(player.getUniqueId(), cost)) {
-                lm.sendMessage(player, lm.getString("Commands.Home.notEnoughMoney").replace("%cost%",
+            if (!plugin.getVaultManager().hasBalance(player, cost)) {
+                lm.sendMessage(player, lm.getString(player, "Commands.Home.notEnoughMoney").replace("%cost%",
                         plugin.getVaultManager().format(cost)));
                 return;
             }
         }
 
         if (toGo == null) {
-            ComponentBuilder builder = new ComponentBuilder(lm.getString("Commands.Home.noHome"));
+            ComponentBuilder builder = new ComponentBuilder(lm.getString(player, "Commands.Home.noHome"));
             builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, PrincepsLib.getCommandManager()
                     .getCommand(Landlordbase.class).getCommandString(SetHome.class)));
             plugin.getUtilsManager().sendBasecomponent(player, builder.create());
@@ -113,11 +113,11 @@ public class Home extends LandlordCommand {
         }
 
         if (cost > 0 && Options.isVaultEnabled()) {
-            plugin.getVaultManager().take(player.getUniqueId(), cost);
-            lm.sendMessage(player, lm.getString("Commands.Home.costing")
+            plugin.getVaultManager().take(player, cost);
+            lm.sendMessage(player, lm.getString(player, "Commands.Home.costing")
                     .replace("%cost%", plugin.getVaultManager().format(cost)));
         }
         player.teleport(toGo);
-        lm.sendMessage(player, lm.getString("Commands.Home.welcomeHome").replace("%player%", playerHome));
+        lm.sendMessage(player, lm.getString(player, "Commands.Home.welcomeHome").replace("%player%", playerHome));
     }
 }

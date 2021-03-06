@@ -69,7 +69,7 @@ public class MultiClaim extends LandlordCommand {
 
         // Implementation of this to avoid latencies with MultiClaim, because getChunk methode generates the chunk if is not :/
         if (radius > maxSize) { // +2 for marge value. Unless server has a huge render distance (16 for example), won't cause any trouble
-            lm.sendMessage(player, lm.getString("Commands.MultiClaim.hugeSize")
+            lm.sendMessage(player, lm.getString(player, "Commands.MultiClaim.hugeSize")
                     .replace("%max_size%", maxSize + ""));
             return;
         }
@@ -77,7 +77,7 @@ public class MultiClaim extends LandlordCommand {
         final Set<Chunk> toClaim = mode.getFreeLands(radius, player.getLocation(), wg);
 
         if (toClaim.size() == 0) {
-            lm.sendMessage(player, lm.getString("Commands.MultiClaim.noLands"));
+            lm.sendMessage(player, lm.getString(player, "Commands.MultiClaim.noLands"));
             return;
         }
 
@@ -94,7 +94,7 @@ public class MultiClaim extends LandlordCommand {
                     lm.getRawString("Commands.MultiClaim.guiMessage")
                             .replace("%amount%", toClaim.size() + "")
                             .replace("%cost%", formattedCost),
-                    lm.getString("Commands.MultiClaim.chatMessage")
+                    lm.getString(player, "Commands.MultiClaim.chatMessage")
                             .replace("%amount%", toClaim.size() + "")
                             .replace("%cost%", formattedCost),
                     (p) -> {
@@ -106,7 +106,7 @@ public class MultiClaim extends LandlordCommand {
                     },
                     (p) -> {
                         // on decline
-                        lm.sendMessage(p, lm.getString("Commands.MultiClaim.abort")
+                        lm.sendMessage(p, lm.getString(p, "Commands.MultiClaim.abort")
                                 .replace("%amount%", toClaim.size() + ""));
                         p.closeInventory();
                     }, confirmcmd);
