@@ -97,8 +97,8 @@ public class Arguments {
      * String[] { "1", "5", "3" }
      * get(1,3) will return { "5" , "3"}
      *
-     * @param from the position from (inclusive) => see the above example
-     * @param to   the position to (exclusive) => see the above example
+     * @param from the position from (inclusive) see the above example
+     * @param to   the position to (exclusive)  see the above example
      * @return the actual string on the position
      * @throws ArgumentsOutOfBoundsException in case the index is to large or out of bounds
      */
