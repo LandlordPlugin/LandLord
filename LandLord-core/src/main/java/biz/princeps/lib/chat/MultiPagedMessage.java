@@ -32,7 +32,6 @@ public class MultiPagedMessage {
      * obj2
      * obj3
      * ... perSite
-     * <Previous>   <Next>
      */
     public MultiPagedMessage(String command, String header, int perSite, List<String> elements, String previous, String next, int pointer) {
         this.command = command;
