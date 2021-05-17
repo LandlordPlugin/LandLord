@@ -94,11 +94,6 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      */
     protected boolean checkDependencies() {
         // shared deps
-        if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
-            haltPlugin("ProtocolLib not found! Please ensure you have the correct version of ProtocolLib in order to " +
-                    "use LandLord");
-            return false;
-        }
         if (getVault() == null) {
             getLogger().info("Vault or an economy provider could no be found. Not all features of landlord are working.");
         }
