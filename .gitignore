@@ -1,6 +1,3 @@
-# Remove config
-/config/
-
 .gradle
 **/build/
 !src/**/build/
@@ -37,20 +34,21 @@ gradle-app.setting
 .idea/**/gradle.xml
 .idea/**/libraries
 
-# Editor-based Rest Client
-.idea/httpRequests
+# Gradle and Maven with auto-import
+# When using Gradle or Maven with auto-import, you should exclude module files,
+# since they will be recreated, and may cause churn.  Uncomment if using
+# auto-import.
+.idea/artifacts
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/modules.xml
+.idea/*.iml
+.idea/modules
+*.iml
+*.ipr
 
-# CMake
-cmake-build-*/
+# File-based project format
+*.iws
 
-# Maven
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-.mvn/wrapper/maven-wrapper.jar
+# IntelliJ
+out/

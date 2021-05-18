@@ -46,8 +46,7 @@ There is a very in depth documentation about nearly everything in the
 Compilation
 ================
 
-LandLord uses maven as dependency resolver. Execute the maven goal "package" to get a jar, that contains all
-dependencies. The jars will be located in target folder of their respect version (1.13.2+ in latest, 1.12.2 in legacy).
+Gradle is the recommended way to build the project. Use `./gradlew build` in the main project directory to build the project. Gradle is required if you intend to build or develop the Sponge module.
 
 Contribution
 ============
