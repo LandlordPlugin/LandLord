@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.get
-
 plugins {
     `java-library`
     `maven-publish`
@@ -7,23 +5,23 @@ plugins {
 }
 
 publishing {
+    val publishData = PublishData(project)
+
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
             groupId = project.group as String?
             artifactId = project.name.toLowerCase()
-            version = project.version as String?
+            version = publishData.getVersion()
         }
-
     }
 
     repositories {
         maven {
-            val isSnapshot = version.toString().endsWith("SNAPSHOT");
-            val release = "https://eldonexus.de/repository/maven-releases/";
-            val snapshot = "https://eldonexus.de/repository/maven-snapshots/";
+            val release = "https://eldonexus.de/repository/maven-releases/"
+            val snapshot = "https://eldonexus.de/repository/maven-snapshots/"
             name = "EldoNexus"
-            url = uri(if (isSnapshot) snapshot else release)
+            url = uri(if (publishData.isSnapshot()) snapshot else release)
 
             authentication {
                 credentials(PasswordCredentials::class) {
