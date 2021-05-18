@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation("biz.princeps", "eldo-util", "version")
+    implementation("biz.princeps", "landlord-core", "version")
 }
 ```
 
@@ -33,7 +33,7 @@ Maven
 
 <dependency>
     <groupId>biz.princeps</groupId>
-    <artifactId>eldo-util</artifactId>
+    <artifactId>landlord-core</artifactId>
     <version>version</version>
 </dependency>
 ```
