@@ -1,7 +1,7 @@
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/LandlordPlugin/Landlord/Publish%20to%20Nexus?style=flat-square)
-![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/biz.princeps/landlord-core?label=EldoNexus&nexusVersion=3&server=https%3A%2F%2Feldonexus.de&style=flat-square)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/LandlordPlugin/Landlord/Verify%20state?style=flat-square)
-![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/biz.princeps/landlord-core?color=orange&label=EldoNexus&server=https%3A%2F%2Feldonexus.de&style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/LandlordPlugin/Landlord/Verify%20state?style=for-the-badge&label=Building)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/LandlordPlugin/Landlord/Publish%20to%20Nexus?style=for-the-badge&label=Publishing)
+![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/biz.princeps/landlord-core?label=Release&nexusVersion=3&server=https%3A%2F%2Feldonexus.de&style=for-the-badge)
+![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/biz.princeps/landlord-core?color=orange&label=Snapshot&server=https%3A%2F%2Feldonexus.de&style=for-the-badge)
 
 Landlord
 ========

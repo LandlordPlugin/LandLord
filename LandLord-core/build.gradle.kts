@@ -12,7 +12,6 @@ dependencies {
     implementation("io.github.bananapuncher714:nbteditor:7.16.1")
     implementation("de.eldoria:eldo-util:1.8.4")
     compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
-    //compileOnly("com.comphenix.protocol:ProtocolLib:4.6.0-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("me.clip:placeholderapi:2.10.5")
     compileOnly("com.github.TownyAdvanced:Towny:0.96.1.11")

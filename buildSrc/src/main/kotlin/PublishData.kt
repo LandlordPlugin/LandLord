@@ -30,12 +30,16 @@ class PublishData(val project: Project) {
         return "local"
     }
 
+    fun getVersion(): String? {
+        return getVersion(false)
+    }
+
     /**
      * Get the publish data
      *
      * @return version as string and boolean which indicated whether this is a production build or not
      */
-    fun getVersion(): String? {
+    fun getVersion(commitHash: Boolean): String? {
         val branch = getCheckedOutBranch()
         println("Current branch is $branch")
         var currVer = project.version as String?
@@ -47,11 +51,14 @@ class PublishData(val project: Project) {
             }
             branch.startsWith("develop") -> {
                 println("Project is DEV version")
-                currVer?.replace("-SNAPSHOT", "").plus("-dev-" + getCheckedOutGitCommitHash())
+                currVer?.replace("-SNAPSHOT", "")
+                    .plus("-dev")
+                    .plus(if(commitHash)"-".plus(getCheckedOutGitCommitHash()) else "")
             }
             else -> {
                 println("Project is SNAPSHOT")
-                (if (currVer?.endsWith("-SNAPSHOT") == true) "" else currVer?.plus("-SNAPSHOT")).plus("-").plus(getCheckedOutGitCommitHash())
+                (if (currVer?.endsWith("-SNAPSHOT") == true) "" else currVer?.plus("-SNAPSHOT"))
+                    .plus(if(commitHash)"-".plus(getCheckedOutGitCommitHash()) else "")
             }
         }
         println("Current project version is $currVer")

@@ -8,7 +8,6 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.0-SNAPSHOT")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.4-SNAPSHOT")
-    //compileOnly("com.comphenix.protocol:ProtocolLib:4.6.0-SNAPSHOT")
 }
 
 description = "LandLord-latest"
@@ -20,7 +19,7 @@ tasks {
         from(sourceSets.main.get().resources.srcDirs) {
             filesMatching("plugin.yml") {
                 expand(
-                    "version" to PublishData(project).getVersion()
+                    "version" to PublishData(project).getVersion(true)
                 )
             }
             duplicatesStrategy = DuplicatesStrategy.INCLUDE

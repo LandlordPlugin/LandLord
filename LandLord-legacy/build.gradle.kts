@@ -20,7 +20,7 @@ tasks {
         from(sourceSets.main.get().resources.srcDirs) {
             filesMatching("plugin.yml") {
                 expand(
-                    "version" to PublishData(project).getVersion() as String
+                    "version" to PublishData(project).getVersion(true) as String
                 )
             }
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
