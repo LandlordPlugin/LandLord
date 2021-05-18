@@ -46,7 +46,7 @@ There is a very in depth documentation about nearly everything in the
 Compilation
 ================
 
-Gradle is the recommended way to build the project. Use `./gradlew build` in the main project directory to build the project. Gradle is required if you intend to build or develop the Sponge module.
+Gradle is the recommended way to build the project. Use `./gradlew build` in the main project directory to build the project.
 
 Contribution
 ============
