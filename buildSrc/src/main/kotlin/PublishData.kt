@@ -52,7 +52,7 @@ class PublishData(val project: Project) {
             branch.startsWith("develop") -> {
                 println("Project is DEV version")
                 currVer?.replace("-SNAPSHOT", "")
-                    .plus("-dev")
+                    .plus("-DEV")
                     .plus(if(commitHash)"-".plus(getCheckedOutGitCommitHash()) else "")
             }
             else -> {
@@ -63,6 +63,21 @@ class PublishData(val project: Project) {
         }
         println("Current project version is $currVer")
         return currVer
+    }
+
+    fun getRepository() : String {
+        val branch = getCheckedOutBranch()
+        return when {
+            branch.contentEquals("master") -> {
+                "https://eldonexus.de/repository/maven-releases/"
+            }
+            branch.startsWith("dev") -> {
+                "https://eldonexus.de/repository/maven-dev/"
+            }
+            else -> {
+                "https://eldonexus.de/repository/maven-snapshots/"
+            }
+        }
     }
 
     fun isSnapshot(): Boolean {

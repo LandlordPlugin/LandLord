@@ -18,10 +18,8 @@ publishing {
 
     repositories {
         maven {
-            val release = "https://eldonexus.de/repository/maven-releases/"
-            val snapshot = "https://eldonexus.de/repository/maven-snapshots/"
             name = "EldoNexus"
-            url = uri(if (publishData.isSnapshot()) snapshot else release)
+            url = uri(publishData.getRepository())
 
             authentication {
                 credentials(PasswordCredentials::class) {
