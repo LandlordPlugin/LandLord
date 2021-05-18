@@ -18,10 +18,9 @@ import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.placeholderapi.LLExpansion;
 import biz.princeps.landlord.placeholderapi.LLFeatherBoard;
 import biz.princeps.landlord.util.ConfigUtil;
-import biz.princeps.landlord.util.Metrics;
-import biz.princeps.landlord.util.Updater;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
+import de.eldoria.eldoutilities.bstats.EldoMetrics;
 import de.eldoria.eldoutilities.core.EldoUtilities;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -75,8 +74,6 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         setupPlayers();
         setupMetrics();
         postloadPrincepsLib();
-
-        new Updater(this);
     }
 
     @Override
@@ -97,11 +94,6 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      */
     protected boolean checkDependencies() {
         // shared deps
-        if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
-            haltPlugin("ProtocolLib not found! Please ensure you have the correct version of ProtocolLib in order to " +
-                    "use LandLord");
-            return false;
-        }
         if (getVault() == null) {
             getLogger().info("Vault or an economy provider could no be found. Not all features of landlord are working.");
         }
@@ -260,10 +252,11 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * Register bStats metrics https://bstats.org/plugin/bukkit/Landlord
      */
     private void setupMetrics() {
-        if (getConfig().getBoolean("EnableMetrics")) {
-            Metrics metrics = new Metrics(this);
-            //TODO maybe add some interesting statistics
+        EldoMetrics metrics = new EldoMetrics(this, 2322);
+        if(metrics.isEnabled()){
+            getLogger().info("§2Metrics enabled. Thank you :3");
         }
+        //TODO maybe add some interesting statistics
     }
 
     private Economy getVault() {

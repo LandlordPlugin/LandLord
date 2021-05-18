@@ -33,7 +33,7 @@ public class MultiClaim extends LandlordCommand {
     /**
      * Executed when a player enters /land multiclaim
      * Expected parameters is
-     * /land multiclaim <option>
+     * /land multiclaim {@code <option>}
      * Option is either circular or rectangular!
      * <p>
      * All the individual claims are redirected to the function that handles /land claim
