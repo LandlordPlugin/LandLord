@@ -1,0 +1,52 @@
+version: 2
+
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "development"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "SirYwell"
+      - "RainbowDashLabs"
+      - "Aurelien30000"
+
+  - package-ecosystem: "gradle"
+    directory: "/LandLord-api"
+    target-branch: "development"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "SirYwell"
+      - "RainbowDashLabs"
+      - "Aurelien30000"
+
+  - package-ecosystem: "gradle"
+    directory: "/LandLord-core"
+    target-branch: "development"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "SirYwell"
+      - "RainbowDashLabs"
+      - "Aurelien30000"
+
+  - package-ecosystem: "gradle"
+    directory: "/LandLord-latest"
+    target-branch: "development"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "SirYwell"
+      - "RainbowDashLabs"
+      - "Aurelien30000"
+
+  - package-ecosystem: "gradle"
+    directory: "/LandLord-legacy"
+    target-branch: "development"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "SirYwell"
+      - "RainbowDashLabs"
+      - "Aurelien30000"
