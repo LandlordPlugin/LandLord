@@ -33,7 +33,6 @@ public class MultiPagedComponentMessage {
      * obj2
      * obj3
      * ... perSite
-     * <<Previous>   <Next>
      */
     public MultiPagedComponentMessage(String command, String header, int perSite, List<BaseComponent> elements, String previous, String next, int pointer) {
         this.command = command;

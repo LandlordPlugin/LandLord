@@ -22,7 +22,7 @@ public interface Command {
 
     /**
      * This method is actually called onCommand. It is not implemented in one of the abstract classes Main/SubCommand
-     * => You will need to implement it in a actual command
+     * You will need to implement it in a actual command
      *
      * @param properties the commandProperties. Stuff around the CommandSender.
      * @param arguments  the Arguments

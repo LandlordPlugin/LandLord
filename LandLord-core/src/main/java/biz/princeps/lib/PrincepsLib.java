@@ -5,8 +5,6 @@ import biz.princeps.lib.crossversion.CrossVersion;
 import biz.princeps.lib.crossversion.Stuff;
 import biz.princeps.lib.item.ItemManager;
 import biz.princeps.lib.manager.ConfirmationManager;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -30,7 +28,6 @@ public class PrincepsLib extends JavaPlugin implements Listener {
     private static ConfirmationManager confirmationManager;
     private static Stuff stuffManager;
     private static TranslateableStrings translateableStrings;
-    private static ProtocolManager protocolManager;
 
     @Override
     public void onEnable() {
@@ -62,7 +59,6 @@ public class PrincepsLib extends JavaPlugin implements Listener {
         PrincepsLib.confirmationManager = new ConfirmationManager();
         PrincepsLib.stuffManager = new Stuff();
         PrincepsLib.translateableStrings = new TranslateableStrings();
-        PrincepsLib.protocolManager = ProtocolLibrary.getProtocolManager();
     }
 
     /**
@@ -126,9 +122,5 @@ public class PrincepsLib extends JavaPlugin implements Listener {
 
     public static TranslateableStrings getTranslateableStrings() {
         return translateableStrings;
-    }
-
-    public static ProtocolManager getProtocolManager() {
-        return protocolManager;
     }
 }
