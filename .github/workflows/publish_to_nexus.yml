@@ -1,13 +1,13 @@
 name: Publish to Nexus
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
       - dev*
       - feature/*
       - release/*
-  workflow_dispatch:
 
 jobs:
   build:
