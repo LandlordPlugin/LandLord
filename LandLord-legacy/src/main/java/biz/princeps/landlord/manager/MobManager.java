@@ -7,6 +7,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class MobManager implements IMobManager {
     }
 
     @Override
-    public List<IMob> values() {
+    public Collection<IMob> values() {
         return MOBS;
     }
 

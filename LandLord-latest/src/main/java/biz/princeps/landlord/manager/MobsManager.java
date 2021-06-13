@@ -8,37 +8,38 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
 public class MobsManager implements IMobManager {
 
     private static final List<IMob> MOBS = new ArrayList<>();
-    final int currentMineCraftVersion;
+    final int currentDataVersion;
 
     public MobsManager() {
-        // v1_17_R1 becomes 1171. Using protocol version should be better, but it is not not supported by Spigot currently.
-        currentMineCraftVersion = Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].replaceAll("[v_R]", ""));
+        // https://minecraft.fandom.com/wiki/Data_version
+        currentDataVersion = Bukkit.getUnsafe().getDataVersion();
 
         registerDefaultEntities();
 
-        if (currentMineCraftVersion >= 1141) {
+        if (currentDataVersion >= 1952) {
             register1_14Entities();
         }
 
-        if (currentMineCraftVersion >= 1151) {
+        if (currentDataVersion >= 2225) {
             register1_15Entities();
         }
 
-        if (currentMineCraftVersion >= 1161) {
+        if (currentDataVersion >= 2566) {
             register1_16Entities();
         }
 
-        if (currentMineCraftVersion >= 1162) {
+        if (currentDataVersion >= 2578) {
             register1_16_2Entities();
         }
 
-        if (currentMineCraftVersion >= 1171) {
+        if (currentDataVersion >= 2724) {
             register1_17Entities();
         }
 
@@ -97,7 +98,7 @@ public class MobsManager implements IMobManager {
         final Mob MUSHROOM_COW = new Mob(EntityType.MUSHROOM_COW, Material.MOOSHROOM_SPAWN_EGG);
 
         // PIG_ZOMBIE still exists in 1.15.2-
-        if (currentMineCraftVersion <= 1151) {
+        if (currentDataVersion <= 1151) {
             final Mob PIG_ZOMBIE = new Mob(EntityType.valueOf("PIG_ZOMBIE"), Material.valueOf("ZOMBIE_PIGMAN_SPAWN_EGG"));
         }
     }
@@ -140,7 +141,7 @@ public class MobsManager implements IMobManager {
     }
 
     @Override
-    public List<IMob> values() {
+    public Collection<IMob> values() {
         return MOBS;
     }
 
