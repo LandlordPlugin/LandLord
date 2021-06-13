@@ -39,7 +39,7 @@ public class MobsManager implements IMobManager {
         }
 
         if (currentMineCraftVersion >= 1171) {
-            register1_16_2Entities();
+            register1_17Entities();
         }
 
         MOBS.sort(Comparator.comparing(iMob -> iMob.getType().name()));
