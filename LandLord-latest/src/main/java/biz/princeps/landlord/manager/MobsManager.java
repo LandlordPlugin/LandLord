@@ -97,8 +97,8 @@ public class MobsManager implements IMobManager {
         final Mob DOLPHIN = new Mob(EntityType.DOLPHIN, Material.DOLPHIN_SPAWN_EGG);
         final Mob MUSHROOM_COW = new Mob(EntityType.MUSHROOM_COW, Material.MOOSHROOM_SPAWN_EGG);
 
-        // PIG_ZOMBIE still exists in 1.15.2-
-        if (currentDataVersion <= 1151) {
+        // PIG_ZOMBIE still exists in 1.15.1-
+        if (currentDataVersion <= 2227) {
             final Mob PIG_ZOMBIE = new Mob(EntityType.valueOf("PIG_ZOMBIE"), Material.valueOf("ZOMBIE_PIGMAN_SPAWN_EGG"));
         }
     }
