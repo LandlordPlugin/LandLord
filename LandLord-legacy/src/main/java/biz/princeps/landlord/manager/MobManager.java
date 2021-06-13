@@ -7,12 +7,12 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 public class MobManager implements IMobManager {
 
-
-    static final Collection<IMob> MOBS = new ArrayList<>();
+    static final List<IMob> MOBS = new ArrayList<>();
     public static final Mob ELDER_GUARDIAN = new Mob(EntityType.ELDER_GUARDIAN, 4);
     public static final Mob WITHER_SKELETON = new Mob(EntityType.WITHER_SKELETON, 5);
     public static final Mob STRAY = new Mob(EntityType.STRAY, 6);
@@ -54,8 +54,12 @@ public class MobManager implements IMobManager {
     public static final Mob PARROT = new Mob(EntityType.PARROT, 105);
     public static final Mob VILLAGER = new Mob(EntityType.VILLAGER, 120);
 
+    public MobManager() {
+        MOBS.sort(Comparator.comparing(iMob -> iMob.getType().name()));
+    }
+
     @Override
-    public Collection<IMob> values() {
+    public List<IMob> values() {
         return MOBS;
     }
 

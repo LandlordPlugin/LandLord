@@ -2,7 +2,7 @@ package biz.princeps.landlord.api;
 
 import org.bukkit.entity.EntityType;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface IMobManager {
 
@@ -24,9 +24,10 @@ public interface IMobManager {
     IMob get(EntityType type);
 
     /**
-     * Gets a collection of all available Mobs.
+     * Gets a list of all available Mobs.
      *
-     * @return a collection of all mobs
+     * @return a list of all mobs
      */
-    Collection<IMob> values();
+    List<IMob> values();
+
 }

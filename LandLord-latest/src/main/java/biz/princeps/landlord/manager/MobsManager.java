@@ -8,14 +8,16 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 public class MobsManager implements IMobManager {
 
-    private static final Collection<IMob> MOBS = new ArrayList<>();
+    private static final List<IMob> MOBS = new ArrayList<>();
     final int currentMineCraftVersion;
 
     public MobsManager() {
+        // v1_17_R1 becomes 1171. Using protocol version should be better, but it is not not supported by Spigot currently.
         currentMineCraftVersion = Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].replaceAll("[v_R]", ""));
 
         registerDefaultEntities();
@@ -35,6 +37,12 @@ public class MobsManager implements IMobManager {
         if (currentMineCraftVersion >= 1162) {
             register1_16_2Entities();
         }
+
+        if (currentMineCraftVersion >= 1171) {
+            register1_16_2Entities();
+        }
+
+        MOBS.sort(Comparator.comparing(iMob -> iMob.getType().name()));
     }
 
     private void registerDefaultEntities() {
@@ -124,8 +132,15 @@ public class MobsManager implements IMobManager {
         final Mob PIGLIN_BRUTE = new Mob(EntityType.PIGLIN_BRUTE, Material.PIGLIN_BRUTE_SPAWN_EGG);
     }
 
+    private void register1_17Entities() {
+        // 1.17's entities
+        final Mob AXOLOTL = new Mob(EntityType.AXOLOTL, Material.AXOLOTL_SPAWN_EGG);
+        final Mob GLOW_SQUID = new Mob(EntityType.GLOW_SQUID, Material.GLOW_SQUID_SPAWN_EGG);
+        final Mob GOAT = new Mob(EntityType.GOAT, Material.GOAT_SPAWN_EGG);
+    }
+
     @Override
-    public Collection<IMob> values() {
+    public List<IMob> values() {
         return MOBS;
     }
 
