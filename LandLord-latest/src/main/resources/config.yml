@@ -739,6 +739,9 @@ Manage:
       - STRIDER
       - ZOGLIN
       - ZOMBIFIED_PIGLIN
+      - AXOLOTL
+      - GLOW_SQUID
+      - GOAT
 
 # Define how the claim height should be defined.
 ClaimHeight:
