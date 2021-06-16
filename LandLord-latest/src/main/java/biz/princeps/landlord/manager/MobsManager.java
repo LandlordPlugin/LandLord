@@ -9,32 +9,41 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 public class MobsManager implements IMobManager {
 
-    private static final Collection<IMob> MOBS = new ArrayList<>();
-    final int currentMineCraftVersion;
+    private static final List<IMob> MOBS = new ArrayList<>();
+    final int currentDataVersion;
 
     public MobsManager() {
-        currentMineCraftVersion = Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].replaceAll("[v_R]", ""));
+        // https://minecraft.fandom.com/wiki/Data_version
+        currentDataVersion = Bukkit.getUnsafe().getDataVersion();
 
         registerDefaultEntities();
 
-        if (currentMineCraftVersion >= 1141) {
+        if (currentDataVersion >= 1952) {
             register1_14Entities();
         }
 
-        if (currentMineCraftVersion >= 1151) {
+        if (currentDataVersion >= 2225) {
             register1_15Entities();
         }
 
-        if (currentMineCraftVersion >= 1161) {
+        if (currentDataVersion >= 2566) {
             register1_16Entities();
         }
 
-        if (currentMineCraftVersion >= 1162) {
+        if (currentDataVersion >= 2578) {
             register1_16_2Entities();
         }
+
+        if (currentDataVersion >= 2724) {
+            register1_17Entities();
+        }
+
+        MOBS.sort(Comparator.comparing(iMob -> iMob.getType().name()));
     }
 
     private void registerDefaultEntities() {
@@ -88,8 +97,8 @@ public class MobsManager implements IMobManager {
         final Mob DOLPHIN = new Mob(EntityType.DOLPHIN, Material.DOLPHIN_SPAWN_EGG);
         final Mob MUSHROOM_COW = new Mob(EntityType.MUSHROOM_COW, Material.MOOSHROOM_SPAWN_EGG);
 
-        // PIG_ZOMBIE still exists in 1.15.2-
-        if (currentMineCraftVersion <= 1151) {
+        // PIG_ZOMBIE still exists in 1.15.1-
+        if (currentDataVersion <= 2227) {
             final Mob PIG_ZOMBIE = new Mob(EntityType.valueOf("PIG_ZOMBIE"), Material.valueOf("ZOMBIE_PIGMAN_SPAWN_EGG"));
         }
     }
@@ -122,6 +131,13 @@ public class MobsManager implements IMobManager {
     private void register1_16_2Entities() {
         // 1.16.2's entities
         final Mob PIGLIN_BRUTE = new Mob(EntityType.PIGLIN_BRUTE, Material.PIGLIN_BRUTE_SPAWN_EGG);
+    }
+
+    private void register1_17Entities() {
+        // 1.17's entities
+        final Mob AXOLOTL = new Mob(EntityType.AXOLOTL, Material.AXOLOTL_SPAWN_EGG);
+        final Mob GLOW_SQUID = new Mob(EntityType.GLOW_SQUID, Material.GLOW_SQUID_SPAWN_EGG);
+        final Mob GOAT = new Mob(EntityType.GOAT, Material.GOAT_SPAWN_EGG);
     }
 
     @Override
