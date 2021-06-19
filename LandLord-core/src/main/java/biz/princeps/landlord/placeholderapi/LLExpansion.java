@@ -23,11 +23,6 @@ public class LLExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String getPlugin() {
-        return pl.getPlugin().getName();
-    }
-
-    @Override
     public String getAuthor() {
         return String.valueOf(pl.getPlugin().getDescription().getAuthors());
     }
@@ -43,21 +38,36 @@ public class LLExpansion extends PlaceholderExpansion {
             return null;
         }
         final int maxClaimPermission = pl.getPlayerManager().getMaxClaimPermission(player);
-        final int landcount = wg.getRegionCount(player.getUniqueId());
+        final int landCount = wg.getRegionCount(player.getUniqueId());
         final IOwnedLand region = wg.getRegion(player.getLocation());
 
         switch (s) {
-            case "ownedlands":
-                return String.valueOf(landcount);
+            case "ownedLands":
+                return String.valueOf(landCount);
 
             case "claims":
                 final IPlayer iPlayer = pl.getPlayerManager().get(player.getUniqueId());
                 if (iPlayer == null) {
-                    pl.getLogger().warning("A placeholder is trying to load %ll_claims% before async loading of the " +
+                    pl.getLogger().warning("A placeholder is trying to load %landlord_claims% before async loading of the " +
                             "player has finished! Use FinishedLoadingPlayerEvent!");
                     return "NaN";
                 }
                 return String.valueOf(iPlayer.getClaims());
+
+            case "remainingClaims":
+                final int freeClaims = pl.getConfig().getInt("Claims.free");
+
+                if (landCount <= freeClaims) {
+                    final IPlayer iPlayer2 = pl.getPlayerManager().get(player.getUniqueId());
+                    if (iPlayer2 == null) {
+                        pl.getLogger().warning("A placeholder is trying to load %landlord_remainingClaims% before async loading of the " +
+                                "player has finished! Use FinishedLoadingPlayerEvent!");
+                        return "NaN";
+                    }
+                    return String.valueOf(iPlayer2.getClaims() - landCount);
+                } else {
+                    return "0";
+                }
 
             case "currentLandOwner":
                 if (region != null) {
@@ -82,14 +92,14 @@ public class LLExpansion extends PlaceholderExpansion {
                 return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble(
                         "Payback"));
 
-            case "maxLimitPermission":
+            case "freeLands":
                 return String.valueOf(maxClaimPermission);
 
             case "remainingFreeLands":
-                final int freelands = pl.getConfig().getInt("Freelands");
+                final int freeLands = pl.getConfig().getInt("Freelands");
 
-                if (landcount <= freelands) {
-                    return String.valueOf((Math.min(maxClaimPermission, freelands)) - landcount);
+                if (landCount <= freeLands) {
+                    return String.valueOf((Math.min(maxClaimPermission, freeLands)) - landCount);
                 } else {
                     return "0";
                 }
