@@ -92,7 +92,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble(
                         "Payback"));
 
-            case "freeLands":
+            case "maxLimitPermission":
                 return String.valueOf(maxClaimPermission);
 
             case "remainingFreeLands":
