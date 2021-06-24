@@ -64,14 +64,15 @@ public class LLExpansion extends PlaceholderExpansion {
                 return String.valueOf(iPlayer2.getClaims() - landCount);
 
             case "currentLandOwner":
-                if (region != null) {
+                if (region != null && region.getOwner() != null) {
                     return region.getOwnersString();
                 }
                 return "∅";
 
             case "currentLandMembers":
-                if (region != null) {
-                    return region.getMembersString();
+                final String members;
+                if (region != null && !(members = region.getMembersString()).isEmpty()) {
+                    return members;
                 }
                 return "∅";
 
