@@ -123,9 +123,8 @@ public class LLExpansion extends PlaceholderExpansion {
 
                         if (landCount <= freeLands) {
                             return String.valueOf((Math.min(getMaxClaimPermission(player), freeLands)) - landCount);
-                        } else {
-                            return "0";
                         }
+                        return "0";
 
                     default:
                         return null;
