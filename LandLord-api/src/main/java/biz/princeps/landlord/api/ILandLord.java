@@ -122,4 +122,13 @@ public interface ILandLord {
      * @return the regeneration manager
      */
     IRegenerationManager getRegenerationManager();
+
+    /**
+     * Get the reference to the MultiTaskManager.
+     * The MultiTaskManager is used to spread load of huge multi tasks and their operations over ticks.
+     *
+     * @return the multi task manager
+     */
+    IMultiTaskManager getMultiTaskManager();
+
 }

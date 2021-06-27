@@ -2,8 +2,8 @@ package biz.princeps.landlord.guis;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.commands.ManageMode;
-import biz.princeps.landlord.commands.MultiMode;
+import biz.princeps.landlord.api.ManageMode;
+import biz.princeps.landlord.multi.MultiMode;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import org.bukkit.entity.Player;
 

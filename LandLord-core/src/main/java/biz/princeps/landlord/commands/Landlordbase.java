@@ -11,6 +11,7 @@ import biz.princeps.landlord.commands.friends.*;
 import biz.princeps.landlord.commands.homes.Home;
 import biz.princeps.landlord.commands.homes.SetHome;
 import biz.princeps.landlord.commands.management.*;
+import biz.princeps.landlord.multi.MultiMode;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.MainCommand;

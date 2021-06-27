@@ -1,0 +1,86 @@
+package biz.princeps.landlord.multi;
+
+import biz.princeps.landlord.api.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+
+import java.util.*;
+
+public class MultiClearTask extends AMultiTask<IOwnedLand> {
+
+    private final IWorldGuardManager wgManager;
+    private final IPlayerManager playerManager;
+    private final ILangManager lgManager;
+    private final CommandSender commandSender;
+
+    private final String targetName;
+    private final int clearedLands;
+    private final Set<UUID> clearedHomes;
+    private final ClearType clearType;
+
+    public MultiClearTask(ILandLord plugin, CommandSender commandSender, Collection<IOwnedLand> operations, String targetName, ClearType clearType) {
+        super(plugin, operations);
+
+        this.wgManager = plugin.getWGManager();
+        this.playerManager = plugin.getPlayerManager();
+        this.lgManager = plugin.getLangManager();
+        this.commandSender = commandSender;
+
+        this.targetName = targetName;
+        this.clearedLands = operations.size();
+        this.clearedHomes = new HashSet<>();
+        this.clearType = clearType;
+    }
+
+    @Override
+    public int processOperations(int limit) {
+        int iterations = 0;
+
+        for (Iterator<IOwnedLand> iterator = queue.iterator(); iterator.hasNext() && iterations < limit; ) {
+            final IOwnedLand ownedLand = iterator.next();
+            final UUID owner = ownedLand.getOwner();
+
+            if (clearType == ClearType.WORLD && !clearedHomes.contains(owner)) {
+                playerManager.getOffline(owner, lPlayer -> {
+                    final Location home = lPlayer.getHome();
+                    if (home != null && home.getWorld().getName().equals(targetName)) {
+                        lPlayer.setHome(null);
+                        clearedHomes.add(owner);
+                        playerManager.save(lPlayer, true);
+                    }
+                });
+            }
+
+            wgManager.unclaim(ownedLand);
+
+            if (!iterator.hasNext()) {
+                switch (clearType) {
+                    case PLAYER:
+                        plugin.getPlayerManager().getOffline(targetName, lPlayer -> {
+                            lPlayer.setHome(null);
+                            plugin.getPlayerManager().save(lPlayer, true);
+                        });
+
+                        lgManager.sendMessage(commandSender, lgManager.getString("Commands.ClearWorld.gui.clearplayer.success")
+                                .replace("%count%", String.valueOf(clearedLands))
+                                .replace("%player%", targetName));
+                        break;
+                    case WORLD:
+                        lgManager.sendMessage(commandSender, lgManager.getString("Commands.ClearWorld.gui.clearworld.success")
+                                .replace("%count%", String.valueOf(clearedLands))
+                                .replace("%world%", targetName));
+                        break;
+                }
+
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
+            }
+
+            iterator.remove();
+            iterations++;
+        }
+
+        return iterations;
+    }
+
+}

@@ -1,11 +1,13 @@
 package biz.princeps.landlord.commands.claiming;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IMultiTaskManager;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.commands.Landlordbase;
-import biz.princeps.landlord.commands.MultiMode;
+import biz.princeps.landlord.multi.MultiClaimTask;
+import biz.princeps.landlord.multi.MultiMode;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
@@ -20,7 +22,8 @@ import java.util.Set;
 public class MultiClaim extends LandlordCommand {
 
     private final IWorldGuardManager wg;
-    private final Claim claim = new Claim(plugin, true);
+    private final IMultiTaskManager multiTaskManager;
+    private final Claim claim;
 
     public MultiClaim(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.MultiClaim.name"),
@@ -28,6 +31,8 @@ public class MultiClaim extends LandlordCommand {
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiClaim.permissions")),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiClaim.aliases")));
         this.wg = plugin.getWGManager();
+        this.multiTaskManager = plugin.getMultiTaskManager();
+        this.claim = new Claim(plugin, true);
     }
 
     /**
@@ -52,11 +57,15 @@ public class MultiClaim extends LandlordCommand {
             return;
         }
 
-        Player player = properties.getPlayer();
-        String confirmcmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
+        final Player player = properties.getPlayer();
+        if (isDisabledWorld(player)) {
+            return;
+        }
+
+        final String confirmcmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
                 .getCommandString(Landlordbase.Confirm.class);
-        MultiMode mode;
-        int radius;
+        final MultiMode mode;
+        final int radius;
         try {
             mode = MultiMode.valueOf(arguments.get()[0].toUpperCase());
             radius = arguments.getInt(1);
@@ -67,7 +76,7 @@ public class MultiClaim extends LandlordCommand {
 
         final int maxSize = Bukkit.getViewDistance() + 2;
 
-        // Implementation of this to avoid latencies with MultiClaim, because getChunk methode generates the chunk if is not :/
+        // Avoid latencies with MultiClaim, because World#getChunk method may generates the chunk :/
         if (radius > maxSize) { // +2 for marge value. Unless server has a huge render distance (16 for example), won't cause any trouble
             lm.sendMessage(player, lm.getString(player, "Commands.MultiClaim.hugeSize")
                     .replace("%max_size%", maxSize + ""));
@@ -75,7 +84,6 @@ public class MultiClaim extends LandlordCommand {
         }
 
         final Set<Chunk> toClaim = mode.getFreeLands(radius, player.getLocation(), wg);
-
         if (toClaim.size() == 0) {
             lm.sendMessage(player, lm.getString(player, "Commands.MultiClaim.noLands"));
             return;
@@ -88,7 +96,7 @@ public class MultiClaim extends LandlordCommand {
             initalRegionCount++;
         }
 
-        String formattedCost = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "");
+        final String formattedCost = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "");
         if (plugin.getConfig().getBoolean("ConfirmationDialog.onMultiClaim")) {
             PrincepsLib.getConfirmationManager().draw(player,
                     lm.getRawString("Commands.MultiClaim.guiMessage")
@@ -99,9 +107,7 @@ public class MultiClaim extends LandlordCommand {
                             .replace("%cost%", formattedCost),
                     (p) -> {
                         // on accept
-                        for (Chunk chunk : toClaim) {
-                            claim.onClaim(player, chunk);
-                        }
+                        multiTaskManager.enqueueTask(new MultiClaimTask(plugin, player, toClaim, claim));
                         p.closeInventory();
                     },
                     (p) -> {
@@ -111,9 +117,7 @@ public class MultiClaim extends LandlordCommand {
                         p.closeInventory();
                     }, confirmcmd);
         } else {
-            for (Chunk chunk : toClaim) {
-                claim.onClaim(player, chunk);
-            }
+            multiTaskManager.enqueueTask(new MultiClaimTask(plugin, player, toClaim, claim));
         }
     }
 

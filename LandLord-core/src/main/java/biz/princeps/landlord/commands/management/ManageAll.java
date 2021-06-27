@@ -2,8 +2,8 @@ package biz.princeps.landlord.commands.management;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.ManageMode;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.commands.ManageMode;
 import biz.princeps.landlord.guis.ManageGuiAll;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;

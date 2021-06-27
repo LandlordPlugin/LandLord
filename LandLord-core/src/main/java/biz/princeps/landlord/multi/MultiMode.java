@@ -1,4 +1,4 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.multi;
 
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
@@ -14,8 +14,8 @@ import java.util.UUID;
 
 public enum MultiMode {
 
-    // Based on WorldEdit cylinder region.
     CIRCULAR {
+        // Based on WorldEdit cylinder region.
         @Override
         public Set<Location> getLandsLocations(int radius, Location center) {
             final Set<Location> landsLocations = new HashSet<>();

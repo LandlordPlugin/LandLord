@@ -1,4 +1,4 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.api;
 
 public enum ManageMode {
 

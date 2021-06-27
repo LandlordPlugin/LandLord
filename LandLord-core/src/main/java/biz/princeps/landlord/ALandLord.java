@@ -14,6 +14,7 @@ import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.manager.VaultManager;
 import biz.princeps.landlord.manager.cost.LandCostManager;
 import biz.princeps.landlord.manager.map.MapManager;
+import biz.princeps.landlord.multi.MultiTaskManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.placeholderapi.LLExpansion;
 import biz.princeps.landlord.placeholderapi.LLFeatherBoard;
@@ -51,6 +52,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     protected IDelimitationManager delimitationManager;
     protected IMobManager mobManager;
     protected IRegenerationManager regenerationManager;
+    protected IMultiTaskManager multiTaskManager;
 
     @Override
     public void onLoad() {
@@ -72,12 +74,15 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         setupManagers();
         setupListeners();
         setupPlayers();
+        setupMultiTaskManager();
         setupMetrics();
         postloadPrincepsLib();
     }
 
     @Override
     public void onDisable() {
+        multiTaskManager.processQueue(Integer.MAX_VALUE);
+
         if (mapManager != null) {
             mapManager.removeAllMaps();
         }
@@ -249,11 +254,19 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     }
 
     /**
+     * Setup and schedule the MultiTaskManager.
+     */
+    private void setupMultiTaskManager() {
+        this.multiTaskManager = new MultiTaskManager(this);
+        multiTaskManager.initTask();
+    }
+
+    /**
      * Register bStats metrics https://bstats.org/plugin/bukkit/Landlord
      */
     private void setupMetrics() {
         EldoMetrics metrics = new EldoMetrics(this, 2322);
-        if(metrics.isEnabled()){
+        if (metrics.isEnabled()) {
             getLogger().info("§2Metrics enabled. Thank you :3");
         }
         //TODO maybe add some interesting statistics
@@ -322,4 +335,10 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     public IRegenerationManager getRegenerationManager() {
         return regenerationManager;
     }
+
+    @Override
+    public IMultiTaskManager getMultiTaskManager() {
+        return multiTaskManager;
+    }
+
 }
