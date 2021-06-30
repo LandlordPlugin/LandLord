@@ -4,27 +4,39 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.IWorldGuardManager;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 public class LLExpansion extends PlaceholderExpansion {
 
     private final ILandLord pl;
     private final IWorldGuardManager wg;
 
+    private final Cache<String, String> cache;
+    private final Cache<UUID, Integer> maxClaimPermissionCache;
+
     public LLExpansion(ILandLord pl) {
         this.pl = pl;
         this.wg = pl.getWGManager();
+
+        this.cache = CacheBuilder.newBuilder()
+                .expireAfterWrite(500, TimeUnit.MILLISECONDS)
+                .build();
+        this.maxClaimPermissionCache = CacheBuilder.newBuilder()
+                .expireAfterWrite(10, TimeUnit.SECONDS)
+                .build();
     }
 
     @Override
     public String getIdentifier() {
-        return "LandLord";
-    }
-
-    @Override
-    public String getPlugin() {
-        return pl.getPlugin().getName();
+        return "landlord";
     }
 
     @Override
@@ -38,58 +50,104 @@ public class LLExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String s) {
+    public boolean persist() {
+        return true;
+    }
+
+    @Override
+    public boolean canRegister() {
+        return true;
+    }
+
+    @Override
+    public String onPlaceholderRequest(Player player, String placeholder) {
         if (player == null) {
             return null;
         }
-        int maxClaimPermission = pl.getPlayerManager().getMaxClaimPermission(player);
-        int landcount = wg.getRegionCount(player.getUniqueId());
-        IOwnedLand region = wg.getRegion(player.getLocation());
 
-        switch (s) {
-            case "ownedlands":
-                return String.valueOf(landcount);
+        try {
+            cache.get(player.getName() + "_" + placeholder, () ->
+                    parsePlaceholder(player, placeholder));
+        } catch (ExecutionException e) {
+            pl.getLogger().log(Level.SEVERE, "Could not parse placeholder: " + placeholder + " for " + player.getName() + "!", e);
+        }
+        return null;
+    }
+
+    private String parsePlaceholder(Player player, String placeholder) {
+        switch (placeholder) {
+            case "owned_lands":
+                return String.valueOf(wg.getRegionCount(player.getUniqueId()));
 
             case "claims":
-                IPlayer player1 = pl.getPlayerManager().get(player.getUniqueId());
-                if (player1 == null) {
-                    pl.getLogger().warning("A placeholder is trying to load %ll_claims% before async loading of the " +
-                            "player has finished!!! Use FinishedLoadingPlayerEvent!");
+                final IPlayer iPlayer = pl.getPlayerManager().get(player.getUniqueId());
+                if (iPlayer == null) {
+                    pl.getLogger().warning("A placeholder is trying to load %landlord_claims% before async loading of the " +
+                            "player has finished! Use FinishedLoadingPlayerEvent!");
                     return "NaN";
                 }
-                return String.valueOf(player1.getClaims());
+                return String.valueOf(iPlayer.getClaims());
 
-            case "currentLandOwner":
-                if (region != null) {
+            case "remaining_claims":
+                final IPlayer iPlayer2 = pl.getPlayerManager().get(player.getUniqueId());
+                if (iPlayer2 == null) {
+                    pl.getLogger().warning("A placeholder is trying to load %landlord_remainingClaims% before async loading of the " +
+                            "player has finished! Use FinishedLoadingPlayerEvent!");
+                    return "NaN";
+                }
+                return String.valueOf(iPlayer2.getClaims() - wg.getRegionCount(player.getUniqueId()));
+
+            case "current_land_owner":
+                final IOwnedLand region = wg.getRegion(player.getLocation());
+                if (region != null && region.getOwner() != null) {
                     return region.getOwnersString();
                 }
                 return "∅";
 
-            case "currentLandName":
+            case "current_land_members":
+                final String members;
+                final IOwnedLand region2 = wg.getRegion(player.getLocation());
+                if (region2 != null && !(members = region2.getMembersString()).isEmpty()) {
+                    return members;
+                }
+                return "∅";
+
+            case "current_land_name":
                 return wg.getLandName(player.getLocation().getChunk());
 
-            case "nextLandPrice":
+            case "next_land_price":
                 return String.valueOf(pl.getCostManager().calculateCost(player.getUniqueId()));
 
-            case "currentLandRefund":
-                int regionCount = wg.getRegionCount(player.getUniqueId());
+            case "current_land_refund":
+                final int regionCount = wg.getRegionCount(player.getUniqueId());
                 return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble(
                         "Payback"));
 
-            case "maxLimitPermission":
-                return String.valueOf(maxClaimPermission);
+            case "max_claim_permission":
+                return String.valueOf(getMaxClaimPermission(player));
 
-            case "remainingFreeLands":
-                int freelands = pl.getConfig().getInt("Freelands");
+            case "remaining_free_lands":
+                final int landCount = wg.getRegionCount(player.getUniqueId());
+                final int freeLands = pl.getConfig().getInt("Freelands");
 
-                if (landcount <= freelands) {
-                    return String.valueOf((Math.min(maxClaimPermission, freelands)) - landcount);
-                } else {
-                    return "0";
+                if (landCount <= freeLands) {
+                    return String.valueOf((Math.min(getMaxClaimPermission(player), freeLands)) - landCount);
                 }
-        }
+                return "0";
 
-        return null;
+            default:
+                return null;
+        }
+    }
+
+    private int getMaxClaimPermission(Player player) {
+        try {
+            return maxClaimPermissionCache.get(player.getUniqueId(), () ->
+                    pl.getPlayerManager().getMaxClaimPermission(player));
+        } catch (ExecutionException e) {
+            pl.getLogger().log(Level.SEVERE, "Could not get maxClaimPermission for " + player.getName() + "!", e);
+        }
+        return -1;
     }
 
 }
