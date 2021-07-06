@@ -15,7 +15,7 @@ import java.util.List;
 public class MobsManager implements IMobManager {
 
     private static final List<IMob> MOBS = new ArrayList<>();
-    int currentDataVersion;
+    final int currentDataVersion;
 
     public MobsManager() {
         // https://minecraft.fandom.com/wiki/Data_version
@@ -167,9 +167,9 @@ public class MobsManager implements IMobManager {
 
     public static class Mob implements IMob {
 
-        EntityType t;
-        Material egg;
-        String permission;
+        final EntityType t;
+        final Material egg;
+        final String permission;
 
         Mob(EntityType t, Material egg) {
             this.t = t;
