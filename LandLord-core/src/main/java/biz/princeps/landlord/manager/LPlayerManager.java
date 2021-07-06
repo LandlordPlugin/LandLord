@@ -1,6 +1,10 @@
 package biz.princeps.landlord.manager;
 
-import biz.princeps.landlord.api.*;
+import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IPlayer;
+import biz.princeps.landlord.api.IPlayerManager;
+import biz.princeps.landlord.api.IStorage;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.persistent.FlatFileStorage;
 import biz.princeps.landlord.persistent.SQLStorage;
 import org.bukkit.Bukkit;
