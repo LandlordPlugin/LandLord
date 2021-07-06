@@ -48,12 +48,12 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
         int iterations = 0;
 
         for (Iterator<IOwnedLand> iterator = queue.iterator(); iterator.hasNext() && iterations < limit; ) {
-            final IOwnedLand ownedLand = iterator.next();
-            final UUID owner = ownedLand.getOwner();
+            IOwnedLand ownedLand = iterator.next();
+            UUID owner = ownedLand.getOwner();
 
             if (clearType == ClearType.WORLD && !clearedHomes.contains(owner)) {
                 playerManager.getOffline(owner, lPlayer -> {
-                    final Location home = lPlayer.getHome();
+                    Location home = lPlayer.getHome();
                     if (home != null && home.getWorld().getName().equals(targetName)) {
                         lPlayer.setHome(null);
                         clearedHomes.add(owner);

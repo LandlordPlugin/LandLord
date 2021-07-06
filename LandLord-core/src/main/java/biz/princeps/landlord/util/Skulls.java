@@ -35,7 +35,7 @@ public enum Skulls {
     CASH("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjRkNjI1Y2E3NmRjODliNjc4YWFjYWRkZTJiNjI2ZTQ3NmRjYjE0YmU2NGM4ZDk1ZGM1MWU4OTA3NWZhY2MzOCJ9fX0="),
     REDEXCLAMATIONMARK("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTRlMWRhODgyZTQzNDgyOWI5NmVjOGVmMjQyYTM4NGE1M2Q4OTAxOGZhNjVmZWU1YjM3ZGViMDRlY2NiZjEwZSJ9fX0="),
     ;
-    final String texture;
+    String texture;
 
     Skulls(String texture) {
         this.texture = texture;

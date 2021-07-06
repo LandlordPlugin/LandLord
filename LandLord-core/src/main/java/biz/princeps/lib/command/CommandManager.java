@@ -41,7 +41,7 @@ public class CommandManager {
 
     private void initBukkitCommandMap() {
         try {
-            final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 
             bukkitCommandMap.setAccessible(true);
             this.cmdMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());

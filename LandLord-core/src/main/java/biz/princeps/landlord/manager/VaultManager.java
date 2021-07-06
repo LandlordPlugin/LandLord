@@ -26,7 +26,7 @@ public class VaultManager implements IVaultManager {
     public VaultManager(ILandLord plugin, Economy economy) {
         this.economy = economy;
 
-        final String worldBalance = plugin.getConfig().getString("Economy.worldBalance");
+        String worldBalance = plugin.getConfig().getString("Economy.worldBalance");
         this.defaultBalance = worldBalance.equals("default");
         this.playerWorldBased = plugin.getConfig().getBoolean("Economy.playerWorldBased");
         this.worldBalance = worldBalance;

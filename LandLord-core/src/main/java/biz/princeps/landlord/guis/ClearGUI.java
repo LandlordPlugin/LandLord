@@ -35,7 +35,7 @@ public class ClearGUI extends AbstractGUI {
 
     @Override
     protected void create() {
-        final IOwnedLand land = wg.getRegion(player.getLocation());
+        IOwnedLand land = wg.getRegion(player.getLocation());
         /*
          * Clear Options:
          * 1. Clear all for player x        (target==x || player stands inside x claim)
@@ -46,11 +46,11 @@ public class ClearGUI extends AbstractGUI {
         if (land != null) {
             if (player.hasPermission("landlord.admin.clear.land")) {
                 // Only clear this land
-                final Icon i1 = new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()));
+                Icon i1 = new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()));
                 i1.setName(lm.getRawString("Commands.ClearWorld.gui.clearcurrentland.name"));
                 i1.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearcurrentland.desc").split("\\|")));
                 i1.addClickAction((player1) -> {
-                    final ConfirmationGUI confirm = new ConfirmationGUI(player1,
+                    ConfirmationGUI confirm = new ConfirmationGUI(player1,
                             lm.getRawString("Commands.ClearWorld.gui.clearcurrentland.confirm"),
                             (a) -> {
                                 clearLand(land);
@@ -67,11 +67,11 @@ public class ClearGUI extends AbstractGUI {
 
             // Clear all for owner of current land
             if (player.hasPermission("landlord.admin.clear.player")) {
-                final Icon i2 = new Icon(plugin.getMaterialsManager().getPlayerHead(land.getOwner()));
+                Icon i2 = new Icon(plugin.getMaterialsManager().getPlayerHead(land.getOwner()));
                 i2.setName(lm.getRawString("Commands.ClearWorld.gui.clearplayer.name"));
                 i2.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearplayer.desc").split("\\|")));
                 i2.addClickAction((player1) -> {
-                    final ConfirmationGUI confirm = new ConfirmationGUI(player1,
+                    ConfirmationGUI confirm = new ConfirmationGUI(player1,
                             lm.getRawString("Commands.ClearWorld.gui.clearplayer.confirm"),
                             (a) -> {
                                 clearPlayer(land.getOwner());
@@ -89,11 +89,11 @@ public class ClearGUI extends AbstractGUI {
 
         if (player.hasPermission("landlord.admin.clear.world")) {
             // Clear all lands in a world
-            final Icon i3 = new Icon(new ItemStack(plugin.getMaterialsManager().getFireCharge()));
+            Icon i3 = new Icon(new ItemStack(plugin.getMaterialsManager().getFireCharge()));
             i3.setName(lm.getRawString("Commands.ClearWorld.gui.clearworld.name"));
             i3.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearworld.desc").split("\\|")));
             i3.addClickAction((player1) -> {
-                final ConfirmationGUI confirm = new ConfirmationGUI(player1,
+                ConfirmationGUI confirm = new ConfirmationGUI(player1,
                         lm.getRawString("Commands.ClearWorld.gui.clearworld.confirm").replace("%world%",
                                 player.getWorld().getName()),
                         (a) -> {
