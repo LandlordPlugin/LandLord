@@ -213,7 +213,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      */
     private void checkWorldNames() {
         if (!getConfig().getBoolean("DisableStartupWorldWarning")) {
-            final Pattern pattern = Pattern.compile("[^A-Za-z0-9_-]+");
+            Pattern pattern = Pattern.compile("[^A-Za-z0-9_-]+");
 
             for (World world : Bukkit.getWorlds()) {
                 if (!pattern.matcher(world.getName()).find()) continue;

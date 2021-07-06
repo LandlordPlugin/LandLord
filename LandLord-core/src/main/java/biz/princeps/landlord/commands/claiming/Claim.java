@@ -65,13 +65,13 @@ public class Claim extends LandlordCommand {
             return;
         }
 
-        final IOwnedLand ol = wg.getRegion(chunk);
-        final String landName = wg.getLandName(chunk);
-        final String confirmcmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
+        IOwnedLand ol = wg.getRegion(chunk);
+        String landName = wg.getLandName(chunk);
+        String confirmcmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
                 .getCommandString(Landlordbase.Confirm.class);
 
-        final int regionCount = wg.getRegionCount(player.getUniqueId());
-        final int worldRegionCount = wg.getRegionCount(player.getUniqueId(), player.getWorld());
+        int regionCount = wg.getRegionCount(player.getUniqueId());
+        int worldRegionCount = wg.getRegionCount(player.getUniqueId(), player.getWorld());
 
         // First check, if outer conditions (conditions that are related more to the buyer as individual)
         // Check for hardcap based on permissions
@@ -100,7 +100,7 @@ public class Claim extends LandlordCommand {
             return;
         }
 
-        final LandPreClaimEvent event = new LandPreClaimEvent(player, chunk);
+        LandPreClaimEvent event = new LandPreClaimEvent(player, chunk);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
@@ -108,9 +108,9 @@ public class Claim extends LandlordCommand {
 
         // is free land
         if (ol == null) {
-            final double calculatedCost = Options.isVaultEnabled() ? plugin.getCostManager().calculateCost(player.getUniqueId()) : 0;
+            double calculatedCost = Options.isVaultEnabled() ? plugin.getCostManager().calculateCost(player.getUniqueId()) : 0;
 
-            final String Desc = lm.getString(player, "Commands.Claim.confirmation")
+            String Desc = lm.getString(player, "Commands.Claim.confirmation")
                     .replace("%chunk%", landName)
                     .replace("%price%", vault.format(calculatedCost));
 
@@ -137,9 +137,9 @@ public class Claim extends LandlordCommand {
             // either inactive or advertised or not claimable or own land
             if (ol.getPrice() > -1 && Options.isVaultEnabled()) {
                 // Advertised land
-                final double calculatedCost = ol.getPrice();
+                double calculatedCost = ol.getPrice();
 
-                final String Desc = lm.getString(player, "Commands.Claim.confirmation")
+                String Desc = lm.getString(player, "Commands.Claim.confirmation")
                         .replace("%chunk%", landName)
                         .replace("%price%", vault.format(calculatedCost));
 
@@ -173,19 +173,19 @@ public class Claim extends LandlordCommand {
 
                 // inactive or unclaimable
                 plugin.getPlayerManager().getOffline(ol.getOwner(), (offline) -> {
-                    final boolean isInactive = plugin.getPlayerManager().isInactive(offline.getLastSeen());
-                    final int inactiveDays = plugin.getPlayerManager().getInactiveRemainingDays(offline.getLastSeen());
+                    boolean isInactive = plugin.getPlayerManager().isInactive(offline.getLastSeen());
+                    int inactiveDays = plugin.getPlayerManager().getInactiveRemainingDays(offline.getLastSeen());
 
                     if (isInactive) {
                         // inactive
-                        final double costForBuyer = plugin.getCostManager().calculateCost(player.getUniqueId());
-                        final double payBackForInactive = plugin.getCostManager().calculateCost(ol.getOwner());
+                        double costForBuyer = plugin.getCostManager().calculateCost(player.getUniqueId());
+                        double payBackForInactive = plugin.getCostManager().calculateCost(ol.getOwner());
 
-                        final String Desc = lm.getString(player, "Commands.Claim.confirmation")
+                        String Desc = lm.getString(player, "Commands.Claim.confirmation")
                                 .replace("%chunk%", landName)
                                 .replace("%price%", vault.format(costForBuyer));
 
-                        final String originalOwner = Bukkit.getOfflinePlayer(ol.getOwner()).getName();
+                        String originalOwner = Bukkit.getOfflinePlayer(ol.getOwner()).getName();
 
                         if (!hasMoney(player, costForBuyer, landName, chunk)) {
                             return;
@@ -238,7 +238,7 @@ public class Claim extends LandlordCommand {
 
     private void handleInactiveClaim(Player player, IOwnedLand ol, double costForBuyer, double payBackForInactive,
                                      String originalOwner) {
-        final Chunk chunk = ol.getChunk();
+        Chunk chunk = ol.getChunk();
 
         vault.take(player, costForBuyer);
         vault.give(ol.getOwner(), payBackForInactive, player.getWorld());
@@ -261,11 +261,11 @@ public class Claim extends LandlordCommand {
 
 
     private void performAdvertisedClaim(Player player, IOwnedLand ol) {
-        final Chunk chunk = ol.getChunk();
+        Chunk chunk = ol.getChunk();
 
         vault.take(player, ol.getPrice());
         vault.give(ol.getOwner(), ol.getPrice(), player.getWorld());
-        final Player pp = Bukkit.getPlayer(ol.getOwner());
+        Player pp = Bukkit.getPlayer(ol.getOwner());
 
         ol.replaceOwner(player.getUniqueId());
 
@@ -287,7 +287,7 @@ public class Claim extends LandlordCommand {
                 Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
         plugin.getMapManager().updateAll();
 
-        final LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol, ClaimType.ADVERTISED);
+        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol, ClaimType.ADVERTISED);
         Bukkit.getPluginManager().callEvent(postEvent);
     }
 
@@ -301,7 +301,7 @@ public class Claim extends LandlordCommand {
             );
         }
 
-        final IOwnedLand claim = wg.claim(chunk, player.getUniqueId());
+        IOwnedLand claim = wg.claim(chunk, player.getUniqueId());
 
         lm.sendMessage(player, lm.getString(player, "Commands.Claim.success")
                 .replace("%chunk%", claim.getName())
@@ -326,12 +326,12 @@ public class Claim extends LandlordCommand {
 
         plugin.getMapManager().updateAll();
 
-        final LandPostClaimEvent postEvent = new LandPostClaimEvent(player, claim, ClaimType.FREE_LAND);
+        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, claim, ClaimType.FREE_LAND);
         Bukkit.getPluginManager().callEvent(postEvent);
     }
 
     private boolean hasLimitPermissions(Player player, int regionCount) {
-        final int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
+        int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
 
         if (regionCount >= highestAllowedLandCount) {
             lm.sendMessage(player, lm.getString(player, "Commands.Claim.hardcap").replace("%regions%",
@@ -343,7 +343,7 @@ public class Claim extends LandlordCommand {
 
     private boolean hasClaims(Player player, int regionCount) {
         if (plugin.getConfig().getBoolean("Claims.enable") && Options.isVaultEnabled()) {
-            final int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
+            int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
 
             if (regionCount >= claims) {
                 ComponentBuilder builder = new ComponentBuilder(lm.getString(player, "Commands.Claim.limit")
@@ -368,9 +368,9 @@ public class Claim extends LandlordCommand {
                 // Get adjacent lands of the land, which a player wants to claim.
                 // Only when one of the 4 adjacent is already owned, allow to claim
                 boolean hasNearbyLand = false;
-                final IOwnedLand[] surroundings = wg.getSurroundings(chunk);
+                IOwnedLand[] surroundings = wg.getSurroundings(chunk);
                 for (int i = 1; i < surroundings.length; i++) {
-                    final IOwnedLand adjLand = surroundings[i];
+                    IOwnedLand adjLand = surroundings[i];
                     if (adjLand != null) {
                         if (adjLand.isOwner(player.getUniqueId())) {
                             hasNearbyLand = true;
@@ -400,7 +400,7 @@ public class Claim extends LandlordCommand {
         int radius = plugin.getConfig().getInt("CommandSettings.Claim.customGapRadius");
 
         boolean differentOwner = false;
-        final Map<Chunk, IOwnedLand> nearbyLands = wg.getNearbyLands(chunk, radius, radius);
+        Map<Chunk, IOwnedLand> nearbyLands = wg.getNearbyLands(chunk, radius, radius);
         for (IOwnedLand adjLand : nearbyLands.values()) {
             if (adjLand != null) {
                 if (!adjLand.isOwner(player.getUniqueId())) {

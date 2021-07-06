@@ -69,13 +69,13 @@ public class Borders extends LandlordCommand implements Listener {
             int refreshRate = plugin.getConfig().getInt("Borders.refreshRate");
             this.tasks.put(p.getUniqueId(), new BukkitRunnable() {
                 int counter = 0;
-                final int timeout = plugin.getConfig().getInt("Borders.timeout");
+                int timeout = plugin.getConfig().getInt("Borders.timeout");
 
                 @Override
                 public void run() {
                     if (counter * refreshRate <= timeout) {
                         if (plugin.getConfig().getBoolean("Particles.borders.enabled")) {
-                            final IOwnedLand ownedLand = wg.getRegion(p.getLocation());
+                            IOwnedLand ownedLand = wg.getRegion(p.getLocation());
 
                             if (ownedLand == null) {
                                 wg.highlightLand(p.getLocation().getChunk(), p,

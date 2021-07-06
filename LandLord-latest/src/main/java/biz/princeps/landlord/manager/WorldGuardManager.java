@@ -82,21 +82,21 @@ public class WorldGuardManager extends AWorldGuardManager {
      */
     @Override
     public IOwnedLand claim(Chunk chunk, UUID owner) {
-        final World world = chunk.getWorld();
-        final int x = chunk.getX() << 4;
-        final int z = chunk.getZ() << 4;
-        final Pair<Integer, Integer> boundaries = calcClaimHeightBoundaries(chunk);
-        final Location down = new Location(world, x, boundaries.getLeft(), z);
-        final Location upper = new Location(world, x + 15, boundaries.getRight(), z + 15);
+        World world = chunk.getWorld();
+        int x = chunk.getX() << 4;
+        int z = chunk.getZ() << 4;
+        Pair<Integer, Integer> boundaries = calcClaimHeightBoundaries(chunk);
+        Location down = new Location(world, x, boundaries.getLeft(), z);
+        Location upper = new Location(world, x + 15, boundaries.getRight(), z + 15);
 
-        final BlockVector3 vec1 = locationToVec(down);
-        final BlockVector3 vec2 = locationToVec(upper);
-        final ProtectedCuboidRegion pr = new ProtectedCuboidRegion(getLandName(chunk), vec1, vec2);
+        BlockVector3 vec1 = locationToVec(down);
+        BlockVector3 vec2 = locationToVec(upper);
+        ProtectedCuboidRegion pr = new ProtectedCuboidRegion(getLandName(chunk), vec1, vec2);
 
-        final RegionManager manager = getRegionManager(chunk.getWorld());
+        RegionManager manager = getRegionManager(chunk.getWorld());
         if (manager != null) {
             manager.addRegion(pr);
-            final IOwnedLand land = OwnedLand.create(pl, pr, owner);
+            IOwnedLand land = OwnedLand.create(pl, pr, owner);
             land.replaceOwner(owner);
             cache.add(land);
             return land;
@@ -116,7 +116,7 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<IOwnedLand> getRegions() {
-        final Set<IOwnedLand> lands = new HashSet<>();
+        Set<IOwnedLand> lands = new HashSet<>();
         for (World world : Bukkit.getWorlds()) {
             lands.addAll(cache.getLands(world));
         }
@@ -125,7 +125,7 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<?> getAllWGRegions(World world) {
-        final Map<String, ProtectedRegion> regions = new HashMap<>(getRegionManager(world).getRegions());
+        Map<String, ProtectedRegion> regions = new HashMap<>(getRegionManager(world).getRegions());
         for (String r : getRegionManager(world).getRegions().keySet()) {
             if (isLLRegion(r)) {
                 regions.remove(r);
@@ -136,9 +136,9 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<?> getAllWGRegions() {
-        final Set<ProtectedRegion> set = new HashSet<>();
+        Set<ProtectedRegion> set = new HashSet<>();
         for (World world : Bukkit.getWorlds()) {
-            final Set<?> allWGRegions = getAllWGRegions(world);
+            Set<?> allWGRegions = getAllWGRegions(world);
             set.addAll(((Set<ProtectedRegion>) allWGRegions));
         }
         return set;
@@ -146,7 +146,7 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<IOwnedLand> getRegions(UUID id, World world) {
-        final Set<IOwnedLand> lands = new HashSet<>();
+        Set<IOwnedLand> lands = new HashSet<>();
         for (IOwnedLand land : cache.getLands(id)) {
             if (land.getWorld() != world) continue;
 
@@ -225,7 +225,7 @@ public class WorldGuardManager extends AWorldGuardManager {
      */
     @Override
     public int getRegionCount(UUID id) {
-        final Set<IOwnedLand> lands = cache.getLands(id);
+        Set<IOwnedLand> lands = cache.getLands(id);
         return lands == null ? 0 : lands.size();
     }
 
@@ -241,7 +241,7 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public int getRegionCount(World w) {
-        final Set<IOwnedLand> lands = cache.getLands(w);
+        Set<IOwnedLand> lands = cache.getLands(w);
         return lands == null ? 0 : lands.size();
     }
 

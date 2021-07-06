@@ -47,11 +47,11 @@ public class ConfigUpdater {
     }
 
     static class Entry {
-        final Entry superior;
+        Entry superior;
 
-        final String entryname;
-        final Object entry;
-        final List<String> comment;
+        String entryname;
+        Object entry;
+        List<String> comment;
 
         public Entry(Entry superior, String entryname, Object entry, List<String> comment) {
             this.superior = superior;

@@ -10,9 +10,9 @@ public enum MaterialProxy {
     RED_WOOL("RED_WOOL", "WOOL", (byte) 14);
 
 
-    final String latest;
-    final String legacy;
-    final byte legacybyte;
+    String latest;
+    String legacy;
+    byte legacybyte;
 
     MaterialProxy(String latest, String legacy, byte legacybyte) {
         this.latest = latest;

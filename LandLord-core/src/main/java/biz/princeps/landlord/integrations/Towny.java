@@ -24,7 +24,7 @@ public class Towny extends BasicListener {
 
     @EventHandler
     public void onLLClaim(LandPreClaimEvent e) {
-        final Chunk chunk = e.getChunk();
+        Chunk chunk = e.getChunk();
         if (towny.isTownyWorld(e.getChunk().getWorld()) &&
                 !towny.isWilderness(new Location(chunk.getWorld(), (chunk.getX() << 4) + 2, 2, (chunk.getZ() << 4) + 2))) {
             pl.getLangManager().sendMessage(e.getPlayer(), "Integrations.Towny.TownyPresent");

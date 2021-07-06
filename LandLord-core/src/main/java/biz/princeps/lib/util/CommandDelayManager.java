@@ -118,7 +118,7 @@ public class CommandDelayManager implements Listener {
      */
     @EventHandler
     public void onCommandPreprocess(final PlayerCommandPreprocessEvent e) {
-        final Player p = e.getPlayer();
+        Player p = e.getPlayer();
 
         String command = e.getMessage();
         //  command = command.substring(1, command.length());

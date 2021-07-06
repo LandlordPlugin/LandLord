@@ -30,7 +30,7 @@ public class MultiClaimTask extends AMultiTask<Chunk> {
         int iterations = 0;
 
         for (Iterator<Chunk> iterator = queue.iterator(); iterator.hasNext() && iterations < limit; ) {
-            final Chunk chunk = iterator.next();
+            Chunk chunk = iterator.next();
 
             claim.onClaim(player, chunk);
 

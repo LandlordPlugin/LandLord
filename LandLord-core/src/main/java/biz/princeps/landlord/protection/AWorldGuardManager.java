@@ -157,8 +157,8 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
     public String formatLocation(Chunk chunk) {
         String configString = pl.getConfig().getString("locationFormat");
 
-        final int x = (chunk.getX() << 4) + 8;
-        final int z = (chunk.getZ() << 4) + 8;
+        int x = (chunk.getX() << 4) + 8;
+        int z = (chunk.getZ() << 4) + 8;
 
         configString = configString.replace("%world%", chunk.getWorld().getName());
         configString = configString.replace("%x%", x + "");
@@ -169,16 +169,16 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     @Override
     public void highlightLand(Chunk chunk, Player p, Particle particle, int amount, boolean everyone) {
-        final World world = chunk.getWorld();
-        final int x = chunk.getX() << 4;
-        final int z = chunk.getZ() << 4;
-        final int y = (int) p.getLocation().getY();
+        World world = chunk.getWorld();
+        int x = chunk.getX() << 4;
+        int z = chunk.getZ() << 4;
+        int y = (int) p.getLocation().getY();
         if (!everyone && p.getLocation().distance(new Location(world, x, y, z)) > 64.0) {
             // Honestly, particles beyond 4 chunks are useless and can't be seen correctly.
             return;
         }
 
-        final Set<Location> edgeBlocks = new HashSet<>();
+        Set<Location> edgeBlocks = new HashSet<>();
 
         for (int i = 0; i < 16; i++) {
             for (int ii = -1; ii <= 10; ii++) {
@@ -271,9 +271,9 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     @Override
     public int unclaim(Set<IOwnedLand> regions) {
-        final int count = regions.size();
+        int count = regions.size();
 
-        final Set<UUID> owners = new HashSet<>();
+        Set<UUID> owners = new HashSet<>();
         for (IOwnedLand region : regions) {
             owners.add(region.getOwner());
         }
