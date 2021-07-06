@@ -54,13 +54,13 @@ public class MultiUnclaim extends LandlordCommand {
             return;
         }
 
-        Player player = properties.getPlayer();
+        final Player player = properties.getPlayer();
         if (isDisabledWorld(player)) {
             return;
         }
 
-        MultiMode mode;
-        int radius;
+        final MultiMode mode;
+        final int radius;
         try {
             mode = MultiMode.valueOf(arguments.get()[0].toUpperCase());
             radius = arguments.getInt(1);
@@ -70,7 +70,7 @@ public class MultiUnclaim extends LandlordCommand {
         }
 
         if (plugin.getConfig().getBoolean("ConfirmationDialog.onMultiUnclaim")) {
-            String guiMsg = lm.getRawString("Commands.MultiUnclaim.confirm");
+            final String guiMsg = lm.getRawString("Commands.MultiUnclaim.confirm");
 
             PrincepsLib.getConfirmationManager().drawGUI(player, guiMsg,
                     (p) -> {
@@ -84,7 +84,7 @@ public class MultiUnclaim extends LandlordCommand {
     }
 
     public void performMultiUnclaim(Player player, MultiMode mode, int radius) {
-        int maxSize = Bukkit.getViewDistance() + 2;
+        final int maxSize = Bukkit.getViewDistance() + 2;
 
         // Avoid latencies with MultiUnclaim, because World#getChunk method may generate the chunk :/
         if (radius > maxSize) { // +2 for marge value. Unless server has a huge render distance (16 for example), won't cause any trouble
@@ -93,7 +93,7 @@ public class MultiUnclaim extends LandlordCommand {
             return;
         }
 
-        Set<IOwnedLand> toUnclaim = mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg);
+        final Set<IOwnedLand> toUnclaim = mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg);
         if (toUnclaim.isEmpty()) {
             lm.sendMessage(player, lm.getString(player, "Commands.MultiUnclaim.notOwnFreeLand"));
             return;

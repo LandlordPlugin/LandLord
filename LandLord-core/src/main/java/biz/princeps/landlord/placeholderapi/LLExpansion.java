@@ -80,7 +80,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 return String.valueOf(wg.getRegionCount(player.getUniqueId()));
 
             case "claims":
-                IPlayer iPlayer = pl.getPlayerManager().get(player.getUniqueId());
+                final IPlayer iPlayer = pl.getPlayerManager().get(player.getUniqueId());
                 if (iPlayer == null) {
                     pl.getLogger().warning("A placeholder is trying to load %landlord_claims% before async loading of the " +
                             "player has finished! Use FinishedLoadingPlayerEvent!");
@@ -89,7 +89,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 return String.valueOf(iPlayer.getClaims());
 
             case "remaining_claims":
-                IPlayer iPlayer2 = pl.getPlayerManager().get(player.getUniqueId());
+                final IPlayer iPlayer2 = pl.getPlayerManager().get(player.getUniqueId());
                 if (iPlayer2 == null) {
                     pl.getLogger().warning("A placeholder is trying to load %landlord_remainingClaims% before async loading of the " +
                             "player has finished! Use FinishedLoadingPlayerEvent!");
@@ -98,15 +98,15 @@ public class LLExpansion extends PlaceholderExpansion {
                 return String.valueOf(iPlayer2.getClaims() - wg.getRegionCount(player.getUniqueId()));
 
             case "current_land_owner":
-                IOwnedLand region = wg.getRegion(player.getLocation());
+                final IOwnedLand region = wg.getRegion(player.getLocation());
                 if (region != null && region.getOwner() != null) {
                     return region.getOwnersString();
                 }
                 return "∅";
 
             case "current_land_members":
-                String members;
-                IOwnedLand region2 = wg.getRegion(player.getLocation());
+                final String members;
+                final IOwnedLand region2 = wg.getRegion(player.getLocation());
                 if (region2 != null && !(members = region2.getMembersString()).isEmpty()) {
                     return members;
                 }
@@ -119,7 +119,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 return String.valueOf(pl.getCostManager().calculateCost(player.getUniqueId()));
 
             case "current_land_refund":
-                int regionCount = wg.getRegionCount(player.getUniqueId());
+                final int regionCount = wg.getRegionCount(player.getUniqueId());
                 return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble(
                         "Payback"));
 
@@ -127,8 +127,8 @@ public class LLExpansion extends PlaceholderExpansion {
                 return String.valueOf(getMaxClaimPermission(player));
 
             case "remaining_free_lands":
-                int landCount = wg.getRegionCount(player.getUniqueId());
-                int freeLands = pl.getConfig().getInt("Freelands");
+                final int landCount = wg.getRegionCount(player.getUniqueId());
+                final int freeLands = pl.getConfig().getInt("Freelands");
 
                 if (landCount <= freeLands) {
                     return String.valueOf((Math.min(getMaxClaimPermission(player), freeLands)) - landCount);

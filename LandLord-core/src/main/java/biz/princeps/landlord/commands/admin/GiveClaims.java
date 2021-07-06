@@ -140,9 +140,9 @@ public class GiveClaims extends LandlordCommand {
     }
 
     private boolean checkPermission(Player player, int amount) {
-        int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
+        final int claimcount = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
 
-        int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
+        final int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
 
         if (claimcount + amount > highestAllowedLandCount) {
             lm.sendMessage(player, plugin.getLangManager().getString("Shop.notAllowed"));

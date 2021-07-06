@@ -36,7 +36,7 @@ public class Clear extends LandlordCommand {
     public void onCommand(Properties properties, Arguments arguments) {
         if (arguments.size() == 1) {
             // Clear a single player
-            String name = arguments.get()[0];
+            final String name = arguments.get()[0];
             if (properties.getCommandSender().hasPermission("landlord.admin.clear.player"))
                 clearPlayer(name, properties.getCommandSender());
             return;
@@ -45,7 +45,7 @@ public class Clear extends LandlordCommand {
         if (properties.isConsole()) {
             return;
         }
-        Player player = properties.getPlayer();
+        final Player player = properties.getPlayer();
 
         /*
          * Clear Options:
@@ -53,7 +53,7 @@ public class Clear extends LandlordCommand {
          * 2. Clear only specific claim     (target==null)
          * 3. Clear entire world            (target==null)
          */
-        ClearGUI clearGUI = new ClearGUI(plugin, player);
+        final ClearGUI clearGUI = new ClearGUI(plugin, player);
         clearGUI.display();
     }
 

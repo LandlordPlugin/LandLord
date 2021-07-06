@@ -176,7 +176,7 @@ public abstract class AbstractGUI implements InventoryHolder {
         this.inventory = Bukkit.createInventory(this, size, title);
 
         if (generateAsync) {
-            CompletableFuture<Inventory> completableFuture = new CompletableFuture<>();
+            final CompletableFuture<Inventory> completableFuture = new CompletableFuture<>();
 
             Bukkit.getScheduler().runTaskAsynchronously(PrincepsLib.getPluginInstance(), () -> {
                 create();

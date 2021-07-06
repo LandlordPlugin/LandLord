@@ -52,20 +52,20 @@ class PublishData(val project: Project) {
             branch.startsWith("develop") -> {
                 println("Project is DEV version")
                 currVer?.replace("-SNAPSHOT", "")
-                        .plus("-DEV")
-                        .plus(if (commitHash) "-".plus(getCheckedOutGitCommitHash()) else "")
+                    .plus("-DEV")
+                    .plus(if(commitHash)"-".plus(getCheckedOutGitCommitHash()) else "")
             }
             else -> {
                 println("Project is SNAPSHOT")
                 (if (currVer?.endsWith("-SNAPSHOT") == true) "" else currVer?.plus("-SNAPSHOT"))
-                        .plus(if (commitHash) "-".plus(getCheckedOutGitCommitHash()) else "")
+                    .plus(if(commitHash)"-".plus(getCheckedOutGitCommitHash()) else "")
             }
         }
         println("Current project version is $currVer")
         return currVer
     }
 
-    fun getRepository(): String {
+    fun getRepository() : String {
         val branch = getCheckedOutBranch()
         return when {
             branch.contentEquals("master") -> {

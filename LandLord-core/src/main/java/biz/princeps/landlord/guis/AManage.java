@@ -323,7 +323,7 @@ public class AManage extends AbstractGUI {
             icon.setLore(lm.getStringList("Commands.Manage.ManageFriends.description"));
 
             Set<UUID> friends = land.getFriends();
-            boolean canSpread = plugin.getConfig().getBoolean("Manage.spread-friends.enable") &&
+            final boolean canSpread = plugin.getConfig().getBoolean("Manage.spread-friends.enable") &&
                     player.hasPermission("landlord.player.manage.spreadfriends") && manageMode != ManageMode.ONE;
             MultiPagedGUI friendsGui = new MultiPagedGUI(player, (int) Math.ceil((double) friends.size() / 9.0),
                     lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
@@ -337,10 +337,10 @@ public class AManage extends AbstractGUI {
                         spreadIcon.setLore(lm.getStringList("Commands.Manage.AllowSpread-friends.description"));
 
                         spreadIcon.addClickAction((p) -> Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-                            Set<UUID> defaultFriends = land.getFriends();
+                            final Set<UUID> defaultFriends = land.getFriends();
 
                             for (IOwnedLand region : regions.subList(1, regions.size())) {
-                                String oldfriends = region.getMembersString();
+                                final String oldfriends = region.getMembersString();
 
                                 for (UUID landFriend : region.getFriends()) {
                                     if (!land.isFriend(landFriend)) region.removeFriend(landFriend);
@@ -395,7 +395,7 @@ public class AManage extends AbstractGUI {
                 });
                 friendsGui.addIcon(friend);
             }
-            int friendPosition = position;
+            final int friendPosition = position;
             icon.addClickAction((p) -> {
                 friendsGui.generateAsync().display();
                 this.setIcon(friendPosition, new Icon(MaterialProxy.CLOCK.crossVersion()).setName(
@@ -519,10 +519,10 @@ public class AManage extends AbstractGUI {
 
             icon.addClickAction((p) -> Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
                 for (int flagI = 0; flagI < land.getFlags().size(); flagI++) {
-                    ILLFlag defaultFlag = land.getFlags().get(flagI);
+                    final ILLFlag defaultFlag = land.getFlags().get(flagI);
 
                     for (IOwnedLand region : regions.subList(1, regions.size())) {
-                        ILLFlag landFlag = region.getFlags().get(flagI);
+                        final ILLFlag landFlag = region.getFlags().get(flagI);
 
                         if (defaultFlag.getFriendStatus() != landFlag.getFriendStatus()) {
                             landFlag.toggleFriends();

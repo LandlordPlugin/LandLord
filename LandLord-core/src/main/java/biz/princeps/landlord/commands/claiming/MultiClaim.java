@@ -57,15 +57,15 @@ public class MultiClaim extends LandlordCommand {
             return;
         }
 
-        Player player = properties.getPlayer();
+        final Player player = properties.getPlayer();
         if (isDisabledWorld(player)) {
             return;
         }
 
-        String confirmcmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
+        final String confirmcmd = PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
                 .getCommandString(Landlordbase.Confirm.class);
-        MultiMode mode;
-        int radius;
+        final MultiMode mode;
+        final int radius;
         try {
             mode = MultiMode.valueOf(arguments.get()[0].toUpperCase());
             radius = arguments.getInt(1);
@@ -74,7 +74,7 @@ public class MultiClaim extends LandlordCommand {
             return;
         }
 
-        int maxSize = Bukkit.getViewDistance() + 2;
+        final int maxSize = Bukkit.getViewDistance() + 2;
 
         // Avoid latencies with MultiClaim, because World#getChunk method may generates the chunk :/
         if (radius > maxSize) { // +2 for marge value. Unless server has a huge render distance (16 for example), won't cause any trouble
@@ -83,7 +83,7 @@ public class MultiClaim extends LandlordCommand {
             return;
         }
 
-        Set<Chunk> toClaim = mode.getFreeLands(radius, player.getLocation(), wg);
+        final Set<Chunk> toClaim = mode.getFreeLands(radius, player.getLocation(), wg);
         if (toClaim.size() == 0) {
             lm.sendMessage(player, lm.getString(player, "Commands.MultiClaim.noLands"));
             return;
@@ -96,7 +96,7 @@ public class MultiClaim extends LandlordCommand {
             initalRegionCount++;
         }
 
-        String formattedCost = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "");
+        final String formattedCost = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "");
         if (plugin.getConfig().getBoolean("ConfirmationDialog.onMultiClaim")) {
             PrincepsLib.getConfirmationManager().draw(player,
                     lm.getRawString("Commands.MultiClaim.guiMessage")

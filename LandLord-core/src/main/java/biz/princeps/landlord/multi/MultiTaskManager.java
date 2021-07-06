@@ -35,7 +35,7 @@ public class MultiTaskManager implements IMultiTaskManager {
         int operations = 0;
 
         for (Iterator<IMultiTask> iterator = queue.iterator(); iterator.hasNext() && operations < limit; ) {
-            IMultiTask multiTask = iterator.next();
+            final IMultiTask multiTask = iterator.next();
             operations += multiTask.processOperations(limit - operations);
 
             if (multiTask.isCompleted()) {

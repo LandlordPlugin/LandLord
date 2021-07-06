@@ -93,8 +93,8 @@ public class Manage extends LandlordCommand {
                     break;
                 case "multisetgreet":
                     try {
-                        MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
-                        int radius = arguments.getInt(2);
+                        final MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
+                        final int radius = arguments.getInt(2);
 
                         setGreet(player, args, new ArrayList<>(mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg)), 3);
                     } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ignored) {
@@ -102,8 +102,8 @@ public class Manage extends LandlordCommand {
                     break;
                 case "multisetfarewell":
                     try {
-                        MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
-                        int radius = arguments.getInt(2);
+                        final MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
+                        final int radius = arguments.getInt(2);
 
                         setFarewell(player, args, new ArrayList<>(mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg)), 3);
                     } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ignored) {

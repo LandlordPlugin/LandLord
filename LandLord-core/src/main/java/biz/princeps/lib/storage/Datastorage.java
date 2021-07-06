@@ -32,7 +32,7 @@ public class Datastorage {
         this.logger = logger;
         this.pl = PrincepsLib.getPluginInstance();
 
-        HikariConfig hikariConfig = new HikariConfig();
+        final HikariConfig hikariConfig = new HikariConfig();
 
         hikariConfig.setMaximumPoolSize(10);
         hikariConfig.setJdbcUrl("jdbc:mysql://" + hostname + ":" + port + "/" + database);
@@ -203,9 +203,9 @@ public class Datastorage {
     }
 
     public static class Triplet {
-        Connection con;
-        PreparedStatement pr;
-        ResultSet res;
+        final Connection con;
+        final PreparedStatement pr;
+        final ResultSet res;
 
         public Triplet(Connection con, PreparedStatement pr, ResultSet res) {
             this.con = con;

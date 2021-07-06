@@ -52,8 +52,8 @@ public class Claims extends LandlordCommand {
                 plugin.getUtilsManager().sendBasecomponent(player, text);
             }
         } else {
-            int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
-            int regionCount = plugin.getWGManager().getRegionCount(player.getUniqueId());
+            final int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
+            final int regionCount = plugin.getWGManager().getRegionCount(player.getUniqueId());
             lm.sendMessage(player, lm.getString(player, "Commands.Claims.message").replace("%regions%", regionCount + "")
                     .replace("%claims%", (highestAllowedLandCount == Integer.MAX_VALUE ? "∞" : highestAllowedLandCount <= 0 ? "∅" : highestAllowedLandCount + "")));
         }

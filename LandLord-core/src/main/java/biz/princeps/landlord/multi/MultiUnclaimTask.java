@@ -51,15 +51,15 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
         int iterations = 0;
 
         for (Iterator<IOwnedLand> iterator = queue.iterator(); iterator.hasNext() && iterations < limit; ) {
-            IOwnedLand ownedLand = iterator.next();
+            final IOwnedLand ownedLand = iterator.next();
 
-            LandUnclaimEvent event = new LandUnclaimEvent(player, ownedLand);
+            final LandUnclaimEvent event = new LandUnclaimEvent(player, ownedLand);
             Bukkit.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
                 if (Options.isVaultEnabled()) {
-                    double payback;
-                    int regionCount = wgManager.getRegionCount(player.getUniqueId());
+                    final double payback;
+                    final int regionCount = wgManager.getRegionCount(player.getUniqueId());
 
                     // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);
 
@@ -75,7 +75,7 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
                     totalPayBack += payback;
                 }
 
-                Location location = ownedLand.getALocation();
+                final Location location = ownedLand.getALocation();
                 wgManager.unclaim(ownedLand.getWorld(), ownedLand.getName());
                 if (plugin.getConfig().getBoolean("CommandSettings.Unclaim.regenerate", false)) {
                     plugin.getRegenerationManager().regenerateChunk(location);
@@ -83,7 +83,7 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
 
                 // remove possible homes
                 if (lPlayer != null) {
-                    Location home = lPlayer.getHome();
+                    final Location home = lPlayer.getHome();
                     if (home != null) {
                         if (ownedLand.contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
                             lgManager.sendMessage(player, lgManager.getString(player, "Commands.SetHome.removed"));

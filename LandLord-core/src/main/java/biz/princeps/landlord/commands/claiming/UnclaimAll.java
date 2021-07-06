@@ -43,12 +43,12 @@ public class UnclaimAll extends LandlordCommand {
             return;
         }
 
-        Player player = properties.getPlayer();
-        List<World> worlds;
+        final Player player = properties.getPlayer();
+        final List<World> worlds;
 
         if (arguments.size() == 1) {
-            String worldName = arguments.get(0);
-            World world = Bukkit.getWorld(worldName);
+            final String worldName = arguments.get(0);
+            final World world = Bukkit.getWorld(worldName);
 
             if (world == null) {
                 lm.sendMessage(player, lm.getString(player, "Commands.UnclaimAll.invalidWorld"));
@@ -61,7 +61,7 @@ public class UnclaimAll extends LandlordCommand {
         }
 
         if (plugin.getConfig().getBoolean("ConfirmationDialog.onUnclaimAll")) {
-            String guiMsg = lm.getRawString("Commands.UnclaimAll.confirm");
+            final String guiMsg = lm.getRawString("Commands.UnclaimAll.confirm");
 
             PrincepsLib.getConfirmationManager().drawGUI(player, guiMsg,
                     (p) -> {
@@ -80,7 +80,7 @@ public class UnclaimAll extends LandlordCommand {
                 continue;
             }
 
-            Set<IOwnedLand> playerLands = new HashSet<>(plugin.getWGManager().getRegions(player.getUniqueId(), world));
+            final Set<IOwnedLand> playerLands = new HashSet<>(plugin.getWGManager().getRegions(player.getUniqueId(), world));
             if (playerLands.isEmpty()) {
                 lm.sendMessage(player, lm.getString(player, "Commands.UnclaimAll.notOwnFreeLand") + " (" + world.getName() + ")");
                 continue;

@@ -195,7 +195,7 @@ public class LandMap {
     }
 
     private String[] buildMap(Player p) {
-        int radius = 3;
+        final int radius = 3;
 
         String[][] mapBoard = getMapDir(p);
         String[] mapRows = new String[mapBoard.length + 3];
