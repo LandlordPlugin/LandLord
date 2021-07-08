@@ -66,7 +66,7 @@ public class LLExpansion extends PlaceholderExpansion {
         }
 
         try {
-            cache.get(player.getName() + "_" + placeholder, () ->
+            return cache.get(player.getName() + "_" + placeholder, () ->
                     parsePlaceholder(player, placeholder));
         } catch (ExecutionException e) {
             pl.getLogger().log(Level.SEVERE, "Could not parse placeholder: " + placeholder + " for " + player.getName() + "!", e);
@@ -136,7 +136,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 return "0";
 
             default:
-                return null;
+                return "";
         }
     }
 
