@@ -5,8 +5,8 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.commands.MultiMode;
 import biz.princeps.landlord.guis.ManageGui;
+import biz.princeps.landlord.multi.MultiMode;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
@@ -93,8 +93,8 @@ public class Manage extends LandlordCommand {
                     break;
                 case "multisetgreet":
                     try {
-                        final MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
-                        final int radius = arguments.getInt(2);
+                        MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
+                        int radius = arguments.getInt(2);
 
                         setGreet(player, args, new ArrayList<>(mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg)), 3);
                     } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ignored) {
@@ -102,8 +102,8 @@ public class Manage extends LandlordCommand {
                     break;
                 case "multisetfarewell":
                     try {
-                        final MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
-                        final int radius = arguments.getInt(2);
+                        MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
+                        int radius = arguments.getInt(2);
 
                         setFarewell(player, args, new ArrayList<>(mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg)), 3);
                     } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ignored) {

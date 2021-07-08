@@ -6,7 +6,11 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -28,7 +32,7 @@ public class Datastorage {
         this.logger = logger;
         this.pl = PrincepsLib.getPluginInstance();
 
-        final HikariConfig hikariConfig = new HikariConfig();
+        HikariConfig hikariConfig = new HikariConfig();
 
         hikariConfig.setMaximumPoolSize(10);
         hikariConfig.setJdbcUrl("jdbc:mysql://" + hostname + ":" + port + "/" + database);

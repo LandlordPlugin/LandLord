@@ -1,6 +1,19 @@
 package biz.princeps.landlord;
 
-import biz.princeps.landlord.api.*;
+import biz.princeps.landlord.api.ICostManager;
+import biz.princeps.landlord.api.IDelimitationManager;
+import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.ILangManager;
+import biz.princeps.landlord.api.IMapManager;
+import biz.princeps.landlord.api.IMaterialsManager;
+import biz.princeps.landlord.api.IMobManager;
+import biz.princeps.landlord.api.IMultiTaskManager;
+import biz.princeps.landlord.api.IPlayerManager;
+import biz.princeps.landlord.api.IRegenerationManager;
+import biz.princeps.landlord.api.IUtilsManager;
+import biz.princeps.landlord.api.IVaultManager;
+import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.integrations.LLLuckPerms;
 import biz.princeps.landlord.integrations.Towny;
@@ -14,6 +27,7 @@ import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.manager.VaultManager;
 import biz.princeps.landlord.manager.cost.LandCostManager;
 import biz.princeps.landlord.manager.map.MapManager;
+import biz.princeps.landlord.multi.MultiTaskManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.placeholderapi.LLExpansion;
 import biz.princeps.landlord.placeholderapi.LLFeatherBoard;
@@ -51,6 +65,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     protected IDelimitationManager delimitationManager;
     protected IMobManager mobManager;
     protected IRegenerationManager regenerationManager;
+    protected IMultiTaskManager multiTaskManager;
 
     @Override
     public void onLoad() {
@@ -72,12 +87,15 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         setupManagers();
         setupListeners();
         setupPlayers();
+        setupMultiTaskManager();
         setupMetrics();
         postloadPrincepsLib();
     }
 
     @Override
     public void onDisable() {
+        multiTaskManager.processQueue(Integer.MAX_VALUE);
+
         if (mapManager != null) {
             mapManager.removeAllMaps();
         }
@@ -195,7 +213,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      */
     private void checkWorldNames() {
         if (!getConfig().getBoolean("DisableStartupWorldWarning")) {
-            final Pattern pattern = Pattern.compile("[^A-Za-z0-9_-]+");
+            Pattern pattern = Pattern.compile("[^A-Za-z0-9_-]+");
 
             for (World world : Bukkit.getWorlds()) {
                 if (!pattern.matcher(world.getName()).find()) continue;
@@ -249,11 +267,19 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     }
 
     /**
+     * Setup and schedule the MultiTaskManager.
+     */
+    private void setupMultiTaskManager() {
+        this.multiTaskManager = new MultiTaskManager(this);
+        multiTaskManager.initTask();
+    }
+
+    /**
      * Register bStats metrics https://bstats.org/plugin/bukkit/Landlord
      */
     private void setupMetrics() {
         EldoMetrics metrics = new EldoMetrics(this, 2322);
-        if(metrics.isEnabled()){
+        if (metrics.isEnabled()) {
             getLogger().info("§2Metrics enabled. Thank you :3");
         }
         //TODO maybe add some interesting statistics
@@ -322,4 +348,10 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     public IRegenerationManager getRegenerationManager() {
         return regenerationManager;
     }
+
+    @Override
+    public IMultiTaskManager getMultiTaskManager() {
+        return multiTaskManager;
+    }
+
 }

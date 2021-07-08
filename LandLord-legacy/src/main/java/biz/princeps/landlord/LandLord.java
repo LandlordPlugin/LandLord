@@ -93,7 +93,7 @@ public class LandLord extends ALandLord implements Listener {
                     "use LandLord. Maybe adequate WorldEdit plugin missing?");
             return false;
         } else {
-            final String worldGuardVersion = getWorldGuard().getDescription().getVersion();
+            String worldGuardVersion = getWorldGuard().getDescription().getVersion();
             if (!worldGuardVersion.contains("6.2.2")) {
                 haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 6.2.2! : You have WG " + worldGuardVersion);
                 return false;

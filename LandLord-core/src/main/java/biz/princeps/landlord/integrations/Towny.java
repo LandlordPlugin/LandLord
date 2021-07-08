@@ -7,6 +7,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.TownPreClaimEvent;
 import com.palmergames.bukkit.towny.object.TownBlock;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 
 
@@ -25,7 +26,7 @@ public class Towny extends BasicListener {
     public void onLLClaim(LandPreClaimEvent e) {
         Chunk chunk = e.getChunk();
         if (towny.isTownyWorld(e.getChunk().getWorld()) &&
-                !towny.isWilderness(chunk.getBlock(2, 2, 2).getLocation())) {
+                !towny.isWilderness(new Location(chunk.getWorld(), (chunk.getX() << 4) + 2, 2, (chunk.getZ() << 4) + 2))) {
             pl.getLangManager().sendMessage(e.getPlayer(), "Integrations.Towny.TownyPresent");
             e.setCancelled(true);
         }

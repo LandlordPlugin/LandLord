@@ -1,12 +1,16 @@
 package biz.princeps.landlord.commands.management;
 
-import biz.princeps.landlord.api.*;
+import biz.princeps.landlord.api.ILLFlag;
+import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IPlayer;
+import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.api.ManageMode;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.commands.Landlordbase;
-import biz.princeps.landlord.commands.ManageMode;
-import biz.princeps.landlord.commands.MultiMode;
 import biz.princeps.landlord.guis.ManageGui;
 import biz.princeps.landlord.guis.ManageGuiAll;
+import biz.princeps.landlord.multi.MultiMode;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;

@@ -1,6 +1,11 @@
 package biz.princeps.landlord.commands.claiming;
 
-import biz.princeps.landlord.api.*;
+import biz.princeps.landlord.api.ClaimType;
+import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IVaultManager;
+import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -51,7 +56,7 @@ public class Claim extends LandlordCommand {
     }
 
     public void onClaim(Player player, Chunk chunk) {
-        if (isDisabledWorld(player)) {
+        if (!overrideConfirmations && isDisabledWorld(player)) {
             return;
         }
 
@@ -233,6 +238,8 @@ public class Claim extends LandlordCommand {
 
     private void handleInactiveClaim(Player player, IOwnedLand ol, double costForBuyer, double payBackForInactive,
                                      String originalOwner) {
+        Chunk chunk = ol.getChunk();
+
         vault.take(player, costForBuyer);
         vault.give(ol.getOwner(), payBackForInactive, player.getWorld());
 
@@ -241,10 +248,10 @@ public class Claim extends LandlordCommand {
                 .replace("%player%", originalOwner)
                 .replace("%price%", vault.format(costForBuyer))
                 .replace("%chunk%", ol.getName())
-                .replace("%location%", wg.formatLocation(ol.getChunk()))
+                .replace("%location%", wg.formatLocation(chunk))
         );
 
-        ol.highlightLand(player,
+        ol.highlightLand(chunk, player,
                 Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
         plugin.getMapManager().updateAll();
 
@@ -276,7 +283,7 @@ public class Claim extends LandlordCommand {
                     .replace("%price%", vault.format(ol.getPrice())));
         }
 
-        ol.highlightLand(player,
+        ol.highlightLand(chunk, player,
                 Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
         plugin.getMapManager().updateAll();
 
@@ -302,7 +309,7 @@ public class Claim extends LandlordCommand {
                 .replace("%world%", chunk.getWorld().getName()));
 
         if (plugin.getConfig().getBoolean("Particles.claim.enabled"))
-            claim.highlightLand(player,
+            claim.highlightLand(chunk, player,
                     Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
 
         if (Options.enabled_homes() && plugin.getConfig().getBoolean("Homes.enableAutoSetHome", false)) {
@@ -324,7 +331,7 @@ public class Claim extends LandlordCommand {
     }
 
     private boolean hasLimitPermissions(Player player, int regionCount) {
-        final int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
+        int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
 
         if (regionCount >= highestAllowedLandCount) {
             lm.sendMessage(player, lm.getString(player, "Commands.Claim.hardcap").replace("%regions%",
@@ -411,5 +418,5 @@ public class Claim extends LandlordCommand {
         }
         return true;
     }
-}
 
+}

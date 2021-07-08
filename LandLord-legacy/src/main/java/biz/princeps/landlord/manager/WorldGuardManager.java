@@ -26,7 +26,13 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 
 /**
@@ -72,19 +78,21 @@ public class WorldGuardManager extends AWorldGuardManager {
      */
     @Override
     public IOwnedLand claim(Chunk chunk, UUID owner) {
+        World world = chunk.getWorld();
+        int x = chunk.getX() << 4;
+        int z = chunk.getZ() << 4;
         Pair<Integer, Integer> boundaries = calcClaimHeightBoundaries(chunk);
-        Location down = chunk.getBlock(0, boundaries.getLeft(), 0).getLocation();
-        Location upper = chunk.getBlock(15, boundaries.getRight(), 15).getLocation();
+        Location down = new Location(world, x, boundaries.getLeft(), z);
+        Location upper = new Location(world, x + 15, boundaries.getRight(), z + 15);
 
         BlockVector vec1 = locationToVec(down);
         BlockVector vec2 = locationToVec(upper);
-
         ProtectedCuboidRegion pr = new ProtectedCuboidRegion(getLandName(chunk), vec1, vec2);
 
         RegionManager manager = getRegionManager(chunk.getWorld());
         if (manager != null) {
             manager.addRegion(pr);
-            OwnedLand land = OwnedLand.create(pl, pr, owner);
+            IOwnedLand land = OwnedLand.create(pl, pr, owner);
             land.replaceOwner(owner);
             cache.add(land);
             return land;
@@ -95,8 +103,8 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public void moveUp(World world, int x, int z, int amt) {
         Chunk chunk = world.getChunkAt(x, z);
-        Vector v1 = chunk.getBlock(0, 3, 0).getLocation().toVector();
-        Vector v2 = chunk.getBlock(15, 255, 15).getLocation().toVector();
+        Vector v1 = new Location(chunk.getWorld(), chunk.getX() << 4, 3, chunk.getZ() << 4).toVector();
+        Vector v2 = new Location(chunk.getWorld(), (chunk.getX() << 4) + 15, 255, (chunk.getZ() << 4) + 15).toVector();
 
         BlockVector b1 = BlockVector.toBlockPoint(v1.getX(), v1.getY(), v1.getZ());
         BlockVector b2 = BlockVector.toBlockPoint(v2.getX(), v2.getY(), v2.getZ());
@@ -131,7 +139,7 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<IOwnedLand> getRegions(UUID id, World world) {
-        final Set<IOwnedLand> lands = new HashSet<>();
+        Set<IOwnedLand> lands = new HashSet<>();
         for (IOwnedLand land : cache.getLands(id)) {
             if (land.getWorld() != world) continue;
 
@@ -147,7 +155,7 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<IOwnedLand> getRegions() {
-        final Set<IOwnedLand> lands = new HashSet<>();
+        Set<IOwnedLand> lands = new HashSet<>();
         for (World world : Bukkit.getWorlds()) {
             lands.addAll(cache.getLands(world));
         }
@@ -156,7 +164,7 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<?> getAllWGRegions(World world) {
-        final Map<String, ProtectedRegion> regions = new HashMap<>(getRegionManager(world).getRegions());
+        Map<String, ProtectedRegion> regions = new HashMap<>(getRegionManager(world).getRegions());
         for (String r : getRegionManager(world).getRegions().keySet()) {
             if (isLLRegion(r)) {
                 regions.remove(r);
@@ -167,9 +175,9 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Set<?> getAllWGRegions() {
-        final Set<ProtectedRegion> set = new HashSet<>();
+        Set<ProtectedRegion> set = new HashSet<>();
         for (World world : Bukkit.getWorlds()) {
-            final Set<?> allWGRegions = getAllWGRegions(world);
+            Set<?> allWGRegions = getAllWGRegions(world);
             set.addAll(((Set<ProtectedRegion>) allWGRegions));
         }
         return set;
@@ -193,8 +201,8 @@ public class WorldGuardManager extends AWorldGuardManager {
     public boolean canClaim(Player player, Chunk currChunk) {
         RegionManager regionManager = getRegionManager(player.getWorld());
         if (regionManager != null) {
-            Vector v1 = currChunk.getBlock(0, 0, 0).getLocation().toVector();
-            Vector v2 = currChunk.getBlock(15, 255, 15).getLocation().toVector();
+            Vector v1 = new Location(currChunk.getWorld(), currChunk.getX() << 4, 0, currChunk.getZ() << 4).toVector();
+            Vector v2 = new Location(currChunk.getWorld(), (currChunk.getX() << 4) + 15, 255, (currChunk.getZ() << 4) + 15).toVector();
 
             ProtectedRegion check = new ProtectedCuboidRegion("check",
                     new BlockVector(v1.getX(), v1.getY(), v1.getZ()),
@@ -217,7 +225,7 @@ public class WorldGuardManager extends AWorldGuardManager {
      */
     @Override
     public int getRegionCount(UUID id) {
-        final Set<IOwnedLand> lands = cache.getLands(id);
+        Set<IOwnedLand> lands = cache.getLands(id);
         return lands == null ? 0 : lands.size();
     }
 
@@ -228,7 +236,7 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public int getRegionCount(World w) {
-        final Set<IOwnedLand> lands = cache.getLands(w);
+        Set<IOwnedLand> lands = cache.getLands(w);
         return lands == null ? 0 : lands.size();
     }
 

@@ -106,7 +106,7 @@ public class SecureWorldListener extends BasicListener {
         if (!worlds.contains(loc.getWorld().getName())) {
             return;
         }
-        final int landcount = plugin.getConfig().getBoolean("SecureWord.perWorld") ?
+        int landcount = plugin.getConfig().getBoolean("SecureWord.perWorld") ?
                 wg.getRegionCount(p.getUniqueId(), loc.getWorld()) :
                 wg.getRegionCount(p.getUniqueId());
 

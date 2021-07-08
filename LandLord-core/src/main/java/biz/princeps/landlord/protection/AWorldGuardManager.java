@@ -6,10 +6,22 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.tuple.Pair;
 import biz.princeps.lib.PrincepsLib;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Project: LandLord
@@ -145,9 +157,8 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
     public String formatLocation(Chunk chunk) {
         String configString = pl.getConfig().getString("locationFormat");
 
-        int x, z, chunkX = chunk.getX() << 4, chunkZ = chunk.getZ() << 4;
-        x = chunkX + 8;
-        z = chunkZ + 8;
+        int x = (chunk.getX() << 4) + 8;
+        int z = (chunk.getZ() << 4) + 8;
 
         configString = configString.replace("%world%", chunk.getWorld().getName());
         configString = configString.replace("%x%", x + "");
@@ -158,13 +169,23 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     @Override
     public void highlightLand(Chunk chunk, Player p, Particle particle, int amount, boolean everyone) {
-        List<Location> edgeBlocks = new ArrayList<>();
+        World world = chunk.getWorld();
+        int x = chunk.getX() << 4;
+        int z = chunk.getZ() << 4;
+        int y = (int) p.getLocation().getY();
+        if (!everyone && p.getLocation().distance(new Location(world, x, y, z)) > 64.0) {
+            // Honestly, particles beyond 4 chunks are useless and can't be seen correctly.
+            return;
+        }
+
+        Set<Location> edgeBlocks = new HashSet<>();
+
         for (int i = 0; i < 16; i++) {
             for (int ii = -1; ii <= 10; ii++) {
-                edgeBlocks.add(chunk.getBlock(i, (int) (p.getLocation().getY()) + ii, 15).getLocation());
-                edgeBlocks.add(chunk.getBlock(i, (int) (p.getLocation().getY()) + ii, 0).getLocation());
-                edgeBlocks.add(chunk.getBlock(0, (int) (p.getLocation().getY()) + ii, i).getLocation());
-                edgeBlocks.add(chunk.getBlock(15, (int) (p.getLocation().getY()) + ii, i).getLocation());
+                edgeBlocks.add(new Location(world, x + i, y + ii, z + 15));
+                edgeBlocks.add(new Location(world, x + i, y + ii, z));
+                edgeBlocks.add(new Location(world, x, y + ii, z + i));
+                edgeBlocks.add(new Location(world, x + 15, y + ii, z + i));
             }
         }
         for (Location edgeBlock : edgeBlocks) {
@@ -198,7 +219,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     @Override
     public IOwnedLand[] getSurroundings(Chunk chunk) {
-        return getSurroundings(chunk.getBlock(1, 1, 1).getLocation());
+        return getSurroundings(new Location(chunk.getWorld(), (chunk.getX() << 4) + 1, 1, chunk.getZ() << 4 + 1));
     }
 
     @Override
@@ -219,7 +240,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     @Override
     public IOwnedLand[] getSurroundingsOwner(Chunk chunk, UUID owner) {
-        return getSurroundingsOwner(chunk.getBlock(1, 1, 1).getLocation(), owner);
+        return getSurroundingsOwner(new Location(chunk.getWorld(), (chunk.getX() << 4) + 1, 1, (chunk.getZ() << 4) + 1), owner);
     }
 
     @Override

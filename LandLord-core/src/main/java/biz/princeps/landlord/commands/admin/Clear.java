@@ -1,13 +1,15 @@
 package biz.princeps.landlord.commands.admin;
 
+import biz.princeps.landlord.api.ClearType;
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IMultiTaskManager;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ClearGUI;
+import biz.princeps.landlord.multi.MultiClearTask;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -19,6 +21,7 @@ import org.bukkit.entity.Player;
 public class Clear extends LandlordCommand {
 
     private final IWorldGuardManager wg;
+    private final IMultiTaskManager multiTaskManager;
 
     public Clear(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Clear.name"),
@@ -26,11 +29,11 @@ public class Clear extends LandlordCommand {
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Clear.permissions")),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Clear.aliases")));
         this.wg = pl.getWGManager();
+        this.multiTaskManager = pl.getMultiTaskManager();
     }
 
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
-
         if (arguments.size() == 1) {
             // Clear a single player
             String name = arguments.get()[0];
@@ -62,15 +65,9 @@ public class Clear extends LandlordCommand {
                         .replace("%players%", name));
             } else {
                 // Success
-                int amt = wg.unclaim(wg.getRegions(lPlayer.getUuid()));
-
-                lm.sendMessage(player, lm.getString("Commands.ClearWorld.gui.clearplayer.success")
-                        .replace("%count%", String.valueOf(amt))
-                        .replace("%player%", lPlayer.getName()));
-
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(),
-                        () -> plugin.getMapManager().updateAll());
+                multiTaskManager.enqueueTask(new MultiClearTask(plugin, player, wg.getRegions(lPlayer.getUuid()), lPlayer.getName(), ClearType.PLAYER));
             }
         });
     }
+
 }

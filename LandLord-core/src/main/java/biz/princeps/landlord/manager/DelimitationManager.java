@@ -84,7 +84,6 @@ public class DelimitationManager implements IDelimitationManager {
      */
     @Override
     public void delimit(Player player, Chunk chunk) {
-        Map<BlockVector, Material> pattern = this.pattern;
         if (pattern == null) {
             plugin.getLogger().warning("Delimitation failed, because there was an error in the config!");
             return;
