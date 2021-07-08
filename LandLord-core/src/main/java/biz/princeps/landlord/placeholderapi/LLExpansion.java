@@ -136,7 +136,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 return "0";
 
             default:
-                return null;
+                return "";
         }
     }
 
