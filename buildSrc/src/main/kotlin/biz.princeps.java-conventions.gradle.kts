@@ -18,7 +18,7 @@ repositories {
     // nbteditor & bungeecord-chat
     maven { url = uri("https://repo.codemc.org/repository/maven-public/") }
     // EldoUtilitites & Landlord
-    maven { url = uri("https://eldonexus.de/repository/maven-releases/") }
+    maven { url = uri("https://eldonexus.de/repository/maven-public/") }
     // Authlib
     maven { url = uri("https://papermc.io/repo/repository/maven-releases/") }
 }
@@ -46,4 +46,3 @@ tasks {
         }
     }
 }
-
