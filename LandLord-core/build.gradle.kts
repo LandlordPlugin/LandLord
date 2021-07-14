@@ -8,7 +8,7 @@ plugins {
 
 dependencies {
     api(project(":LandLord-api"))
-    implementation("com.zaxxer:HikariCP:4.0.3")
+    implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("io.github.bananapuncher714:nbteditor:7.16.1")
     implementation("de.eldoria:eldo-util:1.9.1")
     compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
