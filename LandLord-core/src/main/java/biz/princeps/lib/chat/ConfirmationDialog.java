@@ -59,7 +59,7 @@ public class ConfirmationDialog {
                 }
             }
         };
-        runnable.runTaskLater(PrincepsLib.getPluginInstance(), acceptTimout * 20);
+        runnable.runTaskLater(PrincepsLib.getPluginInstance(), acceptTimout * 20L);
     }
 
 
