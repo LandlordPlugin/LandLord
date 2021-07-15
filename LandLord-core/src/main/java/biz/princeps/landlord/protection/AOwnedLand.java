@@ -4,11 +4,16 @@ import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Project: LandLord
@@ -16,6 +21,8 @@ import org.bukkit.entity.Player;
  * Date: 06-05-19
  */
 public abstract class AOwnedLand implements IOwnedLand {
+
+    private static final String NAMES_DELIMITER = ", ";
 
     protected final World world;
     protected final ILandLord pl;
@@ -116,4 +123,14 @@ public abstract class AOwnedLand implements IOwnedLand {
     }
 
     public abstract ILLFlag getFlag(String s);
+
+    protected static String formatNames(Iterable<UUID> uuids) {
+        Set<String> names = new HashSet<>();
+        // ugly, maybe solve this in the future
+        for (UUID uuid : uuids) {
+            names.add(Bukkit.getOfflinePlayer(uuid).getName());
+        }
+        return String.join(NAMES_DELIMITER, names);
+    }
+
 }

@@ -33,13 +33,11 @@ public class LandCache {
     }
 
     public Set<IOwnedLand> getLands(UUID uuid) {
-        Set<IOwnedLand> playerLands = indexPlayer.get(uuid);
-        return playerLands == null ? Collections.emptySet() : playerLands;
+        return indexPlayer.getOrDefault(uuid, Collections.emptySet());
     }
 
     public Set<IOwnedLand> getLands(World world) {
-        Set<IOwnedLand> worldLands = indexWorld.get(world);
-        return worldLands == null ? Collections.emptySet() : worldLands;
+        return indexWorld.getOrDefault(world, Collections.emptySet());
     }
 
     public boolean contains(String name) {

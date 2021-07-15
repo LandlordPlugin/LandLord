@@ -20,7 +20,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -60,24 +59,12 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public String getOwnersString() {
-        Set<UUID> itt = region.getOwners().getUniqueIds();
-        Set<String> names = new HashSet<>();
-        // ugly, maybe solve this in the future
-        for (UUID uuid : itt) {
-            names.add(Bukkit.getOfflinePlayer(uuid).getName());
-        }
-        return String.join(", ", names);
+        return formatNames(region.getOwners().getUniqueIds());
     }
 
     @Override
     public String getMembersString() {
-        Set<UUID> itt = region.getMembers().getUniqueIds();
-        Set<String> names = new HashSet<>();
-        // ugly, maybe solve this in the future
-        for (UUID uuid : itt) {
-            names.add(Bukkit.getOfflinePlayer(uuid).getName());
-        }
-        return String.join(", ", names);
+        return formatNames(region.getMembers().getUniqueIds());
     }
 
     @Override
