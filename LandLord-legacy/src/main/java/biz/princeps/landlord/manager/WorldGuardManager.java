@@ -257,7 +257,6 @@ public class WorldGuardManager extends AWorldGuardManager {
         return new BlockVector(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
-
     @Override
     public boolean isAllowedInOverlap(Player p, Location loc) {
         LocalPlayer localPlayer = wgPlugin.wrapPlayer(p);
