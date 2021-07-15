@@ -175,7 +175,7 @@ public class WorldGuardManager extends AWorldGuardManager {
         if (regionManager != null) {
             int x = currChunk.getX() << 4;
             int z = currChunk.getZ() << 4;
-            Vector v1 = new Location(currChunk.getWorld(), x, 0, z << 4).toVector();
+            Vector v1 = new Location(currChunk.getWorld(), x, 0, z).toVector();
             Vector v2 = new Location(currChunk.getWorld(), x + 15, 255, z + 15).toVector();
 
             ProtectedRegion check = new ProtectedCuboidRegion("check",

@@ -21,7 +21,7 @@ public class LandCache {
             throw new RuntimeException("Cant Insert a null land!");
         }
 
-        this.indexLandname.put(land.getName(), land);
+        indexLandname.put(land.getName(), land);
         indexPlayer.computeIfAbsent(land.getOwner(), uuid -> Sets.newHashSet())
                 .add(land);
         indexWorld.computeIfAbsent(land.getWorld(), uuid -> Sets.newHashSet())
