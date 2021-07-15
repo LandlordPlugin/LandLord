@@ -48,6 +48,17 @@ public class WorldGuardManager extends AWorldGuardManager {
         this.wgPlugin = worldGuard;
     }
 
+    public void initCache() {
+        for (World world : Bukkit.getWorlds()) {
+            RegionManager manager = getRegionManager(world);
+            for (ProtectedRegion value : manager.getRegions().values()) {
+                if (isLLRegion(value.getId())) {
+                    cache.add(OwnedLand.of(pl, value));
+                }
+            }
+        }
+    }
+
     public static void initFlags(WorldGuardPlugin wgpl) {
         FlagRegistry registry = wgpl.getFlagRegistry();
         try {
@@ -58,18 +69,6 @@ public class WorldGuardManager extends AWorldGuardManager {
             // you may want to re-register with a different name, but this
             // could cause issues with saved flags in region files. if you don't mind
             // sharing a flag, consider making your field non-final and assigning it:
-        }
-    }
-
-    //TODO check performance of sync loading
-    public void initCache() {
-        for (World world : Bukkit.getWorlds()) {
-            RegionManager manager = getRegionManager(world);
-            for (ProtectedRegion value : manager.getRegions().values()) {
-                if (isLLRegion(value.getId())) {
-                    cache.add(OwnedLand.of(pl, value));
-                }
-            }
         }
     }
 
@@ -101,33 +100,6 @@ public class WorldGuardManager extends AWorldGuardManager {
     }
 
     @Override
-    public void moveUp(World world, int x, int z, int amt) {
-        Chunk chunk = world.getChunkAt(x, z);
-        Vector v1 = new Location(chunk.getWorld(), chunk.getX() << 4, 3, chunk.getZ() << 4).toVector();
-        Vector v2 = new Location(chunk.getWorld(), (chunk.getX() << 4) + 15, 255, (chunk.getZ() << 4) + 15).toVector();
-
-        BlockVector b1 = BlockVector.toBlockPoint(v1.getX(), v1.getY(), v1.getZ());
-        BlockVector b2 = BlockVector.toBlockPoint(v2.getX(), v2.getY(), v2.getZ());
-
-        CuboidRegion region = new CuboidRegion(getWGWorld(world.getName()), b1, b2);
-        try {
-            region.shift(BlockVector.toBlockPoint(0, amt, 0));
-        } catch (RegionOperationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public com.sk89q.worldedit.world.World getWGWorld(String name) {
-        for (com.sk89q.worldedit.world.World world : WorldEdit.getInstance().getServer().getWorlds()) {
-            if (world.getName().equals(name)) {
-                return world;
-            }
-        }
-        return null;
-    }
-
-
-    @Override
     public IOwnedLand getRegion(String name) {
         return cache.getLand(name);
     }
@@ -135,22 +107,6 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public Set<IOwnedLand> getRegions(World world) {
         return cache.getLands(world);
-    }
-
-    @Override
-    public Set<IOwnedLand> getRegions(UUID id, World world) {
-        Set<IOwnedLand> lands = new HashSet<>();
-        for (IOwnedLand land : cache.getLands(id)) {
-            if (land.getWorld() != world) continue;
-
-            lands.add(land);
-        }
-        return lands;
-    }
-
-    @Override
-    public Set<IOwnedLand> getRegions(UUID id) {
-        return cache.getLands(id);
     }
 
     @Override
@@ -184,6 +140,22 @@ public class WorldGuardManager extends AWorldGuardManager {
     }
 
     @Override
+    public Set<IOwnedLand> getRegions(UUID id, World world) {
+        Set<IOwnedLand> lands = new HashSet<>();
+        for (IOwnedLand land : cache.getLands(id)) {
+            if (land.getWorld() != world) continue;
+
+            lands.add(land);
+        }
+        return lands;
+    }
+
+    @Override
+    public Set<IOwnedLand> getRegions(UUID id) {
+        return cache.getLands(id);
+    }
+
+    @Override
     public void unclaim(IOwnedLand land) {
         unclaim(land.getWorld(), land.getName());
     }
@@ -201,8 +173,10 @@ public class WorldGuardManager extends AWorldGuardManager {
     public boolean canClaim(Player player, Chunk currChunk) {
         RegionManager regionManager = getRegionManager(player.getWorld());
         if (regionManager != null) {
-            Vector v1 = new Location(currChunk.getWorld(), currChunk.getX() << 4, 0, currChunk.getZ() << 4).toVector();
-            Vector v2 = new Location(currChunk.getWorld(), (currChunk.getX() << 4) + 15, 255, (currChunk.getZ() << 4) + 15).toVector();
+            int x = currChunk.getX() << 4;
+            int z = currChunk.getZ() << 4;
+            Vector v1 = new Location(currChunk.getWorld(), x, 0, z << 4).toVector();
+            Vector v2 = new Location(currChunk.getWorld(), x + 15, 255, z + 15).toVector();
 
             ProtectedRegion check = new ProtectedCuboidRegion("check",
                     new BlockVector(v1.getX(), v1.getY(), v1.getZ()),
@@ -210,7 +184,6 @@ public class WorldGuardManager extends AWorldGuardManager {
             List<ProtectedRegion> intersects = check
                     .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
             for (ProtectedRegion intersect : intersects) {
-
                 if (!regionManager.getApplicableRegions(intersect).isMemberOfAll(wgPlugin.wrapPlayer(player))) {
                     return false;
                 }
@@ -219,25 +192,56 @@ public class WorldGuardManager extends AWorldGuardManager {
         return true;
     }
 
+
+    @Override
+    public void moveUp(World world, int chunkX, int chunkZ, int amt) {
+        int x = chunkX << 4;
+        int z = chunkZ << 4;
+        Vector v1 = new Location(world, x, 3, z).toVector();
+        Vector v2 = new Location(world, x + 15, 255, z + 15).toVector();
+
+        BlockVector b1 = BlockVector.toBlockPoint(v1.getX(), v1.getY(), v1.getZ());
+        BlockVector b2 = BlockVector.toBlockPoint(v2.getX(), v2.getY(), v2.getZ());
+
+        CuboidRegion region = new CuboidRegion(getWGWorld(world.getName()), b1, b2);
+        try {
+            region.shift(BlockVector.toBlockPoint(0, amt, 0));
+        } catch (RegionOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public com.sk89q.worldedit.world.World getWGWorld(String name) {
+        for (com.sk89q.worldedit.world.World world : WorldEdit.getInstance().getServer().getWorlds()) {
+            if (world.getName().equals(name)) {
+                return world;
+            }
+        }
+        return null;
+    }
+
     /**
      * @param id the uuid of the player to get the region count for
      * @return the region count
      */
     @Override
     public int getRegionCount(UUID id) {
-        Set<IOwnedLand> lands = cache.getLands(id);
-        return lands == null ? 0 : lands.size();
+        return cache.getLands(id).size();
     }
 
+    /**
+     * @param id the uuid of the player to get the region count for
+     * @return the region count
+     */
     @Override
     public int getRegionCount(UUID id, World world) {
-        return (int) cache.getLands(id).stream().filter(l -> l.getWorld().equals(world)).count();
+        return (int) cache.getLands(id).stream()
+                .filter(ownedLand -> ownedLand.getWorld().equals(world)).count();
     }
 
     @Override
-    public int getRegionCount(World w) {
-        Set<IOwnedLand> lands = cache.getLands(w);
-        return lands == null ? 0 : lands.size();
+    public int getRegionCount(World world) {
+        return cache.getLands(world).size();
     }
 
     private RegionContainer getRegionContainer() {
@@ -252,6 +256,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     private BlockVector locationToVec(Location loc) {
         return new BlockVector(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
+
 
     @Override
     public boolean isAllowedInOverlap(Player p, Location loc) {

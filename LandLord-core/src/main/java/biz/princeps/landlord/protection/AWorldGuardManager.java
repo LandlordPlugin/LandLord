@@ -95,7 +95,6 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
      */
     @Override
     public boolean isLLRegion(String name) {
-
         World world = getWorld(name);
         if (world == null)
             return false;
@@ -126,7 +125,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
     }
 
     @Override
-    public abstract void moveUp(World world, int x, int z, int amt);
+    public abstract void moveUp(World world, int chunkX, int chunkZ, int amt);
 
     @Override
     public Set<IOwnedLand> getRegions(UUID id) {

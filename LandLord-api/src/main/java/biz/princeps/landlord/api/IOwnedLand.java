@@ -26,6 +26,20 @@ public interface IOwnedLand {
     String getName();
 
     /**
+     * Gets the X coordinate of the land.
+     *
+     * @return the chunk X coordinate
+     */
+    int getChunkX();
+
+    /**
+     * Gets the Z coordinate of the land.
+     *
+     * @return the chunk Z coordinate
+     */
+    int getChunkZ();
+
+    /**
      * Gets a nicely formatted string of the owner.
      * Example: "SpatiumPrinceps" instead of the uuid.
      *
