@@ -11,8 +11,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 /**
@@ -125,12 +124,12 @@ public abstract class AOwnedLand implements IOwnedLand {
     public abstract ILLFlag getFlag(String s);
 
     protected static String formatNames(Iterable<UUID> uuids) {
-        Set<String> names = new HashSet<>();
+        StringJoiner stringJoiner = new StringJoiner(NAMES_DELIMITER);
         // ugly, maybe solve this in the future
         for (UUID uuid : uuids) {
-            names.add(Bukkit.getOfflinePlayer(uuid).getName());
+            stringJoiner.add(Bukkit.getOfflinePlayer(uuid).getName());
         }
-        return String.join(NAMES_DELIMITER, names);
+        return stringJoiner.toString();
     }
 
 }
