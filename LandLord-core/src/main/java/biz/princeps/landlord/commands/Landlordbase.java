@@ -27,7 +27,7 @@ import biz.princeps.landlord.commands.friends.Unfriend;
 import biz.princeps.landlord.commands.friends.UnfriendAll;
 import biz.princeps.landlord.commands.homes.Home;
 import biz.princeps.landlord.commands.homes.SetHome;
-import biz.princeps.landlord.commands.management.Borders;
+import biz.princeps.landlord.commands.management.borders.Borders;
 import biz.princeps.landlord.commands.management.Info;
 import biz.princeps.landlord.commands.management.LandMap;
 import biz.princeps.landlord.commands.management.ListLands;

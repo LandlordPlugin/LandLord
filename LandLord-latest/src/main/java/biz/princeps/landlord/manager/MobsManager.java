@@ -167,21 +167,21 @@ public class MobsManager implements IMobManager {
 
     public static class Mob implements IMob {
 
-        final EntityType t;
-        final Material egg;
-        final String permission;
+        private final EntityType type;
+        private final Material egg;
+        private final String permission;
 
-        Mob(EntityType t, Material egg) {
-            this.t = t;
+        Mob(EntityType type, Material egg) {
+            this.type = type;
             this.egg = egg;
-            this.permission = "landlord.player.manage.mob-spawning." + t.name();
+            this.permission = "landlord.player.manage.mob-spawning." + type.name();
 
             MOBS.add(this);
         }
 
         @Override
         public EntityType getType() {
-            return t;
+            return type;
         }
 
         @Override
@@ -196,7 +196,7 @@ public class MobsManager implements IMobManager {
 
         @Override
         public String getNiceName() {
-            String s = t.getName();
+            String s = type.getName();
             StringBuilder sb = new StringBuilder();
             sb.append(Character.toUpperCase(s.charAt(0)));
             for (int i = 1; i < s.length(); i++) {
@@ -213,7 +213,7 @@ public class MobsManager implements IMobManager {
 
         @Override
         public String getName() {
-            return t.getName().toUpperCase();
+            return type.getName().toUpperCase();
         }
     }
 }
