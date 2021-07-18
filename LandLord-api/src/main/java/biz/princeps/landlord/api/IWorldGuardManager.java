@@ -105,7 +105,7 @@ public interface IWorldGuardManager {
 
     String formatLocation(Chunk chunk);
 
-    void moveUp(World world, int x, int z, int amt);
+    void moveUp(World world, int chunkX, int chunkZ, int amt);
 
     /**
      * Calculates the chunk height boundaries.
@@ -116,5 +116,5 @@ public interface IWorldGuardManager {
      * @return A pair of two integers. The {@link Pair#getLeft()} defines the lower claim boundary. The {@link
      * Pair#getRight()} defines the upper claim boundary
      */
-    public Pair<Integer, Integer> calcClaimHeightBoundaries(Chunk chunk);
+    Pair<Integer, Integer> calcClaimHeightBoundaries(Chunk chunk);
 }

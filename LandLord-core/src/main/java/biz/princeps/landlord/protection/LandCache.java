@@ -4,8 +4,8 @@ import biz.princeps.landlord.api.IOwnedLand;
 import com.google.common.collect.Sets;
 import org.bukkit.World;
 
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -21,19 +21,11 @@ public class LandCache {
             throw new RuntimeException("Cant Insert a null land!");
         }
 
-        this.indexLandname.put(land.getName(), land);
-
-        if (indexPlayer.containsKey(land.getOwner())) {
-            indexPlayer.get(land.getOwner()).add(land);
-        } else {
-            indexPlayer.put(land.getOwner(), Sets.newHashSet(land));
-        }
-
-        if (indexWorld.containsKey(land.getWorld())) {
-            indexWorld.get(land.getWorld()).add(land);
-        } else {
-            indexWorld.put(land.getWorld(), Sets.newHashSet(land));
-        }
+        indexLandname.put(land.getName(), land);
+        indexPlayer.computeIfAbsent(land.getOwner(), uuid -> Sets.newHashSet())
+                .add(land);
+        indexWorld.computeIfAbsent(land.getWorld(), uuid -> Sets.newHashSet())
+                .add(land);
     }
 
     public IOwnedLand getLand(String name) {
@@ -41,13 +33,11 @@ public class LandCache {
     }
 
     public Set<IOwnedLand> getLands(UUID uuid) {
-        if (indexPlayer.get(uuid) == null) return new HashSet<>();
-        return indexPlayer.get(uuid);
+        return indexPlayer.getOrDefault(uuid, Collections.emptySet());
     }
 
-    public Set<IOwnedLand> getLands(World w) {
-        if (indexWorld.get(w) == null) return new HashSet<>();
-        return indexWorld.get(w);
+    public Set<IOwnedLand> getLands(World world) {
+        return indexWorld.getOrDefault(world, Collections.emptySet());
     }
 
     public boolean contains(String name) {

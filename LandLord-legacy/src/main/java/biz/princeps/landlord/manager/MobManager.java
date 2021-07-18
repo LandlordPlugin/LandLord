@@ -86,9 +86,9 @@ public class MobManager implements IMobManager {
 
     public static class Mob implements IMob {
 
-        EntityType t;
-        int egg;
-        String permission;
+        final EntityType t;
+        final int egg;
+        final String permission;
 
         Mob(EntityType t, int egg) {
             this.t = t;

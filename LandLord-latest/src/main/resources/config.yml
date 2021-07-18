@@ -599,7 +599,7 @@ Manage:
     enable: true
   damage-animals:
     enable: true
-    item: LEGACY_RAW_FISH
+    item: COD
     default:
       friends: true
       everyone: false
@@ -674,7 +674,7 @@ Manage:
     item: BOW
   mob-spawning:
     enable: true
-    item: LEGACY_MONSTER_EGG
+    item: SPAWNER
     # If you dont want your users to manage a specific mobspawn, just comment out the line with #
     toggleableMobs:
       - ELDER_GUARDIAN

@@ -4,11 +4,15 @@ import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import java.util.StringJoiner;
+import java.util.UUID;
 
 /**
  * Project: LandLord
@@ -17,12 +21,38 @@ import org.bukkit.entity.Player;
  */
 public abstract class AOwnedLand implements IOwnedLand {
 
+    private static final String NAMES_DELIMITER = ", ";
+
     protected final World world;
     protected final ILandLord pl;
 
-    public AOwnedLand(ILandLord pl, World world) {
+    protected final String name;
+    protected final int chunkX;
+    protected final int chunkZ;
+
+    public AOwnedLand(ILandLord pl, World world, String name) {
         this.world = world;
         this.pl = pl;
+
+        IWorldGuardManager wg = pl.getWGManager();
+        this.name = name;
+        this.chunkX = wg.getX(name);
+        this.chunkZ = wg.getZ(name);
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public int getChunkX() {
+        return chunkX;
+    }
+
+    @Override
+    public int getChunkZ() {
+        return chunkZ;
     }
 
     /**
@@ -62,13 +92,11 @@ public abstract class AOwnedLand implements IOwnedLand {
     @Override
     public Location getALocation() {
         IWorldGuardManager wg = pl.getWGManager();
-        World world = wg.getWorld(getName());
+        World world = wg.getWorld(name);
         if (world == null)
             return null;
 
-        int x = wg.getX(getName());
-        int z = wg.getZ(getName());
-        return new Location(world, x << 4, world.getHighestBlockYAt(x << 4, z << 4) + 1, z << 4);
+        return new Location(world, chunkX << 4, world.getHighestBlockYAt(chunkX << 4, chunkZ << 4) + 1, chunkZ << 4);
 
     }
 
@@ -80,12 +108,10 @@ public abstract class AOwnedLand implements IOwnedLand {
     @Override
     public Chunk getChunk() {
         IWorldGuardManager wg = pl.getWGManager();
-        World w = wg.getWorld(getName());
-        int x = wg.getX(getName());
-        int z = wg.getZ(getName());
+        World w = wg.getWorld(name);
 
-        if (w != null && x != Integer.MIN_VALUE && z != Integer.MIN_VALUE) {
-            return w.getChunkAt(x, z);
+        if (w != null && chunkX != Integer.MIN_VALUE && chunkZ != Integer.MIN_VALUE) {
+            return w.getChunkAt(chunkX, chunkZ);
         }
         return null;
     }
@@ -96,4 +122,14 @@ public abstract class AOwnedLand implements IOwnedLand {
     }
 
     public abstract ILLFlag getFlag(String s);
+
+    protected static String formatNames(Iterable<UUID> uuids) {
+        StringJoiner stringJoiner = new StringJoiner(NAMES_DELIMITER);
+        // ugly, maybe solve this in the future
+        for (UUID uuid : uuids) {
+            stringJoiner.add(Bukkit.getOfflinePlayer(uuid).getName());
+        }
+        return stringJoiner.toString();
+    }
+
 }

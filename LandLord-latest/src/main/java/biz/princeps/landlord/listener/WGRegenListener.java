@@ -39,8 +39,8 @@ public class WGRegenListener extends BasicListener {
             return;
         }
 
-        int x = e.getLand().getChunk().getX();
-        int z = e.getLand().getChunk().getZ();
+        int x = e.getLand().getChunkX();
+        int z = e.getLand().getChunkZ();
         World world = e.getLand().getWorld();
 
         Region region = new CuboidRegion(BlockVector3.at(x << 4, 0, z << 4),

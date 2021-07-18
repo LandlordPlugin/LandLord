@@ -11,7 +11,7 @@ import java.util.UUID;
 public class MaterialsManager implements IMaterialsManager {
     @Override
     public Material getSkull() {
-        return Material.LEGACY_SKULL_ITEM;
+        return Material.PLAYER_HEAD;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class MaterialsManager implements IMaterialsManager {
 
     @Override
     public Material getLongGrass() {
-        return Material.LEGACY_LONG_GRASS;
+        return Material.GRASS;
     }
 
     @Override

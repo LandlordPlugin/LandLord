@@ -20,8 +20,6 @@ import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -45,7 +43,7 @@ public class OwnedLand extends AOwnedLand {
     }
 
     private OwnedLand(ILandLord pl, ProtectedRegion region) {
-        super(pl, pl.getWGManager().getWorld(region.getId()));
+        super(pl, pl.getWGManager().getWorld(region.getId()), region.getId());
         this.region = region;
     }
 
@@ -61,44 +59,17 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public String getOwnersString() {
-        Set<UUID> itt = region.getOwners().getUniqueIds();
-        Set<String> names = new HashSet<>();
-        // ugly, maybe solve this in the future
-        for (UUID uuid : itt) {
-            names.add(Bukkit.getOfflinePlayer(uuid).getName());
-        }
-        return itToString(names.iterator());
+        return formatNames(region.getOwners().getUniqueIds());
     }
 
     @Override
     public String getMembersString() {
-        Set<UUID> itt = region.getMembers().getUniqueIds();
-        Set<String> names = new HashSet<>();
-        // ugly, maybe solve this in the future
-        for (UUID uuid : itt) {
-            names.add(Bukkit.getOfflinePlayer(uuid).getName());
-        }
-        return itToString(names.iterator());
-    }
-
-    private String itToString(Iterator<String> it) {
-        StringBuilder sb = new StringBuilder();
-        while (it.hasNext()) {
-            sb.append(it.next());
-            if (it.hasNext())
-                sb.append(", ");
-        }
-        return sb.toString();
-    }
-
-    @Override
-    public String getName() {
-        return region.getId();
+        return formatNames(region.getMembers().getUniqueIds());
     }
 
     @Override
     public boolean isOwner(UUID uuid) {
-        return region.getOwners().getUniqueIds().contains(uuid);
+        return region.getOwners().contains(uuid);
     }
 
     @Override
@@ -120,22 +91,22 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public boolean isFriend(UUID uuid) {
-        return getFriends().contains(uuid);
+        return region.getMembers().contains(uuid);
     }
 
     @Override
     public Set<UUID> getFriends() {
-        return this.region.getMembers().getUniqueIds();
+        return region.getMembers().getUniqueIds();
     }
 
     @Override
     public void addFriend(UUID uuid) {
-        this.region.getMembers().addPlayer(uuid);
+        region.getMembers().addPlayer(uuid);
     }
 
     @Override
     public void removeFriend(UUID uuid) {
-        this.region.getMembers().removePlayer(uuid);
+        region.getMembers().removePlayer(uuid);
     }
 
     @Override
@@ -151,7 +122,7 @@ public class OwnedLand extends AOwnedLand {
     @Override
     public String toString() {
         return "OwnedLand{" +
-                "chunk=" + region.getId() +
+                "chunk=" + name +
                 '}';
     }
 
@@ -206,7 +177,7 @@ public class OwnedLand extends AOwnedLand {
         Set<EntityType> flag = region.getFlag(DefaultFlag.DENY_SPAWN);
 
         if (flag == null) {
-            HashSet<EntityType> entityTypes = Sets.newHashSet(mob.getType());
+            Set<EntityType> entityTypes = Sets.newHashSet(mob.getType());
             region.setFlag(DefaultFlag.DENY_SPAWN, entityTypes);
             return;
         }

@@ -52,7 +52,6 @@ public class WorldGuardManager extends AWorldGuardManager {
         this.wgPlugin = worldGuard;
     }
 
-    //TODO check performance of sync loading
     public void initCache() {
         for (World world : Bukkit.getWorlds()) {
             RegionManager manager = getRegionManager(world);
@@ -180,8 +179,10 @@ public class WorldGuardManager extends AWorldGuardManager {
         if (regionManager == null) {
             return false;
         }
-        Vector v1 = new Location(currChunk.getWorld(), currChunk.getX() << 4, 0, currChunk.getZ() << 4).toVector();
-        Vector v2 = new Location(currChunk.getWorld(), (currChunk.getX() << 4) + 15, 255, (currChunk.getZ() << 4) + 15).toVector();
+        int x = currChunk.getX() << 4;
+        int z = currChunk.getZ() << 4;
+        Vector v1 = new Location(currChunk.getWorld(), x, 0, z).toVector();
+        Vector v2 = new Location(currChunk.getWorld(), x + 15, 255, z + 15).toVector();
 
         ProtectedRegion check = new ProtectedCuboidRegion("check",
                 BlockVector3.at(v1.getX(), v1.getY(), v1.getZ()),
@@ -201,11 +202,12 @@ public class WorldGuardManager extends AWorldGuardManager {
     }
 
     @Override
-    public void moveUp(World world, int x, int z, int amt) {
+    public void moveUp(World world, int chunkX, int chunkZ, int amt) {
         com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
-        Chunk chunk = world.getChunkAt(x, z);
-        Vector v1 = new Location(chunk.getWorld(), chunk.getX() << 4, 3, chunk.getZ() << 4).toVector();
-        Vector v2 = new Location(chunk.getWorld(), (chunk.getX() << 4) + 15, 255, (chunk.getZ() << 4) + 15).toVector();
+        int x = chunkX << 4;
+        int z = chunkZ << 4;
+        Vector v1 = new Location(world, x, 3, z).toVector();
+        Vector v2 = new Location(world, x + 15, 255, z + 15).toVector();
 
         BlockVector3 b1 = BlockVector3.at(v1.getX(), v1.getY(), v1.getZ());
         BlockVector3 b2 = BlockVector3.at(v2.getX(), v2.getY(), v2.getZ());
@@ -225,8 +227,7 @@ public class WorldGuardManager extends AWorldGuardManager {
      */
     @Override
     public int getRegionCount(UUID id) {
-        Set<IOwnedLand> lands = cache.getLands(id);
-        return lands == null ? 0 : lands.size();
+        return cache.getLands(id).size();
     }
 
     /**
@@ -235,14 +236,13 @@ public class WorldGuardManager extends AWorldGuardManager {
      */
     @Override
     public int getRegionCount(UUID id, World world) {
-        if (cache.getLands(id) == null) return 0;
-        return (int) cache.getLands(id).stream().filter(l -> l.getWorld().equals(world)).count();
+        return (int) cache.getLands(id).stream()
+                .filter(ownedLand -> ownedLand.getWorld().equals(world)).count();
     }
 
     @Override
-    public int getRegionCount(World w) {
-        Set<IOwnedLand> lands = cache.getLands(w);
-        return lands == null ? 0 : lands.size();
+    public int getRegionCount(World world) {
+        return cache.getLands(world).size();
     }
 
     private RegionContainer getRegionContainer() {
@@ -258,7 +258,6 @@ public class WorldGuardManager extends AWorldGuardManager {
     private BlockVector3 locationToVec(Location loc) {
         return BlockVector3.at(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
-
 
     @Override
     public boolean isAllowedInOverlap(Player p, Location loc) {

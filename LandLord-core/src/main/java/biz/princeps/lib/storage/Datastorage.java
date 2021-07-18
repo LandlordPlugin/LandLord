@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class Datastorage {
     protected final Logger logger;
     protected final JavaPlugin pl;
-    protected HikariDataSource ds;
+    protected final HikariDataSource ds;
 
     public Logger getLogger() {
         return logger;
@@ -64,24 +64,6 @@ public class Datastorage {
 
     }
 
-    public void executeUpdateAsync(String query) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                executeUpdate(query, null);
-            }
-        }.runTaskAsynchronously(pl);
-    }
-
-    public void executeAsync(String query) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                execute(query, null);
-            }
-        }.runTaskAsynchronously(pl);
-    }
-
     public void executeQueryAsync(String query, Consumer<ResultSet> consumer) {
         new BukkitRunnable() {
             @Override
@@ -116,18 +98,6 @@ public class Datastorage {
                 executeQuery(query, consumer, args);
             }
         }.runTaskAsynchronously(pl);
-    }
-
-    public void executeUpdate(String query) {
-        executeUpdate(query, null);
-    }
-
-    public void execute(String query) {
-        execute(query, null);
-    }
-
-    public void executeQuery(String query, Consumer<ResultSet> consumer) {
-        executeQuery(query, consumer, null);
     }
 
     public void executeUpdate(String query, Object... args) {
@@ -181,24 +151,22 @@ public class Datastorage {
     }
 
     private void evalutePrepStmt(PreparedStatement st, Object... args) throws SQLException {
-        if (args != null) {
-            for (int i = 0; i < args.length; i++) {
-                Object obj = args[i];
-                if (obj instanceof String)
-                    st.setString(i + 1, (String) obj);
-                else if (obj instanceof Integer)
-                    st.setInt(i + 1, (int) obj);
-                else if (obj instanceof Double)
-                    st.setDouble(i + 1, (double) obj);
-                else if (obj instanceof Float)
-                    st.setFloat(i + 1, (float) obj);
-                else if (obj instanceof Boolean)
-                    st.setBoolean(i + 1, (boolean) obj);
-                else if (obj instanceof Long)
-                    st.setLong(i + 1, (long) obj);
-                else
-                    st.setNull(i + 1, Types.VARCHAR);
-            }
+        for (int i = 0; i < args.length; i++) {
+            Object obj = args[i];
+            if (obj instanceof String)
+                st.setString(i + 1, (String) obj);
+            else if (obj instanceof Integer)
+                st.setInt(i + 1, (int) obj);
+            else if (obj instanceof Double)
+                st.setDouble(i + 1, (double) obj);
+            else if (obj instanceof Float)
+                st.setFloat(i + 1, (float) obj);
+            else if (obj instanceof Boolean)
+                st.setBoolean(i + 1, (boolean) obj);
+            else if (obj instanceof Long)
+                st.setLong(i + 1, (long) obj);
+            else
+                st.setNull(i + 1, Types.VARCHAR);
         }
     }
 

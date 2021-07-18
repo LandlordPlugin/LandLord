@@ -12,7 +12,7 @@ It is hosted on [spigotmc.org](https://www.spigotmc.org/resources/44398/).
 # Download
 You can download the latest builds from our nexus.\
 Please search your version below.\
-Only use snapshot if you know what you are doing. We dont guarantee that these will run without any problems.
+Only use snapshot if you know what you are doing. We don't guarantee that these will run without any problems.
 
 ### Latest 1.13+
 [Latest Release](https://eldonexus.de/service/rest/v1/search/assets/download?sort=version&direction=desc&&repository=maven-releases&maven.groupId=biz.princeps&maven.artifactId=landlord-latest&maven.classifier=all) \
