@@ -72,12 +72,12 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
                             plugin.getPlayerManager().save(lPlayer, true);
                         });
 
-                        lgManager.sendMessage(commandSender, lgManager.getString("Commands.ClearWorld.gui.clearplayer.success")
+                        lgManager.sendMessage(commandSender, lgManager.getString("Commands.Clear.gui.clearplayer.success")
                                 .replace("%count%", String.valueOf(clearedLands))
                                 .replace("%player%", targetName));
                         break;
                     case WORLD:
-                        lgManager.sendMessage(commandSender, lgManager.getString("Commands.ClearWorld.gui.clearworld.success")
+                        lgManager.sendMessage(commandSender, lgManager.getString("Commands.Clear.gui.clearworld.success")
                                 .replace("%count%", String.valueOf(clearedLands))
                                 .replace("%world%", targetName));
                         break;

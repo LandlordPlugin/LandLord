@@ -440,11 +440,21 @@ CommandSettings:
 
   Clear:
     name: clear
-    usage: '/land clear - clear a world'
+    usage: '/land clear - clear lands'
     permissions:
       - landlord.admin.clear
     aliases:
-      - clearworld
+      - cl
+
+  ClearInactive:
+    name: clearinactive
+    usage: '/land clearinactive <days> - clear lands of inactive players'
+    permissions:
+      - landlord.admin.clearinactive
+    aliases:
+      - clinactive
+      - cli
+      - purge
 
   Manage:
     name: manage

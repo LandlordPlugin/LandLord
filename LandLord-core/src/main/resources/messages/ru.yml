@@ -147,7 +147,7 @@ Commands:
     yours: 'Ваша'
     friends: 'Друзей'
     others: 'Другие'
-  ClearWorld:
+  Clear:
     noPlayer: '&7Could not find following players&8: &c%players%'
     gui:
       title: "Clear menu"
@@ -169,6 +169,9 @@ Commands:
         confirm: "Unclaim all lands in %world%?"
         abort: "&cUnclaim action aborted!"
         success: '&7Successfully cleared &c%count% &7lands in world &c%world%'
+  ClearInactive:
+    info: '&7Clearing all lands of players inactive for more than &c%inactivity% &7days...'
+    success: '&7Successfully cleared &c%count% &7lands from player &c%player%&7, inactive for more than &c%inactivity% &7days'
   Item:
     noPlayer: '&7Не удалось найти игроков&8: &c%players%'
   Manage:
@@ -447,4 +450,4 @@ Integrations:
   Towny:
     TownyPresent: '&cThere already is a towny region present!'
     LLPresent: '&cThere already is a landlord region present!'
-version: 25
+version: 26

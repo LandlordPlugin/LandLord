@@ -35,6 +35,7 @@ permissions:
       landlord.admin.list: true
       landlord.admin.manage: true
       landlord.admin.clear.*: true
+      landlord.admin.clearinactive: true
       landlord.admin.bypass: true
       landlord.admin.reload: true
       landlord.admin.modifyfriends: true

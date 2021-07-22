@@ -26,7 +26,7 @@ public class ClearGUI extends AbstractGUI {
     private final IMultiTaskManager multiTaskManager;
 
     public ClearGUI(ILandLord pl, Player player) {
-        super(player, 9, pl.getLangManager().getRawString("Commands.ClearWorld.gui.title"));
+        super(player, 9, pl.getLangManager().getRawString("Commands.Clear.gui.title"));
         this.plugin = pl;
         this.lm = plugin.getLangManager();
         this.wg = pl.getWGManager();
@@ -47,17 +47,17 @@ public class ClearGUI extends AbstractGUI {
             if (player.hasPermission("landlord.admin.clear.land")) {
                 // Only clear this land
                 Icon i1 = new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()));
-                i1.setName(lm.getRawString("Commands.ClearWorld.gui.clearcurrentland.name"));
-                i1.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearcurrentland.desc").split("\\|")));
+                i1.setName(lm.getRawString("Commands.Clear.gui.clearcurrentland.name"));
+                i1.setLore(Arrays.asList(lm.getRawString("Commands.Clear.gui.clearcurrentland.desc").split("\\|")));
                 i1.addClickAction((player1) -> {
                     ConfirmationGUI confirm = new ConfirmationGUI(player1,
-                            lm.getRawString("Commands.ClearWorld.gui.clearcurrentland.confirm"),
+                            lm.getRawString("Commands.Clear.gui.clearcurrentland.confirm"),
                             (a) -> {
                                 clearLand(land);
                                 a.closeInventory();
                             },
                             (d) -> {
-                                lm.sendMessage(d, lm.getString(player, "Commands.ClearWorld.gui.clearcurrentland.abort"));
+                                lm.sendMessage(d, lm.getString(player, "Commands.Clear.gui.clearcurrentland.abort"));
                                 d.closeInventory();
                             }, this);
                     confirm.display();
@@ -68,17 +68,17 @@ public class ClearGUI extends AbstractGUI {
             // Clear all for owner of current land
             if (player.hasPermission("landlord.admin.clear.player")) {
                 Icon i2 = new Icon(plugin.getMaterialsManager().getPlayerHead(land.getOwner()));
-                i2.setName(lm.getRawString("Commands.ClearWorld.gui.clearplayer.name"));
-                i2.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearplayer.desc").split("\\|")));
+                i2.setName(lm.getRawString("Commands.Clear.gui.clearplayer.name"));
+                i2.setLore(Arrays.asList(lm.getRawString("Commands.Clear.gui.clearplayer.desc").split("\\|")));
                 i2.addClickAction((player1) -> {
                     ConfirmationGUI confirm = new ConfirmationGUI(player1,
-                            lm.getRawString("Commands.ClearWorld.gui.clearplayer.confirm"),
+                            lm.getRawString("Commands.Clear.gui.clearplayer.confirm"),
                             (a) -> {
                                 clearPlayer(land.getOwner());
                                 a.closeInventory();
                             },
                             (d) -> {
-                                lm.sendMessage(d, lm.getString(player, "Commands.ClearWorld.gui.clearplayer.abort"));
+                                lm.sendMessage(d, lm.getString(player, "Commands.Clear.gui.clearplayer.abort"));
                                 d.closeInventory();
                             }, this);
                     confirm.display();
@@ -90,18 +90,18 @@ public class ClearGUI extends AbstractGUI {
         if (player.hasPermission("landlord.admin.clear.world")) {
             // Clear all lands in a world
             Icon i3 = new Icon(new ItemStack(plugin.getMaterialsManager().getFireCharge()));
-            i3.setName(lm.getRawString("Commands.ClearWorld.gui.clearworld.name"));
-            i3.setLore(Arrays.asList(lm.getRawString("Commands.ClearWorld.gui.clearworld.desc").split("\\|")));
+            i3.setName(lm.getRawString("Commands.Clear.gui.clearworld.name"));
+            i3.setLore(Arrays.asList(lm.getRawString("Commands.Clear.gui.clearworld.desc").split("\\|")));
             i3.addClickAction((player1) -> {
                 ConfirmationGUI confirm = new ConfirmationGUI(player1,
-                        lm.getRawString("Commands.ClearWorld.gui.clearworld.confirm").replace("%world%",
+                        lm.getRawString("Commands.Clear.gui.clearworld.confirm").replace("%world%",
                                 player.getWorld().getName()),
                         (a) -> {
                             clearWorld(a.getWorld());
                             a.closeInventory();
                         },
                         (d) -> {
-                            lm.sendMessage(d, lm.getString(player, "Commands.ClearWorld.gui.clearworld.abort"));
+                            lm.sendMessage(d, lm.getString(player, "Commands.Clear.gui.clearworld.abort"));
                             d.closeInventory();
                         }, this);
                 confirm.display();
@@ -117,7 +117,7 @@ public class ClearGUI extends AbstractGUI {
         }
 
         wg.unclaim(Collections.singleton(land));
-        lm.sendMessage(player, lm.getString(player, "Commands.ClearWorld.gui.clearcurrentland.success")
+        lm.sendMessage(player, lm.getString(player, "Commands.Clear.gui.clearcurrentland.success")
                 .replace("%land%", land.getName()));
     }
 
@@ -139,7 +139,7 @@ public class ClearGUI extends AbstractGUI {
         plugin.getPlayerManager().getOffline(id, (lPlayer) -> {
             if (lPlayer == null) {
                 // Failure
-                lm.sendMessage(player, lm.getString(player, "Commands.ClearWorld.noPlayer")
+                lm.sendMessage(player, lm.getString(player, "Commands.Clear.noPlayer")
                         .replace("%players%", id.toString()));
             } else {
                 // Success

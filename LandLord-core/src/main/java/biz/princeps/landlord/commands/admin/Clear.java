@@ -61,7 +61,7 @@ public class Clear extends LandlordCommand {
         plugin.getPlayerManager().getOffline(name, (lPlayer) -> {
             if (lPlayer == null) {
                 // Failure
-                lm.sendMessage(player, lm.getString("Commands.ClearWorld.noPlayer")
+                lm.sendMessage(player, lm.getString("Commands.Clear.noPlayer")
                         .replace("%players%", name));
             } else {
                 // Success

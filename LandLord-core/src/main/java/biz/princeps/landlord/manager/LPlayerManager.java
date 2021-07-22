@@ -13,6 +13,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -56,6 +57,11 @@ public class LPlayerManager implements IPlayerManager {
     }
 
     @Override
+    public void remove(UUID id) {
+        players.remove(id);
+    }
+
+    @Override
     public void saveAllOnlineSync() {
         for (IPlayer value : players.values()) {
             save(value, false);
@@ -63,12 +69,6 @@ public class LPlayerManager implements IPlayerManager {
         if (this.stor instanceof FlatFileStorage) {
             ((FlatFileStorage) stor).save();
         }
-    }
-
-
-    @Override
-    public void remove(UUID id) {
-        players.remove(id);
     }
 
 

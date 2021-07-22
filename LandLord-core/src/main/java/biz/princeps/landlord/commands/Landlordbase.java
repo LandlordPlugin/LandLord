@@ -6,6 +6,7 @@ import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.admin.AdminClaim;
 import biz.princeps.landlord.commands.admin.AdminTeleport;
 import biz.princeps.landlord.commands.admin.Clear;
+import biz.princeps.landlord.commands.admin.ClearInactive;
 import biz.princeps.landlord.commands.admin.GiveClaims;
 import biz.princeps.landlord.commands.admin.Reload;
 import biz.princeps.landlord.commands.admin.Update;
@@ -113,6 +114,7 @@ public class Landlordbase extends MainCommand {
         this.addSubcommand(new Manage(pl));
         this.addSubcommand(new ManageAll(pl));
         this.addSubcommand(new Clear(pl));
+        this.addSubcommand(new ClearInactive(pl));
         this.addSubcommand(new LandMap(pl));
         this.addSubcommand(new Reload(pl));
         this.addSubcommand(new Regenerate(pl));

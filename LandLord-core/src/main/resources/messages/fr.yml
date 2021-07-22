@@ -147,7 +147,7 @@ Commands:
     yours: 'Vous'
     friends: 'Amis'
     others: 'Autres'
-  ClearWorld:
+  Clear:
     noPlayer: '&7Les joueurs suivants n''ont pas été trouvés&8: &c%players%'
     gui:
       title: "Menu de suppression:"
@@ -169,6 +169,9 @@ Commands:
         confirm: "Supprimer tous les terrains du monde %world% ?"
         abort: "&cSuppression annulée !"
         success: '&7Suppression réussie de &c%count% &7terrain(s) du monde &c%world%'
+  ClearInactive:
+    info: '&7Suppression des terrains des joueurs inactifs depuis plus de &c%inactivity% &7jours...'
+    success: '&7Suppression réussie de &c%count% &7terrain(s) détenu(s) par &c%player%&7, inactif(ve) depuis plus de &c%inactivity% &7jours'
   Item:
     noPlayer: '&7Les joueurs suivants n''ont pas été trouvés&8: &c%players%'
   Manage:
@@ -446,4 +449,4 @@ Integrations:
     TownyPresent: '&cUne région Towny est déjà présente !'
     LLPresent: '&cUne région LandLord est déjà présente !'
 
-version: 25
+version: 26
