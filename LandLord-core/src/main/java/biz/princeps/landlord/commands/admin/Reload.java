@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Reload extends LandlordCommand {
+
     public Reload(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.Reload.name"),
                 pl.getConfig().getString("CommandSettings.Reload.usage"),
