@@ -103,9 +103,14 @@ public interface ILandLord {
     IDelimitationManager getDelimitationManager();
 
     /**
-     * Sets up PrincepsLib. Also sets specific translated messages for princepslib
+     * Sets up PrincepsLib. Also sets specific translated messages for princepslib.
      */
     void setupPrincepsLib();
+
+    /**
+     * Post load PrincepsLib. Also sets specific translated messages for princepslib and initializes commands.
+     */
+    void postloadPrincepsLib();
 
     /**
      * Get the reference to the MobManager.
