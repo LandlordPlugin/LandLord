@@ -265,7 +265,7 @@ CommandSettings:
     name: multiunclaim
     usage: 'Usage: /land multiunclaim <mode> <radius>'
     permissions:
-      - landlord.player.unclaim
+      - landlord.player.multiunclaim
     aliases:
       - munclaim
       - muc
@@ -276,7 +276,7 @@ CommandSettings:
     name: multiaddfriend
     usage: 'Usage: /land multiaddfriend <mode> <radius> <name>'
     permissions:
-      - landlord.player.own
+      - landlord.player.multiaddfriend
     aliases:
       - multifriendadd
       - multiaddmember
@@ -287,7 +287,7 @@ CommandSettings:
     name: multiremovefriend
     usage: 'Usage: /land multiremovefriend <mode> <radius> <name>'
     permissions:
-      - landlord.player.own
+      - landlord.player.multiremovefriend
     aliases:
       - multifriendremove
       - mfriendremove
@@ -304,7 +304,7 @@ CommandSettings:
     name: multilist
     usage: '/land multilist <mode> <radius>'
     permissions:
-      - landlord.player.own
+      - landlord.player.multilist
     aliases:
       - multilistlands
       - mlistlands
@@ -320,7 +320,7 @@ CommandSettings:
     name: multimanage
     usage: '/land multimanage <mode> <radius>'
     permissions:
-      - landlord.player.manage
+      - landlord.player.multimanage
     aliases:
       - mmanage
       - multimng
@@ -775,4 +775,4 @@ ClaimHeight:
 EnableMetrics: true
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 32
+version: 33

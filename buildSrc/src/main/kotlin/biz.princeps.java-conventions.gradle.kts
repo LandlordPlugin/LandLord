@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "biz.princeps"
-version = "4.355"
+version = "4.356"
 
 repositories {
     mavenCentral()
@@ -18,7 +18,7 @@ repositories {
     // nbteditor & bungeecord-chat
     maven { url = uri("https://repo.codemc.org/repository/maven-public/") }
     // EldoUtilitites & Landlord
-    maven { url = uri("https://eldonexus.de/repository/maven-public/") }
+    maven { url = uri("https://eldonexus.de/repository/maven-releases/") }
     // Authlib
     maven { url = uri("https://papermc.io/repo/repository/maven-releases/") }
 }
