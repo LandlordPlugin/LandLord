@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "biz.princeps"
-version = "4.354"
+version = "4.355"
 
 repositories {
     mavenCentral()

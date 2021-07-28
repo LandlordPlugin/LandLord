@@ -164,7 +164,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * Since there is a cyclic dependency on startup I had to pull this one out.
      * Some strings in Princepslib are translatable. set those here.
      */
-    private void postloadPrincepsLib() {
+    @Override
+    public void postloadPrincepsLib() {
         PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getRawString("Confirmation" +
                 ".accept"));
         PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getRawString(
