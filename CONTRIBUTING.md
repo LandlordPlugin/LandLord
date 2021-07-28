@@ -37,11 +37,20 @@ might not get approved, if there are major problems.
     // ...
     ```
 
-Steps
------
+# Pull Requests
+When you create a new pull request you have to take care of a few things.
 
-1. Clone the repository
-2. Write a run script to copy the built jar into your plugins folder and start the server (or whatever testing env you
-   are using)
-3. Change code while respecting above conventions
-4. Submit a pull-request
+- Create a feature branch based on the development branch
+- Give your feature branch a reasonable name
+- Make your changes
+- Test your changes and features.
+- Make sure your feature branch is rebased on the latest commit on development
+- Open a PR
+- Set development as a target
+- Describe what and why you changed it.
+- Submit your PR
+- Keep an eye if any changes are requested or if you receive any comments.
+- (Apply changes to your PR)
+- You PR gets merged or denied.
+
+Thank you for your contribution!
