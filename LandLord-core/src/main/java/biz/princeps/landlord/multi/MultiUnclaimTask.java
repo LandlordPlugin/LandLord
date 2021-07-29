@@ -93,7 +93,7 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
                 }
             }
 
-            if (!iterator.hasNext()) {
+            if (!iterator.hasNext() && !plugin.isDisabling()) {
                 switch (manageMode) {
                     case MULTI:
                         lgManager.sendMessage(player, lgManager.getString(player, "Commands.MultiUnclaim.success")

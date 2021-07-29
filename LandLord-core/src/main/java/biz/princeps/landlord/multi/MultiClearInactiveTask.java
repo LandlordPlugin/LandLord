@@ -42,13 +42,13 @@ public class MultiClearInactiveTask extends AMultiTask<IOwnedLand> {
         int iterations = 0;
 
         target.setHome(null);
-        playerManager.save(target, true);
+        playerManager.save(target, !plugin.isDisabling());
 
         for (Iterator<IOwnedLand> iterator = queue.iterator(); iterator.hasNext() && iterations < limit; ) {
             IOwnedLand ownedLand = iterator.next();
             wgManager.unclaim(ownedLand);
 
-            if (!iterator.hasNext()) {
+            if (!iterator.hasNext() && !plugin.isDisabling()) {
                 lgManager.sendMessage(commandSender, lgManager.getString("Commands.ClearInactive.success")
                         .replace("%count%", String.valueOf(clearedLands))
                         .replace("%player%", target.getName())

@@ -136,4 +136,12 @@ public interface ILandLord {
      */
     IMultiTaskManager getMultiTaskManager();
 
+
+    /**
+     * Check if the plugin is currently disabling.
+     *
+     * @return if the plugin is disabling
+     */
+    boolean isDisabling();
+
 }

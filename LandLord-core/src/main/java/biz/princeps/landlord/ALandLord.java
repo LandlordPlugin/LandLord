@@ -67,6 +67,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     protected IRegenerationManager regenerationManager;
     protected IMultiTaskManager multiTaskManager;
 
+    protected boolean isDisabling;
+
     @Override
     public void onLoad() {
         EldoUtilities.preWarm(this);
@@ -94,7 +96,11 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
 
     @Override
     public void onDisable() {
+        EldoUtilities.shutdown();
+        this.isDisabling = true;
+        getLogger().info("Processing remaining tasks.");
         multiTaskManager.processQueue(Integer.MAX_VALUE);
+        getLogger().info("All remaining tasks have been processed!");
 
         if (mapManager != null) {
             mapManager.removeAllMaps();
@@ -353,6 +359,11 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     @Override
     public IMultiTaskManager getMultiTaskManager() {
         return multiTaskManager;
+    }
+
+    @Override
+    public boolean isDisabling() {
+        return isDisabling;
     }
 
 }

@@ -48,24 +48,26 @@ public class ClearInactive extends LandlordCommand {
         }
     }
 
-    private void clearInactive(int minInactiveDays, CommandSender player) {
-        lgManager.sendMessage(player, lgManager.getString("Commands.ClearInactive.info")
+    private void clearInactive(int minInactiveDays, CommandSender sender) {
+        lgManager.sendMessage(sender, lgManager.getString("Commands.ClearInactive.info")
                 .replace("%inactivity%", String.valueOf(minInactiveDays)));
 
-        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
-            plugin.getPlayerManager().getOffline(offlinePlayer.getUniqueId(), (lPlayer) -> {
-                if (lPlayer != null) {
-                    Duration offlineInterval = Duration.between(lPlayer.getLastSeen(), LocalDateTime.now());
-                    // Calculates if the offlineInterval if positive, i.e. player is inactive because offlineInterval
-                    // exceeds minInactiveDays.
-                    boolean isInactive = offlineInterval.compareTo(Duration.ofDays(minInactiveDays)) > 0;
+        Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
+            for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+                plugin.getPlayerManager().getOffline(offlinePlayer.getUniqueId(), (lPlayer) -> {
+                    if (lPlayer != null) {
+                        Duration offlineInterval = Duration.between(lPlayer.getLastSeen(), LocalDateTime.now());
+                        // Calculates if the offlineInterval if positive, i.e. player is inactive because offlineInterval
+                        // exceeds minInactiveDays.
+                        boolean isInactive = offlineInterval.compareTo(Duration.ofDays(minInactiveDays)) > 0;
 
-                    if (isInactive) {
-                        multiTaskManager.enqueueTask(new MultiClearInactiveTask(plugin, player, wg.getRegions(lPlayer.getUuid()), lPlayer, offlineInterval.toDays()));
+                        if (isInactive) {
+                            multiTaskManager.enqueueTask(new MultiClearInactiveTask(plugin, sender, wg.getRegions(lPlayer.getUuid()), lPlayer, offlineInterval.toDays()));
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
+        });
     }
 
 }

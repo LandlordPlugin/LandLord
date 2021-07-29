@@ -5,6 +5,7 @@ import biz.princeps.landlord.api.ClearType;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.IPlayerManager;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import org.bukkit.Bukkit;
@@ -52,19 +53,17 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
             UUID owner = ownedLand.getOwner();
 
             if (clearType == ClearType.WORLD && !clearedHomes.contains(owner)) {
-                playerManager.getOffline(owner, lPlayer -> {
-                    Location home = lPlayer.getHome();
-                    if (home != null && home.getWorld().getName().equals(targetName)) {
-                        lPlayer.setHome(null);
-                        clearedHomes.add(owner);
-                        playerManager.save(lPlayer, true);
-                    }
-                });
+                if (plugin.isDisabling()) {
+                    IPlayer lPlayer = playerManager.getOfflineSync(owner);
+                    processHome(lPlayer);
+                } else {
+                    playerManager.getOffline(owner, this::processHome);
+                }
             }
 
             wgManager.unclaim(ownedLand);
 
-            if (!iterator.hasNext()) {
+            if (!iterator.hasNext() && !plugin.isDisabling()) {
                 switch (clearType) {
                     case PLAYER:
                         plugin.getPlayerManager().getOffline(targetName, lPlayer -> {
@@ -91,6 +90,15 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
         }
 
         return iterations;
+    }
+
+    private void processHome(IPlayer lPlayer) {
+        Location home = lPlayer.getHome();
+        if (home != null && home.getWorld().getName().equals(targetName)) {
+            lPlayer.setHome(null);
+            clearedHomes.add(lPlayer.getUuid());
+            playerManager.save(lPlayer, !plugin.isDisabling());
+        }
     }
 
 }
