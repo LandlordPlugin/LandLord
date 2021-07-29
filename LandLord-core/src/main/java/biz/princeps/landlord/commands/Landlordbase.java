@@ -7,6 +7,7 @@ import biz.princeps.landlord.commands.admin.AdminClaim;
 import biz.princeps.landlord.commands.admin.AdminTeleport;
 import biz.princeps.landlord.commands.admin.Clear;
 import biz.princeps.landlord.commands.admin.ClearInactive;
+import biz.princeps.landlord.commands.admin.Debug;
 import biz.princeps.landlord.commands.admin.GiveClaims;
 import biz.princeps.landlord.commands.admin.Reload;
 import biz.princeps.landlord.commands.admin.Update;
@@ -123,7 +124,7 @@ public class Landlordbase extends MainCommand {
         this.addSubcommand(new MultiRemovefriend(pl));
         this.addSubcommand(new MultiListLands(pl));
         this.addSubcommand(new MultiManage(pl));
-        this.addSubcommand(new Debug(pl.getPlugin()));
+        this.addSubcommand(new Debug(pl));
     }
 
     @Override
