@@ -25,7 +25,6 @@ public abstract class MainCommand extends BukkitCommand implements Command {
     protected final Set<String> permissions;
 
     private final String noPermissionsCmd = PrincepsLib.getTranslateableStrings().get("Confirmation.accept");
-    ;
 
     /**
      * Creates a basic MainCommand
