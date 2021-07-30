@@ -119,7 +119,7 @@ Commands:
     alreadyOwn: '&7Nie możesz dodać właściciela jako członka'
   UnfriendAll:
     noPlayer: '&7Nie można odnaleść danego gracza&8: &c%players%'
-    success: '&7usunałeś gracza &c%player% &7do &4wszystkich&7 &c%count% &7Terenów w twoim posiadaniu'
+    success: '&7usunałeś gracza &c%players% &7do &4wszystkich&7 &c%count% &7Terenów w twoim posiadaniu'
     noFriend: '&c%player% &7Nie jest dodany jako przyjaciel'
   ListLands:
     noLands: '&7You do not own any land'

@@ -98,6 +98,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     public void onDisable() {
         EldoUtilities.shutdown();
         this.isDisabling = true;
+
         getLogger().info("Processing remaining tasks.");
         multiTaskManager.processQueue(Integer.MAX_VALUE);
         getLogger().info("All remaining tasks have been processed!");
