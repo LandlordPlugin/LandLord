@@ -62,11 +62,16 @@ public class LPlayerManager implements IPlayerManager {
 
     @Override
     public void saveAllOnlineSync() {
+        plugin.getLogger().info("Saving online players.");
         for (IPlayer value : players.values()) {
             save(value, false);
         }
+        plugin.getLogger().info("Online players saved!");
+
         if (this.stor instanceof FlatFileStorage) {
+            plugin.getLogger().info("Saving file.");
             ((FlatFileStorage) stor).save();
+            plugin.getLogger().info("File saved.");
         }
     }
 

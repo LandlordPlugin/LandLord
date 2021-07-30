@@ -1,6 +1,7 @@
 Tag: '&8[&c&l!&8]'
 Disabled-World: '&6Land-claiming esta deshabilitado en este mundo'
 noPermissions: '&csin permisos'
+noPermissionsCmd: '&cYou don''t have the permission to execute /%cmd%!'
 locOutsideWorld: '§c¡No puedes interaccionar con el chunk %chunk% estando fuera del mundo %world%!'
 pleaseWait: '&7Por favor, espere...'
 Commands:

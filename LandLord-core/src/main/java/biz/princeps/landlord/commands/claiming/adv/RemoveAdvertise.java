@@ -37,7 +37,7 @@ public class RemoveAdvertise extends LandlordCommand {
             return;
         }
 
-        String landname = arguments.size() == 1 ? arguments.get()[0] : "this";
+        String landname = arguments.size() == 1 ? arguments.get(0) : "this";
         Player player = properties.getPlayer();
 
 

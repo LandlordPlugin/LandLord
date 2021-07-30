@@ -9,8 +9,9 @@ public class TranslateableStrings {
 
     public TranslateableStrings() {
         strings = new HashMap<>();
-        strings.put("Confirmation.accept", "&bAccept!");
-        strings.put("Confirmation.decline", "&eDecline!");
+        strings.put("Confirmation.accept", "§bAccept!");
+        strings.put("Confirmation.decline", "§eDecline!");
+        strings.put("noPermissionsCmd", "§cYou don't have the permission to execute /%cmd%!");
     }
 
     public void setString(String path, String string) {

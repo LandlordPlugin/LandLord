@@ -62,7 +62,7 @@ public class MultiUnclaim extends LandlordCommand {
         MultiMode mode;
         int radius;
         try {
-            mode = MultiMode.valueOf(arguments.get()[0].toUpperCase());
+            mode = MultiMode.valueOf(arguments.get(0).toUpperCase());
             radius = arguments.getInt(1);
         } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ex) {
             properties.sendUsage();

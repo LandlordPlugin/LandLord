@@ -36,7 +36,7 @@ public class Clear extends LandlordCommand {
     public void onCommand(Properties properties, Arguments arguments) {
         if (arguments.size() == 1) {
             // Clear a single player
-            String name = arguments.get()[0];
+            String name = arguments.get(0);
             if (properties.getCommandSender().hasPermission("landlord.admin.clear.player"))
                 clearPlayer(name, properties.getCommandSender());
             return;

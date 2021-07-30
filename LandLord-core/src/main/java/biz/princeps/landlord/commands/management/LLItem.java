@@ -29,7 +29,7 @@ public class LLItem extends LandlordCommand {
         String target = "self";
 
         if (arguments.size() > 0) {
-            target = arguments.get()[0];
+            target = arguments.get(0);
         } else {
             if (properties.isPlayer()) {
                 target = properties.getPlayer().getDisplayName();

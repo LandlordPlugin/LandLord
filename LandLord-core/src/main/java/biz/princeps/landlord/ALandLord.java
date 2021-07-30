@@ -103,13 +103,17 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         multiTaskManager.processQueue(Integer.MAX_VALUE);
         getLogger().info("All remaining tasks have been processed!");
 
+        getLogger().info("Removing all maps.");
         if (mapManager != null) {
             mapManager.removeAllMaps();
         }
+        getLogger().info("All maps removed.");
 
+        getLogger().info("Saving data.");
         if (lPlayerManager != null) {
             getPlayerManager().saveAllOnlineSync();
         }
+        getLogger().info("Data saved.");
     }
 
     /**
@@ -173,10 +177,12 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      */
     @Override
     public void postloadPrincepsLib() {
-        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getRawString("Confirmation" +
-                ".accept"));
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getRawString(
+                "Confirmation.accept"));
         PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getRawString(
                 "Confirmation.decline"));
+        PrincepsLib.getTranslateableStrings().setString("noPermissionsCmd", langManager.getRawString(
+                "noPermissionsCmd"));
 
         PrincepsLib.getCommandManager().registerCommand(new Landlordbase(this));
     }

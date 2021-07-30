@@ -1,6 +1,7 @@
 Tag: '&8[&c&l!&8]'
 Disabled-World: '&7Земельные участки запрещены в этом мире'
 noPermissions: '&7Нет разрешения'
+noPermissionsCmd: '&cYou don''t have the permission to execute /%cmd%!'
 locOutsideWorld: '§7You can''t interact with the chunk %chunk% being outside of the world %world%!'
 pleaseWait: '&7Please Wait...'
 Commands:

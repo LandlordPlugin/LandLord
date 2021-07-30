@@ -29,7 +29,6 @@ import biz.princeps.landlord.commands.friends.Unfriend;
 import biz.princeps.landlord.commands.friends.UnfriendAll;
 import biz.princeps.landlord.commands.homes.Home;
 import biz.princeps.landlord.commands.homes.SetHome;
-import biz.princeps.landlord.commands.management.borders.Borders;
 import biz.princeps.landlord.commands.management.Info;
 import biz.princeps.landlord.commands.management.LandMap;
 import biz.princeps.landlord.commands.management.ListLands;
@@ -38,6 +37,7 @@ import biz.princeps.landlord.commands.management.ManageAll;
 import biz.princeps.landlord.commands.management.MultiListLands;
 import biz.princeps.landlord.commands.management.MultiManage;
 import biz.princeps.landlord.commands.management.Regenerate;
+import biz.princeps.landlord.commands.management.borders.Borders;
 import biz.princeps.landlord.multi.MultiMode;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
@@ -278,7 +278,7 @@ public class Landlordbase extends MainCommand {
 
         String[] argsN = new String[1];
         if (arguments.get().length == 1) {
-            argsN[0] = (arguments.get()[0] == null ? "0" : arguments.get()[0]);
+            argsN[0] = (arguments.get(0) == null ? "0" : arguments.get(0));
         }
 
         List<String> toDisplay = new ArrayList<>();
