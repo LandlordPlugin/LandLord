@@ -46,7 +46,12 @@ public class MultiTaskManager implements IMultiTaskManager {
 
     @Override
     public void enqueueTask(IMultiTask multiTask) {
-        queue.add(multiTask);
+        if (Bukkit.isPrimaryThread()) {
+            queue.add(multiTask);
+        } else {
+            Bukkit.getScheduler().runTask(plugin.getPlugin(), () ->
+                    queue.add(multiTask));
+        }
     }
 
 }
