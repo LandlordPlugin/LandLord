@@ -99,7 +99,7 @@ public class MultiUnclaim extends LandlordCommand {
             return;
         }
 
-        multiTaskManager.enqueueTask(new MultiUnclaimTask(plugin, player, toUnclaim, ManageMode.MULTI));
+        multiTaskManager.enqueueTask(new MultiUnclaimTask(plugin, player, toUnclaim, player.getWorld(), ManageMode.MULTI));
     }
 
 }

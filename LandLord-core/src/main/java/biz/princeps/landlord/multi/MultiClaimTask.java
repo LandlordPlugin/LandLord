@@ -22,28 +22,15 @@ public class MultiClaimTask extends AMultiTask<Chunk> {
     }
 
     @Override
-    public int processOperations(int limit) {
-        if (!player.isOnline()) {
-            clear();
-            return 0;
-        }
-        int iterations = 0;
+    public boolean process(Chunk chunk) {
+        claim.onClaim(player, chunk);
 
-        for (Iterator<Chunk> iterator = queue.iterator(); iterator.hasNext() && iterations < limit; ) {
-            Chunk chunk = iterator.next();
-
-            claim.onClaim(player, chunk);
-
-            iterator.remove();
-            iterations++;
-        }
-
-        return iterations;
+        return true;
     }
 
     @Override
-    public boolean isCompleted() {
-        return super.isCompleted() || !player.isOnline();
+    public boolean canProcess() {
+        return player.isOnline();
     }
 
 }

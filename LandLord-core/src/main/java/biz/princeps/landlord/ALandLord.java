@@ -96,24 +96,24 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
 
     @Override
     public void onDisable() {
-        EldoUtilities.shutdown();
         this.isDisabling = true;
+        EldoUtilities.shutdown();
 
-        getLogger().info("Processing remaining tasks.");
-        multiTaskManager.processQueue(Integer.MAX_VALUE);
-        getLogger().info("All remaining tasks have been processed!");
+        getLogger().info("Cancelling remaining tasks...");
+        int clearedTasks = multiTaskManager.clear();
+        getLogger().info(clearedTasks + " tasks have been cancelled!");
 
-        getLogger().info("Removing all maps.");
+        getLogger().info("Clearing all maps...");
         if (mapManager != null) {
             mapManager.removeAllMaps();
         }
-        getLogger().info("All maps removed.");
+        getLogger().info("All maps have been cleared!");
 
-        getLogger().info("Saving data.");
+        getLogger().info("Saving player data...");
         if (lPlayerManager != null) {
             getPlayerManager().saveAllOnlineSync();
         }
-        getLogger().info("Data saved.");
+        getLogger().info("Player data has been saved!");
     }
 
     /**

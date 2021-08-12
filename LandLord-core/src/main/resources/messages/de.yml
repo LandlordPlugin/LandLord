@@ -171,7 +171,7 @@ Commands:
         success: '&7Erfolgreich &c%count% &7Areale aus Welt &c%world% entfernt'
   ClearInactive:
     info: '&7Clearing all lands of players inactive for more than &c%inactivity% &7days...'
-    success: '&7Successfully cleared &c%count% &7lands from player &c%player%&7, inactive for more than &c%inactivity% &7days'
+    success: '&7Successfully cleared &c%players% &7players (&c%lands% &7lands), inactive for more than &c%inactivity% &7days'
   Item:
     noPlayer: '&7Folgende Spieler konnten nicht gefunden werden&8: &c%players%'
   Manage:

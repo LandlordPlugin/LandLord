@@ -86,7 +86,7 @@ public class UnclaimAll extends LandlordCommand {
                 continue;
             }
 
-            multiTaskManager.enqueueTask(new MultiUnclaimTask(plugin, player, playerLands, ManageMode.ALL));
+            multiTaskManager.enqueueTask(new MultiUnclaimTask(plugin, player, playerLands, world, ManageMode.ALL));
         }
     }
 

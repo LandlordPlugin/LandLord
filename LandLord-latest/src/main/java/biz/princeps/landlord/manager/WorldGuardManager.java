@@ -167,11 +167,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public void unclaim(World world, String regionname) {
         this.cache.remove(regionname);
-        if (pl.isDisabling()) {
-            getRegionManager(world).removeRegion(regionname);
-        } else {
-            Bukkit.getScheduler().runTaskAsynchronously(pl.getPlugin(), () -> getRegionManager(world).removeRegion(regionname));
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(pl.getPlugin(), () -> getRegionManager(world).removeRegion(regionname));
     }
 
     /**

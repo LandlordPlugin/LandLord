@@ -3,7 +3,8 @@ package biz.princeps.landlord.commands.admin;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.api.IMultiTaskManager;
-import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.api.IPlayer;
+import biz.princeps.landlord.api.IPlayerManager;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.multi.MultiClearInactiveTask;
 import biz.princeps.lib.command.Arguments;
@@ -15,20 +16,22 @@ import org.bukkit.command.CommandSender;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClearInactive extends LandlordCommand {
 
-    private final IWorldGuardManager wg;
     private final ILangManager lgManager;
-    private final IMultiTaskManager multiTaskManager;
+    private final IPlayerManager playerManager;
+    IMultiTaskManager multiTaskManager;
 
     public ClearInactive(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.ClearInactive.name"),
                 pl.getConfig().getString("CommandSettings.ClearInactive.usage"),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ClearInactive.permissions")),
                 Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ClearInactive.aliases")));
-        this.wg = pl.getWGManager();
         this.lgManager = pl.getLangManager();
+        this.playerManager = pl.getPlayerManager();
         this.multiTaskManager = pl.getMultiTaskManager();
     }
 
@@ -53,20 +56,25 @@ public class ClearInactive extends LandlordCommand {
                 .replace("%inactivity%", String.valueOf(minInactiveDays)));
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-            for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
-                plugin.getPlayerManager().getOffline(offlinePlayer.getUniqueId(), (lPlayer) -> {
-                    if (lPlayer != null) {
-                        Duration offlineInterval = Duration.between(lPlayer.getLastSeen(), LocalDateTime.now());
-                        // Calculates if the offlineInterval if positive, i.e. player is inactive because offlineInterval
-                        // exceeds minInactiveDays.
-                        boolean isInactive = offlineInterval.compareTo(Duration.ofDays(minInactiveDays)) > 0;
+            OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
+            List<OfflinePlayer> playersToClear = new ArrayList<>(offlinePlayers.length);
 
-                        if (isInactive) {
-                            multiTaskManager.enqueueTask(new MultiClearInactiveTask(plugin, sender, wg.getRegions(lPlayer.getUuid()), lPlayer, offlineInterval.toDays()));
-                        }
+            for (OfflinePlayer offlinePlayer : offlinePlayers) {
+                IPlayer lPlayer = playerManager.getOfflineSync(offlinePlayer.getUniqueId());
+
+                if (lPlayer != null) {
+                    Duration offlineInterval = Duration.between(lPlayer.getLastSeen(), LocalDateTime.now());
+                    // Calculates if the offlineInterval if positive, i.e. player is inactive because offlineInterval
+                    // exceeds minInactiveDays.
+                    boolean isInactive = offlineInterval.compareTo(Duration.ofDays(minInactiveDays)) > 0;
+
+                    if (isInactive) {
+                        playersToClear.add(offlinePlayer);
                     }
-                });
+                }
             }
+
+            multiTaskManager.enqueueTask(new MultiClearInactiveTask(plugin, sender, playersToClear, minInactiveDays));
         });
     }
 

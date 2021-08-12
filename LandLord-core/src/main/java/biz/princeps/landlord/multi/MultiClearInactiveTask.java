@@ -3,65 +3,51 @@ package biz.princeps.landlord.multi;
 import biz.princeps.landlord.api.AMultiTask;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
-import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.IPlayer;
-import biz.princeps.landlord.api.IPlayerManager;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collection;
-import java.util.Iterator;
 
-public class MultiClearInactiveTask extends AMultiTask<IOwnedLand> {
+public class MultiClearInactiveTask extends AMultiTask<OfflinePlayer> {
 
     private final IWorldGuardManager wgManager;
-    private final IPlayerManager playerManager;
     private final ILangManager lgManager;
     private final CommandSender commandSender;
 
-    private final IPlayer target;
-    private final long inactiveForDays;
-    private final int clearedLands;
+    private final long minInactiveDays;
+    private final int clearedPlayers;
+    private int clearedLands;
 
-    public MultiClearInactiveTask(ILandLord plugin, CommandSender commandSender, Collection<IOwnedLand> operations, IPlayer target, long inactiveForDays) {
+    public MultiClearInactiveTask(ILandLord plugin, CommandSender commandSender, Collection<OfflinePlayer> operations, int minInactiveDays) {
         super(plugin, operations);
 
         this.wgManager = plugin.getWGManager();
-        this.playerManager = plugin.getPlayerManager();
         this.lgManager = plugin.getLangManager();
         this.commandSender = commandSender;
 
-        this.target = target;
-        this.inactiveForDays = inactiveForDays;
-        this.clearedLands = operations.size();
+        this.minInactiveDays = minInactiveDays;
+        this.clearedPlayers = operations.size();
+        this.clearedLands = 0;
     }
 
     @Override
-    public int processOperations(int limit) {
-        int iterations = 0;
+    public boolean process(OfflinePlayer offlinePlayer) {
+        clearedLands += wgManager.unclaim(
+                wgManager.getRegions(offlinePlayer.getUniqueId()));
 
-        target.setHome(null);
-        playerManager.save(target, !plugin.isDisabling());
+        return true;
+    }
 
-        for (Iterator<IOwnedLand> iterator = queue.iterator(); iterator.hasNext() && iterations < limit; ) {
-            IOwnedLand ownedLand = iterator.next();
-            wgManager.unclaim(ownedLand);
+    @Override
+    public void complete() {
+        lgManager.sendMessage(commandSender, lgManager.getString("Commands.ClearInactive.success")
+                .replace("%players%", String.valueOf(clearedPlayers))
+                .replace("%lands%", String.valueOf(clearedLands))
+                .replace("%inactivity%", String.valueOf(minInactiveDays)));
 
-            if (!iterator.hasNext() && !plugin.isDisabling()) {
-                lgManager.sendMessage(commandSender, lgManager.getString("Commands.ClearInactive.success")
-                        .replace("%count%", String.valueOf(clearedLands))
-                        .replace("%player%", target.getName())
-                        .replace("%inactivity%", String.valueOf(inactiveForDays)));
-
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
-            }
-
-            iterator.remove();
-            iterations++;
-        }
-
-        return iterations;
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
     }
 
 }

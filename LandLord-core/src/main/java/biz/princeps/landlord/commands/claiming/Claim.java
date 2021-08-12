@@ -255,10 +255,8 @@ public class Claim extends LandlordCommand {
                 Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
         plugin.getMapManager().updateAll();
 
-        if (!plugin.isDisabling()) {
-            LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol, ClaimType.INACTIVE);
-            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> Bukkit.getPluginManager().callEvent(postEvent));
-        }
+        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol, ClaimType.INACTIVE);
+        Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> Bukkit.getPluginManager().callEvent(postEvent));
     }
 
 

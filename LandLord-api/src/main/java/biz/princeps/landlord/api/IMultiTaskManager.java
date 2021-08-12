@@ -15,10 +15,17 @@ public interface IMultiTaskManager {
     void processQueue(int limit);
 
     /**
-     * Enqueue a new multi operation task.
+     * Enqueue a new multi task.
      *
      * @param multiTask the task to enqueue
      */
-    void enqueueTask(IMultiTask multiTask);
+    void enqueueTask(IMultiTask<?> multiTask);
+
+    /**
+     * Clear all remaining queued tasks.
+     *
+     * @return the number of remaining tasks
+     */
+    int clear();
 
 }

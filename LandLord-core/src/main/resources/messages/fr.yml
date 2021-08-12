@@ -172,7 +172,7 @@ Commands:
         success: '&7Suppression réussie de &c%count% &7terrain(s) du monde &c%world%'
   ClearInactive:
     info: '&7Suppression des terrains des joueurs inactifs depuis plus de &c%inactivity% &7jours...'
-    success: '&7Suppression réussie de &c%count% &7terrain(s) détenu(s) par &c%player%&7, inactif(ve) depuis plus de &c%inactivity% &7jours'
+    success: '&7Suppression réussie de &c%players% &7joueur(s) (&c%lands% &7terrain(s)), inactif(ve) depuis plus de &c%inactivity% &7jours'
   Item:
     noPlayer: '&7Les joueurs suivants n''ont pas été trouvés&8: &c%players%'
   Manage:
