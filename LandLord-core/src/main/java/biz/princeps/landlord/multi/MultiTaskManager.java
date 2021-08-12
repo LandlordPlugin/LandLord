@@ -25,7 +25,6 @@ public class MultiTaskManager implements IMultiTaskManager {
             if (queue.isEmpty())
                 return;
 
-
             // 10 operations max per tick seems adequate for the majority of cases.
             processQueue(10);
         }, 0L, 1L);
