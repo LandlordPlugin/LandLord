@@ -3,7 +3,6 @@ package biz.princeps.landlord.api;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.Iterator;
 
 public abstract class AMultiTask<T> implements IMultiTask<T> {
 
@@ -19,27 +18,16 @@ public abstract class AMultiTask<T> implements IMultiTask<T> {
     public int processOperations(int limit) {
         int iterations = 0;
 
-        for (Iterator<T> iterator = queue.iterator(); iterator.hasNext() && iterations < limit; ) {
-            T value = iterator.next();
+        while (iterations < limit && !queue.isEmpty()) {
+            T value = queue.remove();
 
             boolean success = process(value);
-            iterator.remove();
             if (success) {
                 iterations++;
             }
         }
 
         return iterations;
-    }
-
-    @Override
-    public boolean process(T value) {
-        return true;
-    }
-
-    @Override
-    public boolean canProcess() {
-        return true;
     }
 
     @Override
@@ -52,7 +40,7 @@ public abstract class AMultiTask<T> implements IMultiTask<T> {
     }
 
     @Override
-    public int clear() {
+    public int clearQueue() {
         int remainingOperations = queue.size();
         queue.clear();
         return remainingOperations;

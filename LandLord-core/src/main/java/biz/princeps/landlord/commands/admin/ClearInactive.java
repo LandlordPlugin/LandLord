@@ -23,7 +23,7 @@ public class ClearInactive extends LandlordCommand {
 
     private final ILangManager lgManager;
     private final IPlayerManager playerManager;
-    IMultiTaskManager multiTaskManager;
+    private final IMultiTaskManager multiTaskManager;
 
     public ClearInactive(ILandLord pl) {
         super(pl, pl.getConfig().getString("CommandSettings.ClearInactive.name"),

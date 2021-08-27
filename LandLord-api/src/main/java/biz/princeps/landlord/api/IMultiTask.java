@@ -16,14 +16,18 @@ public interface IMultiTask<T> {
      * @param value the queued operation value
      * @return if value has been successfully processed
      */
-    boolean process(T value);
+    default boolean process(T value) {
+        return true;
+    }
 
     /**
      * Check if operations should be processed.
      *
      * @return if operations can still be processed
      */
-    boolean canProcess();
+    default boolean canProcess() {
+        return true;
+    }
 
     /**
      * A method that may be overriden to execute some final code,
@@ -45,6 +49,6 @@ public interface IMultiTask<T> {
      *
      * @return the number of remaining operations
      */
-    int clear();
+    int clearQueue();
 
 }

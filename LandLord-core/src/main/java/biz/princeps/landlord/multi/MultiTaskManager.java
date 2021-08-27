@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Iterator;
 
 public class MultiTaskManager implements IMultiTaskManager {
 
@@ -34,19 +33,19 @@ public class MultiTaskManager implements IMultiTaskManager {
     public void processQueue(int limit) {
         int operations = 0;
 
-        for (Iterator<IMultiTask<?>> iterator = queue.iterator(); iterator.hasNext() && operations < limit; ) {
-            IMultiTask<?> multiTask = iterator.next();
+        while (operations < limit && !queue.isEmpty()) {
+            IMultiTask<?> multiTask = queue.poll();
 
             if (multiTask.canProcess()) {
                 operations += multiTask.processOperations(limit - operations);
 
                 if (multiTask.isCompleted()) {
                     multiTask.complete();
-                    iterator.remove();
+                    queue.remove();
                 }
             } else {
-                multiTask.clear();
-                iterator.remove();
+                multiTask.clearQueue();
+                queue.remove();
             }
         }
     }
