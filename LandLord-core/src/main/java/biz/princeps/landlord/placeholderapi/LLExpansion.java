@@ -76,9 +76,11 @@ public class LLExpansion extends PlaceholderExpansion {
 
     private String parsePlaceholder(Player player, String placeholder) {
         switch (placeholder) {
+            // The amount of claimed lands
             case "owned_lands":
                 return String.valueOf(wg.getRegionCount(player.getUniqueId()));
 
+            // The amounf of purchased claims
             case "claims":
                 IPlayer iPlayer = pl.getPlayerManager().get(player.getUniqueId());
                 if (iPlayer == null) {
@@ -88,6 +90,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 }
                 return String.valueOf(iPlayer.getClaims());
 
+            // Remaining claims. Difference between owned_lands and claims
             case "remaining_claims":
                 IPlayer iPlayer2 = pl.getPlayerManager().get(player.getUniqueId());
                 if (iPlayer2 == null) {
@@ -97,6 +100,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 }
                 return String.valueOf(iPlayer2.getClaims() - wg.getRegionCount(player.getUniqueId()));
 
+            // Owner of the current land
             case "current_land_owner":
                 IOwnedLand region = wg.getRegion(player.getLocation());
                 if (region != null && region.getOwner() != null) {
@@ -104,6 +108,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 }
                 return "∅";
 
+            // Members of the current land
             case "current_land_members":
                 String members;
                 IOwnedLand region2 = wg.getRegion(player.getLocation());
@@ -112,20 +117,25 @@ public class LLExpansion extends PlaceholderExpansion {
                 }
                 return "∅";
 
+            // name of the current land
             case "current_land_name":
                 return wg.getLandName(player.getLocation().getChunk());
 
+            // Price of the next land which will be purchased
             case "next_land_price":
                 return String.valueOf(pl.getCostManager().calculateCost(player.getUniqueId()));
 
+            // Amount which will be given when this land will be sold
             case "current_land_refund":
                 int regionCount = wg.getRegionCount(player.getUniqueId());
                 return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble(
                         "Payback"));
 
+            // Number of the permission, which indicates the amount of possible claims
             case "max_claim_permission":
                 return String.valueOf(getMaxClaimPermission(player));
 
+            // Number of free claims a user can still claim.
             case "remaining_free_lands":
                 int landCount = wg.getRegionCount(player.getUniqueId());
                 int freeLands = pl.getConfig().getInt("Freelands");
