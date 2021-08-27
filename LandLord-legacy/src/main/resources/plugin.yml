@@ -26,6 +26,7 @@ permissions:
       landlord.player.advertise: true
       landlord.player.manage: true
       landlord.player.manage.*: true
+      landlord.player.multiclaim.*: true
 
   landlord.admin.*:
     description: Gives access to admin commands.
@@ -33,7 +34,7 @@ permissions:
       landlord.admin.unclaim: true
       landlord.admin.list: true
       landlord.admin.manage: true
-      landlord.admin.clear: true
+      landlord.admin.clear.*: true
       landlord.admin.bypass: true
       landlord.admin.reload: true
       landlord.admin.modifyfriends: true
@@ -74,6 +75,16 @@ permissions:
       landlord.player.manage.spreadflags: true
       landlord.player.manage.spreadmobs: true
       landlord.player.manage.spreadfriends: true
+
+  landlord.player.multiclaim.*:
+    description: required to use multi commands
+    children:
+      landlord.player.multiclaim: true
+      landlord.player.multiunclaim: true
+      landlord.player.multiaddfriend: true
+      landlord.player.multiremovefriend: true
+      landlord.player.multilist: true
+      landlord.player.multimanage: true
 
   landlord.use:
     description: required to use any Landlord commands
@@ -241,16 +252,4 @@ permissions:
 
   landlord.player.manage.pvp:
     description: manage pvp
-    default: true
-
-  landlord.player.manage.spreadflags:
-    description: Spread flag options
-    default: true
-
-  landlord.player.manage.spreadmobs:
-    description: Spread mob options
-    default: true
-
-  landlord.player.manage.spreadfriends:
-    description: Spread friend options
     default: true

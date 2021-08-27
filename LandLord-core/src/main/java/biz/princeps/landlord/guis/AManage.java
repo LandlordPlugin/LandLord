@@ -430,7 +430,7 @@ public class AManage extends AbstractGUI {
 
         // spawn management
         if (plugin.getConfig().getBoolean("Manage.mob-spawning.enable") &&
-                player.hasPermission("landlord.player.manage.mobspawn")) {
+                player.hasPermission("landlord.player.manage.mob-spawning")) {
             String title = lm.getRawString("Commands.Manage.AllowMob-spawning.title");
             Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.mob-spawning" +
                     ".item"))));
