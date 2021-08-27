@@ -78,7 +78,6 @@ public class LLExpansion extends PlaceholderExpansion {
         switch (placeholder) {
             // The amount of claimed lands
             case "owned_lands":
-
                 return String.valueOf(wg.getRegionCount(player.getUniqueId()));
 
             // The amounf of purchased claims
