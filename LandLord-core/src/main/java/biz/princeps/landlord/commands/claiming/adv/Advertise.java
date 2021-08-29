@@ -9,7 +9,6 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 /**
@@ -60,8 +59,7 @@ public class Advertise extends LandlordCommand {
     private void onAdvertise(Player player, String landname, double price) {
         IOwnedLand iOwnedLand;
         if (landname.equals("this")) {
-            Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
-            iOwnedLand = wg.getRegion(chunk);
+            iOwnedLand = wg.getRegion(player.getLocation());
         } else {
             iOwnedLand = wg.getRegion(landname);
         }

@@ -7,7 +7,6 @@ import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
-import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 /**
@@ -45,9 +44,7 @@ public class SetHome extends LandlordCommand {
 
         if (isDisabledWorld(player)) return;
 
-        Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
-
-        IOwnedLand land = plugin.getWGManager().getRegion(chunk);
+        IOwnedLand land = plugin.getWGManager().getRegion(player.getLocation());
 
         if (land == null) {
             lm.sendMessage(player, lm.getString(player, "Commands.SetHome.nullLand"));
