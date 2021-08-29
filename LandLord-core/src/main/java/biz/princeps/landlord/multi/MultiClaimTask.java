@@ -7,7 +7,6 @@ import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 public class MultiClaimTask extends AMultiTask<Chunk> {
 
