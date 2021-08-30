@@ -7,16 +7,20 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Material;
 
+/**
+ * Note on {@code RegionGroup.MEMBERS} and {@code RegionGroup.NON_MEMBERS check}.
+ * From WorldGuard wiki: The {@code entry} and {@code exit} flags default to “non-member”, meaning setting them to
+ * “deny” will prevent non-members from entering/exiting the region.
+ */
 public class LLFlag implements ILLFlag {
 
     private final ProtectedRegion pr;
 
     private boolean friendStatus, allStatus;
-    private final Flag flag;
+    private final Flag<StateFlag.State> flag;
     private final Material mat;
 
-
-    public LLFlag(ProtectedRegion pr, Flag flag, Material mat) {
+    public LLFlag(ProtectedRegion pr, Flag<StateFlag.State> flag, Material mat) {
         this.pr = pr;
         this.flag = flag;
         this.mat = mat;
@@ -27,7 +31,8 @@ public class LLFlag implements ILLFlag {
     }
 
     void setStatus(RegionGroup grp, Object state) {
-        if (grp == RegionGroup.MEMBERS && state == StateFlag.State.ALLOW) {
+        if (grp == RegionGroup.MEMBERS && state == StateFlag.State.ALLOW ||
+                grp == RegionGroup.NON_MEMBERS && state == StateFlag.State.DENY) {
             friendStatus = true;
             allStatus = false;
             // System.out.println("10");
@@ -68,12 +73,19 @@ public class LLFlag implements ILLFlag {
                 // now: 11
                 this.friendStatus = true;
                 pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.ALL);
+                pr.setFlag(flag, StateFlag.State.ALLOW);
             } else {
                 // now 10
                 this.friendStatus = true;
-                pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
+                if (flag.getRegionGroupFlag().getDefault() != RegionGroup.NON_MEMBERS) {
+                    pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
+                    pr.setFlag(flag, StateFlag.State.ALLOW);
+                } else {
+                    pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+                    pr.setFlag(flag, StateFlag.State.DENY);
+                }
             }
-            pr.setFlag(flag, StateFlag.State.ALLOW);
+
             return true;
         }
     }
@@ -85,8 +97,13 @@ public class LLFlag implements ILLFlag {
             this.allStatus = false;
             if (friendStatus) {
                 // still allow friends
-                pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
-                pr.setFlag(flag, StateFlag.State.ALLOW);
+                if (flag.getRegionGroupFlag().getDefault() != RegionGroup.NON_MEMBERS) {
+                    pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
+                    pr.setFlag(flag, StateFlag.State.ALLOW);
+                } else {
+                    pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+                    pr.setFlag(flag, StateFlag.State.DENY);
+                }
             } else {
                 // deny everyone
                 pr.setFlag(flag.getRegionGroupFlag(), RegionGroup.NON_OWNERS);

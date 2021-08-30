@@ -139,7 +139,7 @@ public class OwnedLand extends AOwnedLand {
 
     @Override
     public ILLFlag getFlag(String s) {
-        Flag flag = getWGFlag(s.toLowerCase());
+        Flag<StateFlag.State> flag = getWGFlag(s.toLowerCase());
         if (flag == null) {
             pl.getLogger().warning("Invalid worldguard flag found: " + s);
 
@@ -215,7 +215,7 @@ public class OwnedLand extends AOwnedLand {
         List<String> rawList = pl.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
-            Flag flag = getWGFlag(s.toLowerCase());
+            Flag<StateFlag.State> flag = getWGFlag(s.toLowerCase());
             if (!(flag instanceof StateFlag)) {
                 Bukkit.getLogger().warning("Only stateflags are supported!");
                 return;
@@ -263,7 +263,7 @@ public class OwnedLand extends AOwnedLand {
 
         // add missing flags
         for (String s : rawList) {
-            Flag flag = getWGFlag(s.toLowerCase());
+            Flag<StateFlag.State> flag = getWGFlag(s.toLowerCase());
             if (!region.getFlags().containsKey(flag)) {
                 region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
                 region.setFlag(flag, StateFlag.State.ALLOW);
@@ -288,7 +288,7 @@ public class OwnedLand extends AOwnedLand {
         region.setPriority(pl.getConfig().getInt("Claim.regionPriority"));
     }
 
-    private Flag getWGFlag(String flagName) {
-        return DefaultFlag.fuzzyMatchFlag(flagRegistry, flagName);
+    private Flag<StateFlag.State> getWGFlag(String flagName) {
+        return (Flag<StateFlag.State>) DefaultFlag.fuzzyMatchFlag(flagRegistry, flagName);
     }
 }
