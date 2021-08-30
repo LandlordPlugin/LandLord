@@ -90,7 +90,7 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
     }
 
     @Override
-    public boolean canProcess() {
+    public boolean canContinueProcessing() {
         return player.isOnline();
     }
 

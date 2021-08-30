@@ -8,7 +8,9 @@ public interface IMultiTask<T> {
      * @param limit the max amount of actions processed
      * @return the amount of processed operations
      */
-    int processOperations(int limit);
+    default int processOperations(int limit) {
+        return 0;
+    }
 
     /**
      * Process one queued operations
@@ -25,7 +27,7 @@ public interface IMultiTask<T> {
      *
      * @return if operations can still be processed
      */
-    default boolean canProcess() {
+    default boolean canContinueProcessing() {
         return true;
     }
 
@@ -33,7 +35,7 @@ public interface IMultiTask<T> {
      * A method that may be overriden to execute some final code,
      * <b>once all operations have been processed successfully</b>.
      * <p>
-     * Will not execute if {@link #canProcess()} returns false during execution.
+     * Will not execute if {@link #canContinueProcessing()} returns false during execution.
      */
     void complete();
 
@@ -49,6 +51,8 @@ public interface IMultiTask<T> {
      *
      * @return the number of remaining operations
      */
-    int clearQueue();
+    default int clearQueue() {
+        return 0;
+    }
 
 }

@@ -26,6 +26,8 @@ public interface IMultiTaskManager {
      *
      * @return the number of remaining tasks
      */
-    int clear();
+    default int clear() {
+        return 0;
+    }
 
 }

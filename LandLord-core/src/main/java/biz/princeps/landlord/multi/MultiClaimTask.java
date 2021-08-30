@@ -28,7 +28,7 @@ public class MultiClaimTask extends AMultiTask<Chunk> {
     }
 
     @Override
-    public boolean canProcess() {
+    public boolean canContinueProcessing() {
         return player.isOnline();
     }
 
