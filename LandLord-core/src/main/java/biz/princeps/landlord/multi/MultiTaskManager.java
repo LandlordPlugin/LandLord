@@ -34,7 +34,7 @@ public class MultiTaskManager implements IMultiTaskManager {
         int operations = 0;
 
         while (operations < limit && !queue.isEmpty()) {
-            IMultiTask<?> multiTask = queue.poll();
+            IMultiTask<?> multiTask = queue.peek();
 
             if (multiTask.canContinueProcessing()) {
                 operations += multiTask.processOperations(limit - operations);
