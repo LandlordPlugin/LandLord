@@ -1,6 +1,7 @@
 Tag: '&8[&c&l!&8]'
 Disabled-World: '&6Land-claiming esta deshabilitado en este mundo'
 noPermissions: '&csin permisos'
+noPermissionsCmd: '&cYou don''t have the permission to execute /%cmd%!'
 locOutsideWorld: '§c¡No puedes interaccionar con el chunk %chunk% estando fuera del mundo %world%!'
 pleaseWait: '&7Por favor, espere...'
 Commands:
@@ -147,7 +148,7 @@ Commands:
     yours: 'Tus'
     friends: 'Amigos'
     others: 'Otros'
-  ClearWorld:
+  Clear:
     noPlayer: '&7Could not find following players&8: &c%players%'
     gui:
       title: "Clear menu"
@@ -169,6 +170,9 @@ Commands:
         confirm: "Unclaim all lands in %world%?"
         abort: "&cUnclaim action aborted!"
         success: '&7Successfully cleared &c%count% &7lands in world &c%world%'
+  ClearInactive:
+    info: '&7Clearing all lands of players inactive for more than &c%inactivity% &7days...'
+    success: '&7Successfully cleared &c%players% &7players (&c%lands% &7lands), inactive for more than &c%inactivity% &7days'
   Item:
     noPlayer: '&7No pude encontrar los siguientes jugadores&8: &c%players%'
   Manage:
@@ -446,4 +450,4 @@ Integrations:
   Towny:
     TownyPresent: '&cThere already is a towny region present!'
     LLPresent: '&cThere already is a landlord region present!'
-version: 25
+version: 26

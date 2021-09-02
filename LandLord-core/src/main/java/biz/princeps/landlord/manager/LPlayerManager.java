@@ -56,21 +56,20 @@ public class LPlayerManager implements IPlayerManager {
     }
 
     @Override
-    public void saveAllOnlineSync() {
-        for (IPlayer value : players.values()) {
-            save(value, false);
-        }
-        if (this.stor instanceof FlatFileStorage) {
-            ((FlatFileStorage) stor).save();
-        }
-    }
-
-
-    @Override
     public void remove(UUID id) {
         players.remove(id);
     }
 
+    @Override
+    public void saveAllOnlineSync() {
+        for (IPlayer value : players.values()) {
+            save(value, false);
+        }
+
+        if (this.stor instanceof FlatFileStorage) {
+            ((FlatFileStorage) stor).save();
+        }
+    }
 
     @Override
     public boolean contains(String name) {

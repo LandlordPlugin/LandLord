@@ -36,7 +36,7 @@ public class Clear extends LandlordCommand {
     public void onCommand(Properties properties, Arguments arguments) {
         if (arguments.size() == 1) {
             // Clear a single player
-            String name = arguments.get()[0];
+            String name = arguments.get(0);
             if (properties.getCommandSender().hasPermission("landlord.admin.clear.player"))
                 clearPlayer(name, properties.getCommandSender());
             return;
@@ -61,7 +61,7 @@ public class Clear extends LandlordCommand {
         plugin.getPlayerManager().getOffline(name, (lPlayer) -> {
             if (lPlayer == null) {
                 // Failure
-                lm.sendMessage(player, lm.getString("Commands.ClearWorld.noPlayer")
+                lm.sendMessage(player, lm.getString("Commands.Clear.noPlayer")
                         .replace("%players%", name));
             } else {
                 // Success

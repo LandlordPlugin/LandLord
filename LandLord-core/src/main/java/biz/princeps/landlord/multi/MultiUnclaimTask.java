@@ -11,10 +11,10 @@ import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandUnclaimEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
 
@@ -25,10 +25,11 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
     private final IPlayer lPlayer;
     private final int freeLands;
     private final int unclaimedLands;
+    private final World world;
     private final ManageMode manageMode;
     private double totalPayBack;
 
-    public MultiUnclaimTask(ILandLord plugin, Player player, Collection<IOwnedLand> operations, ManageMode manageMode) {
+    public MultiUnclaimTask(ILandLord plugin, Player player, Collection<IOwnedLand> operations, World world, ManageMode manageMode) {
         super(plugin, operations);
 
         this.wgManager = plugin.getWGManager();
@@ -38,84 +39,78 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
         this.lPlayer = plugin.getPlayerManager().get(player.getUniqueId());
         this.freeLands = plugin.getConfig().getInt("Freelands");
         this.unclaimedLands = operations.size();
+        this.world = world;
         this.manageMode = manageMode;
         this.totalPayBack = 0;
     }
 
     @Override
-    public int processOperations(int limit) {
-        if (!player.isOnline()) {
-            clear();
-            return 0;
-        }
-        int iterations = 0;
+    public boolean process(IOwnedLand ownedLand) {
+        LandUnclaimEvent event = new LandUnclaimEvent(player, ownedLand);
+        Bukkit.getServer().getPluginManager().callEvent(event);
 
-        for (Iterator<IOwnedLand> iterator = queue.iterator(); iterator.hasNext() && iterations < limit; ) {
-            IOwnedLand ownedLand = iterator.next();
+        if (!event.isCancelled()) {
+            if (Options.isVaultEnabled()) {
+                double payback;
+                int regionCount = wgManager.getRegionCount(player.getUniqueId());
 
-            LandUnclaimEvent event = new LandUnclaimEvent(player, ownedLand);
-            Bukkit.getServer().getPluginManager().callEvent(event);
+                // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);
 
-            if (!event.isCancelled()) {
-                if (Options.isVaultEnabled()) {
-                    double payback;
-                    int regionCount = wgManager.getRegionCount(player.getUniqueId());
-
-                    // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);
-
-                    if (regionCount <= freeLands) {
-                        payback = 0;
-                    } else {
-                        payback = plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble("Payback");
-                        // System.out.println(payback);
-                        if (payback > 0) {
-                            plugin.getVaultManager().give(player, payback);
-                        }
+                if (regionCount <= freeLands) {
+                    payback = 0;
+                } else {
+                    payback = plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble("Payback");
+                    // System.out.println(payback);
+                    if (payback > 0) {
+                        plugin.getVaultManager().give(player, payback);
                     }
-                    totalPayBack += payback;
                 }
+                totalPayBack += payback;
+            }
 
-                Location location = ownedLand.getALocation();
-                wgManager.unclaim(ownedLand.getWorld(), ownedLand.getName());
-                if (plugin.getConfig().getBoolean("CommandSettings.Unclaim.regenerate", false)) {
-                    plugin.getRegenerationManager().regenerateChunk(location);
-                }
+            Location location = ownedLand.getALocation();
+            wgManager.unclaim(ownedLand.getWorld(), ownedLand.getName());
+            if (plugin.getConfig().getBoolean("CommandSettings.Unclaim.regenerate", false)) {
+                plugin.getRegenerationManager().regenerateChunk(location);
+            }
 
-                // remove possible homes
-                if (lPlayer != null) {
-                    Location home = lPlayer.getHome();
-                    if (home != null) {
-                        if (ownedLand.contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
-                            lgManager.sendMessage(player, lgManager.getString(player, "Commands.SetHome.removed"));
-                            plugin.getPlayerManager().get(ownedLand.getOwner()).setHome(null);
-                        }
+            // remove possible homes
+            if (lPlayer != null) {
+                Location home = lPlayer.getHome();
+                if (home != null) {
+                    if (ownedLand.contains(home.getBlockX(), home.getBlockY(), home.getBlockZ())) {
+                        lgManager.sendMessage(player, lgManager.getString(player, "Commands.SetHome.removed"));
+                        plugin.getPlayerManager().get(ownedLand.getOwner()).setHome(null);
                     }
                 }
             }
-
-            if (!iterator.hasNext()) {
-                switch (manageMode) {
-                    case MULTI:
-                        lgManager.sendMessage(player, lgManager.getString(player, "Commands.MultiUnclaim.success")
-                                .replace("%amount%", "" + unclaimedLands)
-                                .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultManager().format(totalPayBack) : "-eco disabled-")));
-                        break;
-                    case ALL:
-                        lgManager.sendMessage(player, lgManager.getString(player, "Commands.UnclaimAll.success")
-                                .replace("%amount%", "" + unclaimedLands)
-                                .replace("%world%", ownedLand.getWorld().getName())
-                                .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultManager().format(totalPayBack) : "-eco disabled-")));
-                        break;
-                }
-
-                plugin.getMapManager().updateAll();
-            }
-
-            iterator.remove();
-            iterations++;
         }
 
-        return iterations;
+        return true;
+    }
+
+    @Override
+    public boolean canContinueProcessing() {
+        return player.isOnline();
+    }
+
+    @Override
+    public void complete() {
+        switch (manageMode) {
+            case MULTI:
+                lgManager.sendMessage(player, lgManager.getString(player, "Commands.MultiUnclaim.success")
+                        .replace("%amount%", "" + unclaimedLands)
+                        .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultManager().format(totalPayBack) : "-eco disabled-")));
+                break;
+            case ALL:
+                lgManager.sendMessage(player, lgManager.getString(player, "Commands.UnclaimAll.success")
+                        .replace("%amount%", "" + unclaimedLands)
+                        .replace("%world%", world.getName())
+                        .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultManager().format(totalPayBack) : "-eco disabled-")));
+                break;
+        }
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
     }
 
 }

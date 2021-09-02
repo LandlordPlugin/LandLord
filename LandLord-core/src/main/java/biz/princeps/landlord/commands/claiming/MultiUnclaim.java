@@ -62,7 +62,7 @@ public class MultiUnclaim extends LandlordCommand {
         MultiMode mode;
         int radius;
         try {
-            mode = MultiMode.valueOf(arguments.get()[0].toUpperCase());
+            mode = MultiMode.valueOf(arguments.get(0).toUpperCase());
             radius = arguments.getInt(1);
         } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ex) {
             properties.sendUsage();
@@ -99,7 +99,7 @@ public class MultiUnclaim extends LandlordCommand {
             return;
         }
 
-        multiTaskManager.enqueueTask(new MultiUnclaimTask(plugin, player, toUnclaim, ManageMode.MULTI));
+        multiTaskManager.enqueueTask(new MultiUnclaimTask(plugin, player, toUnclaim, player.getWorld(), ManageMode.MULTI));
     }
 
 }

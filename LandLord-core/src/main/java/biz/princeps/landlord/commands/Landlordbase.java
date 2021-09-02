@@ -6,6 +6,8 @@ import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.admin.AdminClaim;
 import biz.princeps.landlord.commands.admin.AdminTeleport;
 import biz.princeps.landlord.commands.admin.Clear;
+import biz.princeps.landlord.commands.admin.ClearInactive;
+import biz.princeps.landlord.commands.admin.Debug;
 import biz.princeps.landlord.commands.admin.GiveClaims;
 import biz.princeps.landlord.commands.admin.Reload;
 import biz.princeps.landlord.commands.admin.Update;
@@ -27,7 +29,6 @@ import biz.princeps.landlord.commands.friends.Unfriend;
 import biz.princeps.landlord.commands.friends.UnfriendAll;
 import biz.princeps.landlord.commands.homes.Home;
 import biz.princeps.landlord.commands.homes.SetHome;
-import biz.princeps.landlord.commands.management.borders.Borders;
 import biz.princeps.landlord.commands.management.Info;
 import biz.princeps.landlord.commands.management.LandMap;
 import biz.princeps.landlord.commands.management.ListLands;
@@ -36,6 +37,7 @@ import biz.princeps.landlord.commands.management.ManageAll;
 import biz.princeps.landlord.commands.management.MultiListLands;
 import biz.princeps.landlord.commands.management.MultiManage;
 import biz.princeps.landlord.commands.management.Regenerate;
+import biz.princeps.landlord.commands.management.borders.Borders;
 import biz.princeps.landlord.multi.MultiMode;
 import biz.princeps.lib.chat.MultiPagedMessage;
 import biz.princeps.lib.command.Arguments;
@@ -113,6 +115,7 @@ public class Landlordbase extends MainCommand {
         this.addSubcommand(new Manage(pl));
         this.addSubcommand(new ManageAll(pl));
         this.addSubcommand(new Clear(pl));
+        this.addSubcommand(new ClearInactive(pl));
         this.addSubcommand(new LandMap(pl));
         this.addSubcommand(new Reload(pl));
         this.addSubcommand(new Regenerate(pl));
@@ -121,7 +124,7 @@ public class Landlordbase extends MainCommand {
         this.addSubcommand(new MultiRemovefriend(pl));
         this.addSubcommand(new MultiListLands(pl));
         this.addSubcommand(new MultiManage(pl));
-        this.addSubcommand(new Debug(pl.getPlugin()));
+        this.addSubcommand(new Debug(pl));
     }
 
     @Override
@@ -275,7 +278,7 @@ public class Landlordbase extends MainCommand {
 
         String[] argsN = new String[1];
         if (arguments.get().length == 1) {
-            argsN[0] = (arguments.get()[0] == null ? "0" : arguments.get()[0]);
+            argsN[0] = (arguments.get(0) == null ? "0" : arguments.get(0));
         }
 
         List<String> toDisplay = new ArrayList<>();

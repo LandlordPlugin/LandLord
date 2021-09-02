@@ -58,7 +58,7 @@ public class MultiListLands extends LandlordCommand {
                         break;
                 }
 
-                mode = MultiMode.valueOf(arguments.get()[0].toUpperCase());
+                mode = MultiMode.valueOf(arguments.get(0).toUpperCase());
                 radius = arguments.getInt(1);
             } catch (ArgumentsOutOfBoundsException ignored) {
                 properties.sendUsage();

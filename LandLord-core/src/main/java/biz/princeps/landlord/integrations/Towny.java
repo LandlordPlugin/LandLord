@@ -38,9 +38,9 @@ public class Towny extends BasicListener {
         int x = townBlock.getX();
         int z = townBlock.getZ();
 
-        Chunk chunkAt = townBlock.getWorldCoord().getBukkitWorld().getChunkAt(x, z);
+        Location locationAt = new Location(townBlock.getWorldCoord().getBukkitWorld(), x, 0, z);
 
-        if (pl.getWGManager().getRegion(chunkAt) != null) {
+        if (pl.getWGManager().getRegion(locationAt) != null) {
             pl.getLangManager().sendMessage(e.getPlayer(), "Integrations.Towny.LLPresent");
             e.setCancelled(true);
         }

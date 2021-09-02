@@ -7,12 +7,11 @@ import org.bukkit.Bukkit;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Iterator;
 
 public class MultiTaskManager implements IMultiTaskManager {
 
     private final ILandLord plugin;
-    private final Deque<IMultiTask> queue;
+    private final Deque<IMultiTask<?>> queue;
 
     public MultiTaskManager(ILandLord plugin) {
         this.plugin = plugin;
@@ -34,19 +33,38 @@ public class MultiTaskManager implements IMultiTaskManager {
     public void processQueue(int limit) {
         int operations = 0;
 
-        for (Iterator<IMultiTask> iterator = queue.iterator(); iterator.hasNext() && operations < limit; ) {
-            IMultiTask multiTask = iterator.next();
-            operations += multiTask.processOperations(limit - operations);
+        while (operations < limit && !queue.isEmpty()) {
+            IMultiTask<?> multiTask = queue.peek();
 
-            if (multiTask.isCompleted()) {
-                iterator.remove();
+            if (multiTask.canContinueProcessing()) {
+                operations += multiTask.processOperations(limit - operations);
+
+                if (multiTask.isCompleted()) {
+                    multiTask.complete();
+                    queue.remove();
+                }
+            } else {
+                multiTask.clearQueue();
+                queue.remove();
             }
         }
     }
 
     @Override
-    public void enqueueTask(IMultiTask multiTask) {
-        queue.add(multiTask);
+    public void enqueueTask(IMultiTask<?> multiTask) {
+        if (Bukkit.isPrimaryThread()) {
+            queue.add(multiTask);
+        } else {
+            Bukkit.getScheduler().runTask(plugin.getPlugin(), () ->
+                    enqueueTask(multiTask));
+        }
+    }
+
+    @Override
+    public int clear() {
+        int remainingTasks = queue.size();
+        queue.clear();
+        return remainingTasks;
     }
 
 }

@@ -24,7 +24,6 @@ public class LandMap extends LandlordCommand {
 
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
-
         if (arguments.size() == 0) {
             // toggle
             if (properties.isPlayer()) {
@@ -32,7 +31,7 @@ public class LandMap extends LandlordCommand {
             }
         } else if (arguments.size() == 1) {
             // on/off
-            String arg = arguments.get()[0];
+            String arg = arguments.get(0);
             if (arg.equalsIgnoreCase("on") || arg.equalsIgnoreCase("off")) {
                 onToggleLandMap(properties.getPlayer(), arg.toLowerCase());
             }

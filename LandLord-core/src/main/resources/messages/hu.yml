@@ -1,6 +1,7 @@
 Tag: '&8[&c&l!&8]'
 Disabled-World: '&7A földtámogatás le van tiltva ebben a világban'
 noPermissions: '&7Nincs jogod'
+noPermissionsCmd: '&cYou don''t have the permission to execute /%cmd%!'
 locOutsideWorld: '§7You can''t interact with the chunk %chunk% being outside of the world %world%!'
 pleaseWait: '&7Please Wait...'
 Commands:
@@ -146,7 +147,7 @@ Commands:
     yours: 'Tiéd'
     friends: 'Barátok'
     others: 'Mások'
-  ClearWorld:
+  Clear:
     noPlayer: '&7Could not find following players&8: &c%players%'
     gui:
       title: "Clear menu"
@@ -168,6 +169,9 @@ Commands:
         confirm: "Unclaim all lands in %world%?"
         abort: "&cUnclaim action aborted!"
         success: '&7Successfully cleared &c%count% &7lands in world &c%world%'
+  ClearInactive:
+    info: '&7Clearing all lands of players inactive for more than &c%inactivity% &7days...'
+    success: '&7Successfully cleared &c%players% &7players (&c%lands% &7lands), inactive for more than &c%inactivity% &7days'
   Item:
     noPlayer: '&7Nem találhatók a következő játékosok&8: &c%players%'
   Manage:
@@ -446,4 +450,4 @@ Integrations:
   Towny:
     TownyPresent: '&cThere already is a towny region present!'
     LLPresent: '&cThere already is a landlord region present!'
-version: 25
+version: 26

@@ -39,7 +39,7 @@ public class MultiRemovefriend extends LandlordCommand {
         int radius;
         String name;
         try {
-            mode = MultiMode.valueOf(arguments.get()[0].toUpperCase());
+            mode = MultiMode.valueOf(arguments.get(0).toUpperCase());
             radius = arguments.getInt(1);
             name = arguments.get(2);
         } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ex) {

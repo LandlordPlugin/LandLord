@@ -13,7 +13,6 @@ import org.bukkit.command.CommandSender;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
@@ -44,53 +43,46 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
     }
 
     @Override
-    public int processOperations(int limit) {
-        int iterations = 0;
+    public boolean process(IOwnedLand ownedLand) {
+        UUID owner = ownedLand.getOwner();
 
-        for (Iterator<IOwnedLand> iterator = queue.iterator(); iterator.hasNext() && iterations < limit; ) {
-            IOwnedLand ownedLand = iterator.next();
-            UUID owner = ownedLand.getOwner();
-
-            if (clearType == ClearType.WORLD && !clearedHomes.contains(owner)) {
-                playerManager.getOffline(owner, lPlayer -> {
-                    Location home = lPlayer.getHome();
-                    if (home != null && home.getWorld().getName().equals(targetName)) {
-                        lPlayer.setHome(null);
-                        clearedHomes.add(owner);
-                        playerManager.save(lPlayer, true);
-                    }
-                });
-            }
-
-            wgManager.unclaim(ownedLand);
-
-            if (!iterator.hasNext()) {
-                switch (clearType) {
-                    case PLAYER:
-                        plugin.getPlayerManager().getOffline(targetName, lPlayer -> {
-                            lPlayer.setHome(null);
-                            plugin.getPlayerManager().save(lPlayer, true);
-                        });
-
-                        lgManager.sendMessage(commandSender, lgManager.getString("Commands.ClearWorld.gui.clearplayer.success")
-                                .replace("%count%", String.valueOf(clearedLands))
-                                .replace("%player%", targetName));
-                        break;
-                    case WORLD:
-                        lgManager.sendMessage(commandSender, lgManager.getString("Commands.ClearWorld.gui.clearworld.success")
-                                .replace("%count%", String.valueOf(clearedLands))
-                                .replace("%world%", targetName));
-                        break;
+        if (clearType == ClearType.WORLD && !clearedHomes.contains(owner)) {
+            playerManager.getOffline(owner, lPlayer -> {
+                Location home = lPlayer.getHome();
+                if (home != null && home.getWorld().getName().equals(targetName)) {
+                    lPlayer.setHome(null);
+                    clearedHomes.add(lPlayer.getUuid());
+                    playerManager.save(lPlayer, true);
                 }
-
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
-            }
-
-            iterator.remove();
-            iterations++;
+            });
         }
 
-        return iterations;
+        wgManager.unclaim(ownedLand);
+
+        return true;
+    }
+
+    @Override
+    public void complete() {
+        switch (clearType) {
+            case PLAYER:
+                plugin.getPlayerManager().getOffline(targetName, lPlayer -> {
+                    lPlayer.setHome(null);
+                    plugin.getPlayerManager().save(lPlayer, true);
+                });
+
+                lgManager.sendMessage(commandSender, lgManager.getString("Commands.Clear.gui.clearplayer.success")
+                        .replace("%count%", String.valueOf(clearedLands))
+                        .replace("%player%", targetName));
+                break;
+            case WORLD:
+                lgManager.sendMessage(commandSender, lgManager.getString("Commands.Clear.gui.clearworld.success")
+                        .replace("%count%", String.valueOf(clearedLands))
+                        .replace("%world%", targetName));
+                break;
+        }
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
     }
 
 }
