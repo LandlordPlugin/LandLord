@@ -278,14 +278,14 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         }
 
         for (UUID owner : owners) {
-            pl.getPlayerManager().getOffline(owner, player -> {
+            pl.getPlayerManager().getOffline(owner, lPlayer -> {
                 for (IOwnedLand region : regions) {
                     if (region.isOwner(owner)) {
                         //System.out.println("isowner");
-                        if (player.getHome() != null && region.contains(player.getHome())) {
+                        if (lPlayer.getHome() != null && region.contains(lPlayer.getHome())) {
                             //System.out.println("remo");
-                            player.setHome(null);
-                            pl.getPlayerManager().save(player, true);
+                            lPlayer.setHome(null);
+                            pl.getPlayerManager().save(lPlayer, true);
                         }
                     }
                 }

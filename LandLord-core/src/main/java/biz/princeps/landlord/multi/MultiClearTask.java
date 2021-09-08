@@ -48,6 +48,9 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
 
         if (clearType == ClearType.WORLD && !clearedHomes.contains(owner)) {
             playerManager.getOffline(owner, lPlayer -> {
+                if (lPlayer == null) {
+                    return;
+                }
                 Location home = lPlayer.getHome();
                 if (home != null && home.getWorld().getName().equals(targetName)) {
                     lPlayer.setHome(null);
@@ -67,6 +70,9 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
         switch (clearType) {
             case PLAYER:
                 plugin.getPlayerManager().getOffline(targetName, lPlayer -> {
+                    if (lPlayer == null) {
+                        return;
+                    }
                     lPlayer.setHome(null);
                     plugin.getPlayerManager().save(lPlayer, true);
                 });
