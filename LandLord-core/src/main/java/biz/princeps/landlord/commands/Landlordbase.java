@@ -188,16 +188,12 @@ public class Landlordbase extends MainCommand {
 
                     if (subcmd instanceof Addfriend || subcmd instanceof AddfriendAll ||
                             subcmd instanceof Unfriend || subcmd instanceof UnfriendAll) {
-                        if (args[1].isEmpty()) {
-                            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                                tabReturn.add(onlinePlayer.getName());
-                            }
-                        } else {
-                            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                                if (!onlinePlayer.getName().startsWith(args[1])) continue;
+                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                            if (!onlinePlayer.getName().startsWith(args[1]) ||
+                                    (sender instanceof Player && !((Player) sender).canSee(onlinePlayer)))
+                                continue;
 
-                                tabReturn.add(onlinePlayer.getName());
-                            }
+                            tabReturn.add(onlinePlayer.getName());
                         }
                         return tabReturn;
                     }
@@ -230,16 +226,12 @@ public class Landlordbase extends MainCommand {
                     }
 
                     if (subcmd instanceof MultiAddfriend || subcmd instanceof MultiRemovefriend) {
-                        if (args[2].isEmpty()) {
-                            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                                tabReturn.add(onlinePlayer.getName());
-                            }
-                        } else {
-                            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                                if (!onlinePlayer.getName().startsWith(args[2])) continue;
+                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                            if (!onlinePlayer.getName().startsWith(args[2]) ||
+                                    (sender instanceof Player && !((Player) sender).canSee(onlinePlayer)))
+                                continue;
 
-                                tabReturn.add(onlinePlayer.getName());
-                            }
+                            tabReturn.add(onlinePlayer.getName());
                         }
                         return tabReturn;
                     }
