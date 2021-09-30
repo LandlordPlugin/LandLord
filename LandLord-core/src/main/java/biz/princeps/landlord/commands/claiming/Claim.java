@@ -269,7 +269,6 @@ public class Claim extends LandlordCommand {
         Player pp = Bukkit.getPlayer(ol.getOwner());
 
         ol.replaceOwner(player.getUniqueId());
-        ol.setPrice(-1);
 
         lm.sendMessage(player, lm.getString(player, "Commands.Claim.success")
                 .replace("%chunk%", ol.getName())
@@ -285,6 +284,7 @@ public class Claim extends LandlordCommand {
                     .replace("%price%", vault.format(ol.getPrice())));
         }
 
+        ol.setPrice(-1);
         ol.highlightLand(chunk, player,
                 Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
         plugin.getMapManager().updateAll();
