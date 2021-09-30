@@ -64,7 +64,7 @@ public class ClearInactive extends LandlordCommand {
 
                 if (lPlayer != null) {
                     Duration offlineInterval = Duration.between(lPlayer.getLastSeen(), LocalDateTime.now());
-                    // Calculates if the offlineInterval if positive, i.e. player is inactive because offlineInterval
+                    // Calculates if the offlineInterval is positive, i.e. player is inactive because offlineInterval
                     // exceeds minInactiveDays.
                     boolean isInactive = offlineInterval.compareTo(Duration.ofDays(minInactiveDays)) > 0;
 
