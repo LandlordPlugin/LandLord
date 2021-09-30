@@ -274,7 +274,6 @@ public class Claim extends LandlordCommand {
         Player pp = plugin.getServer().getPlayer(ol.getOwner());
 
         ol.replaceOwner(player.getUniqueId());
-        ol.setPrice(-1);
 
         lm.sendMessage(player, lm.getString(player, "Commands.Claim.success")
                 .replace("%chunk%", ol.getName())
