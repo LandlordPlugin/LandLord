@@ -2,7 +2,6 @@ package biz.princeps.landlord.manager.cost;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.util.JavaUtils;
-import jdk.jfr.internal.LogLevel;
 import org.bukkit.Bukkit;
 
 import java.util.UUID;
