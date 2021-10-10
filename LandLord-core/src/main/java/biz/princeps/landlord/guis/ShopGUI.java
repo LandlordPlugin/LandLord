@@ -1,6 +1,5 @@
 package biz.princeps.landlord.guis;
 
-import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.api.IMaterialsManager;
