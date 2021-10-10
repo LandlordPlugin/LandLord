@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * Project: LandLord
@@ -79,9 +80,9 @@ public class PistonOverwriter extends BasicListener {
         }
 
         UUID onlyOwner = wg.getRegion(origin.getChunk()).getOwner();
-        // System.out.println("original owner" + onlyOwner);
+        // plugin.getLogger().log(Level.INFO, "original owner" + onlyOwner);
         for (IOwnedLand land : lands) {
-            // System.out.println(land);
+            // plugin.getLogger().log(Level.INFO, String.valueOf(land));
             if (land == null) {
                 return false;
             }

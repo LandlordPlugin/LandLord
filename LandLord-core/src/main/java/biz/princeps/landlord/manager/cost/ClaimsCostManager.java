@@ -43,13 +43,13 @@ public class ClaimsCostManager extends ACostManager {
             plugin.getLogger().log(Level.INFO, "times " + times);
             for (int i = times; i < 0; i++) {
                 cost += calculateCost(x + i);
-                //System.out.println("\tCost for (" + (x + i) + ") is " + cost);
+                // plugin.getLogger().log(Level.INFO, "\tCost for (" + (x + i) + ") is " + cost);
             }
         } else {
             plugin.getLogger().log(Level.INFO, "times " + times);
             for (int i = 0; i < times; i++) {
                 cost += calculateCost(x + i);
-                // System.out.println("\tCost for (" + (x + i) + ") is " + cost);
+                //plugin.getLogger().log(Level.INFO, "\tCost for (" + (x + i) + ") is " + cost);
 
             }
         }

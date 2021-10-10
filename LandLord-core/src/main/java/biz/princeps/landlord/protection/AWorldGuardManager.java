@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * Project: LandLord
@@ -281,9 +282,9 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
             pl.getPlayerManager().getOffline(owner, lPlayer -> {
                 for (IOwnedLand region : regions) {
                     if (region.isOwner(owner)) {
-                        //System.out.println("isowner");
+                        // pl.getLogger().log(Level.INFO, "isowner");
                         if (lPlayer.getHome() != null && region.contains(lPlayer.getHome())) {
-                            //System.out.println("remo");
+                            // pl.getLogger().log(Level.INFO, "remo");
                             lPlayer.setHome(null);
                             pl.getPlayerManager().save(lPlayer, true);
                         }

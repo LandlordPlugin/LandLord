@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Project: LandLord
@@ -85,7 +86,7 @@ public class Manage extends LandlordCommand {
                     setFarewell(player, args, new ArrayList<>(wg.getRegions(player.getUniqueId())), 1);
                     break;
                 case "setgreet":
-                    //System.out.println("greet " + Arrays.toString(args));
+                    //plugin.getLogger().log(Level.INFO, "greet " + Arrays.toString(args));
                     setGreet(player, args, Collections.singletonList(wg.getRegion(player.getLocation())), 1);
                     break;
                 case "setfarewell":
