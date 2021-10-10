@@ -1,5 +1,6 @@
 package biz.princeps.landlord.guis;
 
+import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.api.IMaterialsManager;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Project: LandLord
@@ -52,7 +54,7 @@ public class ShopGUI extends AbstractGUI {
             this.setIcon(i, placehodler);
         }
 
-        System.out.println("Cl: " + lands + " | " + claims + "/" + max);
+        pl.getLogger().log(Level.INFO, "Cl: " + lands + " | " + claims + "/" + max);
 
         Icon yourLands = new Icon(new ItemStack(mats.getGrass()));
         yourLands.setName(lm.getRawString("Shop.gui.lands.name"));
