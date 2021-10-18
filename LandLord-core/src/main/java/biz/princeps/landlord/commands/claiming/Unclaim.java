@@ -18,6 +18,8 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
+import java.util.logging.Level;
+
 /**
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
@@ -109,14 +111,14 @@ public class Unclaim extends LandlordCommand {
             int regionCount = wg.getRegionCount(player.getUniqueId());
             int freeLands = plugin.getConfig().getInt("Freelands");
 
-            // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);
+            // plugin.getLogger().log(Level.INFO, "regionCount: " + regionCount + " freeLands: " + freeLands);
 
             if (Options.isVaultEnabled()) {
                 if (regionCount <= freeLands) {
                     payback = 0;
                 } else {
                     payback = plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble("Payback");
-                    // System.out.println(payback);
+                    // plugin.getLogger().log(Level.INFO, String.valueOf(payback));
                     if (payback > 0) {
                         plugin.getVaultManager().give(player, payback);
                     }

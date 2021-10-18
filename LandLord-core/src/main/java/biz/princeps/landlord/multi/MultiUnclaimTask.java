@@ -15,6 +15,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.logging.Level;
 
 public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
 
@@ -54,13 +55,13 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
                 double payback;
                 int regionCount = wgManager.getRegionCount(player.getUniqueId());
 
-                // System.out.println("regionCount: " + regionCount + " freeLands: " + freeLands);
+                // plugin.getLogger().log(Level.INFO, "regionCount: " + regionCount + " freeLands: " + freeLands);
 
                 if (regionCount <= freeLands) {
                     payback = 0;
                 } else {
                     payback = plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble("Payback");
-                    // System.out.println(payback);
+                    // plugin.getLogger().log(Level.INFO, String.valueOf(payback));
                     if (payback > 0) {
                         plugin.getVaultManager().give(player, payback);
                     }
