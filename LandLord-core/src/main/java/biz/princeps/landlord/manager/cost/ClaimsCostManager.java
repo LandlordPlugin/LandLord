@@ -5,6 +5,7 @@ import biz.princeps.landlord.util.JavaUtils;
 import org.bukkit.Bukkit;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class ClaimsCostManager extends ACostManager {
 
@@ -38,16 +39,16 @@ public class ClaimsCostManager extends ACostManager {
     public double calculateCost(int x, int times) {
         double cost = 0;
         if (times < 0) {
-            System.out.println("times " + times);
+            plugin.getLogger().log(Level.INFO, "times " + times);
             for (int i = times; i < 0; i++) {
                 cost += calculateCost(x + i);
-                //System.out.println("\tCost for (" + (x + i) + ") is " + cost);
+                // plugin.getLogger().log(Level.INFO, "\tCost for (" + (x + i) + ") is " + cost);
             }
         } else {
-            System.out.println("times " + times);
+            plugin.getLogger().log(Level.INFO, "times " + times);
             for (int i = 0; i < times; i++) {
                 cost += calculateCost(x + i);
-                // System.out.println("\tCost for (" + (x + i) + ") is " + cost);
+                //plugin.getLogger().log(Level.INFO, "\tCost for (" + (x + i) + ") is " + cost);
 
             }
         }

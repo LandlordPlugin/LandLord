@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class AManage extends AbstractGUI {
 
@@ -409,7 +410,7 @@ public class AManage extends AbstractGUI {
         ConfigurationSection cs = plugin.getConfig().getConfigurationSection("Manage.commands");
         Set<String> keys = cs.getKeys(false);
         for (String key : keys) {
-            //System.out.println(plugin.getConfig().getBoolean("Manage.commands." + key + ".enable") + " " + player.hasPermission("landlord.player.manage." + key) + " " + regions.size());
+            // plugin.getLogger().log(Level.INFO, plugin.getConfig().getBoolean("Manage.commands." + key + ".enable") + " " + player.hasPermission("landlord.player.manage." + key) + " " + regions.size());
             // Config: Manage.commands.x
             // Language manager: Commands.Manage.x
             if (plugin.getConfig().getBoolean("Manage.commands." + key + ".enable") &&

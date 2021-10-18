@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 public class SQLStorage extends Datastorage implements IStorage {
 
@@ -96,8 +97,8 @@ public class SQLStorage extends Datastorage implements IStorage {
     @Override
     public IPlayer getPlayer(UUID id) {
         Triplet triplet = executeQuery("SELECT * FROM ll_players WHERE uuid = '" + id + "'");
-        //System.out.println("Query: " + "SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
-        //       sanitize(obj.toString()) + "'");
+        // pl.getLogger().log(Level.INFO, "Query: " + "SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
+        //        sanitize(obj.toString()) + "'");
         try {
             ResultSet res = triplet.getResultSet();
             if (!res.next()) {

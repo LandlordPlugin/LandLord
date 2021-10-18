@@ -1,13 +1,16 @@
 package biz.princeps.lib;
 
+import de.eldoria.eldoutilities.core.EldoUtilities;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 public class ConfigUpdater {
 
@@ -40,7 +43,7 @@ public class ConfigUpdater {
 
         Set<String> keys = config.getKeys(true);
 
-        System.out.println(keys);
+        EldoUtilities.logger().log(Level.INFO, Arrays.toString(keys.toArray()));
 
 
         return entryList;

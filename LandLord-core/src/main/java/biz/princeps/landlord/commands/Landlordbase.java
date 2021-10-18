@@ -54,6 +54,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Project: LandLord
@@ -286,7 +287,7 @@ public class Landlordbase extends MainCommand {
             toDisplay.addAll(adminList);
         toDisplay.addAll(playersList);
 
-        // System.out.println(toDisplay.size());
+        // pl.getLogger().log(Level.INFO, String.valueOf(toDisplay.size()));
 
         MultiPagedMessage msg = new MultiPagedMessage.Builder()
                 .setElements(toDisplay)
