@@ -16,8 +16,8 @@ public class LLLuckPerms {
     private LuckPerms api;
     private final ILandLord plugin;
 
-    public LLLuckPerms(ALandLord aLandLord) {
-        this.plugin = aLandLord;
+    public LLLuckPerms(ILandLord plugin) {
+        this.plugin = plugin;
         RegisteredServiceProvider<LuckPerms> provider = plugin.getPlugin().getServer().getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
             api = provider.getProvider();
