@@ -83,7 +83,7 @@ public class MultiUnclaim extends LandlordCommand {
     }
 
     public void performMultiUnclaim(Player player, MultiMode mode, int radius) {
-        int maxSize = plugin.getPlugin().getServer().getViewDistance() + 2;
+        int maxSize = plugin.getServer().getViewDistance() + 2;
 
         // Avoid latencies with MultiUnclaim, because World#getChunk method may generate the chunk :/
         if (radius > maxSize) { // +2 for marge value. Unless server has a huge render distance (16 for example), won't cause any trouble

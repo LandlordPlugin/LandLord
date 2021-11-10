@@ -102,7 +102,7 @@ public class LPlayerManager implements IPlayerManager {
 
     @Override
     public void getOffline(String name, Consumer<IPlayer> consumer) {
-        getOffline(plugin.getPlugin().getServer().getOfflinePlayer(name).getUniqueId(), consumer);
+        getOffline(plugin.getServer().getOfflinePlayer(name).getUniqueId(), consumer);
     }
 
     /**

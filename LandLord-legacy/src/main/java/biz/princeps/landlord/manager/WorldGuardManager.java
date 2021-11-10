@@ -49,7 +49,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     }
 
     public void initCache() {
-        for (World world : plugin.getPlugin().getServer().getWorlds()) {
+        for (World world : plugin.getServer().getWorlds()) {
             RegionManager manager = getRegionManager(world);
             for (ProtectedRegion value : manager.getRegions().values()) {
                 if (isLLRegion(value.getId())) {
@@ -112,7 +112,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public Set<IOwnedLand> getRegions() {
         Set<IOwnedLand> lands = new HashSet<>();
-        for (World world : plugin.getPlugin().getServer().getWorlds()) {
+        for (World world : plugin.getServer().getWorlds()) {
             lands.addAll(cache.getLands(world));
         }
         return lands;
@@ -132,7 +132,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public Set<?> getAllWGRegions() {
         Set<ProtectedRegion> set = new HashSet<>();
-        for (World world : plugin.getPlugin().getServer().getWorlds()) {
+        for (World world : plugin.getServer().getWorlds()) {
             Set<?> allWGRegions = getAllWGRegions(world);
             set.addAll(((Set<ProtectedRegion>) allWGRegions));
         }

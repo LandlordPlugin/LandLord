@@ -22,7 +22,7 @@ public class MobsManager implements IMobManager {
     public MobsManager(ILandLord plugin) {
         this.plugin = plugin;
         // https://minecraft.fandom.com/wiki/Data_version
-        this.currentDataVersion = plugin.getPlugin().getServer().getUnsafe().getDataVersion();
+        this.currentDataVersion = plugin.getServer().getUnsafe().getDataVersion();
 
         registerDefaultEntities();
 

@@ -48,7 +48,7 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
     @Override
     public boolean process(IOwnedLand ownedLand) {
         LandUnclaimEvent event = new LandUnclaimEvent(player, ownedLand);
-        plugin.getPlugin().getServer().getPluginManager().callEvent(event);
+        plugin.getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
             if (Options.isVaultEnabled()) {

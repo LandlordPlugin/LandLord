@@ -82,7 +82,7 @@ public class MultiAddfriend extends LandlordCommand {
                                     public void run() {
                                         LandManageEvent landManageEvent = new LandManageEvent(player, ol,
                                                 "FRIENDS", oldfriends, ol.getMembersString());
-                                        plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                        plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                     }
                                 }.runTask(plugin.getPlugin());
                             }

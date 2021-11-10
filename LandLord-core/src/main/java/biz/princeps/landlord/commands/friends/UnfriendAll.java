@@ -69,7 +69,7 @@ public class UnfriendAll extends LandlordCommand {
                                     public void run() {
                                         LandManageEvent landManageEvent = new LandManageEvent(player, ol,
                                                 "FRIENDS", oldvalue, ol.getMembersString());
-                                        plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                        plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                     }
                                 }.runTask(plugin.getPlugin());
                             }

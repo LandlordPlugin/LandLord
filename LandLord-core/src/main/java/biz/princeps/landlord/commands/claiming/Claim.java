@@ -102,7 +102,7 @@ public class Claim extends LandlordCommand {
         }
 
         LandPreClaimEvent event = new LandPreClaimEvent(player, chunk);
-        plugin.getPlugin().getServer().getPluginManager().callEvent(event);
+        plugin.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
         }
@@ -186,7 +186,7 @@ public class Claim extends LandlordCommand {
                                 .replace("%chunk%", landName)
                                 .replace("%price%", vault.format(costForBuyer));
 
-                        String originalOwner = plugin.getPlugin().getServer().getOfflinePlayer(ol.getOwner()).getName();
+                        String originalOwner = plugin.getServer().getOfflinePlayer(ol.getOwner()).getName();
 
                         if (!hasMoney(player, costForBuyer, landName, chunk)) {
                             return;
@@ -260,7 +260,7 @@ public class Claim extends LandlordCommand {
         new BukkitRunnable() {
             @Override
             public void run() {
-                plugin.getPlugin().getServer().getPluginManager().callEvent(postEvent);
+                plugin.getServer().getPluginManager().callEvent(postEvent);
             }
         }.runTask(plugin.getPlugin());
     }
@@ -271,7 +271,7 @@ public class Claim extends LandlordCommand {
 
         vault.take(player, ol.getPrice());
         vault.give(ol.getOwner(), ol.getPrice(), player.getWorld());
-        Player pp = plugin.getPlugin().getServer().getPlayer(ol.getOwner());
+        Player pp = plugin.getServer().getPlayer(ol.getOwner());
 
         ol.replaceOwner(player.getUniqueId());
 
@@ -295,7 +295,7 @@ public class Claim extends LandlordCommand {
         plugin.getMapManager().updateAll();
 
         LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol, ClaimType.ADVERTISED);
-        plugin.getPlugin().getServer().getPluginManager().callEvent(postEvent);
+        plugin.getServer().getPluginManager().callEvent(postEvent);
     }
 
     private void performNormalClaim(Player player, Chunk chunk, double calculatedCost, String landName) {
@@ -321,7 +321,7 @@ public class Claim extends LandlordCommand {
 
         if (Options.enabled_homes() && plugin.getConfig().getBoolean("Homes.enableAutoSetHome", false)) {
             if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null) {
-                plugin.getPlugin().getServer().dispatchCommand(player,
+                plugin.getServer().dispatchCommand(player,
                         PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
                                 .getCommandString(SetHome.class).substring(1));
             }
@@ -334,7 +334,7 @@ public class Claim extends LandlordCommand {
         plugin.getMapManager().updateAll();
 
         LandPostClaimEvent postEvent = new LandPostClaimEvent(player, claim, ClaimType.FREE_LAND);
-        plugin.getPlugin().getServer().getPluginManager().callEvent(postEvent);
+        plugin.getServer().getPluginManager().callEvent(postEvent);
     }
 
     private boolean hasLimitPermissions(Player player, int regionCount) {

@@ -213,7 +213,7 @@ public class AManage extends AbstractGUI {
                                     public void run() {
                                         LandManageEvent landManageEvent = new LandManageEvent(player, land,
                                                 landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
-                                        plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                        plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                     }
                                 }.runTask(plugin.getPlugin());
                             }
@@ -246,7 +246,7 @@ public class AManage extends AbstractGUI {
                                     public void run() {
                                         LandManageEvent landManageEvent = new LandManageEvent(player, land,
                                                 landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
-                                        plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                        plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                     }
                                 }.runTask(plugin.getPlugin());
                             }
@@ -373,7 +373,7 @@ public class AManage extends AbstractGUI {
                                                 public void run() {
                                                     LandManageEvent landManageEvent = new LandManageEvent(player, region,
                                                             "FRIENDS", oldfriends, region.getMembersString());
-                                                    plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                                    plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                                 }
                                             }.runTask(plugin.getPlugin());
                                         }
@@ -388,7 +388,7 @@ public class AManage extends AbstractGUI {
             String rawTitle = lm.getRawString("Commands.Manage.ManageFriends.unfriend");
 
             for (UUID id : friends) {
-                OfflinePlayer op = plugin.getPlugin().getServer().getOfflinePlayer(id);
+                OfflinePlayer op = plugin.getServer().getOfflinePlayer(id);
                 Icon friend = new Icon(mats.getPlayerHead(id));
                 String name = (op != null && op.getName() != null ? op.getName() : "OfflinePlayer");
                 String confititle = rawTitle.replace("%player%", name);
@@ -401,7 +401,7 @@ public class AManage extends AbstractGUI {
                                 friendsGui.removeIcon(friend);
 
                                 for (IOwnedLand region : regions) {
-                                    plugin.getPlugin().getServer().dispatchCommand(player, PrincepsLib.getCommandManager()
+                                    plugin.getServer().dispatchCommand(player, PrincepsLib.getCommandManager()
                                             .getCommand(Landlordbase.class).getCommandString(Unfriend.class)
                                             .substring(1) + " " + name + " " + region.getName());
                                 }
@@ -446,7 +446,7 @@ public class AManage extends AbstractGUI {
                 icon.setLore(formatList(formatList(descri, "%regencost%", costString), "%land%", land.getName()));
                 icon.setName(lm.getRawString("Commands.Manage." + key + ".title"));
                 icon.addClickAction((p) ->
-                        plugin.getPlugin().getServer()
+                        plugin.getServer()
                                 .dispatchCommand(player, plugin.getConfig().getString("Manage.commands." + key + ".cmd")
                                         .replace("%land%", land.getName())));
 
@@ -565,7 +565,7 @@ public class AManage extends AbstractGUI {
                                             public void run() {
                                                 LandManageEvent landManageEvent = new LandManageEvent(player, land,
                                                         landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
-                                                plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                                plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                             }
                                         }.runTask(plugin.getPlugin());
                                     }
@@ -577,7 +577,7 @@ public class AManage extends AbstractGUI {
                                             public void run() {
                                                 LandManageEvent landManageEvent = new LandManageEvent(player, land,
                                                         landFlag.getName(), !landFlag.getAllStatus(), landFlag.getAllStatus());
-                                                plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                                plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                             }
                                         }.runTask(plugin.getPlugin());
                                     }
@@ -624,7 +624,7 @@ public class AManage extends AbstractGUI {
     }
 
     private List<String> formatFriendsSegment(UUID id) {
-        OfflinePlayer op = plugin.getPlugin().getServer().getOfflinePlayer(id);
+        OfflinePlayer op = plugin.getServer().getOfflinePlayer(id);
         List<String> toReturn = new ArrayList<>();
 
         IPlayer offline = plugin.getPlayerManager().getOfflineSync(id);

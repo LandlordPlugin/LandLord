@@ -46,7 +46,7 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
     @Override
     public boolean process(IOwnedLand ownedLand) {
         LandClearEvent event = new LandClearEvent(commandSender, ownedLand);
-        plugin.getPlugin().getServer().getPluginManager().callEvent(event);
+        plugin.getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
             UUID owner = ownedLand.getOwner();

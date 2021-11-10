@@ -167,14 +167,14 @@ public class Landlordbase extends MainCommand {
 
                     if (subcmd instanceof GiveClaims) {
                         tabReturn.add("<amount>");
-                        for (Player onlinePlayer : plugin.getPlugin().getServer().getOnlinePlayers()) {
+                        for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                             tabReturn.add(onlinePlayer.getName());
                         }
                         return tabReturn;
                     }
 
                     if (subcmd instanceof AdminTeleport) {
-                        for (Player onlinePlayer : plugin.getPlugin().getServer().getOnlinePlayers()) {
+                        for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                             tabReturn.add(onlinePlayer.getName());
                         }
                         return tabReturn;
@@ -188,7 +188,7 @@ public class Landlordbase extends MainCommand {
 
                     if (subcmd instanceof Addfriend || subcmd instanceof AddfriendAll ||
                             subcmd instanceof Unfriend || subcmd instanceof UnfriendAll) {
-                        for (Player onlinePlayer : plugin.getPlugin().getServer().getOnlinePlayers()) {
+                        for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                             if (!onlinePlayer.getName().startsWith(args[1]) ||
                                     (sender instanceof Player && !((Player) sender).canSee(onlinePlayer)))
                                 continue;
@@ -208,7 +208,7 @@ public class Landlordbase extends MainCommand {
                     }
 
                     if (subcmd instanceof UnclaimAll) {
-                        for (World world : plugin.getPlugin().getServer().getWorlds()) {
+                        for (World world : plugin.getServer().getWorlds()) {
                             tabReturn.add(world.getName());
                         }
                         return tabReturn;
@@ -226,7 +226,7 @@ public class Landlordbase extends MainCommand {
                     }
 
                     if (subcmd instanceof MultiAddfriend || subcmd instanceof MultiRemovefriend) {
-                        for (Player onlinePlayer : plugin.getPlugin().getServer().getOnlinePlayers()) {
+                        for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                             if (!onlinePlayer.getName().startsWith(args[2]) ||
                                     (sender instanceof Player && !((Player) sender).canSee(onlinePlayer)))
                                 continue;

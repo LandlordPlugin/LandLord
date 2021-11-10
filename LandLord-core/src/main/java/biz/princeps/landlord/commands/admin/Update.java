@@ -50,7 +50,7 @@ public class Update extends LandlordCommand {
                 issuer.sendMessage("§8[§c§l!§8] §fStarting to update lands...");
 
                 Collection<IOwnedLand> regions = new HashSet<>();
-                for (World world : plugin.getPlugin().getServer().getWorlds()) {
+                for (World world : plugin.getServer().getWorlds()) {
                     regions.addAll(plugin.getWGManager().getRegions(world));
                 }
 
@@ -74,7 +74,7 @@ public class Update extends LandlordCommand {
                 sender.sendMessage("§8[§c§l!§8] §fStarting to reset lands... Please wait :)");
 
                 Collection<IOwnedLand> regions = new HashSet<>();
-                for (World world : plugin.getPlugin().getServer().getWorlds()) {
+                for (World world : plugin.getServer().getWorlds()) {
                     if (isDisabledWorld(world))
                         continue;
                     regions.addAll(plugin.getWGManager().getRegions(world));

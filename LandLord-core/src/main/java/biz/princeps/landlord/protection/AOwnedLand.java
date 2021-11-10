@@ -126,7 +126,7 @@ public abstract class AOwnedLand implements IOwnedLand {
         StringJoiner stringJoiner = new StringJoiner(NAMES_DELIMITER);
         // ugly, maybe solve this in the future
         for (UUID uuid : uuids) {
-            stringJoiner.add(plugin.getPlugin().getServer().getOfflinePlayer(uuid).getName());
+            stringJoiner.add(plugin.getServer().getOfflinePlayer(uuid).getName());
         }
         return stringJoiner.toString();
     }

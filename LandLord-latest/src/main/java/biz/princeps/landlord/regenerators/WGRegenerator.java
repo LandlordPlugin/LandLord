@@ -44,7 +44,7 @@ public class WGRegenerator implements IRegenerationManager {
         // heal all players so that they dont suffocate in case they have only half a heart left. later we port them up
         for (Entity entity : chunk.getEntities()) {
             if (entity.getType() == EntityType.PLAYER) {
-                plugin.getPlugin().getServer().getPlayer(entity.getName()).setHealth(20);
+                plugin.getServer().getPlayer(entity.getName()).setHealth(20);
             }
         }
 
@@ -73,7 +73,7 @@ public class WGRegenerator implements IRegenerationManager {
         // Teleport players up so that they dont suffocate.
         for (Entity entity : chunk.getEntities()) {
             if (entity.getType() == EntityType.PLAYER) {
-                Player p = plugin.getPlugin().getServer().getPlayer(entity.getName());
+                Player p = plugin.getServer().getPlayer(entity.getName());
                 p.setHealth(20);
                 p.teleport(world.getHighestBlockAt(p.getLocation().add(0, 3, 0)).getLocation());
             }

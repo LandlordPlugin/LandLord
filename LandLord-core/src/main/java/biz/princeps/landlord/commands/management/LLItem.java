@@ -42,7 +42,7 @@ public class LLItem extends LandlordCommand {
                 targetingPlayer = properties.getPlayer();
             }
         } else {
-            targetingPlayer = plugin.getPlugin().getServer().getPlayer(target);
+            targetingPlayer = plugin.getServer().getPlayer(target);
         }
 
         if (targetingPlayer == null) {

@@ -61,12 +61,12 @@ public class VaultManager implements IVaultManager {
     @Override
     public void give(UUID id, double amount, World world) {
         if (playerWorldBased) {
-            economy.depositPlayer(plugin.getPlugin().getServer().getOfflinePlayer(id), world.getName(), amount);
+            economy.depositPlayer(plugin.getServer().getOfflinePlayer(id), world.getName(), amount);
         } else {
             if (defaultBalance) {
-                economy.depositPlayer(plugin.getPlugin().getServer().getOfflinePlayer(id), amount);
+                economy.depositPlayer(plugin.getServer().getOfflinePlayer(id), amount);
             } else {
-                economy.depositPlayer(plugin.getPlugin().getServer().getOfflinePlayer(id), worldBalance, amount);
+                economy.depositPlayer(plugin.getServer().getOfflinePlayer(id), worldBalance, amount);
             }
         }
     }

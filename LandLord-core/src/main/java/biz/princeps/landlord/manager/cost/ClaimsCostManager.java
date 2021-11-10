@@ -14,7 +14,7 @@ public class ClaimsCostManager extends ACostManager {
 
     @Override
     public double calculateCost(UUID uuid) {
-        if (plugin.getPlugin().getServer().getPlayer(uuid) == null) {
+        if (plugin.getServer().getPlayer(uuid) == null) {
             return this.calculateCost(plugin.getPlayerManager().getOfflineSync(uuid).getClaims());
         } else {
             return this.calculateCost(plugin.getPlayerManager().get(uuid).getClaims());

@@ -36,7 +36,7 @@ public class MultiClearInactiveTask extends AMultiTask<OfflinePlayer> {
     @Override
     public boolean process(OfflinePlayer offlinePlayer) {
         LandClearInactiveEvent event = new LandClearInactiveEvent(commandSender, offlinePlayer);
-        plugin.getPlugin().getServer().getPluginManager().callEvent(event);
+        plugin.getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
             clearedLands += wgManager.unclaim(

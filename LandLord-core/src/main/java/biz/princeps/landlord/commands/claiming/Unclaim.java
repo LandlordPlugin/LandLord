@@ -85,7 +85,7 @@ public class Unclaim extends LandlordCommand {
 
         // Normal unclaim
         LandUnclaimEvent event = new LandUnclaimEvent(player, ol);
-        plugin.getPlugin().getServer().getPluginManager().callEvent(event);
+        plugin.getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
             if (plugin.getConfig().getBoolean("ConfirmationDialog.onUnclaim")) {

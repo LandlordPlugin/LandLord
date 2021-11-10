@@ -62,7 +62,7 @@ public class LandSessionHandler extends Handler {
             // exited a non-ll region, needs to be handled by WG
             this.farewell.onCrossBoundary(player, from, to, toSet, entered, exited, moveType);
         }
-        plugin.getPlugin().getServer().getPluginManager().callEvent(new LandChangeEvent(player, exitedLand, enteredLand));
+        plugin.getServer().getPluginManager().callEvent(new LandChangeEvent(player, exitedLand, enteredLand));
         return true; // we're not handling anything here for now
     }
 

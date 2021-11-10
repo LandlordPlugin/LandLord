@@ -237,7 +237,7 @@ public class OwnedLand extends AOwnedLand {
             }
         }
         // add other flags
-        OfflinePlayer p = plugin.getPlugin().getServer().getOfflinePlayer(owner);
+        OfflinePlayer p = plugin.getServer().getOfflinePlayer(owner);
         if (p.getName() == null) {
             return;
         }
@@ -272,7 +272,7 @@ public class OwnedLand extends AOwnedLand {
             }
         }
         // add other flags
-        OfflinePlayer p = plugin.getPlugin().getServer().getOfflinePlayer(owner);
+        OfflinePlayer p = plugin.getServer().getOfflinePlayer(owner);
         if (p.getName() == null) {
             return;
         }

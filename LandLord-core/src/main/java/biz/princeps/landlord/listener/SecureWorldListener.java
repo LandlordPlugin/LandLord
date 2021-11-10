@@ -39,7 +39,7 @@ public class SecureWorldListener extends BasicListener {
         super(plugin);
         this.worlds = new HashSet<>(plugin.getConfig().getStringList("SecureWorld.worlds"));
         if (worlds.isEmpty()) {
-            worlds.addAll(plugin.getPlugin().getServer().getWorlds()
+            worlds.addAll(plugin.getServer().getWorlds()
                     .stream().map(World::getName).collect(Collectors.toSet()));
         }
         this.treshold = plugin.getConfig().getInt("SecureWorld.threshold");
@@ -53,7 +53,7 @@ public class SecureWorldListener extends BasicListener {
         IOwnedLand land = wg.getRegion(e.getBlock().getLocation());
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlock(), e);
-            plugin.getPlugin().getServer().getPluginManager().callEvent(event);
+            plugin.getServer().getPluginManager().callEvent(event);
         }
     }
 
@@ -64,7 +64,7 @@ public class SecureWorldListener extends BasicListener {
 
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlockPlaced(), e);
-            plugin.getPlugin().getServer().getPluginManager().callEvent(event);
+            plugin.getServer().getPluginManager().callEvent(event);
         }
     }
 
@@ -75,7 +75,7 @@ public class SecureWorldListener extends BasicListener {
 
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlockClicked(), e);
-            plugin.getPlugin().getServer().getPluginManager().callEvent(event);
+            plugin.getServer().getPluginManager().callEvent(event);
         }
     }
 

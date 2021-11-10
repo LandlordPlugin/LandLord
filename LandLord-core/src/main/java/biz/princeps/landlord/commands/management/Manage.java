@@ -152,7 +152,7 @@ public class Manage extends LandlordCommand {
         for (IOwnedLand region : lands) {
             LandManageEvent landManageEvent = new LandManageEvent(player, region,
                     "GREET_MESSAGE", region.getGreetMessage(), newmsg);
-            plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+            plugin.getServer().getPluginManager().callEvent(landManageEvent);
 
             region.setGreetMessage(newmsg);
         }
@@ -181,7 +181,7 @@ public class Manage extends LandlordCommand {
         for (IOwnedLand region : lands) {
             LandManageEvent landManageEvent = new LandManageEvent(player, region,
                     "FAREWELL_MESSAGE", region.getFarewellMessage(), newmsg);
-            plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+            plugin.getServer().getPluginManager().callEvent(landManageEvent);
 
             region.setFarewellMessage(newmsg);
         }

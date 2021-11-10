@@ -107,7 +107,7 @@ public class Info extends LandlordCommand {
             plugin.getPlayerManager().getOffline(land.getOwner(), (owner) -> {
                 String lastseen, owners = land.getOwnersString(), friends = land.getMembersString();
                 LocalDateTime lastSeenDate = null;
-                OfflinePlayer op = plugin.getPlugin().getServer().getOfflinePlayer(land.getOwner());
+                OfflinePlayer op = plugin.getServer().getOfflinePlayer(land.getOwner());
                 if (op.isOnline()) {
                     lastseen = lm.getRawString("Commands.Info.online");
                 } else {

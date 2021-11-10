@@ -143,22 +143,22 @@ public class Maitem extends AbstractItem {
     private void executeAction(ItemClickAction clickAction, Player p, Location loc) {
         switch (clickAction.getResult()) {
             case INFO:
-                plugin.getPlugin().getServer().dispatchCommand(p, "ll info");
+                plugin.getServer().dispatchCommand(p, "ll info");
                 break;
             case BUY:
-                plugin.getPlugin().getServer().dispatchCommand(p, "ll claim");
+                plugin.getServer().dispatchCommand(p, "ll claim");
                 break;
             case MANAGE:
-                plugin.getPlugin().getServer().dispatchCommand(p, "ll manage");
+                plugin.getServer().dispatchCommand(p, "ll manage");
                 break;
             case MANAGEALL:
-                plugin.getPlugin().getServer().dispatchCommand(p, "ll manageall");
+                plugin.getServer().dispatchCommand(p, "ll manageall");
                 break;
             case TOGGLEMAP:
-                plugin.getPlugin().getServer().dispatchCommand(p, "ll map");
+                plugin.getServer().dispatchCommand(p, "ll map");
                 break;
             case TOGGLEBORDERS:
-                plugin.getPlugin().getServer().dispatchCommand(p, "ll borders");
+                plugin.getServer().dispatchCommand(p, "ll borders");
                 break;
         }
     }

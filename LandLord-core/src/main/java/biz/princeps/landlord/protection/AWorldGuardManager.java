@@ -51,7 +51,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
             sb.append("_").append(splitted[i]);
         }
 
-        return plugin.getPlugin().getServer().getWorld(sb.toString());
+        return plugin.getServer().getWorld(sb.toString());
     }
 
     /**
@@ -130,10 +130,10 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
     @Override
     public Set<IOwnedLand> getRegions(UUID id) {
         Set<IOwnedLand> set = new HashSet<>();
-        OfflinePlayer op = plugin.getPlugin().getServer().getOfflinePlayer(id);
+        OfflinePlayer op = plugin.getServer().getOfflinePlayer(id);
         if (op != null) {
             List<String> worlds = plugin.getConfig().getStringList("disabled-worlds");
-            for (World world : plugin.getPlugin().getServer().getWorlds()) {
+            for (World world : plugin.getServer().getWorlds()) {
                 // Only count enabled worlds
                 if (!worlds.contains(world.getName())) {
                     for (IOwnedLand region : getRegions(id, world)) {

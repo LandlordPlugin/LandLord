@@ -58,7 +58,7 @@ public class ClearInactive extends LandlordCommand {
         new BukkitRunnable() {
             @Override
             public void run() {
-                OfflinePlayer[] offlinePlayers = plugin.getPlugin().getServer().getOfflinePlayers();
+                OfflinePlayer[] offlinePlayers = plugin.getServer().getOfflinePlayers();
                 List<OfflinePlayer> playersToClear = new ArrayList<>(offlinePlayers.length);
 
                 for (OfflinePlayer offlinePlayer : offlinePlayers) {

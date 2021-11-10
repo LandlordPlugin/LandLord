@@ -47,7 +47,7 @@ public class UnclaimAll extends LandlordCommand {
 
         if (arguments.size() == 1) {
             String worldName = arguments.get(0);
-            World world = plugin.getPlugin().getServer().getWorld(worldName);
+            World world = plugin.getServer().getWorld(worldName);
 
             if (world == null) {
                 lm.sendMessage(player, lm.getString(player, "Commands.UnclaimAll.invalidWorld"));
@@ -56,7 +56,7 @@ public class UnclaimAll extends LandlordCommand {
                 worlds = Collections.singletonList(world);
             }
         } else {
-            worlds = plugin.getPlugin().getServer().getWorlds();
+            worlds = plugin.getServer().getWorlds();
         }
 
         if (plugin.getConfig().getBoolean("ConfirmationDialog.onUnclaimAll")) {

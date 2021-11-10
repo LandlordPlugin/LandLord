@@ -1,5 +1,6 @@
 package biz.princeps.landlord.api;
 
+import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +29,14 @@ public interface ILandLord {
      * @return instance of JavaPlugin
      */
     JavaPlugin getPlugin();
+
+    /**
+     * Returns the instance of the Server.
+     * Useful for accessing and modifying server data.
+     *
+     * @return instance of Server
+     */
+    Server getServer();
 
 
     /**

@@ -52,7 +52,7 @@ public class GiveClaims extends LandlordCommand {
                     return;
                 }
 
-                Player player = plugin.getPlugin().getServer().getPlayer(target);
+                Player player = plugin.getServer().getPlayer(target);
                 if (player != null) {
                     if (checkPermission(player, amount)) {
                         if (vault.hasBalance(player, cost)) {
@@ -83,7 +83,7 @@ public class GiveClaims extends LandlordCommand {
                     issuer.sendUsage();
                     return;
                 }
-                if (plugin.getPlugin().getServer().getPlayer(target) != null) {
+                if (plugin.getServer().getPlayer(target) != null) {
                     addClaims(issuer, target, amount);
 
                 }
@@ -111,7 +111,7 @@ public class GiveClaims extends LandlordCommand {
     }
 
     private void addClaims(Properties issuer, String target, int amount) {
-        Player player = plugin.getPlugin().getServer().getPlayer(target);
+        Player player = plugin.getServer().getPlayer(target);
         IPlayer lPlayer = player != null ? plugin.getPlayerManager().get(player.getUniqueId()) : null;
 
         if (player != null && player.isOnline() && lPlayer != null) {
@@ -123,7 +123,7 @@ public class GiveClaims extends LandlordCommand {
                 if (offline != null) {
                     offline.addClaims(amount);
                     plugin.getPlayerManager().save(offline, true);
-                    OfflinePlayer op = plugin.getPlugin().getServer().getOfflinePlayer(offline.getUuid());
+                    OfflinePlayer op = plugin.getServer().getOfflinePlayer(offline.getUuid());
 
                     if (op.isOnline()) {
                         lm.sendMessage(op.getPlayer(), lm.getString(op.getPlayer(), "Commands.GiveClaims.success").replace("%amount%",

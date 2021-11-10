@@ -55,7 +55,7 @@ public class MultiTaskManager implements IMultiTaskManager {
 
     @Override
     public void enqueueTask(IMultiTask<?> multiTask) {
-        if (plugin.getPlugin().getServer().isPrimaryThread()) {
+        if (plugin.getServer().isPrimaryThread()) {
             queue.add(multiTask);
         } else {
             new BukkitRunnable() {

@@ -36,7 +36,7 @@ public class LangManager implements ILangManager {
         reload();
         new ConfigUtil(plugin).handleConfigUpdate(plugin.getPlugin().getDataFolder() + "/" + filename, "/" + filename);
         reload();
-        parsePlaceholders = plugin.getPlugin().getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
+        parsePlaceholders = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
     }
 
     @Override

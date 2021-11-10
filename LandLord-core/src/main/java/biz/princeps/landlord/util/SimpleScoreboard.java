@@ -32,7 +32,7 @@ public class SimpleScoreboard {
     public SimpleScoreboard(ILandLord plugin, String title, Player p) {
         Objects.requireNonNull(p);
         this.plugin = plugin;
-        this.scoreboard = plugin.getPlugin().getServer().getScoreboardManager().getNewScoreboard();
+        this.scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
         this.title = title;
         this.scores = new ArrayList<>();
         this.player = p;
@@ -92,7 +92,7 @@ public class SimpleScoreboard {
      */
     public void reset() {
         scores.clear();
-        this.scoreboard = plugin.getPlugin().getServer().getScoreboardManager().getNewScoreboard();
+        this.scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
         player.setScoreboard(this.scoreboard);
     }
 
@@ -135,7 +135,7 @@ public class SimpleScoreboard {
     public void deactivate() {
         if (runnable != null)
             this.runnable.cancel();
-        this.scoreboard = plugin.getPlugin().getServer().getScoreboardManager().getNewScoreboard();
+        this.scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
         player.setScoreboard(this.scoreboard);
 
     }

@@ -16,7 +16,7 @@ public abstract class BasicListener implements Listener {
 
     public BasicListener(ILandLord plugin) {
         this.plugin = plugin;
-        plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
+        plugin.getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
     }
 
 }

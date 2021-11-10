@@ -36,7 +36,7 @@ public class Borders extends LandlordCommand implements Listener {
                 Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Borders.aliases")));
         this.tasks = new HashMap<>();
 
-        this.plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
+        this.plugin.getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
     }
 
     @Override

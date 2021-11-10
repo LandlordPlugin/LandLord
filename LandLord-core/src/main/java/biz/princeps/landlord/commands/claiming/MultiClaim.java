@@ -73,7 +73,7 @@ public class MultiClaim extends LandlordCommand {
             return;
         }
 
-        int maxSize = plugin.getPlugin().getServer().getViewDistance() + 2;
+        int maxSize = plugin.getServer().getViewDistance() + 2;
 
         // Avoid latencies with MultiClaim, because World#getChunk method may generates the chunk :/
         if (radius > maxSize) { // +2 for marge value. Unless server has a huge render distance (16 for example), won't cause any trouble
