@@ -50,5 +50,3 @@ public class LandClearInactiveEvent extends Event implements Cancellable {
     }
 
 }
-
-
