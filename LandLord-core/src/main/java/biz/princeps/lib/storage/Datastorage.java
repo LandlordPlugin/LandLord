@@ -1,6 +1,5 @@
 package biz.princeps.lib.storage;
 
-import biz.princeps.lib.PrincepsLib;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 
 /**
  * Project: LandLord
@@ -20,17 +18,12 @@ import java.util.logging.Logger;
  * Date: 26/4/18
  */
 public class Datastorage {
-    protected final Logger logger;
-    protected final JavaPlugin pl;
+
+    protected final JavaPlugin plugin;
     protected final HikariDataSource ds;
 
-    public Logger getLogger() {
-        return logger;
-    }
-
-    public Datastorage(Logger logger, String hostname, String port, String username, String password, String database) {
-        this.logger = logger;
-        this.pl = PrincepsLib.getPluginInstance();
+    public Datastorage(JavaPlugin plugin, String hostname, String port, String username, String password, String database) {
+        this.plugin = plugin;
 
         HikariConfig hikariConfig = new HikariConfig();
 
@@ -55,7 +48,7 @@ public class Datastorage {
         try {
             return ds.getConnection();
         } catch (SQLException e) {
-            logger.warning("Error while trying to pull a new connection: " + e.getMessage());
+            plugin.getLogger().warning("Error while trying to pull a new connection: " + e.getMessage());
             return null;
         }
     }
@@ -70,7 +63,7 @@ public class Datastorage {
             public void run() {
                 executeQuery(query, consumer, null);
             }
-        }.runTaskAsynchronously(pl);
+        }.runTaskAsynchronously(plugin);
     }
 
     public void executeUpdateAsync(String query, Object... args) {
@@ -79,7 +72,7 @@ public class Datastorage {
             public void run() {
                 executeUpdate(query, args);
             }
-        }.runTaskAsynchronously(pl);
+        }.runTaskAsynchronously(plugin);
     }
 
     public void executeAsync(String query, Object... args) {
@@ -88,7 +81,7 @@ public class Datastorage {
             public void run() {
                 execute(query, args);
             }
-        }.runTaskAsynchronously(pl);
+        }.runTaskAsynchronously(plugin);
     }
 
     public void executeQueryAsync(String query, Consumer<ResultSet> consumer, Object... args) {
@@ -97,7 +90,7 @@ public class Datastorage {
             public void run() {
                 executeQuery(query, consumer, args);
             }
-        }.runTaskAsynchronously(pl);
+        }.runTaskAsynchronously(plugin);
     }
 
     public void executeUpdate(String query, Object... args) {
@@ -107,7 +100,7 @@ public class Datastorage {
             st.executeUpdate();
 
         } catch (SQLException e) {
-            logger.warning("Error while executing update for query: " + query + "\nError:" + e.getMessage());
+            plugin.getLogger().warning("Error while executing update for query: " + query + "\nError:" + e.getMessage());
         }
     }
 
@@ -118,7 +111,7 @@ public class Datastorage {
             st.execute();
 
         } catch (SQLException e) {
-            logger.warning("Error while executing query: " + query + "\nError:" + e.getMessage());
+            plugin.getLogger().warning("Error while executing query: " + query + "\nError:" + e.getMessage());
         }
     }
 
@@ -131,7 +124,7 @@ public class Datastorage {
             res.close();
 
         } catch (SQLException e) {
-            logger.warning("Error while getting result set for query: " + query + "\nError:" + e.getMessage());
+            plugin.getLogger().warning("Error while getting result set for query: " + query + "\nError:" + e.getMessage());
         }
     }
 
@@ -144,7 +137,7 @@ public class Datastorage {
             ResultSet res = st.executeQuery();
             return new Triplet(con, st, res);
         } catch (SQLException e) {
-            logger.warning("Error while getting result set for query: " + query + "\nError:" + e.getMessage());
+            plugin.getLogger().warning("Error while getting result set for query: " + query + "\nError:" + e.getMessage());
         }
         // Connection should be closed via the result set
         return null;
@@ -195,4 +188,5 @@ public class Datastorage {
             }
         }
     }
+
 }

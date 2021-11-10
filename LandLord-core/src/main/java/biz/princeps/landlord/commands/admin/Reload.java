@@ -10,11 +10,11 @@ import org.bukkit.command.CommandSender;
 
 public class Reload extends LandlordCommand {
 
-    public Reload(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Reload.name"),
-                pl.getConfig().getString("CommandSettings.Reload.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Reload.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Reload.aliases")));
+    public Reload(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Reload.name"),
+                plugin.getConfig().getString("CommandSettings.Reload.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Reload.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Reload.aliases")));
     }
 
     @Override

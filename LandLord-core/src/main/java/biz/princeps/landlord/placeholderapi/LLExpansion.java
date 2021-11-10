@@ -16,15 +16,15 @@ import java.util.logging.Level;
 
 public class LLExpansion extends PlaceholderExpansion {
 
-    private final ILandLord pl;
+    private final ILandLord plugin;
     private final IWorldGuardManager wg;
 
     private final Cache<String, String> cache;
     private final Cache<UUID, Integer> maxClaimPermissionCache;
 
-    public LLExpansion(ILandLord pl) {
-        this.pl = pl;
-        this.wg = pl.getWGManager();
+    public LLExpansion(ILandLord plugin) {
+        this.plugin = plugin;
+        this.wg = plugin.getWGManager();
 
         this.cache = CacheBuilder.newBuilder()
                 .expireAfterWrite(500, TimeUnit.MILLISECONDS)
@@ -41,12 +41,12 @@ public class LLExpansion extends PlaceholderExpansion {
 
     @Override
     public String getAuthor() {
-        return String.valueOf(pl.getPlugin().getDescription().getAuthors());
+        return String.valueOf(plugin.getPlugin().getDescription().getAuthors());
     }
 
     @Override
     public String getVersion() {
-        return pl.getPlugin().getDescription().getVersion();
+        return plugin.getPlugin().getDescription().getVersion();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class LLExpansion extends PlaceholderExpansion {
             return cache.get(player.getName() + "_" + placeholder, () ->
                     parsePlaceholder(player, placeholder));
         } catch (ExecutionException e) {
-            pl.getLogger().log(Level.SEVERE, "Could not parse placeholder: " + placeholder + " for " + player.getName() + "!", e);
+            plugin.getLogger().log(Level.SEVERE, "Could not parse placeholder: " + placeholder + " for " + player.getName() + "!", e);
         }
         return null;
     }
@@ -82,9 +82,9 @@ public class LLExpansion extends PlaceholderExpansion {
 
             // The amounf of purchased claims
             case "claims":
-                IPlayer iPlayer = pl.getPlayerManager().get(player.getUniqueId());
+                IPlayer iPlayer = plugin.getPlayerManager().get(player.getUniqueId());
                 if (iPlayer == null) {
-                    pl.getLogger().warning("A placeholder is trying to load %landlord_claims% before async loading of the " +
+                    plugin.getLogger().warning("A placeholder is trying to load %landlord_claims% before async loading of the " +
                             "player has finished! Use FinishedLoadingPlayerEvent!");
                     return "NaN";
                 }
@@ -92,9 +92,9 @@ public class LLExpansion extends PlaceholderExpansion {
 
             // Remaining claims. Difference between owned_lands and claims
             case "remaining_claims":
-                IPlayer iPlayer2 = pl.getPlayerManager().get(player.getUniqueId());
+                IPlayer iPlayer2 = plugin.getPlayerManager().get(player.getUniqueId());
                 if (iPlayer2 == null) {
-                    pl.getLogger().warning("A placeholder is trying to load %landlord_remainingClaims% before async loading of the " +
+                    plugin.getLogger().warning("A placeholder is trying to load %landlord_remainingClaims% before async loading of the " +
                             "player has finished! Use FinishedLoadingPlayerEvent!");
                     return "NaN";
                 }
@@ -123,12 +123,12 @@ public class LLExpansion extends PlaceholderExpansion {
 
             // Price of the next land which will be purchased
             case "next_land_price":
-                return String.valueOf(pl.getCostManager().calculateCost(player.getUniqueId()));
+                return String.valueOf(plugin.getCostManager().calculateCost(player.getUniqueId()));
 
             // Amount which will be given when this land will be sold
             case "current_land_refund":
                 int regionCount = wg.getRegionCount(player.getUniqueId());
-                return String.valueOf(pl.getCostManager().calculateCost(regionCount - 1) * pl.getConfig().getDouble(
+                return String.valueOf(plugin.getCostManager().calculateCost(regionCount - 1) * plugin.getConfig().getDouble(
                         "Payback"));
 
             // Number of the permission, which indicates the amount of possible claims
@@ -138,7 +138,7 @@ public class LLExpansion extends PlaceholderExpansion {
             // Number of free claims a user can still claim.
             case "remaining_free_lands":
                 int landCount = wg.getRegionCount(player.getUniqueId());
-                int freeLands = pl.getConfig().getInt("Freelands");
+                int freeLands = plugin.getConfig().getInt("Freelands");
 
                 if (landCount <= freeLands) {
                     return String.valueOf((Math.min(getMaxClaimPermission(player), freeLands)) - landCount);
@@ -153,9 +153,9 @@ public class LLExpansion extends PlaceholderExpansion {
     private int getMaxClaimPermission(Player player) {
         try {
             return maxClaimPermissionCache.get(player.getUniqueId(), () ->
-                    pl.getPlayerManager().getMaxClaimPermission(player));
+                    plugin.getPlayerManager().getMaxClaimPermission(player));
         } catch (ExecutionException e) {
-            pl.getLogger().log(Level.SEVERE, "Could not get maxClaimPermission for " + player.getName() + "!", e);
+            plugin.getLogger().log(Level.SEVERE, "Could not get maxClaimPermission for " + player.getName() + "!", e);
         }
         return -1;
     }

@@ -1,5 +1,6 @@
 package biz.princeps.landlord;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.events.LandChangeEvent;
@@ -14,18 +15,19 @@ import com.sk89q.worldguard.session.Session;
 import com.sk89q.worldguard.session.handler.FarewellFlag;
 import com.sk89q.worldguard.session.handler.GreetingFlag;
 import com.sk89q.worldguard.session.handler.Handler;
-import org.bukkit.Bukkit;
 
 import java.util.Set;
 
 public class LandSessionHandler extends Handler {
 
+    private final ILandLord plugin;
     private final IWorldGuardManager worldGuardManager;
     private final GreetingFlag greeting;
     private final FarewellFlag farewell;
 
-    private LandSessionHandler(Session session, IWorldGuardManager worldGuardManager) {
+    private LandSessionHandler(ILandLord plugin, Session session, IWorldGuardManager worldGuardManager) {
         super(session);
+        this.plugin = plugin;
         this.worldGuardManager = worldGuardManager;
         this.greeting = GreetingFlag.FACTORY.create(session);
         this.farewell = FarewellFlag.FACTORY.create(session);
@@ -61,7 +63,8 @@ public class LandSessionHandler extends Handler {
             // exited a non-ll region, needs to be handled by WG
             this.farewell.onCrossBoundary(player, from, to, toSet, entered, exited, moveType);
         }
-        Bukkit.getPluginManager().callEvent(new LandChangeEvent(BukkitAdapter.adapt(player), exitedLand, enteredLand));
+        plugin.getPlugin().getServer().getPluginManager()
+                .callEvent(new LandChangeEvent(BukkitAdapter.adapt(player), exitedLand, enteredLand));
         return true; // we're not handling anything here for now
     }
 
@@ -78,15 +81,17 @@ public class LandSessionHandler extends Handler {
 
     public static final class Factory extends Handler.Factory<LandSessionHandler> {
 
+        private final ILandLord plugin;
         private final WorldGuardManager worldGuardManager;
 
-        public Factory(WorldGuardManager worldGuardManager) {
+        public Factory(ILandLord plugin, WorldGuardManager worldGuardManager) {
+            this.plugin = plugin;
             this.worldGuardManager = worldGuardManager;
         }
 
         @Override
         public LandSessionHandler create(Session session) {
-            return new LandSessionHandler(session, this.worldGuardManager);
+            return new LandSessionHandler(plugin, session, this.worldGuardManager);
         }
     }
 }

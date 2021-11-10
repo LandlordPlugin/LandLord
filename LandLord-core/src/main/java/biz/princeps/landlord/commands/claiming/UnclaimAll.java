@@ -10,7 +10,6 @@ import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -29,11 +28,11 @@ public class UnclaimAll extends LandlordCommand {
 
     private final IMultiTaskManager multiTaskManager;
 
-    public UnclaimAll(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.UnclaimAll.name"),
-                pl.getConfig().getString("CommandSettings.UnclaimAll.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.UnclaimAll.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.UnclaimAll.aliases")));
+    public UnclaimAll(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.UnclaimAll.name"),
+                plugin.getConfig().getString("CommandSettings.UnclaimAll.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.UnclaimAll.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.UnclaimAll.aliases")));
         this.multiTaskManager = plugin.getMultiTaskManager();
     }
 
@@ -48,7 +47,7 @@ public class UnclaimAll extends LandlordCommand {
 
         if (arguments.size() == 1) {
             String worldName = arguments.get(0);
-            World world = Bukkit.getWorld(worldName);
+            World world = plugin.getPlugin().getServer().getWorld(worldName);
 
             if (world == null) {
                 lm.sendMessage(player, lm.getString(player, "Commands.UnclaimAll.invalidWorld"));
@@ -57,7 +56,7 @@ public class UnclaimAll extends LandlordCommand {
                 worlds = Collections.singletonList(world);
             }
         } else {
-            worlds = Bukkit.getWorlds();
+            worlds = plugin.getPlugin().getServer().getWorlds();
         }
 
         if (plugin.getConfig().getBoolean("ConfirmationDialog.onUnclaimAll")) {

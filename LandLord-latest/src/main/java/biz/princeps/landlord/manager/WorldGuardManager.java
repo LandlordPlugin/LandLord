@@ -20,11 +20,11 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -46,18 +46,18 @@ public class WorldGuardManager extends AWorldGuardManager {
     private final WorldGuardPlugin wgPlugin;
     private final WorldGuard wg;
 
-    public WorldGuardManager(ILandLord pl, WorldGuardPlugin worldGuard) {
-        super(pl);
+    public WorldGuardManager(ILandLord plugin, WorldGuardPlugin worldGuard) {
+        super(plugin);
         this.wg = WorldGuard.getInstance();
         this.wgPlugin = worldGuard;
     }
 
     public void initCache() {
-        for (World world : Bukkit.getWorlds()) {
+        for (World world : plugin.getPlugin().getServer().getWorlds()) {
             RegionManager manager = getRegionManager(world);
             for (ProtectedRegion value : manager.getRegions().values()) {
                 if (isLLRegion(value.getId())) {
-                    cache.add(OwnedLand.of(pl, value));
+                    cache.add(OwnedLand.of(plugin, value));
                 }
             }
         }
@@ -95,7 +95,7 @@ public class WorldGuardManager extends AWorldGuardManager {
         RegionManager manager = getRegionManager(chunk.getWorld());
         if (manager != null) {
             manager.addRegion(pr);
-            IOwnedLand land = OwnedLand.create(pl, pr, owner);
+            IOwnedLand land = OwnedLand.create(plugin, pr, owner);
             land.replaceOwner(owner);
             cache.add(land);
             return land;
@@ -116,7 +116,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public Set<IOwnedLand> getRegions() {
         Set<IOwnedLand> lands = new HashSet<>();
-        for (World world : Bukkit.getWorlds()) {
+        for (World world : plugin.getPlugin().getServer().getWorlds()) {
             lands.addAll(cache.getLands(world));
         }
         return lands;
@@ -136,7 +136,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public Set<?> getAllWGRegions() {
         Set<ProtectedRegion> set = new HashSet<>();
-        for (World world : Bukkit.getWorlds()) {
+        for (World world : plugin.getPlugin().getServer().getWorlds()) {
             Set<?> allWGRegions = getAllWGRegions(world);
             set.addAll(((Set<ProtectedRegion>) allWGRegions));
         }
@@ -147,7 +147,8 @@ public class WorldGuardManager extends AWorldGuardManager {
     public Set<IOwnedLand> getRegions(UUID id, World world) {
         Set<IOwnedLand> lands = new HashSet<>();
         for (IOwnedLand land : cache.getLands(id)) {
-            if (land.getWorld() != world) continue;
+            if (land.getWorld() != world)
+                continue;
 
             lands.add(land);
         }
@@ -167,7 +168,12 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public void unclaim(World world, String regionname) {
         this.cache.remove(regionname);
-        Bukkit.getScheduler().runTaskAsynchronously(pl.getPlugin(), () -> getRegionManager(world).removeRegion(regionname));
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                getRegionManager(world).removeRegion(regionname);
+            }
+        }.runTaskAsynchronously(plugin.getPlugin());
     }
 
     /**

@@ -22,7 +22,6 @@ import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -31,13 +30,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
 
 public class AManage extends AbstractGUI {
 
@@ -54,25 +53,25 @@ public class AManage extends AbstractGUI {
     private final MultiMode multiMode;
     private final int radius;
 
-    AManage(ILandLord pl, Player player, String header, List<IOwnedLand> land, ManageMode manageMode, MultiMode multiMode, int radius) {
-        super(player, 45, header);
-        this.plugin = pl;
+    AManage(ILandLord plugin, Player player, String header, List<IOwnedLand> land, ManageMode manageMode, MultiMode multiMode, int radius) {
+        super(plugin.getPlugin(), player, 45, header);
+        this.plugin = plugin;
         this.regions = land;
         this.lm = plugin.getLangManager();
-        this.toggleMobs = new HashSet<>(pl.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
-        this.mats = pl.getMaterialsManager();
+        this.toggleMobs = new HashSet<>(plugin.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
+        this.mats = plugin.getMaterialsManager();
         this.manageMode = manageMode;
         this.multiMode = multiMode;
         this.radius = radius;
     }
 
-    AManage(ILandLord pl, Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land, ManageMode manageMode, MultiMode multiMode, int radius) {
-        super(player, 54, header, landGui);
+    AManage(ILandLord plugin, Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land, ManageMode manageMode, MultiMode multiMode, int radius) {
+        super(plugin.getPlugin(), player, 54, header, landGui);
+        this.plugin = plugin;
         this.regions = land;
-        this.plugin = pl;
         this.lm = plugin.getLangManager();
-        this.toggleMobs = new HashSet<>(pl.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
-        this.mats = pl.getMaterialsManager();
+        this.toggleMobs = new HashSet<>(plugin.getConfig().getStringList("Manage.mob-spawning.toggleableMobs"));
+        this.mats = plugin.getMaterialsManager();
         this.manageMode = manageMode;
         this.multiMode = multiMode;
         this.radius = radius;
@@ -134,7 +133,8 @@ public class AManage extends AbstractGUI {
         }
 
         for (int i = flagPage * 8; i < flagPage * 8 + 8; i++) {
-            if (flags.size() <= i) break;
+            if (flags.size() <= i)
+                break;
             Icon[] flagArray = flags.get(i);
             setIcon(i - flagPage * 8 + 1, flagArray[0]);
             setIcon(i - flagPage * 8 + 10, flagArray[1]);
@@ -196,22 +196,29 @@ public class AManage extends AbstractGUI {
             if (flag.toggleFriends()) {
                 refresh();
                 //Avoid lag with lots of lands
-                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-                    for (IOwnedLand land : regions.subList(1, regions.size())) {
-                        for (ILLFlag landFlag : land.getFlags()) {
-                            if (!flag.getName().equals(landFlag.getName())
-                                    || flag.getFriendStatus() == landFlag.getFriendStatus()) continue;
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        for (IOwnedLand land : regions.subList(1, regions.size())) {
+                            for (ILLFlag landFlag : land.getFlags()) {
+                                if (!flag.getName().equals(landFlag.getName())
+                                        || flag.getFriendStatus() == landFlag.getFriendStatus())
+                                    continue;
 
-                            landFlag.toggleFriends();
+                                landFlag.toggleFriends();
 
-                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                        landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
-                                Bukkit.getPluginManager().callEvent(landManageEvent);
-                            });
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                                landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
+                                        plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                    }
+                                }.runTask(plugin.getPlugin());
+                            }
                         }
                     }
-                });
+                }.runTaskAsynchronously(plugin.getPlugin());
             }
         });
         friend.setName(isFriend ? lm.getRawString("Commands.Manage.allow") : lm.getRawString("Commands.Manage.deny"));
@@ -222,22 +229,29 @@ public class AManage extends AbstractGUI {
             if (flag.toggleAll()) {
                 refresh();
                 //Avoid lag with lots of lands
-                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-                    for (IOwnedLand land : regions.subList(1, regions.size())) {
-                        for (ILLFlag landFlag : land.getFlags()) {
-                            if (!flag.getName().equals(landFlag.getName())
-                                    || flag.getAllStatus() == landFlag.getAllStatus()) continue;
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        for (IOwnedLand land : regions.subList(1, regions.size())) {
+                            for (ILLFlag landFlag : land.getFlags()) {
+                                if (!flag.getName().equals(landFlag.getName())
+                                        || flag.getAllStatus() == landFlag.getAllStatus())
+                                    continue;
 
-                            landFlag.toggleAll();
+                                landFlag.toggleAll();
 
-                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                        landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
-                                Bukkit.getPluginManager().callEvent(landManageEvent);
-                            });
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                                landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
+                                        plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                    }
+                                }.runTask(plugin.getPlugin());
+                            }
                         }
                     }
-                });
+                }.runTaskAsynchronously(plugin.getPlugin());
             }
         });
         all.setName(isAll ? lm.getRawString("Commands.Manage.allow") : lm.getRawString("Commands.Manage.deny"));
@@ -326,7 +340,7 @@ public class AManage extends AbstractGUI {
             Set<UUID> friends = land.getFriends();
             boolean canSpread = plugin.getConfig().getBoolean("Manage.spread-friends.enable") &&
                     player.hasPermission("landlord.player.manage.spreadfriends") && manageMode != ManageMode.ONE;
-            MultiPagedGUI friendsGui = new MultiPagedGUI(player, (int) Math.ceil((double) friends.size() / 9.0),
+            MultiPagedGUI friendsGui = new MultiPagedGUI(plugin.getPlugin(), player, (int) Math.ceil((double) friends.size() / 9.0),
                     lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
                 @Override
                 protected void generateStaticIcons() {
@@ -337,26 +351,33 @@ public class AManage extends AbstractGUI {
                         spreadIcon.setName(spreadTitle);
                         spreadIcon.setLore(lm.getStringList("Commands.Manage.AllowSpread-friends.description"));
 
-                        spreadIcon.addClickAction((p) -> Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-                            Set<UUID> defaultFriends = land.getFriends();
+                        spreadIcon.addClickAction((p) ->
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        Set<UUID> defaultFriends = land.getFriends();
 
-                            for (IOwnedLand region : regions.subList(1, regions.size())) {
-                                String oldfriends = region.getMembersString();
+                                        for (IOwnedLand region : regions.subList(1, regions.size())) {
+                                            String oldfriends = region.getMembersString();
 
-                                for (UUID landFriend : region.getFriends()) {
-                                    if (!land.isFriend(landFriend)) region.removeFriend(landFriend);
-                                }
-                                for (UUID defaultFriend : defaultFriends) {
-                                    if (!region.isFriend(defaultFriend)) region.addFriend(defaultFriend);
-                                }
+                                            for (UUID landFriend : region.getFriends()) {
+                                                if (!land.isFriend(landFriend)) region.removeFriend(landFriend);
+                                            }
+                                            for (UUID defaultFriend : defaultFriends) {
+                                                if (!region.isFriend(defaultFriend)) region.addFriend(defaultFriend);
+                                            }
 
-                                Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                    LandManageEvent landManageEvent = new LandManageEvent(player, region,
-                                            "FRIENDS", oldfriends, region.getMembersString());
-                                    Bukkit.getPluginManager().callEvent(landManageEvent);
-                                });
-                            }
-                        }));
+                                            new BukkitRunnable() {
+                                                @Override
+                                                public void run() {
+                                                    LandManageEvent landManageEvent = new LandManageEvent(player, region,
+                                                            "FRIENDS", oldfriends, region.getMembersString());
+                                                    plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                                }
+                                            }.runTask(plugin.getPlugin());
+                                        }
+                                    }
+                                }.runTaskAsynchronously(plugin.getPlugin()));
 
                         this.setIcon((int) Math.ceil((double) friends.size() / 9.0) + 1, spreadIcon);
                     }
@@ -366,20 +387,20 @@ public class AManage extends AbstractGUI {
             String rawTitle = lm.getRawString("Commands.Manage.ManageFriends.unfriend");
 
             for (UUID id : friends) {
-                OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+                OfflinePlayer op = plugin.getPlugin().getServer().getOfflinePlayer(id);
                 Icon friend = new Icon(mats.getPlayerHead(id));
                 String name = (op != null && op.getName() != null ? op.getName() : "OfflinePlayer");
                 String confititle = rawTitle.replace("%player%", name);
                 friend.setName(name);
                 friend.setLore(formatFriendsSegment(id));
                 friend.addClickAction((player) -> {
-                    ConfirmationGUI confirmationGUI = new ConfirmationGUI(this.player,
+                    ConfirmationGUI confirmationGUI = new ConfirmationGUI(plugin.getPlugin(), this.player,
                             confititle,
                             (p) -> {
                                 friendsGui.removeIcon(friend);
 
                                 for (IOwnedLand region : regions) {
-                                    Bukkit.dispatchCommand(player, PrincepsLib.getCommandManager()
+                                    plugin.getPlugin().getServer().dispatchCommand(player, PrincepsLib.getCommandManager()
                                             .getCommand(Landlordbase.class).getCommandString(Unfriend.class)
                                             .substring(1) + " " + name + " " + region.getName());
                                 }
@@ -423,7 +444,10 @@ public class AManage extends AbstractGUI {
                 Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.commands." + key + ".item"))));
                 icon.setLore(formatList(formatList(descri, "%regencost%", costString), "%land%", land.getName()));
                 icon.setName(lm.getRawString("Commands.Manage." + key + ".title"));
-                icon.addClickAction((p) -> Bukkit.dispatchCommand(player, plugin.getConfig().getString("Manage.commands." + key + ".cmd").replace("%land%", land.getName())));
+                icon.addClickAction((p) ->
+                        plugin.getPlugin().getServer()
+                                .dispatchCommand(player, plugin.getConfig().getString("Manage.commands." + key + ".cmd")
+                                        .replace("%land%", land.getName())));
 
                 this.setIcon(position++, icon);
             }
@@ -442,7 +466,7 @@ public class AManage extends AbstractGUI {
                 List<Icon> icons = new ArrayList<>();
                 List<String> lore = lm.getStringList("Commands.Manage.AllowMob-spawning.toggleItem.description");
 
-                MultiPagedGUI gui = new MultiPagedGUI(p, 5, title, icons, this) {
+                MultiPagedGUI gui = new MultiPagedGUI(plugin.getPlugin(), p, 5, title, icons, this) {
                     @Override
                     protected void generateStaticIcons() {
                         if (plugin.getConfig().getBoolean("Manage.spread-mobs.enable") &&
@@ -489,18 +513,22 @@ public class AManage extends AbstractGUI {
                     mob.addClickAction((p1) -> {
                         //Avoid lag with lots of lands
                         land.toggleMob(m);
-                        Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-                            for (IOwnedLand region : regions.subList(1, regions.size())) {
-                                if (region.isMobDenied(m) == land.isMobDenied(m)) continue;
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                for (IOwnedLand region : regions.subList(1, regions.size())) {
+                                    if (region.isMobDenied(m) == land.isMobDenied(m))
+                                        continue;
 
-                                region.toggleMob(m);
+                                    region.toggleMob(m);
+                                }
+                                mob.setLore(formatList(formatList(lore, "%value%", formatMobState(land.isMobDenied(m))),
+                                        "%mob%", m.getNiceName()));
+                                //Make allowed mobs icon more distinctive
+                                setGlowing(mob.itemStack, !land.isMobDenied(m));
+                                gui.refresh();
                             }
-                            mob.setLore(formatList(formatList(lore, "%value%", formatMobState(land.isMobDenied(m))),
-                                    "%mob%", m.getNiceName()));
-                            //Make allowed mobs icon more distinctive
-                            setGlowing(mob.itemStack, !land.isMobDenied(m));
-                            gui.refresh();
-                        });
+                        }.runTaskAsynchronously(plugin.getPlugin());
                     });
                 }
 
@@ -518,39 +546,49 @@ public class AManage extends AbstractGUI {
             icon.setName(title);
             icon.setLore(lm.getStringList("Commands.Manage.AllowSpread-flags.description"));
 
-            icon.addClickAction((p) -> Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-                for (int flagI = 0; flagI < land.getFlags().size(); flagI++) {
-                    ILLFlag defaultFlag = land.getFlags().get(flagI);
+            icon.addClickAction((p) ->
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            for (int flagI = 0; flagI < land.getFlags().size(); flagI++) {
+                                ILLFlag defaultFlag = land.getFlags().get(flagI);
 
-                    for (IOwnedLand region : regions.subList(1, regions.size())) {
-                        ILLFlag landFlag = region.getFlags().get(flagI);
+                                for (IOwnedLand region : regions.subList(1, regions.size())) {
+                                    ILLFlag landFlag = region.getFlags().get(flagI);
 
-                        if (defaultFlag.getFriendStatus() != landFlag.getFriendStatus()) {
-                            landFlag.toggleFriends();
+                                    if (defaultFlag.getFriendStatus() != landFlag.getFriendStatus()) {
+                                        landFlag.toggleFriends();
 
-                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                        landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
-                                Bukkit.getPluginManager().callEvent(landManageEvent);
-                            });
+                                        new BukkitRunnable() {
+                                            @Override
+                                            public void run() {
+                                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                                        landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
+                                                plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                            }
+                                        }.runTask(plugin.getPlugin());
+                                    }
+                                    if (defaultFlag.getAllStatus() != landFlag.getAllStatus()) {
+                                        landFlag.toggleAll();
+
+                                        new BukkitRunnable() {
+                                            @Override
+                                            public void run() {
+                                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                                        landFlag.getName(), !landFlag.getAllStatus(), landFlag.getAllStatus());
+                                                plugin.getPlugin().getServer().getPluginManager().callEvent(landManageEvent);
+                                            }
+                                        }.runTask(plugin.getPlugin());
+                                    }
+                                }
+                            }
+
+                            for (IOwnedLand region : regions) {
+                                region.setFarewellMessage(land.getFarewellMessage());
+                                region.setGreetMessage(land.getGreetMessage());
+                            }
                         }
-                        if (defaultFlag.getAllStatus() != landFlag.getAllStatus()) {
-                            landFlag.toggleAll();
-
-                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                        landFlag.getName(), !landFlag.getAllStatus(), landFlag.getAllStatus());
-                                Bukkit.getPluginManager().callEvent(landManageEvent);
-                            });
-                        }
-                    }
-                }
-
-                for (IOwnedLand region : regions) {
-                    region.setFarewellMessage(land.getFarewellMessage());
-                    region.setGreetMessage(land.getGreetMessage());
-                }
-            }));
+                    }.runTaskAsynchronously(plugin.getPlugin()));
 
             this.setIcon(position++, icon);
         }
@@ -585,7 +623,7 @@ public class AManage extends AbstractGUI {
     }
 
     private List<String> formatFriendsSegment(UUID id) {
-        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+        OfflinePlayer op = plugin.getPlugin().getServer().getOfflinePlayer(id);
         List<String> toReturn = new ArrayList<>();
 
         IPlayer offline = plugin.getPlayerManager().getOfflineSync(id);

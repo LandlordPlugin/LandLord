@@ -25,12 +25,12 @@ public class ClearGUI extends AbstractGUI {
     private final IWorldGuardManager wg;
     private final IMultiTaskManager multiTaskManager;
 
-    public ClearGUI(ILandLord pl, Player player) {
-        super(player, 9, pl.getLangManager().getRawString("Commands.Clear.gui.title"));
-        this.plugin = pl;
+    public ClearGUI(ILandLord plugin, Player player) {
+        super(plugin.getPlugin(), player, 9, plugin.getLangManager().getRawString("Commands.Clear.gui.title"));
+        this.plugin = plugin;
         this.lm = plugin.getLangManager();
-        this.wg = pl.getWGManager();
-        this.multiTaskManager = pl.getMultiTaskManager();
+        this.wg = plugin.getWGManager();
+        this.multiTaskManager = plugin.getMultiTaskManager();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ClearGUI extends AbstractGUI {
                 i1.setName(lm.getRawString("Commands.Clear.gui.clearcurrentland.name"));
                 i1.setLore(Arrays.asList(lm.getRawString("Commands.Clear.gui.clearcurrentland.desc").split("\\|")));
                 i1.addClickAction((player1) -> {
-                    ConfirmationGUI confirm = new ConfirmationGUI(player1,
+                    ConfirmationGUI confirm = new ConfirmationGUI(plugin.getPlugin(), player1,
                             lm.getRawString("Commands.Clear.gui.clearcurrentland.confirm"),
                             (a) -> {
                                 clearLand(land);
@@ -71,7 +71,7 @@ public class ClearGUI extends AbstractGUI {
                 i2.setName(lm.getRawString("Commands.Clear.gui.clearplayer.name"));
                 i2.setLore(Arrays.asList(lm.getRawString("Commands.Clear.gui.clearplayer.desc").split("\\|")));
                 i2.addClickAction((player1) -> {
-                    ConfirmationGUI confirm = new ConfirmationGUI(player1,
+                    ConfirmationGUI confirm = new ConfirmationGUI(plugin.getPlugin(), player1,
                             lm.getRawString("Commands.Clear.gui.clearplayer.confirm"),
                             (a) -> {
                                 clearPlayer(land.getOwner());
@@ -93,7 +93,7 @@ public class ClearGUI extends AbstractGUI {
             i3.setName(lm.getRawString("Commands.Clear.gui.clearworld.name"));
             i3.setLore(Arrays.asList(lm.getRawString("Commands.Clear.gui.clearworld.desc").split("\\|")));
             i3.addClickAction((player1) -> {
-                ConfirmationGUI confirm = new ConfirmationGUI(player1,
+                ConfirmationGUI confirm = new ConfirmationGUI(plugin.getPlugin(), player1,
                         lm.getRawString("Commands.Clear.gui.clearworld.confirm").replace("%world%",
                                 player.getWorld().getName()),
                         (a) -> {

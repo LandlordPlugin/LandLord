@@ -14,6 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static biz.princeps.lib.PrincepsLib.getStuffManager;
@@ -24,13 +25,13 @@ import static biz.princeps.lib.PrincepsLib.getStuffManager;
  */
 public class CommandDelayManager implements Listener {
 
-    private final HashMap<String, Integer> commandDelays;
+    private final Map<String, Integer> commandDelays;
     private final String dontMove;
     private final String youMoved;
     private final String countdown;
     private final boolean spawnParticles;
 
-    private final HashMap<UUID, Integer> playertasks;
+    private final Map<UUID, Integer> playertasks;
 
     public CommandDelayManager(String dontMove, String youMoved, String countdown, boolean spawnParticles) {
         commandDelays = new HashMap<>();
@@ -110,14 +111,13 @@ public class CommandDelayManager implements Listener {
         return countdown;
     }
 
-
     /**
-     * Stuff for listening to the actual command
+     * Stuff for listening to the actual command.
      *
-     * @param e
+     * @param e the PlayerCommandPreprocessEvent event
      */
     @EventHandler
-    public void onCommandPreprocess(final PlayerCommandPreprocessEvent e) {
+    public void onCommandPreprocess(PlayerCommandPreprocessEvent e) {
         Player p = e.getPlayer();
 
         String command = e.getMessage();

@@ -1,7 +1,6 @@
 package biz.princeps.lib.command;
 
 import biz.princeps.lib.PrincepsLib;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,10 +40,10 @@ public class CommandManager {
 
     private void initBukkitCommandMap() {
         try {
-            Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            Field bukkitCommandMap = plugin.getServer().getClass().getDeclaredField("commandMap");
 
             bukkitCommandMap.setAccessible(true);
-            this.cmdMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+            this.cmdMap = (CommandMap) bukkitCommandMap.get(plugin.getServer());
         } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }

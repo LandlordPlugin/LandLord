@@ -14,7 +14,6 @@ import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -34,21 +33,21 @@ public class OwnedLand extends AOwnedLand {
     private final ProtectedRegion region;
     private final FlagRegistry flagRegistry = WorldGuard.getInstance().getFlagRegistry();
 
-    public static OwnedLand create(ILandLord pl, ProtectedRegion pr, UUID owner) {
-        return new OwnedLand(pl, pr, owner);
+    public static OwnedLand create(ILandLord plugin, ProtectedRegion pr, UUID owner) {
+        return new OwnedLand(plugin, pr, owner);
     }
 
-    public static OwnedLand of(ILandLord pl, ProtectedRegion pr) {
-        return new OwnedLand(pl, pr);
+    public static OwnedLand of(ILandLord plugin, ProtectedRegion pr) {
+        return new OwnedLand(plugin, pr);
     }
 
-    private OwnedLand(ILandLord pl, ProtectedRegion region) {
-        super(pl, pl.getWGManager().getWorld(region.getId()), region.getId());
+    private OwnedLand(ILandLord plugin, ProtectedRegion region) {
+        super(plugin, plugin.getWGManager().getWorld(region.getId()), region.getId());
         this.region = region;
     }
 
-    private OwnedLand(ILandLord pl, ProtectedRegion region, UUID owner) {
-        this(pl, region);
+    private OwnedLand(ILandLord plugin, ProtectedRegion region, UUID owner) {
+        this(plugin, region);
 
         // insert default flags
         if (region.getFlags().size() == 0) {
@@ -76,7 +75,7 @@ public class OwnedLand extends AOwnedLand {
     public UUID getOwner() {
         Set<UUID> uniqueIds = region.getOwners().getUniqueIds();
         if (uniqueIds.size() != 1) {
-            pl.getLogger().warning("The region " + getName() + " is faulty! It does not have an owner!");
+            plugin.getLogger().warning("The region " + getName() + " is faulty! It does not have an owner!");
             return null;
         } else {
             return uniqueIds.iterator().next();
@@ -129,7 +128,7 @@ public class OwnedLand extends AOwnedLand {
     @Override
     public List<ILLFlag> getFlags() {
         List<ILLFlag> toReturn = new ArrayList<>();
-        List<String> rawList = pl.getConfig().getStringList("Flags");
+        List<String> rawList = plugin.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
             toReturn.add(getFlag(s));
@@ -141,10 +140,10 @@ public class OwnedLand extends AOwnedLand {
     public ILLFlag getFlag(String s) {
         Flag<StateFlag.State> flag = getWGFlag(s.toLowerCase());
         if (flag == null) {
-            pl.getLogger().warning("Invalid worldguard flag found: " + s);
+            plugin.getLogger().warning("Invalid worldguard flag found: " + s);
 
         }
-        Material mat = Material.valueOf(pl.getConfig()
+        Material mat = Material.valueOf(plugin.getConfig()
                 .getString("Manage." + s.toLowerCase() + ".item"));
 
         return new LLFlag(region, flag, mat);
@@ -192,48 +191,51 @@ public class OwnedLand extends AOwnedLand {
     @Override
     public boolean isMobDenied(IMob mob) {
         Set<EntityType> flag = region.getFlag(Flags.DENY_SPAWN);
-        if (flag == null) return false;
-        else return flag.contains(EntityType.REGISTRY.get(mob.getName().toLowerCase()));
+        if (flag == null) {
+            return false;
+        } else {
+            return flag.contains(EntityType.REGISTRY.get(mob.getName().toLowerCase()));
+        }
     }
 
     @Override
     public void initFlags(UUID owner) {
-        List<String> rawList = pl.getConfig().getStringList("Flags");
+        List<String> rawList = plugin.getConfig().getStringList("Flags");
 
         for (String s : rawList) {
             Flag<StateFlag.State> flag = getWGFlag(s.toUpperCase());
             if (!(flag instanceof StateFlag)) {
-                Bukkit.getLogger().warning("Only stateflags are supported!");
+                plugin.getPlugin().getLogger().warning("Only stateflags are supported!");
                 return;
             }
             region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
             region.setFlag(flag, StateFlag.State.ALLOW);
 
             // some combinations are illegal (all true, friends false)
-            if (!pl.getConfig().getBoolean("Manage." + s + ".default.friends", true)) {
+            if (!plugin.getConfig().getBoolean("Manage." + s + ".default.friends", true)) {
                 ILLFlag flag1 = getFlag(s);
                 flag1.toggleFriends();
             }
 
-            if (pl.getConfig().getBoolean("Manage." + s + ".default.everyone", false)) {
+            if (plugin.getConfig().getBoolean("Manage." + s + ".default.everyone", false)) {
                 ILLFlag flag1 = getFlag(s);
                 flag1.toggleAll();
             }
         }
         // add other flags
-        OfflinePlayer p = Bukkit.getOfflinePlayer(owner);
+        OfflinePlayer p = plugin.getPlugin().getServer().getOfflinePlayer(owner);
         if (p.getName() == null) {
             return;
         }
-        region.setFlag(Flags.GREET_MESSAGE, pl.getLangManager()
+        region.setFlag(Flags.GREET_MESSAGE, plugin.getLangManager()
                 .getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
-        region.setFlag(Flags.FAREWELL_MESSAGE, pl.getLangManager()
+        region.setFlag(Flags.FAREWELL_MESSAGE, plugin.getLangManager()
                 .getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
     }
 
     @Override
     public void updateFlags(UUID owner) {
-        List<String> rawList = pl.getConfig().getStringList("Flags");
+        List<String> rawList = plugin.getConfig().getStringList("Flags");
 
         // remove flags, that are no longer required
         for (Flag<?> iWrapperFlag : region.getFlags().keySet()) {
@@ -255,34 +257,34 @@ public class OwnedLand extends AOwnedLand {
                 region.setFlag(flag, StateFlag.State.ALLOW);
 
                 // some combinations are illegal (all true, friends false)
-                if (!pl.getConfig().getBoolean("Manage." + s + ".default.friends", true)) {
+                if (!plugin.getConfig().getBoolean("Manage." + s + ".default.friends", true)) {
                     ILLFlag flag1 = getFlag(s);
                     flag1.toggleFriends();
                 }
 
-                if (pl.getConfig().getBoolean("Manage." + s + ".default.everyone", false)) {
+                if (plugin.getConfig().getBoolean("Manage." + s + ".default.everyone", false)) {
                     ILLFlag flag1 = getFlag(s);
                     flag1.toggleAll();
                 }
             }
         }
         // add other flags
-        OfflinePlayer p = Bukkit.getOfflinePlayer(owner);
+        OfflinePlayer p = plugin.getPlugin().getServer().getOfflinePlayer(owner);
         if (p.getName() == null) {
             return;
         }
         if (!region.getFlags().containsKey(Flags.GREET_MESSAGE)) {
             region.setFlag(Flags.GREET_MESSAGE,
-                    pl.getLangManager().getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
+                    plugin.getLangManager().getRawString("Alerts.defaultGreeting").replace("%owner%", p.getName()));
         } else if (!region.getFlags().containsKey(Flags.FAREWELL_MESSAGE)) {
             region.setFlag(Flags.FAREWELL_MESSAGE,
-                    pl.getLangManager().getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
+                    plugin.getLangManager().getRawString("Alerts.defaultFarewell").replace("%owner%", p.getName()));
         }
     }
 
     @Override
     public void initRegionPriority() {
-        region.setPriority(pl.getConfig().getInt("Claim.regionPriority"));
+        region.setPriority(plugin.getConfig().getInt("Claim.regionPriority"));
     }
 
     @Override

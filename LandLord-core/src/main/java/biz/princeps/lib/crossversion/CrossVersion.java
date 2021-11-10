@@ -29,4 +29,5 @@ public class CrossVersion {
     public static String getVersion() {
         return Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     }
+
 }

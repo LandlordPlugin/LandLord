@@ -37,7 +37,6 @@ import biz.princeps.lib.manager.ConfirmationManager;
 import de.eldoria.eldoutilities.bstats.EldoMetrics;
 import de.eldoria.eldoutilities.core.EldoUtilities;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -188,7 +187,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * Retrieve the LPlayer objects for all online players (in case of reload) and insert them into the PlayerManager
      */
     private void setupPlayers() {
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        for (Player onlinePlayer : getServer().getOnlinePlayers()) {
             getPlayerManager().getOffline(onlinePlayer.getUniqueId(), (offline) -> {
                 if (offline == null) {
                     this.getPlayerManager().add(new LPlayer(onlinePlayer.getUniqueId()));
@@ -226,8 +225,9 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         if (!getConfig().getBoolean("DisableStartupWorldWarning")) {
             Pattern pattern = Pattern.compile("[^A-Za-z0-9_-]+");
 
-            for (World world : Bukkit.getWorlds()) {
-                if (!pattern.matcher(world.getName()).find()) continue;
+            for (World world : getServer().getWorlds()) {
+                if (!pattern.matcher(world.getName()).find())
+                    continue;
 
                 getLogger().warning(
                         "Found an invalid world name (" + world.getName() + ")! LandLord will not work in this " +
@@ -248,16 +248,16 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * TODO add FeatherBoard nop not gonna happen.
      */
     private void setupIntegrations() {
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new LLExpansion(this).register();
         }
-        if (Bukkit.getPluginManager().isPluginEnabled("MVdWPlaceholderAPI")) {
+        if (getServer().getPluginManager().isPluginEnabled("MVdWPlaceholderAPI")) {
             new LLFeatherBoard(this);
         }
-        if (Bukkit.getPluginManager().isPluginEnabled("Towny")) {
+        if (getServer().getPluginManager().isPluginEnabled("Towny")) {
             new Towny(this);
         }
-        if (Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
+        if (getServer().getPluginManager().isPluginEnabled("LuckPerms")) {
             new LLLuckPerms(this);
         }
 

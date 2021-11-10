@@ -42,10 +42,11 @@ public enum Skulls {
         this.texture = texture;
     }
 
-    public ItemStack getSkull(ILandLord pl) {
+    public ItemStack getSkull(ILandLord plugin) {
         UUID uuid = UUID.randomUUID();
-        ItemStack head = pl.getMaterialsManager().getPlayerHead(uuid);
-        if (texture.isEmpty()) return head;
+        ItemStack head = plugin.getMaterialsManager().getPlayerHead(uuid);
+        if (texture.isEmpty())
+            return head;
 
         SkullMeta headMeta = (SkullMeta) head.getItemMeta();
         GameProfile profile = new GameProfile(uuid, null);

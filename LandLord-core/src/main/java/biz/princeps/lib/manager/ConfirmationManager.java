@@ -5,11 +5,18 @@ import biz.princeps.lib.gui.ConfirmationGUI;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Action;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class ConfirmationManager {
 
+    private final JavaPlugin plugin;
+
     private STATE state;
     private int timout = 10;
+
+    public ConfirmationManager(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     public void setState(STATE state) {
         this.state = state;
@@ -20,7 +27,7 @@ public class ConfirmationManager {
     }
 
     public void drawGUI(Player p, String message, Action onAccept, Action onDeny, AbstractGUI main) {
-        ConfirmationGUI confirmationGUI = new ConfirmationGUI(p, message, onAccept, onDeny, main);
+        ConfirmationGUI confirmationGUI = new ConfirmationGUI(plugin, p, message, onAccept, onDeny, main);
         confirmationGUI.display();
     }
 

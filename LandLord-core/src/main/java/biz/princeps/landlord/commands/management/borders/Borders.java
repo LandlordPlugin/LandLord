@@ -29,11 +29,11 @@ public class Borders extends LandlordCommand implements Listener {
 
     private final Map<UUID, BordersTask> tasks;
 
-    public Borders(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Borders.name"),
-                pl.getConfig().getString("CommandSettings.Borders.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Borders.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Borders.aliases")));
+    public Borders(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Borders.name"),
+                plugin.getConfig().getString("CommandSettings.Borders.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Borders.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Borders.aliases")));
         this.tasks = new HashMap<>();
 
         this.plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());

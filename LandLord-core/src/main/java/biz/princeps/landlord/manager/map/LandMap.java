@@ -159,7 +159,7 @@ public class LandMap {
      * @return a reference to the scoreboard
      */
     private SimpleScoreboard displayMap(Player p) {
-        scoreboard = new SimpleScoreboard(header, p);
+        scoreboard = new SimpleScoreboard(plugin, header, p);
 
         scoreboard.scheduleUpdate(plugin.getPlugin(), new Runnable() {
             List<String> prev;

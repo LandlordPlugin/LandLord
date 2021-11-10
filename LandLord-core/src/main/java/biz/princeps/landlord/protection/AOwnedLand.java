@@ -4,7 +4,6 @@ import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -24,17 +23,17 @@ public abstract class AOwnedLand implements IOwnedLand {
     private static final String NAMES_DELIMITER = ", ";
 
     protected final World world;
-    protected final ILandLord pl;
+    protected final ILandLord plugin;
 
     protected final String name;
     protected final int chunkX;
     protected final int chunkZ;
 
-    public AOwnedLand(ILandLord pl, World world, String name) {
+    public AOwnedLand(ILandLord plugin, World world, String name) {
         this.world = world;
-        this.pl = pl;
+        this.plugin = plugin;
 
-        IWorldGuardManager wg = pl.getWGManager();
+        IWorldGuardManager wg = plugin.getWGManager();
         this.name = name;
         this.chunkX = wg.getX(name);
         this.chunkZ = wg.getZ(name);
@@ -80,7 +79,7 @@ public abstract class AOwnedLand implements IOwnedLand {
 
     @Override
     public void highlightLand(Chunk chunk, Player p, Particle e, int amt) {
-        this.pl.getWGManager().highlightLand(chunk, p, e, amt, false);
+        this.plugin.getWGManager().highlightLand(chunk, p, e, amt, false);
     }
 
     /**
@@ -91,7 +90,7 @@ public abstract class AOwnedLand implements IOwnedLand {
      */
     @Override
     public Location getALocation() {
-        IWorldGuardManager wg = pl.getWGManager();
+        IWorldGuardManager wg = plugin.getWGManager();
         World world = wg.getWorld(name);
         if (world == null)
             return null;
@@ -107,7 +106,7 @@ public abstract class AOwnedLand implements IOwnedLand {
      */
     @Override
     public Chunk getChunk() {
-        IWorldGuardManager wg = pl.getWGManager();
+        IWorldGuardManager wg = plugin.getWGManager();
         World w = wg.getWorld(name);
 
         if (w != null && chunkX != Integer.MIN_VALUE && chunkZ != Integer.MIN_VALUE) {
@@ -123,11 +122,11 @@ public abstract class AOwnedLand implements IOwnedLand {
 
     public abstract ILLFlag getFlag(String s);
 
-    protected static String formatNames(Iterable<UUID> uuids) {
+    protected String formatNames(Iterable<UUID> uuids) {
         StringJoiner stringJoiner = new StringJoiner(NAMES_DELIMITER);
         // ugly, maybe solve this in the future
         for (UUID uuid : uuids) {
-            stringJoiner.add(Bukkit.getOfflinePlayer(uuid).getName());
+            stringJoiner.add(plugin.getPlugin().getServer().getOfflinePlayer(uuid).getName());
         }
         return stringJoiner.toString();
     }

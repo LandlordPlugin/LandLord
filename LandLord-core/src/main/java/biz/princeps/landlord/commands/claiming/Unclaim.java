@@ -12,13 +12,10 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-
-import java.util.logging.Level;
 
 /**
  * Project: LandLord
@@ -29,12 +26,12 @@ public class Unclaim extends LandlordCommand {
 
     private final IWorldGuardManager wg;
 
-    public Unclaim(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Unclaim.name"),
-                pl.getConfig().getString("CommandSettings.Unclaim.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Unclaim.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Unclaim.aliases")));
-        this.wg = pl.getWGManager();
+    public Unclaim(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Unclaim.name"),
+                plugin.getConfig().getString("CommandSettings.Unclaim.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Unclaim.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Unclaim.aliases")));
+        this.wg = plugin.getWGManager();
     }
 
     @Override
@@ -64,7 +61,8 @@ public class Unclaim extends LandlordCommand {
             ol = wg.getRegion(chunkname);
         }
 
-        if (isDisabledWorld(player, wg.getWorld(chunkname))) return;
+        if (isDisabledWorld(player, wg.getWorld(chunkname)))
+            return;
 
         if (ol == null) {
             lm.sendMessage(player, lm.getString(player, "Commands.Unclaim.notOwnFreeLand"));
@@ -85,7 +83,7 @@ public class Unclaim extends LandlordCommand {
 
         // Normal unclaim
         LandUnclaimEvent event = new LandUnclaimEvent(player, ol);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        plugin.getPlugin().getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
             if (plugin.getConfig().getBoolean("ConfirmationDialog.onUnclaim")) {

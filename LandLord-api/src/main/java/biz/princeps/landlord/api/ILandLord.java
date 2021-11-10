@@ -39,7 +39,7 @@ public interface ILandLord {
     IWorldGuardManager getWGManager();
 
     /**
-     * Gets the reference to the MaterialManager.
+     * Gets the reference to the MaterialsManager.
      * This class is responsible to handle Materials and Itemstacks, that change from version to version.
      *
      * @return the mat manager

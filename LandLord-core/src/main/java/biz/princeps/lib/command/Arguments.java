@@ -132,12 +132,11 @@ public class Arguments {
         return p;
     }
 
-
     /**
      * Internal helper method to check the bounds of an index
      *
-     * @param index
-     * @throws ArgumentsOutOfBoundsException
+     * @param index - the argument index
+     * @throws ArgumentsOutOfBoundsException if index is out of bounds
      */
     private void checkForRange(int index) throws ArgumentsOutOfBoundsException {
         if (index < 0 || index >= strings.length) {

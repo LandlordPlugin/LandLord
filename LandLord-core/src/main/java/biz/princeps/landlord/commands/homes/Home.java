@@ -12,9 +12,9 @@ import biz.princeps.lib.util.CommandDelayManager;
 import com.google.common.collect.Sets;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 
 /**
@@ -24,11 +24,11 @@ import org.bukkit.entity.Player;
  */
 public class Home extends LandlordCommand {
 
-    public Home(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Home.name"),
-                pl.getConfig().getString("CommandSettings.Home.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Home.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Home.aliases")));
+    public Home(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Home.name"),
+                plugin.getConfig().getString("CommandSettings.Home.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Home.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Home.aliases")));
 
         CommandDelayManager delayManager = new CommandDelayManager(lm.getString("Commands.Home.dontMove"),
                 lm.getString("Commands.Home.youMoved"),
@@ -85,9 +85,13 @@ public class Home extends LandlordCommand {
                         return;
                     }
 
-                    // do the actual teleport sync again
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> teleport(home, player,
-                            targetPlayer));
+                    // Do the actual teleport sync again.
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            teleport(home, player, targetPlayer);
+                        }
+                    }.runTask(plugin.getPlugin());
                 }
             });
         }

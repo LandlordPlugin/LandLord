@@ -9,13 +9,14 @@ import org.bukkit.entity.Player;
 
 public class ManageGui extends AManage {
 
-    public ManageGui(ILandLord pl, Player player, IOwnedLand land) {
-        super(pl, player, pl.getLangManager().getRawString("Commands.Manage.header")
+    public ManageGui(ILandLord plugin, Player player, IOwnedLand land) {
+        super(plugin, player, plugin.getLangManager().getRawString("Commands.Manage.header")
                 .replace("%info%", land.getName()), Lists.newArrayList(land), ManageMode.ONE, null, -1);
     }
 
-    public ManageGui(ILandLord pl, Player player, MultiPagedGUI landGui, IOwnedLand land) {
-        super(pl, player, landGui, pl.getLangManager().getRawString("Commands.Manage.header")
+    public ManageGui(ILandLord plugin, Player player, MultiPagedGUI landGui, IOwnedLand land) {
+        super(plugin, player, landGui, plugin.getLangManager().getRawString("Commands.Manage.header")
                 .replace("%info%", land.getName()), Lists.newArrayList(land), ManageMode.ONE, null, -1);
     }
+
 }

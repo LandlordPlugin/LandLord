@@ -4,7 +4,6 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IVaultManager;
 import biz.princeps.landlord.api.Options;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -17,6 +16,7 @@ import java.util.UUID;
  */
 public class VaultManager implements IVaultManager {
 
+    private final ILandLord plugin;
     private final Economy economy;
 
     private final boolean defaultBalance;
@@ -24,6 +24,7 @@ public class VaultManager implements IVaultManager {
     private final String worldBalance;
 
     public VaultManager(ILandLord plugin, Economy economy) {
+        this.plugin = plugin;
         this.economy = economy;
 
         String worldBalance = plugin.getConfig().getString("Economy.worldBalance");
@@ -60,12 +61,12 @@ public class VaultManager implements IVaultManager {
     @Override
     public void give(UUID id, double amount, World world) {
         if (playerWorldBased) {
-            economy.depositPlayer(Bukkit.getOfflinePlayer(id), world.getName(), amount);
+            economy.depositPlayer(plugin.getPlugin().getServer().getOfflinePlayer(id), world.getName(), amount);
         } else {
             if (defaultBalance) {
-                economy.depositPlayer(Bukkit.getOfflinePlayer(id), amount);
+                economy.depositPlayer(plugin.getPlugin().getServer().getOfflinePlayer(id), amount);
             } else {
-                economy.depositPlayer(Bukkit.getOfflinePlayer(id), worldBalance, amount);
+                economy.depositPlayer(plugin.getPlugin().getServer().getOfflinePlayer(id), worldBalance, amount);
             }
         }
     }

@@ -2,7 +2,6 @@ package biz.princeps.lib.gui.simple;
 
 import biz.princeps.lib.PrincepsLib;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +10,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,7 @@ public abstract class AbstractGUI implements InventoryHolder {
         new InventoryClickListener();
     }
 
+    private final JavaPlugin plugin;
     private final Map<Integer, Icon> icons;
     private int size;
     protected String title, rawTitle;
@@ -38,23 +40,26 @@ public abstract class AbstractGUI implements InventoryHolder {
     /**
      * Creates a new main menu
      *
+     * @param plugin the plugin instance
      * @param player the player which want to see the menu
      * @param size   the size of the inventory. must be a multiple of 9 (starting at 0)
      * @param title  the name of the menu - ChatColor allowed!
      */
-    public AbstractGUI(Player player, int size, String title) {
-        this(player, size, title, null);
+    public AbstractGUI(JavaPlugin plugin, Player player, int size, String title) {
+        this(plugin, player, size, title, null);
     }
 
     /**
      * Creates a new main menu
      *
+     * @param plugin   the plugin instance
      * @param player   the player which want to see the menu
      * @param size     the size of the inventory. must be a multiple of 8
      * @param title    the name of the menu - ChatColor allowed!
      * @param mainMenu The superior menu
      */
-    public AbstractGUI(Player player, int size, String title, AbstractGUI mainMenu) {
+    public AbstractGUI(JavaPlugin plugin, Player player, int size, String title, AbstractGUI mainMenu) {
+        this.plugin = plugin;
         this.player = player;
         this.icons = new HashMap<>();
         this.title = format(title);
@@ -173,20 +178,26 @@ public abstract class AbstractGUI implements InventoryHolder {
      * @return A completable future with the opened inventory
      */
     public CompletableFuture<Inventory> display() {
-        this.inventory = Bukkit.createInventory(this, size, title);
+        this.inventory = plugin.getServer().createInventory(this, size, title);
 
         if (generateAsync) {
             CompletableFuture<Inventory> completableFuture = new CompletableFuture<>();
 
-            Bukkit.getScheduler().runTaskAsynchronously(PrincepsLib.getPluginInstance(), () -> {
-                create();
-                this.getInventory();
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    create();
+                    getInventory();
 
-                Bukkit.getScheduler().runTask(PrincepsLib.getPluginInstance(), () -> {
-                    this.player.openInventory(this.inventory);
-                    completableFuture.complete(this.inventory);
-                });
-            });
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            player.openInventory(inventory);
+                            completableFuture.complete(inventory);
+                        }
+                    }.runTask(plugin);
+                }
+            }.runTaskAsynchronously(plugin);
 
             return completableFuture;
         } else {
@@ -221,12 +232,14 @@ public abstract class AbstractGUI implements InventoryHolder {
                 if (event.getWhoClicked() instanceof Player) {
                     Player player = (Player) event.getWhoClicked();
                     ItemStack itemStack = event.getCurrentItem();
-                    if (itemStack == null || itemStack.getType() == Material.AIR) return;
+                    if (itemStack == null || itemStack.getType() == Material.AIR)
+                        return;
 
                     AbstractGUI customHolder = (AbstractGUI) event.getView().getTopInventory().getHolder();
 
                     Icon icon = customHolder.getIcon(event.getRawSlot());
-                    if (icon == null) return;
+                    if (icon == null)
+                        return;
                     for (Action clickAction : icon.getClickActions()) {
                         clickAction.execute(player);
                     }
@@ -234,4 +247,5 @@ public abstract class AbstractGUI implements InventoryHolder {
             }
         }
     }
+
 }

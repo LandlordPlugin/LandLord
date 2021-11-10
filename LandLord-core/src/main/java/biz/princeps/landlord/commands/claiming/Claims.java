@@ -20,11 +20,11 @@ import org.bukkit.entity.Player;
 public class Claims extends LandlordCommand {
 
 
-    public Claims(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Claims.name"),
-                pl.getConfig().getString("CommandSettings.Claims.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claims.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claims.aliases")));
+    public Claims(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Claims.name"),
+                plugin.getConfig().getString("CommandSettings.Claims.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Claims.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Claims.aliases")));
     }
 
     @Override

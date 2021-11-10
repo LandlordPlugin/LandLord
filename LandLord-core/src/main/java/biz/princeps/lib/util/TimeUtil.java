@@ -20,15 +20,15 @@ public class TimeUtil {
     }
 
     public static LocalDateTime stringToTime(String s) {
-        if (s == null) return null;
-        if (s.equals("null")) return null;
-        if (s.isEmpty()) return null;
+        if (s == null || s.isEmpty() || s.equals("null"))
+            return null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return LocalDateTime.parse(s, formatter);
     }
 
     public static String timeToString(LocalDateTime time) {
-        if (time == null) return "";
+        if (time == null)
+            return "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return time.format(formatter);
     }

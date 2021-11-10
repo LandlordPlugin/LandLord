@@ -8,9 +8,9 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IPlayerManager;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.events.LandClearEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -46,7 +46,7 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
     @Override
     public boolean process(IOwnedLand ownedLand) {
         LandClearEvent event = new LandClearEvent(commandSender, ownedLand);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        plugin.getPlugin().getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
             UUID owner = ownedLand.getOwner();
@@ -94,7 +94,12 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
                 break;
         }
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                plugin.getMapManager().updateAll();
+            }
+        }.runTask(plugin.getPlugin());
     }
 
 }

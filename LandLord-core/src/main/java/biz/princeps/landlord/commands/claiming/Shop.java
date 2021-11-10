@@ -16,11 +16,11 @@ import org.bukkit.entity.Player;
  */
 public class Shop extends LandlordCommand {
 
-    public Shop(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Shop.name"),
-                pl.getConfig().getString("CommandSettings.Shop.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Shop.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Shop.aliases")));
+    public Shop(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Shop.name"),
+                plugin.getConfig().getString("CommandSettings.Shop.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Shop.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Shop.aliases")));
     }
 
     @Override

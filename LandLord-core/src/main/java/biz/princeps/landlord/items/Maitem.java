@@ -3,7 +3,6 @@ package biz.princeps.landlord.items;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.lib.item.AbstractItem;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -29,9 +28,9 @@ public class Maitem extends AbstractItem {
 
     private final ILandLord plugin;
 
-    public Maitem(ILandLord pl) {
-        super(NAME, new ItemStack(Material.valueOf(pl.getConfig().getString("MaItem.item"))), true, false);
-        this.plugin = pl;
+    public Maitem(ILandLord plugin) {
+        super(NAME, new ItemStack(Material.valueOf(plugin.getConfig().getString("MaItem.item"))), true, false);
+        this.plugin = plugin;
         this.STACK = getBukkitStack();
         initClickActions();
         setItemAppearance();
@@ -143,24 +142,23 @@ public class Maitem extends AbstractItem {
 
     private void executeAction(ItemClickAction clickAction, Player p, Location loc) {
         switch (clickAction.getResult()) {
-
             case INFO:
-                Bukkit.dispatchCommand(p, "ll info");
+                plugin.getPlugin().getServer().dispatchCommand(p, "ll info");
                 break;
             case BUY:
-                Bukkit.dispatchCommand(p, "ll claim");
+                plugin.getPlugin().getServer().dispatchCommand(p, "ll claim");
                 break;
             case MANAGE:
-                Bukkit.dispatchCommand(p, "ll manage");
+                plugin.getPlugin().getServer().dispatchCommand(p, "ll manage");
                 break;
             case MANAGEALL:
-                Bukkit.dispatchCommand(p, "ll manageall");
+                plugin.getPlugin().getServer().dispatchCommand(p, "ll manageall");
                 break;
             case TOGGLEMAP:
-                Bukkit.dispatchCommand(p, "ll map");
+                plugin.getPlugin().getServer().dispatchCommand(p, "ll map");
                 break;
             case TOGGLEBORDERS:
-                Bukkit.dispatchCommand(p, "ll borders");
+                plugin.getPlugin().getServer().dispatchCommand(p, "ll borders");
                 break;
         }
     }
