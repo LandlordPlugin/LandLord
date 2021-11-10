@@ -262,4 +262,5 @@ public class ShopGUI extends AbstractGUI {
         }
         return newList;
     }
+
 }
