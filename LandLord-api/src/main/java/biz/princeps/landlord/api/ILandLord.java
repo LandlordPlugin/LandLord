@@ -2,11 +2,12 @@ package biz.princeps.landlord.api;
 
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
-public interface ILandLord {
+public interface ILandLord extends Plugin {
 
     /**
      * Adapter to JavaPlugin#getConfig
@@ -27,7 +28,9 @@ public interface ILandLord {
      * Useful for starting runnables.
      *
      * @return instance of JavaPlugin
+     * @deprecated {@link ILandLord is a plugin itself and will only return itself. Use the instance directly.}
      */
+    @Deprecated(forRemoval = true, since = "4.357")
     JavaPlugin getPlugin();
 
     /**
