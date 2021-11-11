@@ -41,12 +41,12 @@ public class LLExpansion extends PlaceholderExpansion {
 
     @Override
     public String getAuthor() {
-        return String.valueOf(plugin.getPlugin().getDescription().getAuthors());
+        return String.valueOf(plugin.getDescription().getAuthors());
     }
 
     @Override
     public String getVersion() {
-        return plugin.getPlugin().getDescription().getVersion();
+        return plugin.getDescription().getVersion();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 IPlayer iPlayer = plugin.getPlayerManager().get(player.getUniqueId());
                 if (iPlayer == null) {
                     plugin.getLogger().warning("A placeholder is trying to load %landlord_claims% before async loading of the " +
-                            "player has finished! Use FinishedLoadingPlayerEvent!");
+                                               "player has finished! Use FinishedLoadingPlayerEvent!");
                     return "NaN";
                 }
                 return String.valueOf(iPlayer.getClaims());
@@ -95,7 +95,7 @@ public class LLExpansion extends PlaceholderExpansion {
                 IPlayer iPlayer2 = plugin.getPlayerManager().get(player.getUniqueId());
                 if (iPlayer2 == null) {
                     plugin.getLogger().warning("A placeholder is trying to load %landlord_remainingClaims% before async loading of the " +
-                            "player has finished! Use FinishedLoadingPlayerEvent!");
+                                               "player has finished! Use FinishedLoadingPlayerEvent!");
                     return "NaN";
                 }
                 return String.valueOf(iPlayer2.getClaims() - wg.getRegionCount(player.getUniqueId()));

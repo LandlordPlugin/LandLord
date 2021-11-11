@@ -65,11 +65,23 @@ public class ConfirmationDialog {
 
     static class DialogHandler implements Listener {
 
+        private static final Map<UUID, ConfirmationDialog> openDialogs = new HashMap<>();
+
         private DialogHandler() {
             PrincepsLib.getPluginInstance().getServer().getPluginManager().registerEvents(this, PrincepsLib.getPluginInstance());
         }
 
-        private static final Map<UUID, ConfirmationDialog> openDialogs = new HashMap<>();
+        public synchronized static void addPlayer(UUID uniqueId, ConfirmationDialog confirmationDialog) {
+            openDialogs.put(uniqueId, confirmationDialog);
+        }
+
+        public synchronized static void removePlayer(UUID uniqueId) {
+            openDialogs.remove(uniqueId);
+        }
+
+        public synchronized static boolean contains(UUID uuid) {
+            return openDialogs.containsKey(uuid);
+        }
 
         @EventHandler
         public void onCommand(PlayerCommandPreprocessEvent event) {
@@ -85,18 +97,6 @@ public class ConfirmationDialog {
 
         public synchronized ConfirmationDialog get(UUID id) {
             return openDialogs.get(id);
-        }
-
-        public synchronized static void addPlayer(UUID uniqueId, ConfirmationDialog confirmationDialog) {
-            openDialogs.put(uniqueId, confirmationDialog);
-        }
-
-        public synchronized static void removePlayer(UUID uniqueId) {
-            openDialogs.remove(uniqueId);
-        }
-
-        public synchronized static boolean contains(UUID uuid) {
-            return openDialogs.containsKey(uuid);
         }
     }
 }

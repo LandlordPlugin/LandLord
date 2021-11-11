@@ -61,7 +61,7 @@ public class Regenerate extends LandlordCommand {
             String costString = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "-1");
 
             IOwnedLand finalLand = land;
-            ConfirmationGUI confi = new ConfirmationGUI(plugin.getPlugin(), player,
+            ConfirmationGUI confi = new ConfirmationGUI(plugin, player,
                     lm.getRawString("Commands.Regenerate.confirmation").replace("%cost%", costString),
                     (p1) -> {
                         boolean flag = true;
@@ -83,7 +83,7 @@ public class Regenerate extends LandlordCommand {
                                             null, "REGENERATE", "REGENERATE");
                                     plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                 }
-                            }.runTask(plugin.getPlugin());
+                            }.runTask(plugin);
 
                             plugin.getRegenerationManager().regenerateChunk(finalLand.getALocation());
                             lm.sendMessage(player, lm.getString(player, "Commands.Regenerate.success")

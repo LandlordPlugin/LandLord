@@ -60,7 +60,7 @@ public class Update extends LandlordCommand {
                 }
                 issuer.sendMessage("§8[§c§l!§8] §fFinished updating lands!");
             }
-        }.runTaskAsynchronously(plugin.getPlugin());
+        }.runTaskAsynchronously(plugin);
     }
 
     /**
@@ -87,7 +87,7 @@ public class Update extends LandlordCommand {
 
                 sender.sendMessage("§8[§c§l!§8] §fFinished resetting lands!");
             }
-        }.runTaskAsynchronously(plugin.getPlugin());
+        }.runTaskAsynchronously(plugin);
     }
 
 }

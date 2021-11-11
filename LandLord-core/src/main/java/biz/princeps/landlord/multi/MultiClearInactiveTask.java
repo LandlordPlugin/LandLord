@@ -57,7 +57,7 @@ public class MultiClearInactiveTask extends AMultiTask<OfflinePlayer> {
             public void run() {
                 plugin.getMapManager().updateAll();
             }
-        }.runTask(plugin.getPlugin());
+        }.runTask(plugin);
     }
 
 }

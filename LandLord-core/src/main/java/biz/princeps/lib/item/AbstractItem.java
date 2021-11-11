@@ -17,10 +17,10 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public abstract class AbstractItem {
 
+    protected final String name;
+    private final boolean breakBlocks;
     private ItemStack stack;
     private boolean glowing;
-    private final boolean breakBlocks;
-    protected final String name;
 
     /**
      * Used to initially create a custom item stack
@@ -35,6 +35,10 @@ public abstract class AbstractItem {
         this.stack = PrincepsLib.crossVersion().addNBTTag(stack, "customItemName", name);
         setGlowing(glowing);
         this.breakBlocks = breakBlocks;
+    }
+
+    public static boolean isCustomItem(ItemStack stack) {
+        return PrincepsLib.crossVersion().hasNBTTag(stack, "customItem");
     }
 
     public void give(Player p) {
@@ -75,9 +79,5 @@ public abstract class AbstractItem {
 
     public boolean canBreakBlocks() {
         return breakBlocks;
-    }
-
-    public static boolean isCustomItem(ItemStack stack) {
-        return PrincepsLib.crossVersion().hasNBTTag(stack, "customItem");
     }
 }

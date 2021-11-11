@@ -23,10 +23,10 @@ public class CommandManager {
 
     // A set of all registered commands. Might need it later
     private final Set<MainCommand> commandSet;
-    // The internal command map of bukkit
-    private CommandMap cmdMap;
     // Instance of the javaplugin, which is using PrincepsLib
     private final JavaPlugin plugin;
+    // The internal command map of bukkit
+    private CommandMap cmdMap;
 
     /**
      * Creates a new CommandManager and tries to initialize the commandMap from Bukkit

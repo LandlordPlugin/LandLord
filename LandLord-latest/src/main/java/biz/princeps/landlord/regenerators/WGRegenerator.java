@@ -48,7 +48,7 @@ public class WGRegenerator implements IRegenerationManager {
             }
         }
 
-        File file = new File(new File(plugin.getPlugin().getDataFolder(), "chunksaves"), landName);
+        File file = new File(new File(plugin.getDataFolder(), "chunksaves"), landName);
 
         if (file.exists()) {
             ClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;

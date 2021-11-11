@@ -48,9 +48,9 @@ public class Manage extends LandlordCommand {
 
         // land manage
         if (args.length == 0 || (args.length == 1 && !args[0].equals("setgreet")
-                && !args[0].equals("setgreetall")
-                && !args[0].equals("setfarewell")
-                && !args[0].equals("setfarewellall"))) {
+                                 && !args[0].equals("setgreetall")
+                                 && !args[0].equals("setfarewell")
+                                 && !args[0].equals("setfarewellall"))) {
 
             IOwnedLand land;
             if (args.length == 0) {

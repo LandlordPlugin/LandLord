@@ -3,7 +3,7 @@ package biz.princeps.landlord.util;
 import biz.princeps.landlord.api.ILandLord;
 import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -16,11 +16,10 @@ import java.util.Objects;
 public class SimpleScoreboard {
 
     private final ILandLord plugin;
-    private Scoreboard scoreboard;
-
     private final String title;
     private final List<String> scores;
     private final Player player;
+    private Scoreboard scoreboard;
     private BukkitRunnable runnable;
 
     /**
@@ -116,7 +115,7 @@ public class SimpleScoreboard {
      * @param delay  ~ delay
      * @param timer  the repeating time
      */
-    public void scheduleUpdate(JavaPlugin plugin, Runnable run, long delay, long timer) {
+    public void scheduleUpdate(Plugin plugin, Runnable run, long delay, long timer) {
         this.runnable = new BukkitRunnable() {
             @Override
             public void run() {

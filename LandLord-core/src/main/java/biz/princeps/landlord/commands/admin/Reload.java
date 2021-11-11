@@ -24,7 +24,7 @@ public class Reload extends LandlordCommand {
         issuer.sendMessage(ChatColor.RED + "Reloading is not recommended! Before reporting any bugs, please restart your server.");
 
         plugin.getLangManager().reload();
-        plugin.getPlugin().reloadConfig();
+        plugin.reloadConfig();
         plugin.setupPrincepsLib();
         plugin.postloadPrincepsLib();
 

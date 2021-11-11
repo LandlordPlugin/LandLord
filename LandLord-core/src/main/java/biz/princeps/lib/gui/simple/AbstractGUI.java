@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -27,15 +27,14 @@ public abstract class AbstractGUI implements InventoryHolder {
         new InventoryClickListener();
     }
 
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
     private final Map<Integer, Icon> icons;
-    private int size;
     protected String title, rawTitle;
     protected AbstractGUI mainMenu;
     protected boolean generateAsync;
-
     protected Player player;
     protected Inventory inventory;
+    private int size;
 
     /**
      * Creates a new main menu
@@ -45,7 +44,7 @@ public abstract class AbstractGUI implements InventoryHolder {
      * @param size   the size of the inventory. must be a multiple of 9 (starting at 0)
      * @param title  the name of the menu - ChatColor allowed!
      */
-    public AbstractGUI(JavaPlugin plugin, Player player, int size, String title) {
+    public AbstractGUI(Plugin plugin, Player player, int size, String title) {
         this(plugin, player, size, title, null);
     }
 
@@ -58,7 +57,7 @@ public abstract class AbstractGUI implements InventoryHolder {
      * @param title    the name of the menu - ChatColor allowed!
      * @param mainMenu The superior menu
      */
-    public AbstractGUI(JavaPlugin plugin, Player player, int size, String title, AbstractGUI mainMenu) {
+    public AbstractGUI(Plugin plugin, Player player, int size, String title, AbstractGUI mainMenu) {
         this.plugin = plugin;
         this.player = player;
         this.icons = new HashMap<>();
@@ -113,14 +112,6 @@ public abstract class AbstractGUI implements InventoryHolder {
         return title;
     }
 
-    public String getRawTitle() {
-        return rawTitle;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
     /**
      * Sets the title of the GUI
      * It is not possible to update the title once the gui is created!
@@ -129,6 +120,14 @@ public abstract class AbstractGUI implements InventoryHolder {
      */
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getRawTitle() {
+        return rawTitle;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     public void setSize(int size) {
@@ -214,9 +213,9 @@ public abstract class AbstractGUI implements InventoryHolder {
     @Override
     public String toString() {
         return "AbstractGUI{" +
-                "size=" + size +
-                ", title='" + title + '\'' +
-                '}';
+               "size=" + size +
+               ", title='" + title + '\'' +
+               '}';
     }
 
     static class InventoryClickListener implements Listener {

@@ -99,7 +99,7 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
             public void run() {
                 plugin.getMapManager().updateAll();
             }
-        }.runTask(plugin.getPlugin());
+        }.runTask(plugin);
     }
 
 }

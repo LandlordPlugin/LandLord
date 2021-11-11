@@ -33,7 +33,7 @@ public class ShopGUI extends AbstractGUI {
     private double cost = 0;
 
     public ShopGUI(ILandLord plugin, Player player, String title) {
-        super(plugin.getPlugin(), player, 54, title);
+        super(plugin, player, 54, title);
         this.plugin = plugin;
         this.costManager = new ClaimsCostManager(plugin);
         this.mats = plugin.getMaterialsManager();

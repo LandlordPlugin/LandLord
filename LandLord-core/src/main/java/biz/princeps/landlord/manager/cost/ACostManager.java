@@ -24,21 +24,21 @@ public abstract class ACostManager implements ICostManager {
         switch (func.toLowerCase()) {
             default:
                 plugin.getLogger().warning("Illegal function [" + func + "] detected! The plugin will default to " +
-                        "linear");
+                                           "linear");
             case "linear":
-                this.strategy = new LinearStrategy(plugin.getPlugin(), namespace, free);
+                this.strategy = new LinearStrategy(plugin, namespace, free);
                 break;
             case "exponential":
-                this.strategy = new ExponentialStrategy(plugin.getPlugin(), namespace, free);
+                this.strategy = new ExponentialStrategy(plugin, namespace, free);
                 break;
             case "limited":
-                this.strategy = new LimitedStrategy(plugin.getPlugin(), namespace, free);
+                this.strategy = new LimitedStrategy(plugin, namespace, free);
                 break;
             case "logarithmic":
-                this.strategy = new LogarithmicStrategy(plugin.getPlugin(), namespace, free);
+                this.strategy = new LogarithmicStrategy(plugin, namespace, free);
                 break;
             case "sinus":
-                this.strategy = new SinusStrategy(plugin.getPlugin(), namespace, free);
+                this.strategy = new SinusStrategy(plugin, namespace, free);
                 break;
         }
     }

@@ -55,7 +55,7 @@ public class BordersTask extends BukkitRunnable {
     }
 
     public void start() {
-        runTaskTimer(plugin.getPlugin(), 0, refreshRate * 20L);
+        runTaskTimer(plugin, 0, refreshRate * 20L);
     }
 
 }

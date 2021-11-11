@@ -29,7 +29,7 @@ public class MultiTaskManager implements IMultiTaskManager {
                 // 10 operations max per tick seems adequate for the majority of cases.
                 processQueue(10);
             }
-        }.runTaskTimer(plugin.getPlugin(), 0L, 1L);
+        }.runTaskTimer(plugin, 0L, 1L);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class MultiTaskManager implements IMultiTaskManager {
                 public void run() {
                     enqueueTask(multiTask);
                 }
-            }.runTask(plugin.getPlugin());
+            }.runTask(plugin);
         }
     }
 

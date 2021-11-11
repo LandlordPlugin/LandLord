@@ -74,11 +74,11 @@ public class LPlayer implements IPlayer {
     @Override
     public String toString() {
         return "LPlayer{" +
-                "uuid=" + uuid +
-                ", name='" + name + '\'' +
-                ", claims=" + claims +
-                ", home=" + home +
-                ", lastseen='" + getLastSeen() + '\'' +
-                '}';
+               "uuid=" + uuid +
+               ", name='" + name + '\'' +
+               ", claims=" + claims +
+               ", home=" + home +
+               ", lastseen='" + getLastSeen() + '\'' +
+               '}';
     }
 }

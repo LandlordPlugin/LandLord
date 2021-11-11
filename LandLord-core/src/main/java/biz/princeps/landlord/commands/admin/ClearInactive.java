@@ -78,7 +78,7 @@ public class ClearInactive extends LandlordCommand {
 
                 multiTaskManager.enqueueTask(new MultiClearInactiveTask(plugin, sender, playersToClear, minInactiveDays));
             }
-        }.runTaskAsynchronously(plugin.getPlugin());
+        }.runTaskAsynchronously(plugin);
     }
 
 }

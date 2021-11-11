@@ -25,6 +25,15 @@ public class ItemManager {
         new ItemActionListener(this);
     }
 
+    public static ItemStack stack(String string) {
+        try {
+            Material material = Material.valueOf(string.toUpperCase());
+            return new ItemStack(material);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
     public void registerItem(String name, Class<? extends AbstractItem> item) {
         items.put(name, item);
     }
@@ -40,14 +49,5 @@ public class ItemManager {
             EldoUtilities.logger().log(Level.WARNING, "Custom item must implement empty constructor: " + e);
         }
         return null;
-    }
-
-    public static ItemStack stack(String string) {
-        try {
-            Material material = Material.valueOf(string.toUpperCase());
-            return new ItemStack(material);
-        } catch (NumberFormatException ex) {
-            return null;
-        }
     }
 }
