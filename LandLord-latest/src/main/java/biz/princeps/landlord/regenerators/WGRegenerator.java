@@ -34,7 +34,6 @@ public class WGRegenerator implements IRegenerationManager {
 
     @Override
     public void regenerateChunk(World world, int x, int z) {
-
         WorldEdit worldEdit = WorldEdit.getInstance();
         com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
 
