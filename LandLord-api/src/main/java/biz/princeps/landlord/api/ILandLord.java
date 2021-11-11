@@ -13,7 +13,7 @@ public interface ILandLord extends Plugin {
      * Useful for starting runnables.
      *
      * @return instance of JavaPlugin
-     * @deprecated {@link ILandLord is a plugin itself and will only return itself. Use the instance directly.}
+     * @deprecated {@link ILandLord} is a plugin itself and will only return itself. Use the instance directly.
      */
     @Deprecated(forRemoval = true, since = "4.357")
     Plugin getPlugin();
