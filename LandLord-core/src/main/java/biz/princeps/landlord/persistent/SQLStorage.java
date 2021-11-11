@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 
 public class SQLStorage extends Datastorage implements IStorage {
 

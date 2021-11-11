@@ -1,6 +1,5 @@
 package biz.princeps.landlord.integrations;
 
-import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import net.luckperms.api.LuckPerms;
