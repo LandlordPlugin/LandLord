@@ -111,7 +111,7 @@ public enum Skulls {
     @Override
     public String toString() {
         return "Skulls{" +
-                this.name() +
-                '}';
+               this.name() +
+               '}';
     }
 }

@@ -98,8 +98,8 @@ public class DelimitationManager implements IDelimitationManager {
                     Block b = chunk.getBlock(x, highestY, z);
 
                     while (b.getType() != Material.AIR &&
-                            b.getType() != plugin.getMaterialsManager().getGrass() &&
-                            b.getType() != plugin.getMaterialsManager().getLongGrass()) {
+                           b.getType() != plugin.getMaterialsManager().getGrass() &&
+                           b.getType() != plugin.getMaterialsManager().getLongGrass()) {
                         b = chunk.getBlock(x, ++highestY, z);
                     }
 
@@ -126,9 +126,9 @@ public class DelimitationManager implements IDelimitationManager {
         @Override
         public String toString() {
             return "BlockVector{" +
-                    "x=" + x +
-                    ", z=" + z +
-                    '}';
+                   "x=" + x +
+                   ", z=" + z +
+                   '}';
         }
 
         @Override
