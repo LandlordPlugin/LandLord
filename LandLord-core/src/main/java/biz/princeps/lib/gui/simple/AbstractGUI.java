@@ -213,9 +213,9 @@ public abstract class AbstractGUI implements InventoryHolder {
     @Override
     public String toString() {
         return "AbstractGUI{" +
-               "size=" + size +
-               ", title='" + title + '\'' +
-               '}';
+                "size=" + size +
+                ", title='" + title + '\'' +
+                '}';
     }
 
     static class InventoryClickListener implements Listener {

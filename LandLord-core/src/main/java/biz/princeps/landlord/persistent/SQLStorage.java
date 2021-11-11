@@ -121,9 +121,9 @@ public class SQLStorage extends Datastorage implements IStorage {
     @Override
     public void savePlayer(IPlayer lp, boolean async) {
         Runnable r = () -> execute("REPLACE INTO ll_players (uuid, name, claims, home, lastseen) VALUES ('" + lp.getUuid() + "', '" +
-                                   lp.getName() + "', " + lp.getClaims() + ", '" +
-                                   SpigotUtil.exactlocationToString(lp.getHome()) + "', '" +
-                                   TimeUtil.timeToString(lp.getLastSeen()) + "')");
+                lp.getName() + "', " + lp.getClaims() + ", '" +
+                SpigotUtil.exactlocationToString(lp.getHome()) + "', '" +
+                TimeUtil.timeToString(lp.getLastSeen()) + "')");
         if (async) {
             new BukkitRunnable() {
                 @Override

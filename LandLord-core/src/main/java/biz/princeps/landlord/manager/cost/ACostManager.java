@@ -24,7 +24,7 @@ public abstract class ACostManager implements ICostManager {
         switch (func.toLowerCase()) {
             default:
                 plugin.getLogger().warning("Illegal function [" + func + "] detected! The plugin will default to " +
-                                           "linear");
+                        "linear");
             case "linear":
                 this.strategy = new LinearStrategy(plugin, namespace, free);
                 break;

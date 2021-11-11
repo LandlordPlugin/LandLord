@@ -229,7 +229,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
 
                 getLogger().warning(
                         "Found an invalid world name (" + world.getName() + ")! LandLord will not work in this " +
-                        "world!");
+                                "world!");
             }
         }
     }
