@@ -135,7 +135,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         this.getPluginLoader().disablePlugin(this);
     }
 
-    @Deprecated(forRemoval = true)
+    @Deprecated
     @Override
     public Plugin getPlugin() {
         return this;
