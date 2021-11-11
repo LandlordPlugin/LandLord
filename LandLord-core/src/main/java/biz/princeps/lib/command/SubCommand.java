@@ -34,11 +34,11 @@ public abstract class SubCommand implements Command {
     @Override
     public String toString() {
         return "SubCommand{" +
-               "permissions=" + permissions +
-               ", name='" + name + '\'' +
-               ", usage='" + usage + '\'' +
-               ", aliases=" + aliases +
-               '}';
+                "permissions=" + permissions +
+                ", name='" + name + '\'' +
+                ", usage='" + usage + '\'' +
+                ", aliases=" + aliases +
+                '}';
     }
 
     /**

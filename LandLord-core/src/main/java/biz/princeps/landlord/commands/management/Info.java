@@ -124,7 +124,7 @@ public class Info extends LandlordCommand {
                             plugin.getVaultManager().format(plugin.getCostManager().calculateCost(player.getUniqueId()))));
                     if (plugin.getConfig().getBoolean("Particles.info"))
                         land.highlightLand(player, Particle.valueOf(plugin.getConfig().getString("Particles.info" +
-                                                                                                 ".inactive").toUpperCase()));
+                                ".inactive").toUpperCase()));
                     return;
                 }
 
@@ -144,7 +144,7 @@ public class Info extends LandlordCommand {
         } else {
             // unclaimed
             if (!plugin.getConfig().getBoolean("CommandSettings.Claim.allowOverlap", false) &&
-                !wg.canClaim(player, chunk)) {
+                    !wg.canClaim(player, chunk)) {
                 lm.sendMessage(player, lm.getString(player, "Commands.Claim.notAllowed"));
                 return;
             } else {

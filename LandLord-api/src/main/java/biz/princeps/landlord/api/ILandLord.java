@@ -1,10 +1,6 @@
 package biz.princeps.landlord.api;
 
-import org.bukkit.Server;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
-
-import java.util.logging.Logger;
 
 public interface ILandLord extends Plugin {
 

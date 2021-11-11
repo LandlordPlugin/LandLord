@@ -143,7 +143,7 @@ public class Landlordbase extends MainCommand {
                             tabReturn.add(subCommand.getName());
                         }
                     } else if (subCommand instanceof Shop || subCommand instanceof Claims
-                               || subCommand instanceof GiveClaims) {
+                            || subCommand instanceof GiveClaims) {
                         if (Options.enabled_shop()) {
                             tabReturn.add(subCommand.getName());
                         }
@@ -186,10 +186,10 @@ public class Landlordbase extends MainCommand {
                     }
 
                     if (subcmd instanceof Addfriend || subcmd instanceof AddfriendAll ||
-                        subcmd instanceof Unfriend || subcmd instanceof UnfriendAll) {
+                            subcmd instanceof Unfriend || subcmd instanceof UnfriendAll) {
                         for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                             if (!onlinePlayer.getName().startsWith(args[1]) ||
-                                (sender instanceof Player && !((Player) sender).canSee(onlinePlayer)))
+                                    (sender instanceof Player && !((Player) sender).canSee(onlinePlayer)))
                                 continue;
 
                             tabReturn.add(onlinePlayer.getName());
@@ -198,8 +198,8 @@ public class Landlordbase extends MainCommand {
                     }
 
                     if (subcmd instanceof MultiClaim || subcmd instanceof MultiUnclaim ||
-                        subcmd instanceof MultiAddfriend || subcmd instanceof MultiRemovefriend ||
-                        subcmd instanceof MultiListLands || subcmd instanceof MultiManage) {
+                            subcmd instanceof MultiAddfriend || subcmd instanceof MultiRemovefriend ||
+                            subcmd instanceof MultiListLands || subcmd instanceof MultiManage) {
                         for (MultiMode multiMode : MultiMode.values()) {
                             tabReturn.add(multiMode.name());
                         }
@@ -227,7 +227,7 @@ public class Landlordbase extends MainCommand {
                     if (subcmd instanceof MultiAddfriend || subcmd instanceof MultiRemovefriend) {
                         for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                             if (!onlinePlayer.getName().startsWith(args[2]) ||
-                                (sender instanceof Player && !((Player) sender).canSee(onlinePlayer)))
+                                    (sender instanceof Player && !((Player) sender).canSee(onlinePlayer)))
                                 continue;
 
                             tabReturn.add(onlinePlayer.getName());
