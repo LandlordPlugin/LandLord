@@ -17,13 +17,13 @@ public class LLFeatherBoard {
     private void registerPlaceholders(ILandLord plugin) {
         plugin.getLogger().warning("Featherboard Placeholders do not work. Please tell Maxim from Featherboard to take a look at the MVdWPlaceholderAPI repo.");
         /*
-        PlaceholderAPI.registerPlaceholder(plugin.getPlugin(), "ownedlands",
+        PlaceholderAPI.registerPlaceholder(plugin, "ownedlands",
                 e -> {
                     int landcount = wg.getRegionCount(e.getPlayer().getUniqueId());
                     return String.valueOf(landcount);
                 }
         );
-        PlaceholderAPI.registerPlaceholder(plugin.getPlugin(), "claims",
+        PlaceholderAPI.registerPlaceholder(plugin, "claims",
                 e -> {
                     IPlayer player1 = plugin.getPlayerManager().get(e.getPlayer().getUniqueId());
                     if (player1 == null) {
@@ -34,7 +34,7 @@ public class LLFeatherBoard {
                     return String.valueOf(player1.getClaims());
                 }
         );
-        PlaceholderAPI.registerPlaceholder(plugin.getPlugin(), "currentLandOwner",
+        PlaceholderAPI.registerPlaceholder(plugin, "currentLandOwner",
                 e -> {
                     IOwnedLand region = wg.getRegion(e.getPlayer().getLocation());
                     if (region != null) {
@@ -43,13 +43,13 @@ public class LLFeatherBoard {
                     return "";
                 }
         );
-        PlaceholderAPI.registerPlaceholder(plugin.getPlugin(), "currentLandName",
+        PlaceholderAPI.registerPlaceholder(plugin, "currentLandName",
                 e -> wg.getLandName(e.getPlayer().getLocation().getChunk())
         );
-        PlaceholderAPI.registerPlaceholder(plugin.getPlugin(), "nextLandPrice",
+        PlaceholderAPI.registerPlaceholder(plugin, "nextLandPrice",
                 e -> String.valueOf(plugin.getCostManager().calculateCost(e.getPlayer().getUniqueId()))
         );
-        PlaceholderAPI.registerPlaceholder(plugin.getPlugin(), "currentLandRefund",
+        PlaceholderAPI.registerPlaceholder(plugin, "currentLandRefund",
                 e -> {
                     int regionCount = wg.getRegionCount(e.getPlayer().getUniqueId());
                     return String.valueOf(plugin.getCostManager().calculateCost(regionCount - 1) *

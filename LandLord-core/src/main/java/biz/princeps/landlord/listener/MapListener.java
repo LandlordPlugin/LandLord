@@ -51,8 +51,7 @@ public class MapListener extends BasicListener {
             public void run() {
                 plugin.getMapManager().updateAll();
             }
-        }.runTaskLater(plugin.getPlugin(), 15L);
+        }.runTaskLater(plugin, 15L);
     }
 
 }
-

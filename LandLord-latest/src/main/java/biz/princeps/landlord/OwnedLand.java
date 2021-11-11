@@ -205,7 +205,7 @@ public class OwnedLand extends AOwnedLand {
         for (String s : rawList) {
             Flag<StateFlag.State> flag = getWGFlag(s.toUpperCase());
             if (!(flag instanceof StateFlag)) {
-                plugin.getPlugin().getLogger().warning("Only stateflags are supported!");
+                plugin.getLogger().warning("Only stateflags are supported!");
                 return;
             }
             region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);

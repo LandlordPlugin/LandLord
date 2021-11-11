@@ -71,7 +71,7 @@ public class AddfriendAll extends LandlordCommand {
                                                 "FRIENDS", oldfriends, ol.getMembersString());
                                         plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                     }
-                                }.runTask(plugin.getPlugin());
+                                }.runTask(plugin);
                             }
                         }
 
@@ -84,13 +84,12 @@ public class AddfriendAll extends LandlordCommand {
                             public void run() {
                                 plugin.getMapManager().updateAll();
                             }
-                        }.runTask(plugin.getPlugin());
+                        }.runTask(plugin);
                     }
-                }.runTaskAsynchronously(plugin.getPlugin());
+                }.runTaskAsynchronously(plugin);
             } else {
                 lm.sendMessage(player, lm.getString(player, "Commands.Addfriend.alreadyOwn"));
             }
         });
     }
 }
-

@@ -91,7 +91,7 @@ public class Home extends LandlordCommand {
                         public void run() {
                             teleport(home, player, targetPlayer);
                         }
-                    }.runTask(plugin.getPlugin());
+                    }.runTask(plugin);
                 }
             });
         }

@@ -43,18 +43,15 @@ public class AManage extends AbstractGUI {
     private final List<IOwnedLand> regions;
     private final ILangManager lm;
     private final ILandLord plugin;
-    private int flagPage = 0;
-
     private final Set<String> toggleMobs;
-
     private final IMaterialsManager mats;
-
     private final ManageMode manageMode;
     private final MultiMode multiMode;
     private final int radius;
+    private int flagPage = 0;
 
     AManage(ILandLord plugin, Player player, String header, List<IOwnedLand> land, ManageMode manageMode, MultiMode multiMode, int radius) {
-        super(plugin.getPlugin(), player, 45, header);
+        super(plugin, player, 45, header);
         this.plugin = plugin;
         this.regions = land;
         this.lm = plugin.getLangManager();
@@ -66,7 +63,7 @@ public class AManage extends AbstractGUI {
     }
 
     AManage(ILandLord plugin, Player player, MultiPagedGUI landGui, String header, List<IOwnedLand> land, ManageMode manageMode, MultiMode multiMode, int radius) {
-        super(plugin.getPlugin(), player, 54, header, landGui);
+        super(plugin, player, 54, header, landGui);
         this.plugin = plugin;
         this.regions = land;
         this.lm = plugin.getLangManager();
@@ -123,7 +120,7 @@ public class AManage extends AbstractGUI {
         for (ILLFlag flag : land.getFlags()) {
             String flagName = flag.getName();
             if (plugin.getConfig().getBoolean("Manage." + flagName + ".enable") &&
-                    player.hasPermission("landlord.player.manage." + flagName)) {
+                player.hasPermission("landlord.player.manage." + flagName)) {
                 flags.add(getIcons(flag));
             }
         }
@@ -202,7 +199,7 @@ public class AManage extends AbstractGUI {
                         for (IOwnedLand land : regions.subList(1, regions.size())) {
                             for (ILLFlag landFlag : land.getFlags()) {
                                 if (!flag.getName().equals(landFlag.getName())
-                                        || flag.getFriendStatus() == landFlag.getFriendStatus())
+                                    || flag.getFriendStatus() == landFlag.getFriendStatus())
                                     continue;
 
                                 landFlag.toggleFriends();
@@ -214,11 +211,11 @@ public class AManage extends AbstractGUI {
                                                 landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
                                         plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                     }
-                                }.runTask(plugin.getPlugin());
+                                }.runTask(plugin);
                             }
                         }
                     }
-                }.runTaskAsynchronously(plugin.getPlugin());
+                }.runTaskAsynchronously(plugin);
             }
         });
         friend.setName(isFriend ? lm.getRawString("Commands.Manage.allow") : lm.getRawString("Commands.Manage.deny"));
@@ -235,7 +232,7 @@ public class AManage extends AbstractGUI {
                         for (IOwnedLand land : regions.subList(1, regions.size())) {
                             for (ILLFlag landFlag : land.getFlags()) {
                                 if (!flag.getName().equals(landFlag.getName())
-                                        || flag.getAllStatus() == landFlag.getAllStatus())
+                                    || flag.getAllStatus() == landFlag.getAllStatus())
                                     continue;
 
                                 landFlag.toggleAll();
@@ -247,11 +244,11 @@ public class AManage extends AbstractGUI {
                                                 landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
                                         plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                     }
-                                }.runTask(plugin.getPlugin());
+                                }.runTask(plugin);
                             }
                         }
                     }
-                }.runTaskAsynchronously(plugin.getPlugin());
+                }.runTaskAsynchronously(plugin);
             }
         });
         all.setName(isAll ? lm.getRawString("Commands.Manage.allow") : lm.getRawString("Commands.Manage.deny"));
@@ -271,7 +268,7 @@ public class AManage extends AbstractGUI {
                 .getCommandString(Manage.class);
         // Set greet icon
         if (plugin.getConfig().getBoolean("Manage.setgreet.enable") &&
-                player.hasPermission("landlord.player.manage.setgreet")) {
+            player.hasPermission("landlord.player.manage.setgreet")) {
             String currentGreet = land.getGreetMessage();
             List<String> greetDesc = lm.getStringList("Commands.Manage.SetGreet.description");
 
@@ -301,12 +298,12 @@ public class AManage extends AbstractGUI {
 
         // set farewell icon
         if (plugin.getConfig().getBoolean("Manage.setfarewell.enable") &&
-                player.hasPermission("landlord.player.manage.setfarewell")) {
+            player.hasPermission("landlord.player.manage.setfarewell")) {
             List<String> farewellDesc = lm.getStringList("Commands.Manage.SetFarewell.description");
             String currentFarewell = land.getFarewellMessage();
 
             Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.setfarewell" +
-                    ".item"))));
+                                                                                             ".item"))));
             icon.setName(lm.getRawString("Commands.Manage.SetFarewell.title"));
             icon.setLore(formatList(farewellDesc, "%var%", currentFarewell));
             icon.addClickAction(((p) -> {
@@ -332,15 +329,15 @@ public class AManage extends AbstractGUI {
 
         // set friends icon
         if (plugin.getConfig().getBoolean("Manage.friends.enable") &&
-                player.hasPermission("landlord.player.manage.friends")) {
+            player.hasPermission("landlord.player.manage.friends")) {
             Icon icon = new Icon(mats.getPlayerHead(player.getUniqueId()));
             icon.setName(lm.getRawString("Commands.Manage.ManageFriends.title"));
             icon.setLore(lm.getStringList("Commands.Manage.ManageFriends.description"));
 
             Set<UUID> friends = land.getFriends();
             boolean canSpread = plugin.getConfig().getBoolean("Manage.spread-friends.enable") &&
-                    player.hasPermission("landlord.player.manage.spreadfriends") && manageMode != ManageMode.ONE;
-            MultiPagedGUI friendsGui = new MultiPagedGUI(plugin.getPlugin(), player, (int) Math.ceil((double) friends.size() / 9.0),
+                                player.hasPermission("landlord.player.manage.spreadfriends") && manageMode != ManageMode.ONE;
+            MultiPagedGUI friendsGui = new MultiPagedGUI(plugin, player, (int) Math.ceil((double) friends.size() / 9.0),
                     lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
                 @Override
                 protected void generateStaticIcons() {
@@ -374,10 +371,10 @@ public class AManage extends AbstractGUI {
                                                             "FRIENDS", oldfriends, region.getMembersString());
                                                     plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                                 }
-                                            }.runTask(plugin.getPlugin());
+                                            }.runTask(plugin);
                                         }
                                     }
-                                }.runTaskAsynchronously(plugin.getPlugin()));
+                                }.runTaskAsynchronously(plugin));
 
                         this.setIcon((int) Math.ceil((double) friends.size() / 9.0) + 1, spreadIcon);
                     }
@@ -394,15 +391,15 @@ public class AManage extends AbstractGUI {
                 friend.setName(name);
                 friend.setLore(formatFriendsSegment(id));
                 friend.addClickAction((player) -> {
-                    ConfirmationGUI confirmationGUI = new ConfirmationGUI(plugin.getPlugin(), this.player,
+                    ConfirmationGUI confirmationGUI = new ConfirmationGUI(plugin, this.player,
                             confititle,
                             (p) -> {
                                 friendsGui.removeIcon(friend);
 
                                 for (IOwnedLand region : regions) {
                                     plugin.getServer().dispatchCommand(player, PrincepsLib.getCommandManager()
-                                            .getCommand(Landlordbase.class).getCommandString(Unfriend.class)
-                                            .substring(1) + " " + name + " " + region.getName());
+                                                                                       .getCommand(Landlordbase.class).getCommandString(Unfriend.class)
+                                                                                       .substring(1) + " " + name + " " + region.getName());
                                 }
                                 player.closeInventory();
                                 friendsGui.display();
@@ -435,8 +432,8 @@ public class AManage extends AbstractGUI {
             // Config: Manage.commands.x
             // Language manager: Commands.Manage.x
             if (plugin.getConfig().getBoolean("Manage.commands." + key + ".enable") &&
-                    player.hasPermission("landlord.player.manage." + key) &&
-                    manageMode == ManageMode.ONE) {
+                player.hasPermission("landlord.player.manage." + key) &&
+                manageMode == ManageMode.ONE) {
                 List<String> descri = lm.getStringList("Commands.Manage." + key + ".description");
                 double cost = plugin.getConfig().getDouble("ResetCost");
                 String costString = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "-1");
@@ -455,10 +452,10 @@ public class AManage extends AbstractGUI {
 
         // spawn management
         if (plugin.getConfig().getBoolean("Manage.mob-spawning.enable") &&
-                player.hasPermission("landlord.player.manage.mob-spawning")) {
+            player.hasPermission("landlord.player.manage.mob-spawning")) {
             String title = lm.getRawString("Commands.Manage.AllowMob-spawning.title");
             Icon icon = new Icon(new ItemStack(Material.valueOf(plugin.getConfig().getString("Manage.mob-spawning" +
-                    ".item"))));
+                                                                                             ".item"))));
             icon.setName(title);
             icon.setLore(lm.getStringList("Commands.Manage.AllowMob-spawning.description"));
 
@@ -466,11 +463,11 @@ public class AManage extends AbstractGUI {
                 List<Icon> icons = new ArrayList<>();
                 List<String> lore = lm.getStringList("Commands.Manage.AllowMob-spawning.toggleItem.description");
 
-                MultiPagedGUI gui = new MultiPagedGUI(plugin.getPlugin(), p, 5, title, icons, this) {
+                MultiPagedGUI gui = new MultiPagedGUI(plugin, p, 5, title, icons, this) {
                     @Override
                     protected void generateStaticIcons() {
                         if (plugin.getConfig().getBoolean("Manage.spread-mobs.enable") &&
-                                player.hasPermission("landlord.player.manage.spreadmobs") && manageMode != ManageMode.ONE) {
+                            player.hasPermission("landlord.player.manage.spreadmobs") && manageMode != ManageMode.ONE) {
                             String spreadTitle = lm.getRawString("Commands.Manage.AllowSpread-mobs.title");
                             Material material = Material.valueOf(plugin.getConfig().getString("Manage.spread-mobs" + ".item"));
                             Icon spreadIcon = new Icon(new ItemStack(material));
@@ -528,7 +525,7 @@ public class AManage extends AbstractGUI {
                                 setGlowing(mob.itemStack, !land.isMobDenied(m));
                                 gui.refresh();
                             }
-                        }.runTaskAsynchronously(plugin.getPlugin());
+                        }.runTaskAsynchronously(plugin);
                     });
                 }
 
@@ -539,7 +536,7 @@ public class AManage extends AbstractGUI {
         }
 
         if (plugin.getConfig().getBoolean("Manage.spread-flags.enable") &&
-                player.hasPermission("landlord.player.manage.spreadflags") && manageMode != ManageMode.ONE) {
+            player.hasPermission("landlord.player.manage.spreadflags") && manageMode != ManageMode.ONE) {
             String title = lm.getRawString("Commands.Manage.AllowSpread-flags.title");
             Material material = Material.valueOf(plugin.getConfig().getString("Manage.spread-flags" + ".item"));
             Icon icon = new Icon(new ItemStack(material));
@@ -566,7 +563,7 @@ public class AManage extends AbstractGUI {
                                                         landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
                                                 plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                             }
-                                        }.runTask(plugin.getPlugin());
+                                        }.runTask(plugin);
                                     }
                                     if (defaultFlag.getAllStatus() != landFlag.getAllStatus()) {
                                         landFlag.toggleAll();
@@ -578,7 +575,7 @@ public class AManage extends AbstractGUI {
                                                         landFlag.getName(), !landFlag.getAllStatus(), landFlag.getAllStatus());
                                                 plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                             }
-                                        }.runTask(plugin.getPlugin());
+                                        }.runTask(plugin);
                                     }
                                 }
                             }
@@ -588,7 +585,7 @@ public class AManage extends AbstractGUI {
                                 region.setGreetMessage(land.getGreetMessage());
                             }
                         }
-                    }.runTaskAsynchronously(plugin.getPlugin()));
+                    }.runTaskAsynchronously(plugin));
 
             this.setIcon(position++, icon);
         }
@@ -648,4 +645,3 @@ public class AManage extends AbstractGUI {
     }
 
 }
-

@@ -27,29 +27,29 @@ public class LangManager implements ILangManager {
 
     private final ILandLord plugin;
     private final String filename;
-    private FileConfiguration msg;
     private final boolean parsePlaceholders;
+    private FileConfiguration msg;
 
     public LangManager(ILandLord plugin, String lang) {
         this.plugin = plugin;
         filename = "messages/" + lang + ".yml";
         reload();
-        new ConfigUtil(plugin).handleConfigUpdate(plugin.getPlugin().getDataFolder() + "/" + filename, "/" + filename);
+        new ConfigUtil(plugin).handleConfigUpdate(plugin.getDataFolder() + "/" + filename, "/" + filename);
         reload();
         parsePlaceholders = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
     }
 
     @Override
     public void reload() {
-        File f = new File(plugin.getPlugin().getDataFolder(), filename);
+        File f = new File(plugin.getDataFolder(), filename);
         this.msg = new YamlConfiguration();
         try {
-            File folder = new File(plugin.getPlugin().getDataFolder(), "messages");
+            File folder = new File(plugin.getDataFolder(), "messages");
             if (!folder.exists())
                 folder.mkdir();
 
             if (!f.exists())
-                plugin.getPlugin().saveResource(filename, false);
+                plugin.saveResource(filename, false);
 
             this.msg.load(f);
         } catch (IOException | InvalidConfigurationException e) {

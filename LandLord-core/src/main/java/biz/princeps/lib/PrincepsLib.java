@@ -27,11 +27,6 @@ public class PrincepsLib extends JavaPlugin implements Listener {
     private static Stuff STUFF_MANAGER;
     private static TranslateableStrings TRANSLATEABLE_STRINGS;
 
-    @Override
-    public void onEnable() {
-        setPluginInstance(this);
-    }
-
     /**
      * @return your own plugin instance, which you set before
      */
@@ -114,6 +109,11 @@ public class PrincepsLib extends JavaPlugin implements Listener {
 
     public static TranslateableStrings getTranslateableStrings() {
         return TRANSLATEABLE_STRINGS;
+    }
+
+    @Override
+    public void onEnable() {
+        setPluginInstance(this);
     }
 
 }

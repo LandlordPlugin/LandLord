@@ -83,7 +83,7 @@ public class Unfriend extends LandlordCommand {
                                     "FRIENDS", old, land.getMembersString());
                             plugin.getServer().getPluginManager().callEvent(landManageEvent);
                         }
-                    }.runTask(plugin.getPlugin());
+                    }.runTask(plugin);
 
                     lm.sendMessage(player, lm.getString(player, "Commands.Unfriend.success")
                             .replace("%players%", playerName));
@@ -95,7 +95,7 @@ public class Unfriend extends LandlordCommand {
                         public void run() {
                             plugin.getMapManager().updateAll();
                         }
-                    }.runTaskLater(plugin.getPlugin(), 60L);
+                    }.runTaskLater(plugin, 60L);
                 } else {
                     lm.sendMessage(player, lm.getString(player, "Commands.UnfriendAll.noFriend")
                             .replace("%player%", playerName));
@@ -104,4 +104,3 @@ public class Unfriend extends LandlordCommand {
         }
     }
 }
-

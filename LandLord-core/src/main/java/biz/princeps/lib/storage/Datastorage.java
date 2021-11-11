@@ -2,7 +2,7 @@ package biz.princeps.lib.storage;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
@@ -19,10 +19,10 @@ import java.util.function.Consumer;
  */
 public class Datastorage {
 
-    protected final JavaPlugin plugin;
+    protected final Plugin plugin;
     protected final HikariDataSource ds;
 
-    public Datastorage(JavaPlugin plugin, String hostname, String port, String username, String password, String database) {
+    public Datastorage(Plugin plugin, String hostname, String port, String username, String password, String database) {
         this.plugin = plugin;
 
         HikariConfig hikariConfig = new HikariConfig();

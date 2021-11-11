@@ -106,7 +106,7 @@ public class MultiListLands extends LandlordCommand {
                 String confirmMode = plugin.getConfig().getString("CommandSettings.MultiListLands.mode");
 
                 if (confirmMode.equals("gui")) {
-                    MultiPagedGUI landGui = new MultiPagedGUI(plugin.getPlugin(), sender, 5,
+                    MultiPagedGUI landGui = new MultiPagedGUI(plugin, sender, 5,
                             plugin.getLangManager().getRawString("Commands.MultiListLands.gui.header")
                                     .replace("%player%", target.getName())) {
                         @Override
@@ -171,7 +171,7 @@ public class MultiListLands extends LandlordCommand {
                             public void run() {
                                 landGui.display();
                             }
-                        }.runTask(plugin.getPlugin());
+                        }.runTask(plugin);
                     }
                 } else {
                     // Chat based system
@@ -199,11 +199,11 @@ public class MultiListLands extends LandlordCommand {
                             public void run() {
                                 plugin.getUtilsManager().sendBasecomponent(sender, message.create());
                             }
-                        }.runTask(plugin.getPlugin());
+                        }.runTask(plugin);
                     }
                 }
             }
-        }.runTaskAsynchronously(plugin.getPlugin());
+        }.runTaskAsynchronously(plugin);
     }
 
     private String formatState(boolean bool) {

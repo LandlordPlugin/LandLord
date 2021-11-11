@@ -84,7 +84,7 @@ public class MultiAddfriend extends LandlordCommand {
                                                 "FRIENDS", oldfriends, ol.getMembersString());
                                         plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                     }
-                                }.runTask(plugin.getPlugin());
+                                }.runTask(plugin);
                             }
                         }
 
@@ -97,13 +97,12 @@ public class MultiAddfriend extends LandlordCommand {
                             public void run() {
                                 plugin.getMapManager().updateAll();
                             }
-                        }.runTask(plugin.getPlugin());
+                        }.runTask(plugin);
                     }
-                }.runTaskAsynchronously(plugin.getPlugin());
+                }.runTaskAsynchronously(plugin);
             } else {
                 lm.sendMessage(player, lm.getString(player, "Commands.MultiAddfriend.alreadyOwn"));
             }
         });
     }
 }
-

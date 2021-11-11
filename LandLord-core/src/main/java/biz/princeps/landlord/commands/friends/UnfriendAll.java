@@ -71,7 +71,7 @@ public class UnfriendAll extends LandlordCommand {
                                                 "FRIENDS", oldvalue, ol.getMembersString());
                                         plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                     }
-                                }.runTask(plugin.getPlugin());
+                                }.runTask(plugin);
                             }
                         }
 
@@ -85,15 +85,14 @@ public class UnfriendAll extends LandlordCommand {
                                 public void run() {
                                     plugin.getMapManager().updateAll();
                                 }
-                            }.runTask(plugin.getPlugin());
+                            }.runTask(plugin);
                         } else {
                             lm.sendMessage(player, lm.getString(player, "Commands.UnfriendAll.noFriend")
                                     .replace("%player%", name));
                         }
                     }
-                }.runTaskAsynchronously(plugin.getPlugin());
+                }.runTaskAsynchronously(plugin);
             }
         });
     }
 }
-

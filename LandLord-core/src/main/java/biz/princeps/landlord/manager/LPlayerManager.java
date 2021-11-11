@@ -36,9 +36,9 @@ public class LPlayerManager implements IPlayerManager {
         this.plugin = plugin;
 
         if (plugin.getConfig().getString("DatabaseType").equalsIgnoreCase("MySQL")) {
-            this.stor = new SQLStorage(plugin.getPlugin());
+            this.stor = new SQLStorage(plugin);
         } else {
-            this.stor = new FlatFileStorage(plugin.getPlugin());
+            this.stor = new FlatFileStorage(plugin);
             ((FlatFileStorage) this.stor).init();
         }
     }

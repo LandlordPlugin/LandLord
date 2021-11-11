@@ -8,7 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -18,12 +18,12 @@ import java.util.function.Consumer;
 
 public class FlatFileStorage implements IStorage {
 
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
 
     private File customConfigFile;
     private FileConfiguration customConfig;
 
-    public FlatFileStorage(JavaPlugin plugin) {
+    public FlatFileStorage(Plugin plugin) {
         this.plugin = plugin;
     }
 

@@ -11,9 +11,8 @@ import java.util.List;
  */
 public class Icon {
 
-    public ItemStack itemStack;
-
     public final List<Action> clickActions = new ArrayList<>();
+    public ItemStack itemStack;
 
     public Icon(ItemStack itemStack) {
         this.itemStack = itemStack;
@@ -35,14 +34,14 @@ public class Icon {
         return this;
     }
 
+    public List<String> getLore() {
+        return itemStack.getItemMeta().getLore();
+    }
+
     public Icon setLore(List<String> lore) {
         ItemMeta meta = itemStack.getItemMeta();
         meta.setLore(lore);
         itemStack.setItemMeta(meta);
         return this;
-    }
-
-    public List<String> getLore() {
-        return itemStack.getItemMeta().getLore();
     }
 }

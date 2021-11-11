@@ -84,7 +84,7 @@ public class MultiRemovefriend extends LandlordCommand {
                                                 "FRIENDS", oldvalue, ol.getMembersString());
                                         plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                     }
-                                }.runTask(plugin.getPlugin());
+                                }.runTask(plugin);
                             }
                         }
 
@@ -98,16 +98,15 @@ public class MultiRemovefriend extends LandlordCommand {
                                 public void run() {
                                     plugin.getMapManager().updateAll();
                                 }
-                            }.runTask(plugin.getPlugin());
+                            }.runTask(plugin);
                         } else {
                             lm.sendMessage(player, lm.getString(player, "Commands.MultiUnfriend.noFriend")
                                     .replace("%player%", name));
                         }
                     }
-                }.runTaskAsynchronously(plugin.getPlugin());
+                }.runTaskAsynchronously(plugin);
             }
         });
     }
 
 }
-

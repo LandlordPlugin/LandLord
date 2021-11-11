@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class MultiPagedGUI extends AbstractGUI {
      * @param icons       a list of icons which should be displayed on more pages
      * @param main        the superior main menu
      */
-    public MultiPagedGUI(JavaPlugin plugin, Player player, int rowsPerSite, String title, List<Icon> icons, AbstractGUI main) {
+    public MultiPagedGUI(Plugin plugin, Player player, int rowsPerSite, String title, List<Icon> icons, AbstractGUI main) {
         super(plugin, player, rowsPerSite * 9 + 9, title, main);
         this.icons = icons;
         this.rowsPerSite = rowsPerSite;
@@ -46,7 +46,7 @@ public class MultiPagedGUI extends AbstractGUI {
      * @param rowsPerSite a value between 0 and 5
      * @param title       the name of the menu - ChatColor allowed!
      */
-    public MultiPagedGUI(JavaPlugin plugin, Player player, int rowsPerSite, String title) {
+    public MultiPagedGUI(Plugin plugin, Player player, int rowsPerSite, String title) {
         this(plugin, player, rowsPerSite, title, new ArrayList<>(), null);
     }
 

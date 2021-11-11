@@ -60,7 +60,7 @@ public class WGRegenListener extends BasicListener {
             worldEditException.printStackTrace();
         }
 
-        File file = new File(new File(plugin.getPlugin().getDataFolder(), "chunksaves"), e.getLand().getName());
+        File file = new File(new File(plugin.getDataFolder(), "chunksaves"), e.getLand().getName());
 
         try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
             writer.write(clipboard);

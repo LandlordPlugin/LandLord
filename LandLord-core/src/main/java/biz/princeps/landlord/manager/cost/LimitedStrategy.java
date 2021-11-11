@@ -1,15 +1,15 @@
 package biz.princeps.landlord.manager.cost;
 
 import biz.princeps.landlord.api.ICostStrategy;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 public class LimitedStrategy implements ICostStrategy {
 
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
     private final int free;
     private final String namespace;
 
-    public LimitedStrategy(JavaPlugin plugin, String namespace, int free) {
+    public LimitedStrategy(Plugin plugin, String namespace, int free) {
         this.plugin = plugin;
         this.free = free;
         this.namespace = namespace;

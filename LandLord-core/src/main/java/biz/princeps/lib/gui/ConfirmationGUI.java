@@ -8,7 +8,7 @@ import biz.princeps.lib.gui.simple.Icon;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Created by spatium on 21.07.17.
@@ -20,7 +20,7 @@ public class ConfirmationGUI extends AbstractGUI {
     private String confirm = PrincepsLib.getTranslateableStrings().get("Confirmation.accept");
     private String decline = PrincepsLib.getTranslateableStrings().get("Confirmation.decline");
 
-    public ConfirmationGUI(JavaPlugin plugin, Player player, String msg, Action onAccept, Action onDecline, AbstractGUI mainMenu) {
+    public ConfirmationGUI(Plugin plugin, Player player, String msg, Action onAccept, Action onDecline, AbstractGUI mainMenu) {
         super(plugin, player, 9, msg, mainMenu);
         this.onAccept = onAccept;
         this.onDecline = onDecline;

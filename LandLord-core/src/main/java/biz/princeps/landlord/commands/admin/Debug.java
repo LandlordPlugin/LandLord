@@ -25,7 +25,7 @@ public class Debug extends SubCommand {
 
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
-        DebugUtil.dispatchDebug(properties.getCommandSender(), plugin.getPlugin(), DebugSettings.DEFAULT);
+        DebugUtil.dispatchDebug(properties.getCommandSender(), plugin, DebugSettings.DEFAULT);
     }
 
 }

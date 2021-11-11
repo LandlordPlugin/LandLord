@@ -5,7 +5,7 @@ import biz.princeps.landlord.api.IStorage;
 import biz.princeps.lib.storage.Datastorage;
 import biz.princeps.lib.util.SpigotUtil;
 import biz.princeps.lib.util.TimeUtil;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.ResultSet;
@@ -17,7 +17,7 @@ public class SQLStorage extends Datastorage implements IStorage {
 
     private static final int CURRENT_VERSION = 4;
 
-    public SQLStorage(JavaPlugin plugin) {
+    public SQLStorage(Plugin plugin) {
         super(plugin,
                 plugin.getConfig().getString("MySQL.Hostname"),
                 plugin.getConfig().getString("MySQL.Port"),
@@ -121,9 +121,9 @@ public class SQLStorage extends Datastorage implements IStorage {
     @Override
     public void savePlayer(IPlayer lp, boolean async) {
         Runnable r = () -> execute("REPLACE INTO ll_players (uuid, name, claims, home, lastseen) VALUES ('" + lp.getUuid() + "', '" +
-                lp.getName() + "', " + lp.getClaims() + ", '" +
-                SpigotUtil.exactlocationToString(lp.getHome()) + "', '" +
-                TimeUtil.timeToString(lp.getLastSeen()) + "')");
+                                   lp.getName() + "', " + lp.getClaims() + ", '" +
+                                   SpigotUtil.exactlocationToString(lp.getHome()) + "', '" +
+                                   TimeUtil.timeToString(lp.getLastSeen()) + "')");
         if (async) {
             new BukkitRunnable() {
                 @Override

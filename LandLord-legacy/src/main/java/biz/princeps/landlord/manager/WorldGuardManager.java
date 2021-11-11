@@ -169,7 +169,7 @@ public class WorldGuardManager extends AWorldGuardManager {
             public void run() {
                 getRegionManager(world).removeRegion(regionname);
             }
-        }.runTaskAsynchronously(plugin.getPlugin());
+        }.runTaskAsynchronously(plugin);
     }
 
     /**

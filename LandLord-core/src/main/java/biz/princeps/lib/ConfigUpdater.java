@@ -21,7 +21,7 @@ public class ConfigUpdater {
      * The destination file is supposed to receive all entries, that are in source but not in dest.
      *
      * @param source the *.yml path
-     * @param dest the destination file
+     * @param dest   the destination file
      */
     public static void updateConfig(String source, File dest) {
         File sourceFile = null;
