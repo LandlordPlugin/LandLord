@@ -42,7 +42,7 @@ public class LandLord extends ALandLord {
         this.mobManager = new MobsManager(this);
 
         if (getConfig().getString("Regeneration.provider", "default").equalsIgnoreCase("wg")) {
-            File folder = new File(getPlugin().getDataFolder(), "chunksaves");
+            File folder = new File(getDataFolder(), "chunksaves");
             folder.mkdir();
             this.regenerationManager = new WGRegenerator(this);
             new WGRegenListener(this);
