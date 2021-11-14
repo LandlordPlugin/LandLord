@@ -137,7 +137,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
 
     @Deprecated
     @Override
-    public Plugin getPlugin() {
+    public JavaPlugin getPlugin() {
         return this;
     }
 
