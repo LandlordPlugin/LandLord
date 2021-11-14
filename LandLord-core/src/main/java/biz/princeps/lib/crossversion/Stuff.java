@@ -20,20 +20,20 @@ public class Stuff {
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(text));
     }
 
-    public void spawnPublicParticle(Location loc, Particle particle, int amt) {
+    public void spawnPublicParticle(Location loc, Particle particle, int amount) {
         new BukkitRunnable() {
             @Override
             public void run() {
-                loc.getWorld().spawnParticle(particle, loc, amt);
+                loc.getWorld().spawnParticle(particle, loc, amount);
             }
         }.runTaskAsynchronously(plugin);
     }
 
-    public void spawnPlayerParticle(Player p, Location loc, Particle particle, int amt) {
+    public void spawnPlayerParticle(Player p, Location loc, Particle particle, int amount) {
         new BukkitRunnable() {
             @Override
             public void run() {
-                p.spawnParticle(particle, loc, amt);
+                p.spawnParticle(particle, loc, amount);
             }
         }.runTaskAsynchronously(plugin);
     }

@@ -5,9 +5,10 @@ plugins {
 
 dependencies {
     implementation(project(":LandLord-core"))
-    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.0-SNAPSHOT")
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.4-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.7-SNAPSHOT")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.5-SNAPSHOT")
+    compileOnly("io.papermc:paperlib:1.0.6")
 }
 
 description = "LandLord-latest"
@@ -31,6 +32,7 @@ tasks {
         relocate("org.slf4j.slf4j-api", shadebade + "slf4j-api")
         relocate("io.github", shadebade + "nbteditor")
         relocate("de.eldoria.eldoutilities", shadebade + "eldoutilities")
+        relocate("io.papermc.lib", shadebade + "paperlib")
         mergeServiceFiles()
         archiveBaseName.set(project.parent?.name)
     }

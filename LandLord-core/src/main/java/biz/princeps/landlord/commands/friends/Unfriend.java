@@ -42,7 +42,7 @@ public class Unfriend extends LandlordCommand {
             String targetPlayer;
             if (arguments.size() == 1) {
                 targetPlayer = arguments.get(0);
-                targetLand = plugin.getWGManager().getRegion(player.getLocation().getChunk());
+                targetLand = plugin.getWGManager().getRegion(player.getLocation());
             } else {
                 targetPlayer = arguments.get(0);
                 targetLand = plugin.getWGManager().getRegion(arguments.get(1));

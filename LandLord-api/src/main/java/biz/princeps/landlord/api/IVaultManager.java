@@ -9,14 +9,14 @@ public interface IVaultManager {
 
     double getBalance(Player player);
 
-    boolean hasBalance(Player player, double amt);
+    boolean hasBalance(Player player, double amount);
 
-    void take(Player player, double amt);
+    void take(Player player, double amount);
 
-    void give(UUID uuid, double amt, World world);
+    void give(UUID uuid, double amount, World world);
 
-    void give(Player player, double amt);
+    void give(Player player, double amount);
 
-    String format(double amt);
+    String format(double amount);
 }
 

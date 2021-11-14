@@ -113,7 +113,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     }
 
     /**
-     * Checks if shared dependencies (protocollib+vault) are available
+     * Checks if shared dependencies (vault) are available
      *
      * @return if the dependencies are available
      */

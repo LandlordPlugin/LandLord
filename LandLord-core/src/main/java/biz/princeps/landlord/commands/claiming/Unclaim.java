@@ -12,7 +12,6 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -49,9 +48,9 @@ public class Unclaim extends LandlordCommand {
 
         IOwnedLand ol;
         if (chunkname.equals("null")) {
-            Chunk chunk = player.getLocation().getChunk();
-            ol = wg.getRegion(chunk);
-            chunkname = wg.getLandName(chunk);
+            Location location = player.getLocation();
+            ol = wg.getRegion(location);
+            chunkname = wg.getLandName(location);
         } else {
             if (!wg.isLLRegion(chunkname)) {
                 lm.sendMessage(player, lm.getString(player, "Commands.Unclaim.notOwnFreeLand"));

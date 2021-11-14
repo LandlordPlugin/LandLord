@@ -24,7 +24,7 @@ public class ClaimsCostManager extends ACostManager {
     /**
      * Calculates cost for the next land to claim based on the amount x of owned lands
      *
-     * @param x current amt of lands
+     * @param x current amount of lands
      * @return amount to pay for next land
      */
     @Override

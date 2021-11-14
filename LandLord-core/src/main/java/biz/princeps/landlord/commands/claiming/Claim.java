@@ -15,6 +15,7 @@ import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
+import io.papermc.lib.PaperLib;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -50,8 +51,9 @@ public class Claim extends LandlordCommand {
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
         if (properties.isPlayer()) {
-            Chunk chunk = properties.getPlayer().getWorld().getChunkAt(properties.getPlayer().getLocation());
-            onClaim(properties.getPlayer(), chunk);
+            PaperLib.getChunkAtAsync(properties.getPlayer().getLocation()).thenAccept(chunk -> {
+                onClaim(properties.getPlayer(), chunk);
+            });
         }
     }
 

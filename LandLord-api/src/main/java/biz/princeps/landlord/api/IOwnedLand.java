@@ -101,12 +101,12 @@ public interface IOwnedLand {
     /**
      * Highlight a specific chunk for a player with particles
      *
-     * @param chunk the chunk
-     * @param p     the player to highlight the chunk for
-     * @param e     the particles
-     * @param amt   amount of particles
+     * @param chunk  the chunk
+     * @param p      the player to highlight the chunk for
+     * @param e      the particles
+     * @param amount amount of particles
      */
-    void highlightLand(Chunk chunk, Player p, Particle e, int amt);
+    void highlightLand(Chunk chunk, Player p, Particle e, int amount);
 
     /**
      * Highlights the border around the chunk the player is standing in with a particle effect.
@@ -181,7 +181,15 @@ public interface IOwnedLand {
     void updateFlags(UUID owner);
 
     /**
+     * Reclaim the chunk and update height, keeping the same data.
+     * Note, from WorldEdit documentation: <i>ProtectedRegion bounds should never be mutated. Regions must be redefined to move them. This method will be removed in a future release.</i>
+     * That's why it reclaims the area.
+     */
+    void reclaim();
+
+    /**
      * Set the priority of a land region (incidence when it is not zero)
      */
     void initRegionPriority();
+
 }

@@ -64,7 +64,6 @@ public class LandLord extends ALandLord implements Listener {
     /**
      * Checks versions+availability for
      * a) spigot
-     * b) protocollib
      * c) worldguard
      * d) worldedit
      * e) vault

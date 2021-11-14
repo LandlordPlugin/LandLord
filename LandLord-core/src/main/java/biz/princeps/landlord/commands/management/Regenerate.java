@@ -10,7 +10,6 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import com.google.common.collect.Sets;
-import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -45,8 +44,7 @@ public class Regenerate extends LandlordCommand {
             return;
         }
 
-        Chunk chunk = player.getLocation().getChunk();
-        IOwnedLand land = wg.getRegion(chunk);
+        IOwnedLand land = wg.getRegion(player.getLocation());
 
         if (arguments.size() == 1) {
             land = wg.getRegion(arguments.get(0));

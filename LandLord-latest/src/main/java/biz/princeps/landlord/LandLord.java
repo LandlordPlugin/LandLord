@@ -60,6 +60,15 @@ public class LandLord extends ALandLord {
 
         new PistonOverwriter(this);
 
+        // Handle 1.18 auto-migration.
+        // https://minecraft.fandom.com/wiki/Data_version
+        int currentDataVersion = getServer().getUnsafe().getDataVersion();
+        if (currentDataVersion > 2825 && getConfig().getInt("ClaimHeight.overworld-topY") <= 255) {
+            getLogger().warning("It appears that you are running Minecraft 1.18 for the first time. " +
+                    "Due to world height changes in overworld, Landlord will try to convert heights in configuration and on lands. " +
+                    "This operation could be unsuccessful, so don't hesitate to check configuration/regions, contact us and use the command '/ll update -c'!");
+            getServer().dispatchCommand(getServer().getConsoleSender(), "ll update -c");
+        }
     }
 
 
@@ -71,7 +80,6 @@ public class LandLord extends ALandLord {
     /**
      * Checks versions+availability for
      * a) spigot
-     * b) protocollib
      * c) worldguard
      * d) worldedit
      * e) vault

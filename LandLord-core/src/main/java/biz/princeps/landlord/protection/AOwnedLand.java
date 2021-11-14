@@ -24,17 +24,17 @@ public abstract class AOwnedLand implements IOwnedLand {
 
     protected final World world;
     protected final ILandLord plugin;
-
     protected final String name;
+
     protected final int chunkX;
     protected final int chunkZ;
 
     public AOwnedLand(ILandLord plugin, World world, String name) {
-        this.world = world;
         this.plugin = plugin;
+        this.world = world;
+        this.name = name;
 
         IWorldGuardManager wg = plugin.getWGManager();
-        this.name = name;
         this.chunkX = wg.getX(name);
         this.chunkZ = wg.getZ(name);
     }
@@ -78,8 +78,8 @@ public abstract class AOwnedLand implements IOwnedLand {
     }
 
     @Override
-    public void highlightLand(Chunk chunk, Player p, Particle e, int amt) {
-        this.plugin.getWGManager().highlightLand(chunk, p, e, amt, false);
+    public void highlightLand(Chunk chunk, Player p, Particle e, int amount) {
+        this.plugin.getWGManager().highlightLand(chunk, p, e, amount, false);
     }
 
     /**
@@ -96,7 +96,6 @@ public abstract class AOwnedLand implements IOwnedLand {
             return null;
 
         return new Location(world, chunkX << 4, world.getHighestBlockYAt(chunkX << 4, chunkZ << 4) + 1, chunkZ << 4);
-
     }
 
     /**

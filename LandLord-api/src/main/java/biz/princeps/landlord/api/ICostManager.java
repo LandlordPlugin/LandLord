@@ -16,8 +16,8 @@ public interface ICostManager {
     /**
      * Calculates the cost to claim the next land based on the configuration.
      *
-     * @param amtOfLands amount of current owned lands
+     * @param amountOfLands amount of current owned lands
      * @return the cost for the next claim
      */
-    double calculateCost(int amtOfLands);
+    double calculateCost(int amountOfLands);
 }

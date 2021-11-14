@@ -9,6 +9,7 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import com.google.common.collect.Sets;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -61,8 +62,8 @@ public class AdminTeleport extends LandlordCommand {
                                 .setName(land.getName())
                                 .addClickAction((p) -> {
                                             Location toTp = land.getALocation();
-                                            sender.teleport(toTp);
-                                            land.highlightLand(sender, Particle.VILLAGER_HAPPY);
+                                            PaperLib.teleportAsync(sender, toTp).thenRun(() ->
+                                                    land.highlightLand(sender, Particle.VILLAGER_HAPPY));
                                         }
                                 )
                         );

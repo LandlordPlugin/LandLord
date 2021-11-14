@@ -3,6 +3,7 @@ package biz.princeps.landlord;
 import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMob;
+import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.manager.WorldGuardManager;
 import biz.princeps.landlord.protection.AOwnedLand;
 import com.google.common.collect.Sets;
@@ -49,7 +50,7 @@ public class OwnedLand extends AOwnedLand {
     private OwnedLand(ILandLord plugin, ProtectedRegion region, UUID owner) {
         this(plugin, region);
 
-        // insert default flags
+        // Insert default flags.
         if (region.getFlags().size() == 0) {
             initFlags(owner);
             initRegionPriority();
@@ -199,6 +200,20 @@ public class OwnedLand extends AOwnedLand {
     }
 
     @Override
+    public double getPrice() {
+        Double flag = region.getFlag(WorldGuardManager.REGION_PRICE_FLAG);
+        if (flag == null) {
+            return -1;
+        }
+        return flag;
+    }
+
+    @Override
+    public void setPrice(double price) {
+        region.setFlag(WorldGuardManager.REGION_PRICE_FLAG, price);
+    }
+
+    @Override
     public void initFlags(UUID owner) {
         List<String> rawList = plugin.getConfig().getStringList("Flags");
 
@@ -283,25 +298,24 @@ public class OwnedLand extends AOwnedLand {
     }
 
     @Override
+    public void reclaim() {
+        IWorldGuardManager wg = plugin.getWGManager();
+        UUID owner = getOwner();
+        OwnedLand ownedLand = (OwnedLand) wg.claim(getChunk(), owner);
+        ownedLand.getRegion().copyFrom(this.region);
+    }
+
+    @Override
     public void initRegionPriority() {
         region.setPriority(plugin.getConfig().getInt("Claim.regionPriority"));
     }
 
-    @Override
-    public double getPrice() {
-        Double flag = region.getFlag(WorldGuardManager.REGION_PRICE_FLAG);
-        if (flag == null) {
-            return -1;
-        }
-        return flag;
-    }
-
-    @Override
-    public void setPrice(double price) {
-        region.setFlag(WorldGuardManager.REGION_PRICE_FLAG, price);
+    private ProtectedRegion getRegion() {
+        return region;
     }
 
     private Flag<StateFlag.State> getWGFlag(String flagName) {
         return (Flag<StateFlag.State>) Flags.fuzzyMatchFlag(flagRegistry, flagName);
     }
+
 }

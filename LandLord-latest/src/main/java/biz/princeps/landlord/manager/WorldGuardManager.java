@@ -1,6 +1,7 @@
 package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.OwnedLand;
+import biz.princeps.landlord.api.ClaimHeightDefinition;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.tuple.Pair;
@@ -66,18 +67,18 @@ public class WorldGuardManager extends AWorldGuardManager {
     public static void initFlags() {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         try {
-            // register our flag with the registry
+            // Register our flag with the registry.
             registry.register(REGION_PRICE_FLAG);
         } catch (FlagConflictException e) {
-            // some other plugin registered a flag by the same name already.
-            // you may want to re-register with a different name, but this
-            // could cause issues with saved flags in region files. if you don't mind
-            // sharing a flag, consider making your field non-final and assigning it:
+            // Some other plugin registered a flag by the same name already.
+            // You may want to re-register with a different name, but this
+            // could cause issues with saved flags in region files. If you don't mind
+            // sharing a flag, consider making your field non-final and assigning it.
         }
     }
 
     /**
-     * Claims a chunk for a player in worldguard by selecting the most bottom and the highest point
+     * Claims a chunk for a player in worldguard by selecting points according to configuration.
      */
     @Override
     public IOwnedLand claim(Chunk chunk, UUID owner) {
@@ -94,9 +95,15 @@ public class WorldGuardManager extends AWorldGuardManager {
 
         RegionManager manager = getRegionManager(chunk.getWorld());
         if (manager != null) {
+            IOwnedLand land;
+            if (manager.hasRegion(pr.getId())) {
+                // Don't init flags and data for an existing land, old data will be copied out later during reclaim.
+                land = OwnedLand.of(plugin, pr);
+            } else {
+                land = OwnedLand.create(plugin, pr, owner);
+            }
             manager.addRegion(pr);
-            IOwnedLand land = OwnedLand.create(plugin, pr, owner);
-            land.replaceOwner(owner);
+            pr.getOwners().addPlayer(owner);
             cache.add(land);
             return land;
         }
@@ -208,7 +215,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     }
 
     @Override
-    public void moveUp(World world, int chunkX, int chunkZ, int amt) {
+    public void moveUp(World world, int chunkX, int chunkZ, int amount) {
         com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
         int x = chunkX << 4;
         int z = chunkZ << 4;
@@ -221,7 +228,7 @@ public class WorldGuardManager extends AWorldGuardManager {
         CuboidRegion region = new CuboidRegion(weWorld, b1, b2);
 
         try {
-            region.shift(BlockVector3.at(0, amt, 0));
+            region.shift(BlockVector3.at(0, amount, 0));
         } catch (RegionOperationException e) {
             e.printStackTrace();
         }
@@ -278,6 +285,76 @@ public class WorldGuardManager extends AWorldGuardManager {
             }
         }
         return false;
+    }
+
+    @Override
+    public Pair<Integer, Integer> calcClaimHeightBoundaries(Chunk chunk) {
+        ClaimHeightDefinition boundaryMethod = ClaimHeightDefinition.parse(plugin.getConfig().getString("ClaimHeight.method"));
+
+        // We will use the full and default behaviour as default value.
+        if (boundaryMethod == null) {
+            boundaryMethod = ClaimHeightDefinition.FULL;
+        }
+
+        World world = chunk.getWorld();
+        com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
+        int maxHeight = weWorld.getMaxY();
+        int minHeight = weWorld.getMinY();
+
+        // Full is the default behaviour.
+        // This will claim the whole chunk.
+        if (boundaryMethod == ClaimHeightDefinition.FULL) {
+            return Pair.of(minHeight, maxHeight);
+        }
+
+        String claimHeightWorldType = world.getEnvironment() == World.Environment.NORMAL ? "overworld" : "other";
+        int bottomY = plugin.getConfig().getInt("ClaimHeight." + claimHeightWorldType + "-bottomY", minHeight);
+        int topY = plugin.getConfig().getInt("ClaimHeight." + claimHeightWorldType + "-topY", maxHeight);
+
+        // Fixed is the simple claim behaviour.
+        // We want to handle this first.
+        if (boundaryMethod == ClaimHeightDefinition.FIXED) {
+            return Pair.of(Math.max(minHeight, bottomY), Math.min(topY, maxHeight));
+        }
+
+        // Let's find all highest points in the chunk.
+        List<Integer> points = new ArrayList<>();
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                points.add(world.getHighestBlockYAt((chunk.getX() << 4) + x, (chunk.getZ() << 4) + z));
+            }
+        }
+
+        // Get the center based on the boundary Method
+        int center = boundaryMethod.getCenter(points);
+
+        bottomY = center + bottomY;
+        topY = center + topY;
+
+        if (plugin.getConfig().getBoolean("ClaimHeight.appendOversize")) {
+            // We append the oversize which reach out of the world on the top or the bottom if it fits.
+            // We throw oversize away if we would exceed the world height limit on both ends.
+            if (topY > maxHeight) {
+                bottomY -= topY - maxHeight;
+                topY = maxHeight;
+                if (bottomY < minHeight) {
+                    bottomY = minHeight;
+                }
+            }
+
+            if (bottomY < minHeight) {
+                topY += Math.abs(bottomY);
+                bottomY = minHeight;
+                if (topY > maxHeight) {
+                    topY = maxHeight;
+                }
+            }
+        } else {
+            // Just clamp this stuff.
+            bottomY = Math.max(bottomY, minHeight);
+            topY = Math.min(topY, maxHeight);
+        }
+        return Pair.of(bottomY, topY);
     }
 
 }
