@@ -1,6 +1,7 @@
 package biz.princeps.landlord.api;
 
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public interface ILandLord extends Plugin {
 
@@ -12,7 +13,7 @@ public interface ILandLord extends Plugin {
      * @deprecated {@link ILandLord} is a plugin itself and will only return itself. Use the instance directly.
      */
     @Deprecated
-    Plugin getPlugin();
+    JavaPlugin getPlugin();
 
 
     /**

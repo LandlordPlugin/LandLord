@@ -8,9 +8,9 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Material;
 
 /**
- * Note on {@code RegionGroup.MEMBERS} and {@code RegionGroup.NON_MEMBERS check}.
- * From WorldGuard wiki: The {@code entry} and {@code exit} flags default to “non-member”, meaning setting them to
- * “deny” will prevent non-members from entering/exiting the region.
+ * Note on {@link RegionGroup#MEMBERS} and {@link RegionGroup#NON_MEMBERS check}.
+ * From WorldGuard wiki: The {@code entry} and {@code exit} flags default to {@code non-member}, meaning setting them to
+ * {@code deny} will prevent non-members from entering/exiting the region.
  */
 public class LLFlag implements ILLFlag {
 
