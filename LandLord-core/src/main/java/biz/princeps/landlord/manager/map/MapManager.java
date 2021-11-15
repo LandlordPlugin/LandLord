@@ -14,14 +14,14 @@ import java.util.UUID;
 public class MapManager implements IMapManager {
 
     private final HashMap<UUID, LandMap> mapList;
-    private final ILandLord pl;
+    private final ILandLord plugin;
     private final MapConstants constants;
 
-    public MapManager(ILandLord pl) {
+    public MapManager(ILandLord plugin) {
         super();
-        this.pl = pl;
+        this.plugin = plugin;
         this.mapList = new HashMap<>();
-        this.constants = new MapConstants(pl.getConfig());
+        this.constants = new MapConstants(plugin.getConfig());
     }
 
     @Override
@@ -36,7 +36,7 @@ public class MapManager implements IMapManager {
     @Override
     public void addMap(Player player) {
         if (!hasMap(player.getUniqueId())) {
-            mapList.put(player.getUniqueId(), new LandMap(player, pl, constants));
+            mapList.put(player.getUniqueId(), new LandMap(player, plugin, constants));
         }
     }
 

@@ -23,13 +23,13 @@ public class Clear extends LandlordCommand {
     private final IWorldGuardManager wg;
     private final IMultiTaskManager multiTaskManager;
 
-    public Clear(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Clear.name"),
-                pl.getConfig().getString("CommandSettings.Clear.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Clear.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Clear.aliases")));
-        this.wg = pl.getWGManager();
-        this.multiTaskManager = pl.getMultiTaskManager();
+    public Clear(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Clear.name"),
+                plugin.getConfig().getString("CommandSettings.Clear.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Clear.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Clear.aliases")));
+        this.wg = plugin.getWGManager();
+        this.multiTaskManager = plugin.getMultiTaskManager();
     }
 
     @Override

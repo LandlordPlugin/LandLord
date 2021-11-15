@@ -133,11 +133,12 @@ public class DelimitationManager implements IDelimitationManager {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
             BlockVector that = (BlockVector) o;
-            return x == that.x &&
-                    z == that.z;
+            return x == that.x && z == that.z;
         }
 
         @Override

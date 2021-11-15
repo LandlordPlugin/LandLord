@@ -22,11 +22,11 @@ import java.util.List;
  */
 public class ManageAll extends LandlordCommand {
 
-    public ManageAll(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.ManageAll.name"),
-                pl.getConfig().getString("CommandSettings.ManageAll.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ManageAll.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.ManageAll.aliases")));
+    public ManageAll(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.ManageAll.name"),
+                plugin.getConfig().getString("CommandSettings.ManageAll.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.ManageAll.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.ManageAll.aliases")));
     }
 
     @Override

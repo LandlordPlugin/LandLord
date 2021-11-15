@@ -16,11 +16,11 @@ import org.bukkit.entity.Player;
  */
 public class SetHome extends LandlordCommand {
 
-    public SetHome(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Sethome.name"),
-                pl.getConfig().getString("CommandSettings.Sethome.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Sethome.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Sethome.aliases")));
+    public SetHome(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Sethome.name"),
+                plugin.getConfig().getString("CommandSettings.Sethome.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Sethome.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Sethome.aliases")));
     }
 
     // requires permission landlord.player.home
@@ -42,7 +42,8 @@ public class SetHome extends LandlordCommand {
             return;
         }
 
-        if (isDisabledWorld(player)) return;
+        if (isDisabledWorld(player))
+            return;
 
         IOwnedLand land = plugin.getWGManager().getRegion(player.getLocation());
 

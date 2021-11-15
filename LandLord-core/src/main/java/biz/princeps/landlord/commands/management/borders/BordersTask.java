@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class BordersTask extends BukkitRunnable {
 
-    private final ILandLord pl;
+    private final ILandLord plugin;
     private final IWorldGuardManager wg;
     private final Player player;
 
@@ -18,32 +18,32 @@ public class BordersTask extends BukkitRunnable {
 
     private int counter;
 
-    BordersTask(ILandLord pl, Player player) {
-        this.pl = pl;
-        this.wg = pl.getWGManager();
+    BordersTask(ILandLord plugin, Player player) {
+        this.plugin = plugin;
+        this.wg = plugin.getWGManager();
         this.player = player;
 
-        this.refreshRate = pl.getConfig().getInt("Borders.refreshRate");
-        this.timeout = pl.getConfig().getInt("Borders.timeout");
+        this.refreshRate = plugin.getConfig().getInt("Borders.refreshRate");
+        this.timeout = plugin.getConfig().getInt("Borders.timeout");
     }
 
     @Override
     public void run() {
         if (counter * refreshRate <= timeout) {
-            if (pl.getConfig().getBoolean("Particles.borders.enabled")) {
+            if (plugin.getConfig().getBoolean("Particles.borders.enabled")) {
                 IOwnedLand ownedLand = wg.getRegion(player.getLocation());
 
                 if (ownedLand == null) {
                     wg.highlightLand(player.getLocation().getChunk(), player,
-                            Particle.valueOf(pl.getConfig().getString("Particles.borders.unclaimed")), 1, false);
+                            Particle.valueOf(plugin.getConfig().getString("Particles.borders.unclaimed")), 1, false);
                 } else {
-                    pl.getPlayerManager().getOffline(ownedLand.getOwner(), (owner) -> {
-                        if (pl.getPlayerManager().isInactive(owner.getLastSeen())) {
+                    plugin.getPlayerManager().getOffline(ownedLand.getOwner(), (owner) -> {
+                        if (plugin.getPlayerManager().isInactive(owner.getLastSeen())) {
                             wg.highlightLand(player.getLocation().getChunk(), player,
-                                    Particle.valueOf(pl.getConfig().getString("Particles.borders.inactive")), 1, false);
+                                    Particle.valueOf(plugin.getConfig().getString("Particles.borders.inactive")), 1, false);
                         } else {
                             wg.highlightLand(player.getLocation().getChunk(), player,
-                                    Particle.valueOf(pl.getConfig().getString("Particles.borders.claimed")), 1, false);
+                                    Particle.valueOf(plugin.getConfig().getString("Particles.borders.claimed")), 1, false);
                         }
                     });
                 }
@@ -55,7 +55,7 @@ public class BordersTask extends BukkitRunnable {
     }
 
     public void start() {
-        runTaskTimer(pl.getPlugin(), 0, refreshRate * 20L);
+        runTaskTimer(plugin, 0, refreshRate * 20L);
     }
 
 }

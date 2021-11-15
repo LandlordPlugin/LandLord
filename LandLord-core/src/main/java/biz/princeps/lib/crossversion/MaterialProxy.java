@@ -33,7 +33,6 @@ public enum MaterialProxy {
 
     ItemStack getLegacy() {
         return new ItemStack(Material.valueOf(legacy), 1, legacybyte);
-
     }
 
 }

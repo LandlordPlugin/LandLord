@@ -20,12 +20,12 @@ public class Advertise extends LandlordCommand {
 
     private final IWorldGuardManager wg;
 
-    public Advertise(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Advertise.name"),
-                pl.getConfig().getString("CommandSettings.Advertise.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Advertise.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Advertise.aliases")));
-        wg = pl.getWGManager();
+    public Advertise(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Advertise.name"),
+                plugin.getConfig().getString("CommandSettings.Advertise.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Advertise.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Advertise.aliases")));
+        wg = plugin.getWGManager();
     }
 
 

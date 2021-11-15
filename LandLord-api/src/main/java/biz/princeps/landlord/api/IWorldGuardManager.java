@@ -117,4 +117,5 @@ public interface IWorldGuardManager {
      * Pair#getRight()} defines the upper claim boundary
      */
     Pair<Integer, Integer> calcClaimHeightBoundaries(Chunk chunk);
+
 }

@@ -3,6 +3,7 @@ package biz.princeps.lib.gui;
 import biz.princeps.lib.gui.simple.AbstractGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Created by spatium on 21.07.17.
@@ -12,12 +13,13 @@ public class MainMenuGUI extends AbstractGUI {
     /**
      * Creates a new main menu
      *
+     * @param plugin   the plugin instance
      * @param player   the player which want to see the menu
      * @param rowCount a value between 0 and 6
      * @param title    the name of the menu - ChatColor allowed!
      */
-    public MainMenuGUI(Player player, int rowCount, String title) {
-        super(player, rowCount * 9, title);
+    public MainMenuGUI(JavaPlugin plugin, Player player, int rowCount, String title) {
+        super(plugin, player, rowCount * 9, title);
     }
 
 

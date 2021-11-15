@@ -20,11 +20,11 @@ public class MultiManage extends LandlordCommand {
 
     private final IWorldGuardManager wg;
 
-    public MultiManage(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.MultiManage.name"),
-                pl.getConfig().getString("CommandSettings.MultiManage.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiManage.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiManage.aliases")));
+    public MultiManage(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.MultiManage.name"),
+                plugin.getConfig().getString("CommandSettings.MultiManage.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MultiManage.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MultiManage.aliases")));
         this.wg = plugin.getWGManager();
     }
 

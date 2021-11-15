@@ -1,9 +1,9 @@
 package biz.princeps.landlord.util;
 
+import biz.princeps.landlord.api.ILandLord;
 import com.google.common.base.Preconditions;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -15,11 +15,11 @@ import java.util.Objects;
 
 public class SimpleScoreboard {
 
-    private Scoreboard scoreboard;
-
+    private final ILandLord plugin;
     private final String title;
     private final List<String> scores;
     private final Player player;
+    private Scoreboard scoreboard;
     private BukkitRunnable runnable;
 
     /**
@@ -28,9 +28,10 @@ public class SimpleScoreboard {
      * @param title the title to be displayed
      * @param p     the player the scoreboard should be displayed for
      */
-    public SimpleScoreboard(String title, Player p) {
+    public SimpleScoreboard(ILandLord plugin, String title, Player p) {
         Objects.requireNonNull(p);
-        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        this.plugin = plugin;
+        this.scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
         this.title = title;
         this.scores = new ArrayList<>();
         this.player = p;
@@ -90,7 +91,7 @@ public class SimpleScoreboard {
      */
     public void reset() {
         scores.clear();
-        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        this.scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
         player.setScoreboard(this.scoreboard);
     }
 
@@ -109,20 +110,19 @@ public class SimpleScoreboard {
     /**
      * Schedules an update task which regularly updates the the scoreboard with a given runnable
      *
-     * @param pl    plugin reference
-     * @param run   runnable
-     * @param delay ~ delay
-     * @param timer the repeating time
+     * @param plugin plugin reference
+     * @param run    runnable
+     * @param delay  ~ delay
+     * @param timer  the repeating time
      */
-    public void scheduleUpdate(JavaPlugin pl, Runnable run, long delay, long timer) {
-
+    public void scheduleUpdate(Plugin plugin, Runnable run, long delay, long timer) {
         this.runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 run.run();
             }
         };
-        this.runnable.runTaskTimer(pl, delay, timer);
+        this.runnable.runTaskTimer(plugin, delay, timer);
     }
 
     /**
@@ -134,7 +134,7 @@ public class SimpleScoreboard {
     public void deactivate() {
         if (runnable != null)
             this.runnable.cancel();
-        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        this.scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
         player.setScoreboard(this.scoreboard);
 
     }

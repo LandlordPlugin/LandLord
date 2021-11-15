@@ -13,7 +13,6 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -23,11 +22,11 @@ public class MultiUnclaim extends LandlordCommand {
     private final IWorldGuardManager wg;
     private final IMultiTaskManager multiTaskManager;
 
-    public MultiUnclaim(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.MultiUnclaim.name"),
-                pl.getConfig().getString("CommandSettings.MultiUnclaim.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiUnclaim.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiUnclaim.aliases")));
+    public MultiUnclaim(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.MultiUnclaim.name"),
+                plugin.getConfig().getString("CommandSettings.MultiUnclaim.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MultiUnclaim.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MultiUnclaim.aliases")));
         this.wg = plugin.getWGManager();
         this.multiTaskManager = plugin.getMultiTaskManager();
     }
@@ -84,7 +83,7 @@ public class MultiUnclaim extends LandlordCommand {
     }
 
     public void performMultiUnclaim(Player player, MultiMode mode, int radius) {
-        int maxSize = Bukkit.getViewDistance() + 2;
+        int maxSize = plugin.getServer().getViewDistance() + 2;
 
         // Avoid latencies with MultiUnclaim, because World#getChunk method may generate the chunk :/
         if (radius > maxSize) { // +2 for marge value. Unless server has a huge render distance (16 for example), won't cause any trouble

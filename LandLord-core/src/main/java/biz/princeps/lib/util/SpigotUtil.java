@@ -12,9 +12,8 @@ import java.util.logging.Level;
 public class SpigotUtil {
 
     public static Location exactlocationFromString(String s) {
-        if (s == null) return null;
-        if (s.isEmpty()) return null;
-        if (s.equals("null")) return null;
+        if (s == null || s.isEmpty() || s.equals("null"))
+            return null;
         String[] split = s.split(":");
         Location loc;
 
@@ -30,7 +29,8 @@ public class SpigotUtil {
     }
 
     public static String exactlocationToString(Location loc) {
-        if (loc == null) return "";
+        if (loc == null)
+            return "";
         if (loc.getWorld() == null || loc.getWorld().getName() == null) {
             EldoUtilities.logger().log(Level.WARNING, "Something is wrong with your world!");
             return "";
@@ -44,4 +44,5 @@ public class SpigotUtil {
 
         return world + ":" + MathUtil.round(x, 3) + ":" + MathUtil.round(y, 3) + ":" + MathUtil.round(z, 3) + ":" + yaw + ":" + pitch;
     }
+
 }

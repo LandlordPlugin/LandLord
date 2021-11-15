@@ -42,29 +42,6 @@ public enum Skulls {
         this.texture = texture;
     }
 
-    public ItemStack getSkull(ILandLord pl) {
-        UUID uuid = UUID.randomUUID();
-        ItemStack head = pl.getMaterialsManager().getPlayerHead(uuid);
-        if (texture.isEmpty()) return head;
-
-        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-        GameProfile profile = new GameProfile(uuid, null);
-
-        profile.getProperties().put("textures", new Property("textures", texture));
-
-        try {
-            Field profileField = headMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(headMeta, profile);
-
-        } catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException error) {
-            error.printStackTrace();
-        }
-        head.setItemMeta(headMeta);
-        return head;
-    }
-
-
     public static List<Skulls> numToSkull(int num) {
         List<Skulls> list = new ArrayList<>();
         String numstring = String.valueOf(num);
@@ -108,6 +85,28 @@ public enum Skulls {
         return list;
     }
 
+    public ItemStack getSkull(ILandLord plugin) {
+        UUID uuid = UUID.randomUUID();
+        ItemStack head = plugin.getMaterialsManager().getPlayerHead(uuid);
+        if (texture.isEmpty())
+            return head;
+
+        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
+        GameProfile profile = new GameProfile(uuid, null);
+
+        profile.getProperties().put("textures", new Property("textures", texture));
+
+        try {
+            Field profileField = headMeta.getClass().getDeclaredField("profile");
+            profileField.setAccessible(true);
+            profileField.set(headMeta, profile);
+
+        } catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException error) {
+            error.printStackTrace();
+        }
+        head.setItemMeta(headMeta);
+        return head;
+    }
 
     @Override
     public String toString() {

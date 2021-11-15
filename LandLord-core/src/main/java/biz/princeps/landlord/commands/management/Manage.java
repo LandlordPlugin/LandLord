@@ -11,14 +11,12 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * Project: LandLord
@@ -31,12 +29,12 @@ public class Manage extends LandlordCommand {
 
     private final IWorldGuardManager wg;
 
-    public Manage(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Manage.name"),
-                pl.getConfig().getString("CommandSettings.Manage.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Manage.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Manage.aliases")));
-        this.wg = pl.getWGManager();
+    public Manage(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Manage.name"),
+                plugin.getConfig().getString("CommandSettings.Manage.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Manage.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Manage.aliases")));
+        this.wg = plugin.getWGManager();
     }
 
     // TODO Clean this mess up
@@ -153,7 +151,7 @@ public class Manage extends LandlordCommand {
         for (IOwnedLand region : lands) {
             LandManageEvent landManageEvent = new LandManageEvent(player, region,
                     "GREET_MESSAGE", region.getGreetMessage(), newmsg);
-            Bukkit.getPluginManager().callEvent(landManageEvent);
+            plugin.getServer().getPluginManager().callEvent(landManageEvent);
 
             region.setGreetMessage(newmsg);
         }
@@ -182,7 +180,7 @@ public class Manage extends LandlordCommand {
         for (IOwnedLand region : lands) {
             LandManageEvent landManageEvent = new LandManageEvent(player, region,
                     "FAREWELL_MESSAGE", region.getFarewellMessage(), newmsg);
-            Bukkit.getPluginManager().callEvent(landManageEvent);
+            plugin.getServer().getPluginManager().callEvent(landManageEvent);
 
             region.setFarewellMessage(newmsg);
         }

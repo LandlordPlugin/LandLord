@@ -14,6 +14,10 @@ public class CrossVersion {
         this.item = new Item();
     }
 
+    public static String getVersion() {
+        return Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+    }
+
     public ItemStack addNBTTag(ItemStack stack, String key, Object value) {
         return item.addNBTTag(stack, key, value);
     }
@@ -26,7 +30,4 @@ public class CrossVersion {
         return item.hasNBTTag(stack, customItem);
     }
 
-    public static String getVersion() {
-        return Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-    }
 }

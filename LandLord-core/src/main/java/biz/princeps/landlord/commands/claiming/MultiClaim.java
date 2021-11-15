@@ -13,7 +13,6 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
@@ -25,11 +24,11 @@ public class MultiClaim extends LandlordCommand {
     private final IMultiTaskManager multiTaskManager;
     private final Claim claim;
 
-    public MultiClaim(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.MultiClaim.name"),
-                pl.getConfig().getString("CommandSettings.MultiClaim.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiClaim.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiClaim.aliases")));
+    public MultiClaim(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.MultiClaim.name"),
+                plugin.getConfig().getString("CommandSettings.MultiClaim.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MultiClaim.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MultiClaim.aliases")));
         this.wg = plugin.getWGManager();
         this.multiTaskManager = plugin.getMultiTaskManager();
         this.claim = new Claim(plugin, true);
@@ -74,7 +73,7 @@ public class MultiClaim extends LandlordCommand {
             return;
         }
 
-        int maxSize = Bukkit.getViewDistance() + 2;
+        int maxSize = plugin.getServer().getViewDistance() + 2;
 
         // Avoid latencies with MultiClaim, because World#getChunk method may generates the chunk :/
         if (radius > maxSize) { // +2 for marge value. Unless server has a huge render distance (16 for example), won't cause any trouble

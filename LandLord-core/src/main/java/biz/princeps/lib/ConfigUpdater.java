@@ -15,13 +15,13 @@ import java.util.logging.Level;
 public class ConfigUpdater {
 
     /**
-     * Source is the *.yml within the jar
+     * Source is the *.yml within the jar.
      * Destination is the yml copied into some directory.
      * <p>
      * The destination file is supposed to receive all entries, that are in source but not in dest.
      *
-     * @param source
-     * @param dest
+     * @param source the *.yml path
+     * @param dest   the destination file
      */
     public static void updateConfig(String source, File dest) {
         File sourceFile = null;
@@ -45,7 +45,6 @@ public class ConfigUpdater {
 
         EldoUtilities.logger().log(Level.INFO, Arrays.toString(keys.toArray()));
 
-
         return entryList;
     }
 
@@ -63,4 +62,5 @@ public class ConfigUpdater {
             this.comment = comment;
         }
     }
+
 }

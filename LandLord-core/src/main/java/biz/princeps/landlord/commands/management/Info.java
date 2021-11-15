@@ -8,7 +8,6 @@ import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Particle;
@@ -32,12 +31,12 @@ public class Info extends LandlordCommand {
     private final String inactive;
     private final IWorldGuardManager wg;
 
-    public Info(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Info.name"),
-                pl.getConfig().getString("CommandSettings.Info.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Info.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Info.aliases")));
-        this.wg = pl.getWGManager();
+    public Info(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Info.name"),
+                plugin.getConfig().getString("CommandSettings.Info.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Info.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Info.aliases")));
+        this.wg = plugin.getWGManager();
 
         List<String> ownedList = plugin.getLangManager().getStringList("Commands.Info.owned");
         StringBuilder sb = new StringBuilder();
@@ -108,7 +107,7 @@ public class Info extends LandlordCommand {
             plugin.getPlayerManager().getOffline(land.getOwner(), (owner) -> {
                 String lastseen, owners = land.getOwnersString(), friends = land.getMembersString();
                 LocalDateTime lastSeenDate = null;
-                OfflinePlayer op = Bukkit.getOfflinePlayer(land.getOwner());
+                OfflinePlayer op = plugin.getServer().getOfflinePlayer(land.getOwner());
                 if (op.isOnline()) {
                     lastseen = lm.getRawString("Commands.Info.online");
                 } else {

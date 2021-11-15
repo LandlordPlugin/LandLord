@@ -1,6 +1,5 @@
 package biz.princeps.landlord.integrations;
 
-import biz.princeps.landlord.ALandLord;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import net.luckperms.api.LuckPerms;
@@ -8,19 +7,17 @@ import net.luckperms.api.context.ContextCalculator;
 import net.luckperms.api.context.ContextConsumer;
 import net.luckperms.api.context.ContextSet;
 import net.luckperms.api.context.ImmutableContextSet;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class LLLuckPerms {
 
+    private final ILandLord plugin;
     private LuckPerms api;
-    private final ILandLord pl;
 
-
-    public LLLuckPerms(ALandLord aLandLord) {
-        pl = aLandLord;
-        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+    public LLLuckPerms(ILandLord plugin) {
+        this.plugin = plugin;
+        RegisteredServiceProvider<LuckPerms> provider = plugin.getServer().getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
             api = provider.getProvider();
         }
@@ -33,7 +30,7 @@ public class LLLuckPerms {
 
         @Override
         public void calculate(Player p, ContextConsumer contextConsumer) {
-            IOwnedLand region = pl.getWGManager().getRegion(p.getLocation());
+            IOwnedLand region = plugin.getWGManager().getRegion(p.getLocation());
             if (region == null) {
                 contextConsumer.accept("land", "wilderness");
             } else {
@@ -58,4 +55,3 @@ public class LLLuckPerms {
         }
     }
 }
-

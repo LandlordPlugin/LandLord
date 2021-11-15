@@ -3,7 +3,7 @@ package biz.princeps.landlord.multi;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMultiTask;
 import biz.princeps.landlord.api.IMultiTaskManager;
-import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -20,13 +20,16 @@ public class MultiTaskManager implements IMultiTaskManager {
 
     @Override
     public void initTask() {
-        Bukkit.getScheduler().runTaskTimer(plugin.getPlugin(), () -> {
-            if (queue.isEmpty())
-                return;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (queue.isEmpty())
+                    return;
 
-            // 10 operations max per tick seems adequate for the majority of cases.
-            processQueue(10);
-        }, 0L, 1L);
+                // 10 operations max per tick seems adequate for the majority of cases.
+                processQueue(10);
+            }
+        }.runTaskTimer(plugin, 0L, 1L);
     }
 
     @Override
@@ -52,11 +55,15 @@ public class MultiTaskManager implements IMultiTaskManager {
 
     @Override
     public void enqueueTask(IMultiTask<?> multiTask) {
-        if (Bukkit.isPrimaryThread()) {
+        if (plugin.getServer().isPrimaryThread()) {
             queue.add(multiTask);
         } else {
-            Bukkit.getScheduler().runTask(plugin.getPlugin(), () ->
-                    enqueueTask(multiTask));
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    enqueueTask(multiTask);
+                }
+            }.runTask(plugin);
         }
     }
 

@@ -6,7 +6,6 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.tuple.Pair;
 import biz.princeps.lib.PrincepsLib;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -22,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
 
 /**
  * Project: LandLord
@@ -32,10 +30,10 @@ import java.util.logging.Level;
 public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     protected final LandCache cache = new LandCache();
-    protected final ILandLord pl;
+    protected final ILandLord plugin;
 
-    public AWorldGuardManager(ILandLord pl) {
-        this.pl = pl;
+    public AWorldGuardManager(ILandLord plugin) {
+        this.plugin = plugin;
     }
 
     @Override
@@ -52,7 +50,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
             sb.append("_").append(splitted[i]);
         }
 
-        return Bukkit.getWorld(sb.toString());
+        return plugin.getServer().getWorld(sb.toString());
     }
 
     /**
@@ -131,14 +129,15 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
     @Override
     public Set<IOwnedLand> getRegions(UUID id) {
         Set<IOwnedLand> set = new HashSet<>();
-        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
+        OfflinePlayer op = plugin.getServer().getOfflinePlayer(id);
         if (op != null) {
-            List<String> worlds = pl.getConfig().getStringList("disabled-worlds");
-            for (World world : Bukkit.getWorlds()) {
+            List<String> worlds = plugin.getConfig().getStringList("disabled-worlds");
+            for (World world : plugin.getServer().getWorlds()) {
                 // Only count enabled worlds
                 if (!worlds.contains(world.getName())) {
                     for (IOwnedLand region : getRegions(id, world)) {
-                        if (!isLLRegion(region.getName())) continue;
+                        if (!isLLRegion(region.getName()))
+                            continue;
 
                         set.add(region);
                     }
@@ -155,7 +154,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     @Override
     public String formatLocation(Chunk chunk) {
-        String configString = pl.getConfig().getString("locationFormat");
+        String configString = plugin.getConfig().getString("locationFormat");
 
         int x = (chunk.getX() << 4) + 8;
         int z = (chunk.getZ() << 4) + 8;
@@ -207,7 +206,8 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
      */
     @Override
     public IOwnedLand[] getSurroundings(Location ploc) {
-        if (ploc == null) return new IOwnedLand[0];
+        if (ploc == null)
+            return new IOwnedLand[0];
         return new IOwnedLand[]{
                 getRegion(ploc),
                 getRegion(ploc.clone().add(16, 0, 0)),
@@ -279,14 +279,14 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         }
 
         for (UUID owner : owners) {
-            pl.getPlayerManager().getOffline(owner, lPlayer -> {
+            plugin.getPlayerManager().getOffline(owner, lPlayer -> {
                 for (IOwnedLand region : regions) {
                     if (region.isOwner(owner)) {
-                        // pl.getLogger().log(Level.INFO, "isowner");
+                        // plugin.getLogger().log(Level.INFO, "isowner");
                         if (lPlayer.getHome() != null && region.contains(lPlayer.getHome())) {
-                            // pl.getLogger().log(Level.INFO, "remo");
+                            // plugin.getLogger().log(Level.INFO, "remo");
                             lPlayer.setHome(null);
-                            pl.getPlayerManager().save(lPlayer, true);
+                            plugin.getPlayerManager().save(lPlayer, true);
                         }
                     }
                 }
@@ -301,7 +301,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     @Override
     public Pair<Integer, Integer> calcClaimHeightBoundaries(Chunk chunk) {
-        ClaimHeightDefinition boundaryMethod = ClaimHeightDefinition.parse(pl.getConfig().getString("ClaimHeight.method"));
+        ClaimHeightDefinition boundaryMethod = ClaimHeightDefinition.parse(plugin.getConfig().getString("ClaimHeight.method"));
 
         // We will use the full and default behaviour as default value.
         if (boundaryMethod == null) {
@@ -316,8 +316,8 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
             return Pair.of(0, maxHeight);
         }
 
-        int bottomY = pl.getConfig().getInt("ClaimHeight.bottomY", 0);
-        int topY = pl.getConfig().getInt("ClaimHeight.topY", maxHeight);
+        int bottomY = plugin.getConfig().getInt("ClaimHeight.bottomY", 0);
+        int topY = plugin.getConfig().getInt("ClaimHeight.topY", maxHeight);
 
         // Fixed is the simple claim behaviour.
         // We want to handle this first.
@@ -339,8 +339,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         bottomY = center + bottomY;
         topY = center + topY;
 
-
-        if (pl.getConfig().getBoolean("ClaimHeight.appendOversize")) {
+        if (plugin.getConfig().getBoolean("ClaimHeight.appendOversize")) {
             // We append the oversize which reach out of the world on the top or the bottom if it fits.
             // We throw oversize away if we would exceed the world height limit on both ends.
             if (topY > maxHeight) {

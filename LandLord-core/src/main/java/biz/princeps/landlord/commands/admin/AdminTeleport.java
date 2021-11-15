@@ -23,11 +23,11 @@ import java.util.Set;
  */
 public class AdminTeleport extends LandlordCommand {
 
-    public AdminTeleport(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.AdminTP.name"),
-                pl.getConfig().getString("CommandSettings.AdminTP.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AdminTP.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AdminTP.aliases")));
+    public AdminTeleport(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.AdminTP.name"),
+                plugin.getConfig().getString("CommandSettings.AdminTP.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.AdminTP.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.AdminTP.aliases")));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class AdminTeleport extends LandlordCommand {
                 // Success
                 Set<IOwnedLand> lands = plugin.getWGManager().getRegions(offline.getUuid());
                 if (lands.size() > 0) {
-                    MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
+                    MultiPagedGUI landGui = new MultiPagedGUI(plugin, sender, 5,
                             lm.getRawString("Commands.AdminTp.guiHeader").replace("%player%", target));
 
                     for (IOwnedLand land : lands) {

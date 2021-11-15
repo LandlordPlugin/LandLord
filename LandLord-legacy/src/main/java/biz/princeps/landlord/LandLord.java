@@ -2,14 +2,13 @@ package biz.princeps.landlord;
 
 import biz.princeps.landlord.listener.PistonOverwriter;
 import biz.princeps.landlord.manager.MaterialsManager;
-import biz.princeps.landlord.manager.MobManager;
+import biz.princeps.landlord.manager.MobsManager;
 import biz.princeps.landlord.manager.UtilsManager;
 import biz.princeps.landlord.manager.WorldGuardManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.session.SessionManager;
 import com.sk89q.worldguard.session.handler.FarewellFlag;
 import com.sk89q.worldguard.session.handler.GreetingFlag;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -37,8 +36,8 @@ public class LandLord extends ALandLord implements Listener {
 
         this.worldGuardManager = new WorldGuardManager(this, getWorldGuard());
         this.utilsManager = new UtilsManager();
-        this.materialsManager = new MaterialsManager();
-        this.mobManager = new MobManager();
+        this.materialsManager = new MaterialsManager(this);
+        this.mobManager = new MobsManager(this);
 
         if (getConfig().getString("Regeneration.provider", "default").equalsIgnoreCase("wg")) {
             // there is only the default method available for 1.12.2
@@ -46,7 +45,7 @@ public class LandLord extends ALandLord implements Listener {
         this.regenerationManager = World::regenerateChunk;
 
         SessionManager sessionManager = WorldGuardPlugin.inst().getSessionManager();
-        sessionManager.registerHandler(new LandSessionHandler.Factory((WorldGuardManager) worldGuardManager), null);
+        sessionManager.registerHandler(new LandSessionHandler.Factory(this, (WorldGuardManager) worldGuardManager), null);
         sessionManager.unregisterHandler(GreetingFlag.FACTORY);
         sessionManager.unregisterHandler(FarewellFlag.FACTORY);
 
@@ -80,10 +79,11 @@ public class LandLord extends ALandLord implements Listener {
      */
     @Override
     protected boolean checkDependencies() {
-        if (!super.checkDependencies()) return false;
+        if (!super.checkDependencies())
+            return false;
 
         // Dependency stuff
-        if (!Bukkit.getVersion().contains("1.12.2")) {
+        if (!getServer().getVersion().contains("1.12.2")) {
             haltPlugin("Invalid Spigot version detected! LandLord requires 1.12.2, use Latest version for 1.13.2+!");
             return false;
         }

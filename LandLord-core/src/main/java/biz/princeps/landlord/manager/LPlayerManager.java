@@ -7,7 +7,6 @@ import biz.princeps.landlord.api.IStorage;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.persistent.FlatFileStorage;
 import biz.princeps.landlord.persistent.SQLStorage;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
@@ -32,14 +31,14 @@ public class LPlayerManager implements IPlayerManager {
     private final IStorage stor;
 
 
-    public LPlayerManager(ILandLord pl) {
+    public LPlayerManager(ILandLord plugin) {
         this.players = new HashMap<>();
-        this.plugin = pl;
+        this.plugin = plugin;
 
-        if (pl.getConfig().getString("DatabaseType").equalsIgnoreCase("MySQL")) {
-            this.stor = new SQLStorage(plugin.getPlugin());
+        if (plugin.getConfig().getString("DatabaseType").equalsIgnoreCase("MySQL")) {
+            this.stor = new SQLStorage(plugin);
         } else {
-            this.stor = new FlatFileStorage(pl.getPlugin());
+            this.stor = new FlatFileStorage(plugin);
             ((FlatFileStorage) this.stor).init();
         }
     }
@@ -103,7 +102,7 @@ public class LPlayerManager implements IPlayerManager {
 
     @Override
     public void getOffline(String name, Consumer<IPlayer> consumer) {
-        getOffline(Bukkit.getOfflinePlayer(name).getUniqueId(), consumer);
+        getOffline(plugin.getServer().getOfflinePlayer(name).getUniqueId(), consumer);
     }
 
     /**
@@ -115,11 +114,10 @@ public class LPlayerManager implements IPlayerManager {
      */
     @Override
     public boolean isInactive(LocalDateTime lastSeenDate) {
-        if (!Options.enabled_inactiveBuyUp()) return false;
-
-        if (lastSeenDate == null) {
+        if (!Options.enabled_inactiveBuyUp())
             return false;
-        }
+        if (lastSeenDate == null)
+            return false;
 
         int days = plugin.getConfig().getInt("BuyUpInactive.timegate");
 

@@ -7,9 +7,10 @@ import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IPlayerManager;
 import biz.princeps.landlord.api.IWorldGuardManager;
-import org.bukkit.Bukkit;
+import biz.princeps.landlord.api.events.LandClearEvent;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -44,23 +45,28 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
 
     @Override
     public boolean process(IOwnedLand ownedLand) {
-        UUID owner = ownedLand.getOwner();
+        LandClearEvent event = new LandClearEvent(commandSender, ownedLand);
+        plugin.getServer().getPluginManager().callEvent(event);
 
-        if (clearType == ClearType.WORLD && !clearedHomes.contains(owner)) {
-            playerManager.getOffline(owner, lPlayer -> {
-                if (lPlayer == null) {
-                    return;
-                }
-                Location home = lPlayer.getHome();
-                if (home != null && home.getWorld().getName().equals(targetName)) {
-                    lPlayer.setHome(null);
-                    clearedHomes.add(lPlayer.getUuid());
-                    playerManager.save(lPlayer, true);
-                }
-            });
+        if (!event.isCancelled()) {
+            UUID owner = ownedLand.getOwner();
+
+            if (clearType == ClearType.WORLD && !clearedHomes.contains(owner)) {
+                playerManager.getOffline(owner, lPlayer -> {
+                    if (lPlayer == null) {
+                        return;
+                    }
+                    Location home = lPlayer.getHome();
+                    if (home != null && home.getWorld().getName().equals(targetName)) {
+                        lPlayer.setHome(null);
+                        clearedHomes.add(lPlayer.getUuid());
+                        playerManager.save(lPlayer, true);
+                    }
+                });
+            }
+
+            wgManager.unclaim(ownedLand);
         }
-
-        wgManager.unclaim(ownedLand);
 
         return true;
     }
@@ -88,7 +94,12 @@ public class MultiClearTask extends AMultiTask<IOwnedLand> {
                 break;
         }
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                plugin.getMapManager().updateAll();
+            }
+        }.runTask(plugin);
     }
 
 }

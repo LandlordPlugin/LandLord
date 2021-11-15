@@ -14,12 +14,12 @@ import org.bukkit.event.EventHandler;
 public class Towny extends BasicListener {
 
     private final TownyAPI towny;
-    private final ILandLord pl;
+    private final ILandLord plugin;
 
-    public Towny(ILandLord pl) {
-        super(pl);
+    public Towny(ILandLord plugin) {
+        super(plugin);
         this.towny = TownyAPI.getInstance();
-        this.pl = pl;
+        this.plugin = plugin;
     }
 
     @EventHandler
@@ -27,7 +27,7 @@ public class Towny extends BasicListener {
         Chunk chunk = e.getChunk();
         if (towny.isTownyWorld(e.getChunk().getWorld()) &&
                 !towny.isWilderness(new Location(chunk.getWorld(), (chunk.getX() << 4) + 2, 2, (chunk.getZ() << 4) + 2))) {
-            pl.getLangManager().sendMessage(e.getPlayer(), "Integrations.Towny.TownyPresent");
+            plugin.getLangManager().sendMessage(e.getPlayer(), "Integrations.Towny.TownyPresent");
             e.setCancelled(true);
         }
     }
@@ -40,8 +40,8 @@ public class Towny extends BasicListener {
 
         Location locationAt = new Location(townBlock.getWorldCoord().getBukkitWorld(), x, 0, z);
 
-        if (pl.getWGManager().getRegion(locationAt) != null) {
-            pl.getLangManager().sendMessage(e.getPlayer(), "Integrations.Towny.LLPresent");
+        if (plugin.getWGManager().getRegion(locationAt) != null) {
+            plugin.getLangManager().sendMessage(e.getPlayer(), "Integrations.Towny.LLPresent");
             e.setCancelled(true);
         }
     }

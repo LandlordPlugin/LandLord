@@ -16,13 +16,11 @@ import java.util.List;
 public class MultiPagedMessage {
 
     private final String command;
-
-    private String header;
     private final int perSite;
     private final List<String> elements;
     private final String previous;
     private final String next;
-
+    private String header;
     private int pointer;
 
     /**

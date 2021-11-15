@@ -18,10 +18,10 @@ import java.io.InputStreamReader;
  */
 public class ConfigUtil {
 
-    private final ILandLord pl;
+    private final ILandLord plugin;
 
-    public ConfigUtil(ILandLord pl) {
-        this.pl = pl;
+    public ConfigUtil(ILandLord plugin) {
+        this.plugin = plugin;
     }
 
     /**
@@ -44,12 +44,12 @@ public class ConfigUtil {
 
         int version = config.getInt("version");
 
-        InputStream resourceAsStream = pl.getClass().getResourceAsStream(pathInJar);
+        InputStream resourceAsStream = plugin.getClass().getResourceAsStream(pathInJar);
         BufferedReader reader;
         if (resourceAsStream != null)
             reader = new BufferedReader(new InputStreamReader(resourceAsStream));
         else {
-            pl.getLogger().warning("You are using an unknown translation.\n" +
+            plugin.getLogger().warning("You are using an unknown translation.\n" +
                     "Please be aware, that LandLord will not add any new strings to your translation.\n" +
                     "If you would like to see your translation inside the plugin, please contact the author!");
             return;
@@ -64,7 +64,7 @@ public class ConfigUtil {
                     }
 
                 } catch (NumberFormatException e) {
-                    pl.getLogger().warning("Invalid version in file " + pathInJar);
+                    plugin.getLogger().warning("Invalid version in file " + pathInJar);
                 }
             }
         });

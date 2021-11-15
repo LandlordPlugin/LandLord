@@ -19,12 +19,12 @@ public class RemoveAdvertise extends LandlordCommand {
 
     private final IWorldGuardManager wg;
 
-    public RemoveAdvertise(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.RemoveAdvertise.name"),
-                pl.getConfig().getString("CommandSettings.RemoveAdvertise.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveAdvertise.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveAdvertise.aliases")));
-        this.wg = pl.getWGManager();
+    public RemoveAdvertise(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.RemoveAdvertise.name"),
+                plugin.getConfig().getString("CommandSettings.RemoveAdvertise.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.RemoveAdvertise.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.RemoveAdvertise.aliases")));
+        this.wg = plugin.getWGManager();
     }
 
 

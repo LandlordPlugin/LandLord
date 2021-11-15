@@ -1,32 +1,18 @@
 package biz.princeps.landlord.api;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Logger;
-
-public interface ILandLord {
-
-    /**
-     * Adapter to JavaPlugin#getConfig
-     *
-     * @return the config file
-     */
-    FileConfiguration getConfig();
-
-    /**
-     * Adapter to JavaPlugin#getConfig
-     *
-     * @return the config file
-     */
-    Logger getLogger();
+public interface ILandLord extends Plugin {
 
     /**
      * Returns the instance of the JavaPlugin.
      * Useful for starting runnables.
      *
      * @return instance of JavaPlugin
+     * @deprecated {@link ILandLord} is a plugin itself and will only return itself. Use the instance directly.
      */
+    @Deprecated
     JavaPlugin getPlugin();
 
 
@@ -39,7 +25,7 @@ public interface ILandLord {
     IWorldGuardManager getWGManager();
 
     /**
-     * Gets the reference to the MaterialManager.
+     * Gets the reference to the MaterialsManager.
      * This class is responsible to handle Materials and Itemstacks, that change from version to version.
      *
      * @return the mat manager

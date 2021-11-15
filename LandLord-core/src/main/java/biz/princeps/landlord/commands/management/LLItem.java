@@ -6,7 +6,6 @@ import biz.princeps.landlord.items.Maitem;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 /**
@@ -17,11 +16,11 @@ import org.bukkit.entity.Player;
  */
 public class LLItem extends LandlordCommand {
 
-    public LLItem(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.MAItem.name"),
-                pl.getConfig().getString("CommandSettings.MAItem.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MAItem.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MAItem.aliases")));
+    public LLItem(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.MAItem.name"),
+                plugin.getConfig().getString("CommandSettings.MAItem.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MAItem.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MAItem.aliases")));
     }
 
     @Override
@@ -43,7 +42,7 @@ public class LLItem extends LandlordCommand {
                 targetingPlayer = properties.getPlayer();
             }
         } else {
-            targetingPlayer = Bukkit.getPlayer(target);
+            targetingPlayer = plugin.getServer().getPlayer(target);
         }
 
         if (targetingPlayer == null) {

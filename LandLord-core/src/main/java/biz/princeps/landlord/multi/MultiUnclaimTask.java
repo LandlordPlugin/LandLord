@@ -9,13 +9,12 @@ import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.ManageMode;
 import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandUnclaimEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
-import java.util.logging.Level;
 
 public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
 
@@ -48,7 +47,7 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
     @Override
     public boolean process(IOwnedLand ownedLand) {
         LandUnclaimEvent event = new LandUnclaimEvent(player, ownedLand);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        plugin.getServer().getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
             if (Options.isVaultEnabled()) {
@@ -111,7 +110,12 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
                 break;
         }
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> plugin.getMapManager().updateAll());
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                plugin.getMapManager().updateAll();
+            }
+        }.runTask(plugin);
     }
 
 }

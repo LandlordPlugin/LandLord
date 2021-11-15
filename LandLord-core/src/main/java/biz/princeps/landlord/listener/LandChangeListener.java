@@ -13,6 +13,7 @@ import java.util.function.BiConsumer;
 import static net.md_5.bungee.api.ChatColor.translateAlternateColorCodes;
 
 public class LandChangeListener extends BasicListener {
+
     private final BiConsumer<String, Player> sendMessage;
 
     public LandChangeListener(ILandLord plugin) {

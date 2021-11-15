@@ -2,7 +2,6 @@ package biz.princeps.landlord.manager.cost;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.util.JavaUtils;
-import org.bukkit.Bukkit;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -15,7 +14,7 @@ public class ClaimsCostManager extends ACostManager {
 
     @Override
     public double calculateCost(UUID uuid) {
-        if (Bukkit.getPlayer(uuid) == null) {
+        if (plugin.getServer().getPlayer(uuid) == null) {
             return this.calculateCost(plugin.getPlayerManager().getOfflineSync(uuid).getClaims());
         } else {
             return this.calculateCost(plugin.getPlayerManager().get(uuid).getClaims());

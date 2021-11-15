@@ -1,8 +1,8 @@
 package biz.princeps.landlord.manager;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMob;
 import biz.princeps.landlord.api.IMobManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -17,9 +17,12 @@ public class MobsManager implements IMobManager {
     private static final List<IMob> MOBS = new ArrayList<>();
     final int currentDataVersion;
 
-    public MobsManager() {
+    private final ILandLord plugin;
+
+    public MobsManager(ILandLord plugin) {
+        this.plugin = plugin;
         // https://minecraft.fandom.com/wiki/Data_version
-        currentDataVersion = Bukkit.getUnsafe().getDataVersion();
+        this.currentDataVersion = plugin.getServer().getUnsafe().getDataVersion();
 
         registerDefaultEntities();
 
@@ -216,4 +219,5 @@ public class MobsManager implements IMobManager {
             return type.getName().toUpperCase();
         }
     }
+
 }
