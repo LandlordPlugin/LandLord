@@ -776,8 +776,8 @@ ClaimHeight:
   # overworld-topY: 60
   # fixed settings:
   # Take advantage of new overworld heights! (-64 to 319)
-  overworld-bottomY: 0
-  overworld-topY: 255
+  overworld-bottomY: -64
+  overworld-topY: 319
   # Other worlds keeping the old behavior such as nether and ender.
   other-bottomY: 0
   other-topY: 255
@@ -790,4 +790,5 @@ ClaimHeight:
 EnableMetrics: true
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
+check-1-18-world-heights: true
 version: 34

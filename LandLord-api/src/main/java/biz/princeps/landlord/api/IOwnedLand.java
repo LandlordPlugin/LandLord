@@ -40,6 +40,20 @@ public interface IOwnedLand {
     int getChunkZ();
 
     /**
+     * Gets the max Y coordinate of the land.
+     *
+     * @return the max Y coordinate
+     */
+    int getMaxY();
+
+    /**
+     * Gets the min Y coordinate of the land.
+     *
+     * @return the min Y coordinate
+     */
+    int getMinY();
+
+    /**
      * Gets a nicely formatted string of the owner.
      * Example: "SpatiumPrinceps" instead of the uuid.
      *

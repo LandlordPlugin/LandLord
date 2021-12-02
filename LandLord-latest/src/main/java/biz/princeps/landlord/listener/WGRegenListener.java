@@ -44,8 +44,8 @@ public class WGRegenListener extends BasicListener {
         int x = ownedLand.getChunkX();
         int z = ownedLand.getChunkZ();
 
-        Region region = new CuboidRegion(BlockVector3.at(x << 4, 0, z << 4),
-                BlockVector3.at((x << 4) + 15, 255, (z << 4) + 15));
+        Region region = new CuboidRegion(BlockVector3.at(x << 4, ownedLand.getMinY(), z << 4),
+                BlockVector3.at((x << 4) + 15, ownedLand.getMaxY(), (z << 4) + 15));
 
         WorldEdit worldEdit = WorldEdit.getInstance();
         com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);

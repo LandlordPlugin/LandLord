@@ -58,6 +58,16 @@ public class OwnedLand extends AOwnedLand {
     }
 
     @Override
+    public int getMaxY() {
+        return region.getMaximumPoint().getBlockY();
+    }
+
+    @Override
+    public int getMinY() {
+        return region.getMinimumPoint().getBlockY();
+    }
+
+    @Override
     public String getOwnersString() {
         return formatNames(region.getOwners().getUniqueIds());
     }

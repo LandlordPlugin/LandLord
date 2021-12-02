@@ -192,10 +192,12 @@ public class WorldGuardManager extends AWorldGuardManager {
         if (regionManager == null) {
             return false;
         }
+        World world = currChunk.getWorld();
         int x = currChunk.getX() << 4;
         int z = currChunk.getZ() << 4;
-        Vector v1 = new Location(currChunk.getWorld(), x, 0, z).toVector();
-        Vector v2 = new Location(currChunk.getWorld(), x + 15, 255, z + 15).toVector();
+        Pair<Integer, Integer> boundaries = calcClaimHeightBoundaries(currChunk);
+        Vector v1 = new Location(world, x, boundaries.getLeft(), z).toVector();
+        Vector v2 = new Location(world, x + 15, boundaries.getRight(), z + 15).toVector();
 
         ProtectedRegion check = new ProtectedCuboidRegion("check",
                 BlockVector3.at(v1.getX(), v1.getY(), v1.getZ()),
@@ -219,8 +221,8 @@ public class WorldGuardManager extends AWorldGuardManager {
         com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
         int x = chunkX << 4;
         int z = chunkZ << 4;
-        Vector v1 = new Location(world, x, 3, z).toVector();
-        Vector v2 = new Location(world, x + 15, 255, z + 15).toVector();
+        Vector v1 = new Location(world, x, weWorld.getMinY() + 3, z).toVector();
+        Vector v2 = new Location(world, x + 15, weWorld.getMaxY(), z + 15).toVector();
 
         BlockVector3 b1 = BlockVector3.at(v1.getX(), v1.getY(), v1.getZ());
         BlockVector3 b2 = BlockVector3.at(v2.getX(), v2.getY(), v2.getZ());
@@ -263,7 +265,7 @@ public class WorldGuardManager extends AWorldGuardManager {
     }
 
     private RegionManager getRegionManager(World world) {
-        com.sk89q.worldedit.world.World worldByName = wg.getPlatform().getMatcher().getWorldByName(world.getName());
+        com.sk89q.worldedit.world.World worldByName = BukkitAdapter.adapt(world);
         RegionContainer regionContainer = getRegionContainer();
         return regionContainer.get(worldByName);
     }
@@ -311,50 +313,7 @@ public class WorldGuardManager extends AWorldGuardManager {
         int bottomY = plugin.getConfig().getInt("ClaimHeight." + claimHeightWorldType + "-bottomY", minHeight);
         int topY = plugin.getConfig().getInt("ClaimHeight." + claimHeightWorldType + "-topY", maxHeight);
 
-        // Fixed is the simple claim behaviour.
-        // We want to handle this first.
-        if (boundaryMethod == ClaimHeightDefinition.FIXED) {
-            return Pair.of(Math.max(minHeight, bottomY), Math.min(topY, maxHeight));
-        }
-
-        // Let's find all highest points in the chunk.
-        List<Integer> points = new ArrayList<>();
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                points.add(world.getHighestBlockYAt((chunk.getX() << 4) + x, (chunk.getZ() << 4) + z));
-            }
-        }
-
-        // Get the center based on the boundary Method
-        int center = boundaryMethod.getCenter(points);
-
-        bottomY = center + bottomY;
-        topY = center + topY;
-
-        if (plugin.getConfig().getBoolean("ClaimHeight.appendOversize")) {
-            // We append the oversize which reach out of the world on the top or the bottom if it fits.
-            // We throw oversize away if we would exceed the world height limit on both ends.
-            if (topY > maxHeight) {
-                bottomY -= topY - maxHeight;
-                topY = maxHeight;
-                if (bottomY < minHeight) {
-                    bottomY = minHeight;
-                }
-            }
-
-            if (bottomY < minHeight) {
-                topY += Math.abs(bottomY);
-                bottomY = minHeight;
-                if (topY > maxHeight) {
-                    topY = maxHeight;
-                }
-            }
-        } else {
-            // Just clamp this stuff.
-            bottomY = Math.max(bottomY, minHeight);
-            topY = Math.min(topY, maxHeight);
-        }
-        return Pair.of(bottomY, topY);
+        return super.calcClaimHeightBoundaries(boundaryMethod, chunk, maxHeight, minHeight, bottomY, topY);
     }
 
 }

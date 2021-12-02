@@ -1,8 +1,10 @@
 package biz.princeps.landlord.protection;
 
+import biz.princeps.landlord.api.ClaimHeightDefinition;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.api.tuple.Pair;
 import biz.princeps.lib.PrincepsLib;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -12,6 +14,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -299,6 +302,56 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
             unclaim(region);
         }
         return count;
+    }
+
+    protected Pair<Integer, Integer> calcClaimHeightBoundaries(ClaimHeightDefinition boundaryMethod, Chunk chunk,
+                                                               int minHeight, int maxHeight, int bottomY, int topY) {
+        // Fixed is the simple claim behaviour.
+        // We want to handle this first.
+        if (boundaryMethod == ClaimHeightDefinition.FIXED) {
+            return Pair.of(Math.max(minHeight, bottomY), Math.min(topY, maxHeight));
+        }
+
+        World world = chunk.getWorld();
+
+        // Let's find all highest points in the chunk.
+        List<Integer> points = new ArrayList<>();
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                points.add(world.getHighestBlockYAt((chunk.getX() << 4) + x, (chunk.getZ() << 4) + z));
+            }
+        }
+
+        // Get the center based on the boundary Method
+        int center = boundaryMethod.getCenter(points);
+
+        bottomY = center + bottomY;
+        topY = center + topY;
+
+        if (plugin.getConfig().getBoolean("ClaimHeight.appendOversize")) {
+            // We append the oversize which reach out of the world on the top or the bottom if it fits.
+            // We throw oversize away if we would exceed the world height limit on both ends.
+            if (topY > maxHeight) {
+                bottomY -= topY - maxHeight;
+                topY = maxHeight;
+                if (bottomY < minHeight) {
+                    bottomY = minHeight;
+                }
+            }
+
+            if (bottomY < minHeight) {
+                topY += Math.abs(bottomY);
+                bottomY = minHeight;
+                if (topY > maxHeight) {
+                    topY = maxHeight;
+                }
+            }
+        } else {
+            // Just clamp this stuff.
+            bottomY = Math.max(bottomY, minHeight);
+            topY = Math.min(topY, maxHeight);
+        }
+        return Pair.of(bottomY, topY);
     }
 
 }

@@ -63,10 +63,12 @@ public class LandLord extends ALandLord {
         // Handle 1.18 auto-migration.
         // https://minecraft.fandom.com/wiki/Data_version
         int currentDataVersion = getServer().getUnsafe().getDataVersion();
-        if (currentDataVersion > 2825 && getConfig().getInt("ClaimHeight.overworld-topY") <= 255) {
+        if (currentDataVersion > 2858 && getConfig().getBoolean("check-1-18-world-heights")) {
             getLogger().warning("It appears that you are running Minecraft 1.18 for the first time. " +
                     "Due to world height changes in overworld, Landlord will try to convert heights in configuration and on lands. " +
                     "This operation could be unsuccessful, so don't hesitate to check configuration/regions, contact us and use the command '/ll update -c'!");
+            getConfig().set("check-1-18-world-heights", false);
+            saveConfig();
             getServer().dispatchCommand(getServer().getConsoleSender(), "ll update -c");
         }
     }
@@ -99,8 +101,10 @@ public class LandLord extends ALandLord {
 
         // Dependency stuff
         String version = getServer().getVersion();
-        if (!version.contains("1.13.2") && !version.contains("1.14") && !version.contains("1.15") && !version.contains("1.16") && !version.contains("1.17")) {
-            haltPlugin("Invalid Spigot version detected! LandLord latest requires 1.13.2/1.14.x/1.15.x/1.16.x/1.17.x, use Legacy version for 1.12.2!");
+        if (!version.contains("1.13.2") && !version.contains("1.14") && !version.contains("1.15")
+                && !version.contains("1.16") && !version.contains("1.17") && !version.contains("1.18")) {
+            haltPlugin("Invalid Spigot version detected! LandLord latest requires " +
+                    "1.13.2/1.14.x/1.15.x/1.16.x/1.17.x/1.18.x, use Legacy version for 1.12.2!");
             return false;
         }
 
