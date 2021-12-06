@@ -304,15 +304,22 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         return count;
     }
 
-    protected Pair<Integer, Integer> calcClaimHeightBoundaries(ClaimHeightDefinition boundaryMethod, Chunk chunk,
-                                                               int minHeight, int maxHeight, int bottomY, int topY) {
+    protected Pair<Integer, Integer> calcClaimHeightBoundaries(ClaimHeightDefinition boundaryMethod, World world,
+                                                               Chunk chunk, int minHeight, int maxHeight) {
+        // Full is the default behaviour.
+        // This will claim the whole chunk.
+        if (boundaryMethod == ClaimHeightDefinition.FULL) {
+            return Pair.of(minHeight, maxHeight);
+        }
+
+        int bottomY = plugin.getConfigurationManager().getCustomizableInt(world, "ClaimHeight.bottomY", minHeight);
+        int topY = plugin.getConfigurationManager().getCustomizableInt(world, "ClaimHeight.topY", maxHeight);
+
         // Fixed is the simple claim behaviour.
         // We want to handle this first.
         if (boundaryMethod == ClaimHeightDefinition.FIXED) {
             return Pair.of(Math.max(minHeight, bottomY), Math.min(topY, maxHeight));
         }
-
-        World world = chunk.getWorld();
 
         // Let's find all highest points in the chunk.
         List<Integer> points = new ArrayList<>();
@@ -328,7 +335,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         bottomY = center + bottomY;
         topY = center + topY;
 
-        if (plugin.getConfig().getBoolean("ClaimHeight.appendOversize")) {
+        if (plugin.getConfigurationManager().getCustomizableBoolean(world, "ClaimHeight.appendOversize", false)) {
             // We append the oversize which reach out of the world on the top or the bottom if it fits.
             // We throw oversize away if we would exceed the world height limit on both ends.
             if (topY > maxHeight) {

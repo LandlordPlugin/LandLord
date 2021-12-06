@@ -64,15 +64,14 @@ public class LandLord extends ALandLord {
         // https://minecraft.fandom.com/wiki/Data_version
         int currentDataVersion = getServer().getUnsafe().getDataVersion();
         if (currentDataVersion > 2858 && getConfig().getBoolean("check-1-18-world-heights")) {
-            getLogger().warning("It appears that you are running Minecraft 1.18 for the first time. " +
-                    "Due to world height changes in overworld, Landlord will try to convert heights in configuration and on lands. " +
-                    "This operation could be unsuccessful, so don't hesitate to check configuration/regions, contact us and use the command '/ll update -c'!");
-            getConfig().set("check-1-18-world-heights", false);
-            saveConfig();
-            getServer().dispatchCommand(getServer().getConsoleSender(), "ll update -c");
+            getLogger().warning("It appears that Landlord is not fully ready to run Minecraft 1.18.\n" +
+                    "Due to world height changes, Landlord lands must be converted. Check and adjust your " +
+                    "configuration and convert your lands if necessary.\n" +
+                    "This operation could be unsuccessful, so don't hesitate to BACKUP configuration/regions," +
+                    "contact us and use the command '/ll update -c'!");
+            getLogger().info("To disable this warning once all notes considered, set 'check-1-18-world-heights' to false.");
         }
     }
-
 
     @Override
     public void onDisable() {
@@ -114,7 +113,7 @@ public class LandLord extends ALandLord {
             return false;
         } else {
             String worldGuardVersion = getWorldGuard().getDescription().getVersion();
-            if (worldGuardVersion.charAt(0) != '7') {
+            if (worldGuardVersion.charAt(0) < '7') {
                 haltPlugin("Invalid WorldGuard Version found. LandLord requires WG 7.0.0+ ! You have WG " + worldGuardVersion);
                 return false;
             }

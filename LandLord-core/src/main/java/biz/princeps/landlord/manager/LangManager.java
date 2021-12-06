@@ -2,7 +2,6 @@ package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
-import biz.princeps.landlord.util.ConfigUtil;
 import com.google.common.collect.Lists;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
@@ -34,7 +33,7 @@ public class LangManager implements ILangManager {
         this.plugin = plugin;
         filename = "messages/" + lang + ".yml";
         reload();
-        new ConfigUtil(plugin).handleConfigUpdate(plugin.getDataFolder() + "/" + filename, "/" + filename);
+        plugin.getConfigurationManager().handleConfigUpdate(plugin.getDataFolder() + "/" + filename, "/" + filename);
         reload();
         parsePlaceholders = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
     }

@@ -291,27 +291,19 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Pair<Integer, Integer> calcClaimHeightBoundaries(Chunk chunk) {
-        ClaimHeightDefinition boundaryMethod = ClaimHeightDefinition.parse(plugin.getConfig().getString("ClaimHeight.method"));
+        World world = chunk.getWorld();
+        ClaimHeightDefinition boundaryMethod = ClaimHeightDefinition.parse(
+                plugin.getConfigurationManager().getCustomizableString(world, "ClaimHeight.method", ClaimHeightDefinition.FULL.name()));
 
         // We will use the full and default behaviour as default value.
         if (boundaryMethod == null) {
             boundaryMethod = ClaimHeightDefinition.FULL;
         }
 
-        World world = chunk.getWorld();
         int maxHeight = world.getMaxHeight() - 1;
         int minHeight = 0;
 
-        // Full is the default behaviour.
-        // This will claim the whole chunk.
-        if (boundaryMethod == ClaimHeightDefinition.FULL) {
-            return Pair.of(minHeight, maxHeight);
-        }
-
-        int bottomY = plugin.getConfig().getInt("ClaimHeight.bottomY", minHeight);
-        int topY = plugin.getConfig().getInt("ClaimHeight.topY", maxHeight);
-
-        return super.calcClaimHeightBoundaries(boundaryMethod, chunk, maxHeight, minHeight, bottomY, topY);
+        return super.calcClaimHeightBoundaries(boundaryMethod, world, chunk, minHeight, maxHeight);
     }
 
 }

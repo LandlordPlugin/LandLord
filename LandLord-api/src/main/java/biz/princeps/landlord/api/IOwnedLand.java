@@ -44,14 +44,18 @@ public interface IOwnedLand {
      *
      * @return the max Y coordinate
      */
-    int getMaxY();
+    default int getMaxY() {
+        return 255;
+    }
 
     /**
      * Gets the min Y coordinate of the land.
      *
      * @return the min Y coordinate
      */
-    int getMinY();
+    default int getMinY() {
+        return 0;
+    }
 
     /**
      * Gets a nicely formatted string of the owner.
@@ -196,10 +200,11 @@ public interface IOwnedLand {
 
     /**
      * Reclaim the chunk and update height, keeping the same data.
-     * Note, from WorldEdit documentation: <i>ProtectedRegion bounds should never be mutated. Regions must be redefined to move them. This method will be removed in a future release.</i>
+     * Note, from WorldGuard documentation: <i>ProtectedRegion bounds should never be mutated. Regions must be redefined to move them. This method will be removed in a future release.</i>
      * That's why it reclaims the area.
      */
-    void reclaim();
+    default void reclaim() {
+    }
 
     /**
      * Set the priority of a land region (incidence when it is not zero)

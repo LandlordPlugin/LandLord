@@ -97,9 +97,13 @@ public interface IWorldGuardManager {
 
     boolean isLLRegion(String name);
 
-    String getLandName(Chunk chunk);
+    default String getLandName(Chunk chunk) {
+        return "";
+    }
 
-    String getLandName(Location location);
+    default String getLandName(Location location) {
+        return "";
+    }
 
     boolean isAllowedInOverlap(Player p, Location location);
 

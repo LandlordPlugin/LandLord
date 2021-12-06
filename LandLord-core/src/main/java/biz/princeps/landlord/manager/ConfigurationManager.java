@@ -1,6 +1,8 @@
-package biz.princeps.landlord.util;
+package biz.princeps.landlord.manager;
 
+import biz.princeps.landlord.api.IConfigurationManager;
 import biz.princeps.landlord.api.ILandLord;
+import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,17 +13,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-/**
- * Project: LandLord
- * Created by Alex D. (SpatiumPrinceps)
- * Date: Unknown
- */
-public class ConfigUtil {
+public class ConfigurationManager implements IConfigurationManager {
+
+    private static final String WORLDS_SECTION = "worlds";
 
     private final ILandLord plugin;
+    private final FileConfiguration configuration;
 
-    public ConfigUtil(ILandLord plugin) {
+    public ConfigurationManager(ILandLord plugin) {
         this.plugin = plugin;
+        this.configuration = plugin.getConfig();
     }
 
     /**
@@ -30,7 +31,6 @@ public class ConfigUtil {
      * right place.
      */
     public void handleConfigUpdate(String pathToExisting, String pathInJar) {
-
         if (pathInJar == null || pathToExisting == null)
             return;
 
@@ -74,5 +74,23 @@ public class ConfigUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getCustomizableString(World world, String defaultPath, String defaultValue) {
+        return configuration.getString(WORLDS_SECTION + "." + world.getName() + "." + defaultPath,
+                configuration.getString(defaultPath, defaultValue));
+    }
+
+    @Override
+    public int getCustomizableInt(World world, String defaultPath, int defaultValue) {
+        return configuration.getInt(WORLDS_SECTION + "." + world.getName() + "." + defaultPath,
+                configuration.getInt(defaultPath, defaultValue));
+    }
+
+    @Override
+    public boolean getCustomizableBoolean(World world, String defaultPath, boolean defaultValue) {
+        return configuration.getBoolean(WORLDS_SECTION + "." + world.getName() + "." + defaultPath,
+                configuration.getBoolean(defaultPath, defaultValue));
     }
 }

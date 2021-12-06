@@ -1,5 +1,6 @@
 package biz.princeps.landlord;
 
+import biz.princeps.landlord.api.IConfigurationManager;
 import biz.princeps.landlord.api.ICostManager;
 import biz.princeps.landlord.api.IDelimitationManager;
 import biz.princeps.landlord.api.ILandLord;
@@ -21,6 +22,7 @@ import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandChangeListener;
 import biz.princeps.landlord.listener.MapListener;
 import biz.princeps.landlord.listener.SecureWorldListener;
+import biz.princeps.landlord.manager.ConfigurationManager;
 import biz.princeps.landlord.manager.DelimitationManager;
 import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.manager.LangManager;
@@ -31,7 +33,6 @@ import biz.princeps.landlord.multi.MultiTaskManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.placeholderapi.LLExpansion;
 import biz.princeps.landlord.placeholderapi.LLFeatherBoard;
-import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
 import de.eldoria.eldoutilities.bstats.EldoMetrics;
@@ -65,6 +66,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     protected IMobManager mobManager;
     protected IRegenerationManager regenerationManager;
     protected IMultiTaskManager multiTaskManager;
+    protected IConfigurationManager configurationManager;
 
     @Override
     public void onLoad() {
@@ -146,8 +148,9 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * update by backing up the old config and copying the new config to the right place
      */
     private void setupConfig() {
+        this.configurationManager = new ConfigurationManager(this);
         this.saveDefaultConfig();
-        new ConfigUtil(this).handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
+        this.configurationManager.handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
         this.saveDefaultConfig();
     }
 
@@ -363,4 +366,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         return multiTaskManager;
     }
 
+    @Override
+    public IConfigurationManager getConfigurationManager() {
+        return configurationManager;
+    }
 }

@@ -291,29 +291,20 @@ public class WorldGuardManager extends AWorldGuardManager {
 
     @Override
     public Pair<Integer, Integer> calcClaimHeightBoundaries(Chunk chunk) {
-        ClaimHeightDefinition boundaryMethod = ClaimHeightDefinition.parse(plugin.getConfig().getString("ClaimHeight.method"));
+        World world = chunk.getWorld();
+        ClaimHeightDefinition boundaryMethod = ClaimHeightDefinition.parse(
+                plugin.getConfigurationManager().getCustomizableString(world, "ClaimHeight.method", ClaimHeightDefinition.FULL.name()));
 
         // We will use the full and default behaviour as default value.
         if (boundaryMethod == null) {
             boundaryMethod = ClaimHeightDefinition.FULL;
         }
 
-        World world = chunk.getWorld();
         com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
         int maxHeight = weWorld.getMaxY();
         int minHeight = weWorld.getMinY();
 
-        // Full is the default behaviour.
-        // This will claim the whole chunk.
-        if (boundaryMethod == ClaimHeightDefinition.FULL) {
-            return Pair.of(minHeight, maxHeight);
-        }
-
-        String claimHeightWorldType = world.getEnvironment() == World.Environment.NORMAL ? "overworld" : "other";
-        int bottomY = plugin.getConfig().getInt("ClaimHeight." + claimHeightWorldType + "-bottomY", minHeight);
-        int topY = plugin.getConfig().getInt("ClaimHeight." + claimHeightWorldType + "-topY", maxHeight);
-
-        return super.calcClaimHeightBoundaries(boundaryMethod, chunk, maxHeight, minHeight, bottomY, topY);
+        return super.calcClaimHeightBoundaries(boundaryMethod, world, chunk, minHeight, maxHeight);
     }
 
 }
