@@ -64,9 +64,9 @@ public class LandLord extends ALandLord {
         // https://minecraft.fandom.com/wiki/Data_version
         int currentDataVersion = getServer().getUnsafe().getDataVersion();
         if (currentDataVersion > 2858 && getConfig().getBoolean("check-1-18-world-heights")) {
-            getLogger().warning("It appears that Landlord is not fully ready to run Minecraft 1.18.\n" +
+            getLogger().warning("It appears that Landlord is not fully ready to run Minecraft 1.18. " +
                     "Due to world height changes, Landlord lands must be converted. Check and adjust your " +
-                    "configuration and convert your lands if necessary.\n" +
+                    "configuration and convert your lands if necessary. " +
                     "This operation could be unsuccessful, so don't hesitate to BACKUP configuration/regions," +
                     "contact us and use the command '/ll update -c'!");
             getLogger().info("To disable this warning once all notes considered, set 'check-1-18-world-heights' to false.");
