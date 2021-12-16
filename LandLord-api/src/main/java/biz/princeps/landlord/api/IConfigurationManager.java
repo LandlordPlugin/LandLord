@@ -2,6 +2,9 @@ package biz.princeps.landlord.api;
 
 import org.bukkit.World;
 
+/**
+ * <p>This API interface <strong>must not be extended, implemented or overridden</strong>.</p>
+ */
 public interface IConfigurationManager {
 
     /**
