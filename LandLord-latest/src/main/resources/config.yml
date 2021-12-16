@@ -772,8 +772,8 @@ ClaimHeight:
   # This also means that the values will be added on the corresponding values.
   # If you want to move the bottom down you have to insert a negative value.
   # example for relative settings:
-  # overworld-bottomY: -30
-  # overworld-topY: 60
+  # bottomY: -30
+  # topY: 60
   # fixed settings:
   bottomY: -64
   topY: 319
