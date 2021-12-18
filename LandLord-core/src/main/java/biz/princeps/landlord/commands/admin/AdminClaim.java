@@ -39,7 +39,7 @@ public class AdminClaim extends LandlordCommand {
             return;
         }
 
-        IOwnedLand land = plugin.getWGManager().getRegion(sender.getLocation().getChunk());
+        IOwnedLand land = plugin.getWGManager().getRegion(sender.getLocation());
 
         plugin.getPlayerManager().getOffline(target, (offline) -> {
             if (offline == null) {

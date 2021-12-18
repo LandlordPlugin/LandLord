@@ -40,10 +40,9 @@ public class RemoveAdvertise extends LandlordCommand {
         String landname = arguments.size() == 1 ? arguments.get(0) : "this";
         Player player = properties.getPlayer();
 
-
         IOwnedLand ownedLand;
         if (landname.equals("this")) {
-            ownedLand = wg.getRegion(player.getLocation().getChunk());
+            ownedLand = wg.getRegion(player.getLocation());
         } else {
             ownedLand = wg.getRegion(landname);
         }

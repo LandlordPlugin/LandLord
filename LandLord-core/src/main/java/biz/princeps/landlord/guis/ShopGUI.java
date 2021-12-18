@@ -53,7 +53,7 @@ public class ShopGUI extends AbstractGUI {
             this.setIcon(i, placehodler);
         }
 
-        plugin.getLogger().log(Level.INFO, "Cl: " + lands + " | " + claims + "/" + max);
+        // plugin.getLogger().log(Level.INFO, "Cl: " + lands + " | " + claims + "/" + max);
 
         Icon yourLands = new Icon(new ItemStack(mats.getGrass()));
         yourLands.setName(lm.getRawString("Shop.gui.lands.name"));

@@ -1,6 +1,7 @@
 package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.OwnedLand;
+import biz.princeps.landlord.api.ClaimHeightDefinition;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.tuple.Pair;
@@ -62,18 +63,18 @@ public class WorldGuardManager extends AWorldGuardManager {
     public static void initFlags(WorldGuardPlugin wgplugin) {
         FlagRegistry registry = wgplugin.getFlagRegistry();
         try {
-            // register our flag with the registry
+            // Register our flag with the registry.
             registry.register(REGION_PRICE_FLAG);
         } catch (FlagConflictException e) {
-            // some other plugin registered a flag by the same name already.
-            // you may want to re-register with a different name, but this
-            // could cause issues with saved flags in region files. if you don't mind
-            // sharing a flag, consider making your field non-final and assigning it:
+            // Some other plugin registered a flag by the same name already.
+            // You may want to re-register with a different name, but this
+            // could cause issues with saved flags in region files. If you don't mind
+            // sharing a flag, consider making your field non-final and assigning it.
         }
     }
 
     /**
-     * Claims a chunk for a player in worldguard by selecting the most bottom and the highest point
+     * Claims a chunk for a player in worldguard by selecting points according to configuration.
      */
     @Override
     public IOwnedLand claim(Chunk chunk, UUID owner) {
@@ -90,9 +91,15 @@ public class WorldGuardManager extends AWorldGuardManager {
 
         RegionManager manager = getRegionManager(chunk.getWorld());
         if (manager != null) {
+            IOwnedLand land;
+            if (manager.hasRegion(pr.getId())) {
+                // Don't init flags and data for an existing land, old data will be copied out later during reclaim.
+                land = OwnedLand.of(plugin, pr);
+            } else {
+                land = OwnedLand.create(plugin, pr, owner);
+            }
             manager.addRegion(pr);
-            IOwnedLand land = OwnedLand.create(plugin, pr, owner);
-            land.replaceOwner(owner);
+            pr.getOwners().addPlayer(owner);
             cache.add(land);
             return land;
         }
@@ -178,21 +185,24 @@ public class WorldGuardManager extends AWorldGuardManager {
     @Override
     public boolean canClaim(Player player, Chunk currChunk) {
         RegionManager regionManager = getRegionManager(player.getWorld());
-        if (regionManager != null) {
-            int x = currChunk.getX() << 4;
-            int z = currChunk.getZ() << 4;
-            Vector v1 = new Location(currChunk.getWorld(), x, 0, z).toVector();
-            Vector v2 = new Location(currChunk.getWorld(), x + 15, 255, z + 15).toVector();
+        if (regionManager == null) {
+            return false;
+        }
+        World world = currChunk.getWorld();
+        int x = currChunk.getX() << 4;
+        int z = currChunk.getZ() << 4;
+        Pair<Integer, Integer> boundaries = calcClaimHeightBoundaries(currChunk);
+        Vector v1 = new Location(world, x, boundaries.getLeft(), z).toVector();
+        Vector v2 = new Location(world, x + 15, boundaries.getRight(), z + 15).toVector();
 
-            ProtectedRegion check = new ProtectedCuboidRegion("check",
-                    new BlockVector(v1.getX(), v1.getY(), v1.getZ()),
-                    new BlockVector(v2.getX(), v2.getY(), v2.getZ()));
-            List<ProtectedRegion> intersects = check
-                    .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
-            for (ProtectedRegion intersect : intersects) {
-                if (!regionManager.getApplicableRegions(intersect).isMemberOfAll(wgPlugin.wrapPlayer(player))) {
-                    return false;
-                }
+        ProtectedRegion check = new ProtectedCuboidRegion("check",
+                new BlockVector(v1.getX(), v1.getY(), v1.getZ()),
+                new BlockVector(v2.getX(), v2.getY(), v2.getZ()));
+        List<ProtectedRegion> intersects = check
+                .getIntersectingRegions(new ArrayList<>(regionManager.getRegions().values()));
+        for (ProtectedRegion intersect : intersects) {
+            if (!regionManager.getApplicableRegions(intersect).isMemberOfAll(wgPlugin.wrapPlayer(player))) {
+                return false;
             }
         }
         return true;
@@ -200,7 +210,8 @@ public class WorldGuardManager extends AWorldGuardManager {
 
 
     @Override
-    public void moveUp(World world, int chunkX, int chunkZ, int amt) {
+    public void moveUp(World world, int chunkX, int chunkZ, int amount) {
+        com.sk89q.worldedit.world.World weWorld = getWGWorld(world.getName());
         int x = chunkX << 4;
         int z = chunkZ << 4;
         Vector v1 = new Location(world, x, 3, z).toVector();
@@ -209,9 +220,9 @@ public class WorldGuardManager extends AWorldGuardManager {
         BlockVector b1 = BlockVector.toBlockPoint(v1.getX(), v1.getY(), v1.getZ());
         BlockVector b2 = BlockVector.toBlockPoint(v2.getX(), v2.getY(), v2.getZ());
 
-        CuboidRegion region = new CuboidRegion(getWGWorld(world.getName()), b1, b2);
+        CuboidRegion region = new CuboidRegion(weWorld, b1, b2);
         try {
-            region.shift(BlockVector.toBlockPoint(0, amt, 0));
+            region.shift(BlockVector.toBlockPoint(0, amount, 0));
         } catch (RegionOperationException e) {
             e.printStackTrace();
         }
@@ -276,6 +287,23 @@ public class WorldGuardManager extends AWorldGuardManager {
             }
         }
         return false;
+    }
+
+    @Override
+    public Pair<Integer, Integer> calcClaimHeightBoundaries(Chunk chunk) {
+        World world = chunk.getWorld();
+        ClaimHeightDefinition boundaryMethod = ClaimHeightDefinition.parse(
+                plugin.getConfigurationManager().getCustomizableString(world, "ClaimHeight.method", ClaimHeightDefinition.FULL.name()));
+
+        // We will use the full and default behaviour as default value.
+        if (boundaryMethod == null) {
+            boundaryMethod = ClaimHeightDefinition.FULL;
+        }
+
+        int maxHeight = world.getMaxHeight() - 1;
+        int minHeight = 0;
+
+        return super.calcClaimHeightBoundaries(boundaryMethod, world, chunk, minHeight, maxHeight);
     }
 
 }

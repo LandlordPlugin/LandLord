@@ -122,4 +122,12 @@ public interface ILandLord extends Plugin {
      */
     IMultiTaskManager getMultiTaskManager();
 
+    /**
+     * Get the reference to the ConfigurationManager.
+     * The ConfigurationManager is used to process and improve configuration usage.
+     *
+     * @return the configuration manager
+     */
+    IConfigurationManager getConfigurationManager();
+
 }

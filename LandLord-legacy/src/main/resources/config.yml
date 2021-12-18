@@ -476,7 +476,8 @@ CommandSettings:
 
   Update:
     name: update
-    usage: '<-r> - updates all lands in one world. Parameter -r forces to reset all lands to their default state'
+    usage: '/land update - updates all lands in one world. Parameter -r forces to reset all lands to their default state,
+    -u forces to update all lands and -c to reclaim all lands.'
     permissions:
       - landlord.admin.update
     aliases:
@@ -733,15 +734,15 @@ Manage:
 
 # Define how the claim height should be defined.
 ClaimHeight:
-  # Choose the method which should be used to define the claim Y dimensions
-  # FULL - Use the full chunk from 0 to max height - 1
-  # FIXED - Use the minY and maxY value as the fixed size
-  # The now following methods are relativ. This means that we will substract the minY from it and add the maxY on it to define the height.
+  # Choose the method which should be used to define the claim Y dimensions:
+  # FULL - Use the full chunk from min height to max height - 1.
+  # FIXED - Use the minY and maxY value as the fixed size.
+  # The now following methods are relative. This means that we will substract the minY from it and add the maxY on it to define the height.
   # We use the highest block of each coordinate in the chunk. This means that we will use 16x16 blocks.
   # LOWEST - We use the lowest block in the chunk.
   # HIGHEST - We use the highest block in the chunk.
   # AVERAGE - We use the average block height of the chunk.
-  # MEDIAN - We use the median of the block height in the chunk
+  # MEDIAN - We use the median of the block height in the chunk.
   method: FULL
   # If you choose FULL this wont matter.
   # If you choose FIXED this will be the bottom and top y value.
@@ -759,8 +760,23 @@ ClaimHeight:
   # This means that if your claim would exceed the world limit on the top by 10 blocks, we add 10 blocks at the bottom of your region.
   appendOversize: false
 
+# Per-world configuration fields.
+# Overwrites default global values defined above by a per-world value.
+# World name represents one section, values are specified in a sub-section.
+# See the example below for a custom ClaimHeight behavior in "example" world.
+worlds:
+  #  example:
+  #    ClaimHeight:
+  #      method: FIXED
+  #      bottomY: 10
+  #      topY: 200
+  #      appendOversize: false
+  world:
+  world_nether:
+  world_the_end:
+
 # Sorry for the opt-out, I don't really like that. I would not opt-out for something more important. This data keeps me motivated :)
 EnableMetrics: true
 checkUpdatesPeriodically: true
 checkUpdateOnStart: true
-version: 33
+version: 34

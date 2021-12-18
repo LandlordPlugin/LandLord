@@ -119,7 +119,7 @@ public class LLExpansion extends PlaceholderExpansion {
 
             // name of the current land
             case "current_land_name":
-                return wg.getLandName(player.getLocation().getChunk());
+                return wg.getLandName(player.getLocation());
 
             // Price of the next land which will be purchased
             case "next_land_price":

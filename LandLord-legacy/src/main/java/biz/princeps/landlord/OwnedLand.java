@@ -3,6 +3,7 @@ package biz.princeps.landlord;
 import biz.princeps.landlord.api.ILLFlag;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMob;
+import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.manager.WorldGuardManager;
 import biz.princeps.landlord.protection.AOwnedLand;
 import com.google.common.collect.Sets;
@@ -49,11 +50,21 @@ public class OwnedLand extends AOwnedLand {
     private OwnedLand(ILandLord plugin, ProtectedRegion region, UUID owner) {
         this(plugin, region);
 
-        // insert default flags
+        // Insert default flags.
         if (region.getFlags().size() == 0) {
             initFlags(owner);
             initRegionPriority();
         }
+    }
+
+    @Override
+    public int getMaxY() {
+        return region.getMaximumPoint().getBlockY();
+    }
+
+    @Override
+    public int getMinY() {
+        return region.getMinimumPoint().getBlockY();
     }
 
     @Override
@@ -269,6 +280,17 @@ public class OwnedLand extends AOwnedLand {
             if (!region.getFlags().containsKey(flag)) {
                 region.setFlag(flag.getRegionGroupFlag(), RegionGroup.MEMBERS);
                 region.setFlag(flag, StateFlag.State.ALLOW);
+
+                // some combinations are illegal (all true, friends false)
+                if (!plugin.getConfig().getBoolean("Manage." + s + ".default.friends", true)) {
+                    ILLFlag flag1 = getFlag(s);
+                    flag1.toggleFriends();
+                }
+
+                if (plugin.getConfig().getBoolean("Manage." + s + ".default.everyone", false)) {
+                    ILLFlag flag1 = getFlag(s);
+                    flag1.toggleAll();
+                }
             }
         }
         // add other flags
@@ -286,11 +308,24 @@ public class OwnedLand extends AOwnedLand {
     }
 
     @Override
+    public void reclaim() {
+        IWorldGuardManager wg = plugin.getWGManager();
+        UUID owner = getOwner();
+        OwnedLand ownedLand = (OwnedLand) wg.claim(getChunk(), owner);
+        ownedLand.getRegion().copyFrom(this.region);
+    }
+
+    @Override
     public void initRegionPriority() {
         region.setPriority(plugin.getConfig().getInt("Claim.regionPriority"));
+    }
+
+    private ProtectedRegion getRegion() {
+        return region;
     }
 
     private Flag<StateFlag.State> getWGFlag(String flagName) {
         return (Flag<StateFlag.State>) DefaultFlag.fuzzyMatchFlag(flagRegistry, flagName);
     }
+
 }

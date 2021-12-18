@@ -18,7 +18,7 @@ public class LandCache {
 
     public void add(IOwnedLand land) {
         if (land == null) {
-            throw new RuntimeException("Cant Insert a null land!");
+            throw new RuntimeException("Can't insert a null land!");
         }
 
         indexLandname.put(land.getName(), land);

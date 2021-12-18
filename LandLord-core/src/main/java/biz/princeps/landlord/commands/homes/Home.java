@@ -10,6 +10,7 @@ import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.util.CommandDelayManager;
 import com.google.common.collect.Sets;
+import io.papermc.lib.PaperLib;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Location;
@@ -121,7 +122,7 @@ public class Home extends LandlordCommand {
             lm.sendMessage(player, lm.getString(player, "Commands.Home.costing")
                     .replace("%cost%", plugin.getVaultManager().format(cost)));
         }
-        player.teleport(toGo);
-        lm.sendMessage(player, lm.getString(player, "Commands.Home.welcomeHome").replace("%player%", playerHome));
+        PaperLib.teleportAsync(player, toGo).thenRun(() ->
+                lm.sendMessage(player, lm.getString(player, "Commands.Home.welcomeHome").replace("%player%", playerHome)));
     }
 }

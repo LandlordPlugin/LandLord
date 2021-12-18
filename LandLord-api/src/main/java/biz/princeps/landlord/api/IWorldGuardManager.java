@@ -97,15 +97,21 @@ public interface IWorldGuardManager {
 
     boolean isLLRegion(String name);
 
-    String getLandName(Chunk chunk);
+    default String getLandName(Chunk chunk) {
+        return "";
+    }
 
-    boolean isAllowedInOverlap(Player p, Location loc);
+    default String getLandName(Location location) {
+        return "";
+    }
+
+    boolean isAllowedInOverlap(Player p, Location location);
 
     void highlightLand(Chunk chunk, Player p, Particle particle, int amount, boolean everyone);
 
     String formatLocation(Chunk chunk);
 
-    void moveUp(World world, int chunkX, int chunkZ, int amt);
+    void moveUp(World world, int chunkX, int chunkZ, int amount);
 
     /**
      * Calculates the chunk height boundaries.
@@ -114,7 +120,7 @@ public interface IWorldGuardManager {
      *
      * @param chunk chunk of which the claim height should be calculated
      * @return A pair of two integers. The {@link Pair#getLeft()} defines the lower claim boundary. The {@link
-     * Pair#getRight()} defines the upper claim boundary
+     * Pair#getRight()} defines the upper claim boundary.
      */
     Pair<Integer, Integer> calcClaimHeightBoundaries(Chunk chunk);
 

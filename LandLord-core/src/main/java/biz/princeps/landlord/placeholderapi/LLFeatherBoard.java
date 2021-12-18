@@ -44,7 +44,7 @@ public class LLFeatherBoard {
                 }
         );
         PlaceholderAPI.registerPlaceholder(plugin, "currentLandName",
-                e -> wg.getLandName(e.getPlayer().getLocation().getChunk())
+                e -> wg.getLandName(e.getPlayer().getLocation())
         );
         PlaceholderAPI.registerPlaceholder(plugin, "nextLandPrice",
                 e -> String.valueOf(plugin.getCostManager().calculateCost(e.getPlayer().getUniqueId()))

@@ -4,11 +4,13 @@ plugins {
 }
 
 group = "biz.princeps"
-version = "4.358"
+version = "4.359"
 
 repositories {
     mavenCentral()
+    // Spigot & Paper
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
+    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     // WorldEdit & WorldGuard
     maven { url = uri("https://maven.enginehub.org/repo/") }
     // Towny

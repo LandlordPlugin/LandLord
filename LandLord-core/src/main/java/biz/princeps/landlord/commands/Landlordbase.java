@@ -161,10 +161,9 @@ public class Landlordbase extends MainCommand {
                 tabReturn.removeIf(next -> !next.startsWith(args[0]));
             }
         } else if (args.length == 2) {
-            for (SubCommand subcmd : subCommandMap.values()) {
-                if (subcmd.matches(args[0])) {
-
-                    if (subcmd instanceof GiveClaims) {
+            for (SubCommand subCommand : subCommandMap.values()) {
+                if (subCommand.matches(args[0])) {
+                    if (subCommand instanceof GiveClaims) {
                         tabReturn.add("<amount>");
                         for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                             tabReturn.add(onlinePlayer.getName());
@@ -172,21 +171,21 @@ public class Landlordbase extends MainCommand {
                         return tabReturn;
                     }
 
-                    if (subcmd instanceof AdminTeleport) {
+                    if (subCommand instanceof AdminTeleport) {
                         for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                             tabReturn.add(onlinePlayer.getName());
                         }
                         return tabReturn;
                     }
 
-                    if (subcmd instanceof LandMap) {
+                    if (subCommand instanceof LandMap) {
                         tabReturn.add("on");
                         tabReturn.add("off");
                         return tabReturn;
                     }
 
-                    if (subcmd instanceof Addfriend || subcmd instanceof AddfriendAll ||
-                            subcmd instanceof Unfriend || subcmd instanceof UnfriendAll) {
+                    if (subCommand instanceof Addfriend || subCommand instanceof AddfriendAll ||
+                            subCommand instanceof Unfriend || subCommand instanceof UnfriendAll) {
                         for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                             if (!onlinePlayer.getName().startsWith(args[1]) ||
                                     (sender instanceof Player && !((Player) sender).canSee(onlinePlayer)))
@@ -197,34 +196,40 @@ public class Landlordbase extends MainCommand {
                         return tabReturn;
                     }
 
-                    if (subcmd instanceof MultiClaim || subcmd instanceof MultiUnclaim ||
-                            subcmd instanceof MultiAddfriend || subcmd instanceof MultiRemovefriend ||
-                            subcmd instanceof MultiListLands || subcmd instanceof MultiManage) {
+                    if (subCommand instanceof MultiClaim || subCommand instanceof MultiUnclaim ||
+                            subCommand instanceof MultiAddfriend || subCommand instanceof MultiRemovefriend ||
+                            subCommand instanceof MultiListLands || subCommand instanceof MultiManage) {
                         for (MultiMode multiMode : MultiMode.values()) {
                             tabReturn.add(multiMode.name());
                         }
                         return tabReturn;
                     }
 
-                    if (subcmd instanceof UnclaimAll) {
+                    if (subCommand instanceof UnclaimAll) {
                         for (World world : plugin.getServer().getWorlds()) {
                             tabReturn.add(world.getName());
                         }
                         return tabReturn;
                     }
+
+                    if (subCommand instanceof Update) {
+                        tabReturn.add("-u");
+                        tabReturn.add("-r");
+                        tabReturn.add("-c");
+                        return tabReturn;
+                    }
                 }
             }
         } else if (args.length == 3) {
-            for (SubCommand subcmd : subCommandMap.values()) {
-                if (subcmd.matches(args[0])) {
-
-                    if (subcmd instanceof GiveClaims) {
+            for (SubCommand subCommand : subCommandMap.values()) {
+                if (subCommand.matches(args[0])) {
+                    if (subCommand instanceof GiveClaims) {
                         tabReturn.add("<amount>");
                         tabReturn.add("<price>");
                         return tabReturn;
                     }
 
-                    if (subcmd instanceof MultiAddfriend || subcmd instanceof MultiRemovefriend) {
+                    if (subCommand instanceof MultiAddfriend || subCommand instanceof MultiRemovefriend) {
                         for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                             if (!onlinePlayer.getName().startsWith(args[2]) ||
                                     (sender instanceof Player && !((Player) sender).canSee(onlinePlayer)))
@@ -237,10 +242,9 @@ public class Landlordbase extends MainCommand {
                 }
             }
         } else if (args.length == 4) {
-            for (SubCommand subcmd : subCommandMap.values()) {
-                if (subcmd.matches(args[0])) {
-
-                    if (subcmd instanceof GiveClaims) {
+            for (SubCommand subCommand : subCommandMap.values()) {
+                if (subCommand.matches(args[0])) {
+                    if (subCommand instanceof GiveClaims) {
                         tabReturn.add("<amount>");
                     }
                 }
