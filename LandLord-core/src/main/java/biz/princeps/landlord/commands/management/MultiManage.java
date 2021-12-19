@@ -3,10 +3,10 @@ package biz.princeps.landlord.commands.management;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.api.ManageMode;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.commands.ManageMode;
-import biz.princeps.landlord.commands.MultiMode;
 import biz.princeps.landlord.guis.ManageGuiAll;
+import biz.princeps.landlord.multi.MultiMode;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
@@ -20,11 +20,11 @@ public class MultiManage extends LandlordCommand {
 
     private final IWorldGuardManager wg;
 
-    public MultiManage(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.MultiManage.name"),
-                pl.getConfig().getString("CommandSettings.MultiManage.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiManage.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiManage.aliases")));
+    public MultiManage(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.MultiManage.name"),
+                plugin.getConfig().getString("CommandSettings.MultiManage.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MultiManage.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MultiManage.aliases")));
         this.wg = plugin.getWGManager();
     }
 
@@ -41,7 +41,7 @@ public class MultiManage extends LandlordCommand {
         MultiMode mode;
         int radius;
         try {
-            mode = MultiMode.valueOf(arguments.get()[0].toUpperCase());
+            mode = MultiMode.valueOf(arguments.get(0).toUpperCase());
             radius = arguments.getInt(1);
         } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ex) {
             properties.sendUsage();

@@ -10,9 +10,8 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 
 /**
@@ -24,12 +23,12 @@ public class Regenerate extends LandlordCommand {
 
     private final IWorldGuardManager wg;
 
-    public Regenerate(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Regenerate.name"),
-                pl.getConfig().getString("CommandSettings.Regenerate.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Regenerate.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Regenerate.aliases")));
-        this.wg = pl.getWGManager();
+    public Regenerate(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Regenerate.name"),
+                plugin.getConfig().getString("CommandSettings.Regenerate.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Regenerate.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Regenerate.aliases")));
+        this.wg = plugin.getWGManager();
 
 
     }
@@ -45,8 +44,7 @@ public class Regenerate extends LandlordCommand {
             return;
         }
 
-        Chunk chunk = player.getLocation().getChunk();
-        IOwnedLand land = wg.getRegion(chunk);
+        IOwnedLand land = wg.getRegion(player.getLocation());
 
         if (arguments.size() == 1) {
             land = wg.getRegion(arguments.get(0));
@@ -61,7 +59,7 @@ public class Regenerate extends LandlordCommand {
             String costString = (Options.isVaultEnabled() ? plugin.getVaultManager().format(cost) : "-1");
 
             IOwnedLand finalLand = land;
-            ConfirmationGUI confi = new ConfirmationGUI(player,
+            ConfirmationGUI confi = new ConfirmationGUI(plugin, player,
                     lm.getRawString("Commands.Regenerate.confirmation").replace("%cost%", costString),
                     (p1) -> {
                         boolean flag = true;
@@ -76,11 +74,14 @@ public class Regenerate extends LandlordCommand {
                             }
                         }
                         if (flag) {
-                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                LandManageEvent landManageEvent = new LandManageEvent(player, finalLand,
-                                        null, "REGENERATE", "REGENERATE");
-                                Bukkit.getPluginManager().callEvent(landManageEvent);
-                            });
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    LandManageEvent landManageEvent = new LandManageEvent(player, finalLand,
+                                            null, "REGENERATE", "REGENERATE");
+                                    plugin.getServer().getPluginManager().callEvent(landManageEvent);
+                                }
+                            }.runTask(plugin);
 
                             plugin.getRegenerationManager().regenerateChunk(finalLand.getALocation());
                             lm.sendMessage(player, lm.getString(player, "Commands.Regenerate.success")

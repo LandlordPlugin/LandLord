@@ -9,7 +9,6 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 /**
@@ -21,12 +20,12 @@ public class Advertise extends LandlordCommand {
 
     private final IWorldGuardManager wg;
 
-    public Advertise(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Advertise.name"),
-                pl.getConfig().getString("CommandSettings.Advertise.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Advertise.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Advertise.aliases")));
-        wg = pl.getWGManager();
+    public Advertise(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Advertise.name"),
+                plugin.getConfig().getString("CommandSettings.Advertise.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Advertise.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Advertise.aliases")));
+        wg = plugin.getWGManager();
     }
 
 
@@ -60,8 +59,7 @@ public class Advertise extends LandlordCommand {
     private void onAdvertise(Player player, String landname, double price) {
         IOwnedLand iOwnedLand;
         if (landname.equals("this")) {
-            Chunk chunk = player.getWorld().getChunkAt(player.getLocation());
-            iOwnedLand = wg.getRegion(chunk);
+            iOwnedLand = wg.getRegion(player.getLocation());
         } else {
             iOwnedLand = wg.getRegion(landname);
         }

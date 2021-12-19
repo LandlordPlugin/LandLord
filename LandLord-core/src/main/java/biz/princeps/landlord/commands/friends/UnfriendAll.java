@@ -8,8 +8,8 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Project: LandLord
@@ -18,11 +18,11 @@ import org.bukkit.entity.Player;
  */
 public class UnfriendAll extends LandlordCommand {
 
-    public UnfriendAll(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.RemovefriendAll.name"),
-                pl.getConfig().getString("CommandSettings.RemovefriendAll.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemovefriendAll.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemovefriendAll.aliases")));
+    public UnfriendAll(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.RemovefriendAll.name"),
+                plugin.getConfig().getString("CommandSettings.RemovefriendAll.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.RemovefriendAll.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.RemovefriendAll.aliases")));
     }
 
     @Override
@@ -55,34 +55,44 @@ public class UnfriendAll extends LandlordCommand {
                         .replace("%players%", name));
             } else {
                 // Success
-                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-                    int count = 0;
-                    for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
-                        if (ol.isFriend(offline.getUuid())) {
-                            String oldvalue = ol.getMembersString();
-                            ol.removeFriend(offline.getUuid());
-                            count++;
-                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                LandManageEvent landManageEvent = new LandManageEvent(player, ol,
-                                        "FRIENDS", oldvalue, ol.getMembersString());
-                                Bukkit.getPluginManager().callEvent(landManageEvent);
-                            });
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        int count = 0;
+                        for (IOwnedLand ol : plugin.getWGManager().getRegions(player.getUniqueId())) {
+                            if (ol.isFriend(offline.getUuid())) {
+                                String oldvalue = ol.getMembersString();
+                                ol.removeFriend(offline.getUuid());
+                                count++;
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        LandManageEvent landManageEvent = new LandManageEvent(player, ol,
+                                                "FRIENDS", oldvalue, ol.getMembersString());
+                                        plugin.getServer().getPluginManager().callEvent(landManageEvent);
+                                    }
+                                }.runTask(plugin);
+                            }
+                        }
+
+                        if (count > 0) {
+                            lm.sendMessage(player, lm.getString(player, "Commands.UnfriendAll.success")
+                                    .replace("%count%", String.valueOf(count))
+                                    .replace("%players%", name));
+
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    plugin.getMapManager().updateAll();
+                                }
+                            }.runTask(plugin);
+                        } else {
+                            lm.sendMessage(player, lm.getString(player, "Commands.UnfriendAll.noFriend")
+                                    .replace("%player%", name));
                         }
                     }
-
-                    if (count > 0) {
-                        lm.sendMessage(player, lm.getString(player, "Commands.UnfriendAll.success")
-                                .replace("%count%", String.valueOf(count))
-                                .replace("%players%", name));
-
-                        Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
-                    } else {
-                        lm.sendMessage(player, lm.getString(player, "Commands.UnfriendAll.noFriend")
-                                .replace("%player%", name));
-                    }
-                });
+                }.runTaskAsynchronously(plugin);
             }
         });
     }
 }
-

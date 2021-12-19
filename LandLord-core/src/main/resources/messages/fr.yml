@@ -1,5 +1,6 @@
 Tag: '&8[&c&l!&8]'
 Disabled-World: '&7Vous ne pouvez pas protéger dans ce monde !'
+noPermissionsCmd: '&cVous n''avez pas la permission d''exécuter /%cmd% !'
 noPermissions: '&7Vous n''avez pas la permission de faire ça !'
 locOutsideWorld: '§7Vous ne pouvez pas interagir avec le chunk %chunk% étant en dehors du monde %world% !'
 pleaseWait: '&7Veuillez Patienter...'
@@ -147,7 +148,7 @@ Commands:
     yours: 'Vous'
     friends: 'Amis'
     others: 'Autres'
-  ClearWorld:
+  Clear:
     noPlayer: '&7Les joueurs suivants n''ont pas été trouvés&8: &c%players%'
     gui:
       title: "Menu de suppression:"
@@ -169,6 +170,9 @@ Commands:
         confirm: "Supprimer tous les terrains du monde %world% ?"
         abort: "&cSuppression annulée !"
         success: '&7Suppression réussie de &c%count% &7terrain(s) du monde &c%world%'
+  ClearInactive:
+    info: '&7Suppression des terrains des joueurs inactifs depuis plus de &c%inactivity% &7jours...'
+    success: '&7Suppression réussie de &c%players% &7joueur(s) (&c%lands% &7terrain(s)), inactif(ve) depuis plus de &c%inactivity% &7jours'
   Item:
     noPlayer: '&7Les joueurs suivants n''ont pas été trouvés&8: &c%players%'
   Manage:
@@ -446,4 +450,4 @@ Integrations:
     TownyPresent: '&cUne région Towny est déjà présente !'
     LLPresent: '&cUne région LandLord est déjà présente !'
 
-version: 25
+version: 26

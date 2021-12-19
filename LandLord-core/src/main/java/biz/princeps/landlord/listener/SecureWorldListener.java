@@ -6,7 +6,6 @@ import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.events.PlayerBrokeSecureWorldEvent;
 import biz.princeps.landlord.util.JavaUtils;
 import biz.princeps.lib.PrincepsLib;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -36,14 +35,15 @@ public class SecureWorldListener extends BasicListener {
     private final int treshold;
     private final IWorldGuardManager wg;
 
-    public SecureWorldListener(ILandLord pl) {
-        super(pl);
+    public SecureWorldListener(ILandLord plugin) {
+        super(plugin);
         this.worlds = new HashSet<>(plugin.getConfig().getStringList("SecureWorld.worlds"));
         if (worlds.isEmpty()) {
-            worlds.addAll(Bukkit.getWorlds().stream().map(World::getName).collect(Collectors.toSet()));
+            worlds.addAll(plugin.getServer().getWorlds()
+                    .stream().map(World::getName).collect(Collectors.toSet()));
         }
         this.treshold = plugin.getConfig().getInt("SecureWorld.threshold");
-        this.wg = pl.getWGManager();
+        this.wg = plugin.getWGManager();
         this.display = MessageDisplay.valueOf(plugin.getConfig().getString("SecureWorld.displayWarning"));
     }
 
@@ -53,7 +53,7 @@ public class SecureWorldListener extends BasicListener {
         IOwnedLand land = wg.getRegion(e.getBlock().getLocation());
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlock(), e);
-            Bukkit.getPluginManager().callEvent(event);
+            plugin.getServer().getPluginManager().callEvent(event);
         }
     }
 
@@ -64,7 +64,7 @@ public class SecureWorldListener extends BasicListener {
 
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlockPlaced(), e);
-            Bukkit.getPluginManager().callEvent(event);
+            plugin.getServer().getPluginManager().callEvent(event);
         }
     }
 
@@ -75,7 +75,7 @@ public class SecureWorldListener extends BasicListener {
 
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlockClicked(), e);
-            Bukkit.getPluginManager().callEvent(event);
+            plugin.getServer().getPluginManager().callEvent(event);
         }
     }
 
@@ -106,7 +106,7 @@ public class SecureWorldListener extends BasicListener {
         if (!worlds.contains(loc.getWorld().getName())) {
             return;
         }
-        final int landcount = plugin.getConfig().getBoolean("SecureWord.perWorld") ?
+        int landcount = plugin.getConfig().getBoolean("SecureWord.perWorld") ?
                 wg.getRegionCount(p.getUniqueId(), loc.getWorld()) :
                 wg.getRegionCount(p.getUniqueId());
 

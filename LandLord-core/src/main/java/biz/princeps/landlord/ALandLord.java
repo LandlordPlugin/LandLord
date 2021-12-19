@@ -1,6 +1,20 @@
 package biz.princeps.landlord;
 
-import biz.princeps.landlord.api.*;
+import biz.princeps.landlord.api.IConfigurationManager;
+import biz.princeps.landlord.api.ICostManager;
+import biz.princeps.landlord.api.IDelimitationManager;
+import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.ILangManager;
+import biz.princeps.landlord.api.IMapManager;
+import biz.princeps.landlord.api.IMaterialsManager;
+import biz.princeps.landlord.api.IMobManager;
+import biz.princeps.landlord.api.IMultiTaskManager;
+import biz.princeps.landlord.api.IPlayerManager;
+import biz.princeps.landlord.api.IRegenerationManager;
+import biz.princeps.landlord.api.IUtilsManager;
+import biz.princeps.landlord.api.IVaultManager;
+import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.integrations.LLLuckPerms;
 import biz.princeps.landlord.integrations.Towny;
@@ -8,22 +22,22 @@ import biz.princeps.landlord.listener.JoinListener;
 import biz.princeps.landlord.listener.LandChangeListener;
 import biz.princeps.landlord.listener.MapListener;
 import biz.princeps.landlord.listener.SecureWorldListener;
+import biz.princeps.landlord.manager.ConfigurationManager;
 import biz.princeps.landlord.manager.DelimitationManager;
 import biz.princeps.landlord.manager.LPlayerManager;
 import biz.princeps.landlord.manager.LangManager;
 import biz.princeps.landlord.manager.VaultManager;
 import biz.princeps.landlord.manager.cost.LandCostManager;
 import biz.princeps.landlord.manager.map.MapManager;
+import biz.princeps.landlord.multi.MultiTaskManager;
 import biz.princeps.landlord.persistent.LPlayer;
 import biz.princeps.landlord.placeholderapi.LLExpansion;
 import biz.princeps.landlord.placeholderapi.LLFeatherBoard;
-import biz.princeps.landlord.util.ConfigUtil;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.manager.ConfirmationManager;
 import de.eldoria.eldoutilities.bstats.EldoMetrics;
 import de.eldoria.eldoutilities.core.EldoUtilities;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -51,6 +65,8 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     protected IDelimitationManager delimitationManager;
     protected IMobManager mobManager;
     protected IRegenerationManager regenerationManager;
+    protected IMultiTaskManager multiTaskManager;
+    protected IConfigurationManager configurationManager;
 
     @Override
     public void onLoad() {
@@ -72,23 +88,34 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         setupManagers();
         setupListeners();
         setupPlayers();
+        setupMultiTaskManager();
         setupMetrics();
         postloadPrincepsLib();
     }
 
     @Override
     public void onDisable() {
+        EldoUtilities.shutdown();
+
+        getLogger().info("Cancelling remaining tasks...");
+        int clearedTasks = multiTaskManager.clear();
+        getLogger().info(clearedTasks + " tasks have been cancelled!");
+
+        getLogger().info("Clearing all maps...");
         if (mapManager != null) {
             mapManager.removeAllMaps();
         }
+        getLogger().info("All maps have been cleared!");
 
+        getLogger().info("Saving player data...");
         if (lPlayerManager != null) {
             getPlayerManager().saveAllOnlineSync();
         }
+        getLogger().info("Player data has been saved!");
     }
 
     /**
-     * Checks if shared dependencies (protocollib+vault) are available
+     * Checks if shared dependencies (vault) are available
      *
      * @return if the dependencies are available
      */
@@ -110,9 +137,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
         this.getPluginLoader().disablePlugin(this);
     }
 
-    /**
-     * @return the javaplugin instance
-     */
+    @Deprecated
     @Override
     public JavaPlugin getPlugin() {
         return this;
@@ -123,8 +148,9 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * update by backing up the old config and copying the new config to the right place
      */
     private void setupConfig() {
+        this.configurationManager = new ConfigurationManager(this);
         this.saveDefaultConfig();
-        new ConfigUtil(this).handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
+        this.configurationManager.handleConfigUpdate(this.getDataFolder() + "/config.yml", "/config.yml");
         this.saveDefaultConfig();
     }
 
@@ -146,11 +172,14 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * Since there is a cyclic dependency on startup I had to pull this one out.
      * Some strings in Princepslib are translatable. set those here.
      */
-    private void postloadPrincepsLib() {
-        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getRawString("Confirmation" +
-                ".accept"));
+    @Override
+    public void postloadPrincepsLib() {
+        PrincepsLib.getTranslateableStrings().setString("Confirmation.accept", langManager.getRawString(
+                "Confirmation.accept"));
         PrincepsLib.getTranslateableStrings().setString("Confirmation.decline", langManager.getRawString(
                 "Confirmation.decline"));
+        PrincepsLib.getTranslateableStrings().setString("noPermissionsCmd", langManager.getRawString(
+                "noPermissionsCmd"));
 
         PrincepsLib.getCommandManager().registerCommand(new Landlordbase(this));
     }
@@ -159,7 +188,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * Retrieve the LPlayer objects for all online players (in case of reload) and insert them into the PlayerManager
      */
     private void setupPlayers() {
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        for (Player onlinePlayer : getServer().getOnlinePlayers()) {
             getPlayerManager().getOffline(onlinePlayer.getUniqueId(), (offline) -> {
                 if (offline == null) {
                     this.getPlayerManager().add(new LPlayer(onlinePlayer.getUniqueId()));
@@ -195,10 +224,11 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      */
     private void checkWorldNames() {
         if (!getConfig().getBoolean("DisableStartupWorldWarning")) {
-            final Pattern pattern = Pattern.compile("[^A-Za-z0-9_-]+");
+            Pattern pattern = Pattern.compile("[^A-Za-z0-9_-]+");
 
-            for (World world : Bukkit.getWorlds()) {
-                if (!pattern.matcher(world.getName()).find()) continue;
+            for (World world : getServer().getWorlds()) {
+                if (!pattern.matcher(world.getName()).find())
+                    continue;
 
                 getLogger().warning(
                         "Found an invalid world name (" + world.getName() + ")! LandLord will not work in this " +
@@ -219,16 +249,16 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
      * TODO add FeatherBoard nop not gonna happen.
      */
     private void setupIntegrations() {
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new LLExpansion(this).register();
         }
-        if (Bukkit.getPluginManager().isPluginEnabled("MVdWPlaceholderAPI")) {
+        if (getServer().getPluginManager().isPluginEnabled("MVdWPlaceholderAPI")) {
             new LLFeatherBoard(this);
         }
-        if (Bukkit.getPluginManager().isPluginEnabled("Towny")) {
+        if (getServer().getPluginManager().isPluginEnabled("Towny")) {
             new Towny(this);
         }
-        if (Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
+        if (getServer().getPluginManager().isPluginEnabled("LuckPerms")) {
             new LLLuckPerms(this);
         }
 
@@ -249,11 +279,19 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     }
 
     /**
+     * Setup and schedule the MultiTaskManager.
+     */
+    private void setupMultiTaskManager() {
+        this.multiTaskManager = new MultiTaskManager(this);
+        multiTaskManager.initTask();
+    }
+
+    /**
      * Register bStats metrics https://bstats.org/plugin/bukkit/Landlord
      */
     private void setupMetrics() {
         EldoMetrics metrics = new EldoMetrics(this, 2322);
-        if(metrics.isEnabled()){
+        if (metrics.isEnabled()) {
             getLogger().info("§2Metrics enabled. Thank you :3");
         }
         //TODO maybe add some interesting statistics
@@ -321,5 +359,15 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     @Override
     public IRegenerationManager getRegenerationManager() {
         return regenerationManager;
+    }
+
+    @Override
+    public IMultiTaskManager getMultiTaskManager() {
+        return multiTaskManager;
+    }
+
+    @Override
+    public IConfigurationManager getConfigurationManager() {
+        return configurationManager;
     }
 }

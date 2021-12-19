@@ -2,7 +2,6 @@ package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMapManager;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,14 +9,15 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class MapListener extends BasicListener {
 
     private final IMapManager mapManager;
 
-    public MapListener(ILandLord pl) {
-        super(pl);
-        this.mapManager = pl.getMapManager();
+    public MapListener(ILandLord plugin) {
+        super(plugin);
+        this.mapManager = plugin.getMapManager();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -46,9 +46,12 @@ public class MapListener extends BasicListener {
     }
 
     private void handleMapRefresh(Player player) {
-        final Player p = player;
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin.getPlugin(), () -> mapManager.update(p.getUniqueId()), 15L);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                plugin.getMapManager().updateAll();
+            }
+        }.runTaskLater(plugin, 15L);
     }
 
 }
-

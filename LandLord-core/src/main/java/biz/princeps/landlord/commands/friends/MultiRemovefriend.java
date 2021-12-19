@@ -5,23 +5,23 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.commands.MultiMode;
+import biz.princeps.landlord.multi.MultiMode;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class MultiRemovefriend extends LandlordCommand {
 
     private final IWorldGuardManager wg;
 
-    public MultiRemovefriend(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.MultiRemovefriend.name"),
-                pl.getConfig().getString("CommandSettings.MultiRemovefriend.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiRemovefriend.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.MultiRemovefriend.aliases")));
+    public MultiRemovefriend(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.MultiRemovefriend.name"),
+                plugin.getConfig().getString("CommandSettings.MultiRemovefriend.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MultiRemovefriend.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.MultiRemovefriend.aliases")));
         this.wg = plugin.getWGManager();
     }
 
@@ -39,7 +39,7 @@ public class MultiRemovefriend extends LandlordCommand {
         int radius;
         String name;
         try {
-            mode = MultiMode.valueOf(arguments.get()[0].toUpperCase());
+            mode = MultiMode.valueOf(arguments.get(0).toUpperCase());
             radius = arguments.getInt(1);
             name = arguments.get(2);
         } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ex) {
@@ -68,35 +68,45 @@ public class MultiRemovefriend extends LandlordCommand {
                         .replace("%players%", name));
             } else {
                 // Success
-                Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-                    int count = 0;
-                    for (IOwnedLand ol : mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg)) {
-                        if (ol.isFriend(offline.getUuid())) {
-                            String oldvalue = ol.getMembersString();
-                            ol.removeFriend(offline.getUuid());
-                            count++;
-                            Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                                LandManageEvent landManageEvent = new LandManageEvent(player, ol,
-                                        "FRIENDS", oldvalue, ol.getMembersString());
-                                Bukkit.getPluginManager().callEvent(landManageEvent);
-                            });
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        int count = 0;
+                        for (IOwnedLand ol : mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg)) {
+                            if (ol.isFriend(offline.getUuid())) {
+                                String oldvalue = ol.getMembersString();
+                                ol.removeFriend(offline.getUuid());
+                                count++;
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        LandManageEvent landManageEvent = new LandManageEvent(player, ol,
+                                                "FRIENDS", oldvalue, ol.getMembersString());
+                                        plugin.getServer().getPluginManager().callEvent(landManageEvent);
+                                    }
+                                }.runTask(plugin);
+                            }
+                        }
+
+                        if (count > 0) {
+                            lm.sendMessage(player, lm.getString(player, "Commands.MultiUnfriend.success")
+                                    .replace("%count%", String.valueOf(count))
+                                    .replace("%players%", name));
+
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    plugin.getMapManager().updateAll();
+                                }
+                            }.runTask(plugin);
+                        } else {
+                            lm.sendMessage(player, lm.getString(player, "Commands.MultiUnfriend.noFriend")
+                                    .replace("%player%", name));
                         }
                     }
-
-                    if (count > 0) {
-                        lm.sendMessage(player, lm.getString(player, "Commands.MultiUnfriend.success")
-                                .replace("%count%", String.valueOf(count))
-                                .replace("%players%", name));
-
-                        Bukkit.getScheduler().runTask(plugin.getPlugin(), plugin.getMapManager()::updateAll);
-                    } else {
-                        lm.sendMessage(player, lm.getString(player, "Commands.MultiUnfriend.noFriend")
-                                .replace("%player%", name));
-                    }
-                });
+                }.runTaskAsynchronously(plugin);
             }
         });
     }
 
 }
-

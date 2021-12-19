@@ -2,12 +2,10 @@ package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
-import biz.princeps.landlord.util.ConfigUtil;
 import com.google.common.collect.Lists;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,31 +24,31 @@ import java.util.List;
  */
 public class LangManager implements ILangManager {
 
-    private final ILandLord pl;
+    private final ILandLord plugin;
     private final String filename;
-    private FileConfiguration msg;
     private final boolean parsePlaceholders;
+    private FileConfiguration msg;
 
-    public LangManager(ILandLord pl, String lang) {
-        this.pl = pl;
+    public LangManager(ILandLord plugin, String lang) {
+        this.plugin = plugin;
         filename = "messages/" + lang + ".yml";
         reload();
-        new ConfigUtil(pl).handleConfigUpdate(pl.getPlugin().getDataFolder() + "/" + filename, "/" + filename);
+        plugin.getConfigurationManager().handleConfigUpdate(plugin.getDataFolder() + "/" + filename, "/" + filename);
         reload();
-        parsePlaceholders = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+        parsePlaceholders = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
     }
 
     @Override
     public void reload() {
-        File f = new File(pl.getPlugin().getDataFolder(), filename);
+        File f = new File(plugin.getDataFolder(), filename);
         this.msg = new YamlConfiguration();
         try {
-            File folder = new File(pl.getPlugin().getDataFolder(), "messages");
+            File folder = new File(plugin.getDataFolder(), "messages");
             if (!folder.exists())
                 folder.mkdir();
 
             if (!f.exists())
-                pl.getPlugin().saveResource(filename, false);
+                plugin.saveResource(filename, false);
 
             this.msg.load(f);
         } catch (IOException | InvalidConfigurationException e) {
@@ -67,7 +65,7 @@ public class LangManager implements ILangManager {
     public String getString(Player player, String path) {
         String message = msg.getString(path);
         if (message == null) {
-            pl.getLogger().warning("Your language file " + filename + " seems to miss string '" + path + "'");
+            plugin.getLogger().warning("Your language file " + filename + " seems to miss string '" + path + "'");
             return "MISSING STRING";
         } else {
             return ChatColor.translateAlternateColorCodes('&', getTag() + " " + (parsePlaceholders ? PlaceholderAPI.setPlaceholders(player, message) : message));
@@ -84,7 +82,7 @@ public class LangManager implements ILangManager {
         List<String> message = msg.getStringList(path);
 
         if (message == null) {
-            pl.getLogger().warning("Your language file " + filename + " seems to miss string '" + path + "'");
+            plugin.getLogger().warning("Your language file " + filename + " seems to miss string '" + path + "'");
             return Lists.newArrayList();
         }
 
@@ -99,7 +97,7 @@ public class LangManager implements ILangManager {
     public String getRawString(String path) {
         String message = msg.getString(path);
         if (message == null) {
-            pl.getLogger().warning("Your language file " + filename + " seems to miss string '" + path + "'");
+            plugin.getLogger().warning("Your language file " + filename + " seems to miss string '" + path + "'");
             return "MISSING STRING";
         } else {
             return ChatColor.translateAlternateColorCodes('&', message);
@@ -108,8 +106,9 @@ public class LangManager implements ILangManager {
 
     @Override
     public void sendMessage(CommandSender player, String msg) {
-        if (msg.isEmpty() || msg.contains("%null%")) return;
-        if (msg.equals("MISSING STRING") && pl.getConfig().getBoolean("CommandSettings.Main.enableMissingStringWarning")) {
+        if (msg.isEmpty() || msg.contains("%null%"))
+            return;
+        if (msg.equals("MISSING STRING") && plugin.getConfig().getBoolean("CommandSettings.Main.enableMissingStringWarning")) {
             player.sendMessage("§cThe string you are looking for does not exist. Please check the log for further information!");
         } else {
             //I don't know why, but some messages are not sent correctly without TextComponent...

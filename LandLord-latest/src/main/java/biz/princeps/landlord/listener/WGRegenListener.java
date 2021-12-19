@@ -2,6 +2,7 @@ package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.api.ClaimType;
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -33,18 +34,18 @@ public class WGRegenListener extends BasicListener {
 
     @EventHandler
     public void onClaim(LandPostClaimEvent e) {
-
-        // We want to regenerate it to the state where it was claimed initially
+        // We want to regenerate it to the state where it was claimed initially.
         if (e.getClaimType() != ClaimType.FREE_LAND) {
             return;
         }
 
-        int x = e.getLand().getChunk().getX();
-        int z = e.getLand().getChunk().getZ();
-        World world = e.getLand().getWorld();
+        IOwnedLand ownedLand = e.getLand();
+        World world = ownedLand.getWorld();
+        int x = ownedLand.getChunkX();
+        int z = ownedLand.getChunkZ();
 
-        Region region = new CuboidRegion(BlockVector3.at(x << 4, 0, z << 4),
-                BlockVector3.at((x << 4) + 15, 255, (z << 4) + 15));
+        Region region = new CuboidRegion(BlockVector3.at(x << 4, ownedLand.getMinY(), z << 4),
+                BlockVector3.at((x << 4) + 15, ownedLand.getMaxY(), (z << 4) + 15));
 
         WorldEdit worldEdit = WorldEdit.getInstance();
         com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
@@ -60,7 +61,7 @@ public class WGRegenListener extends BasicListener {
             worldEditException.printStackTrace();
         }
 
-        File file = new File(new File(plugin.getPlugin().getDataFolder(), "chunksaves"), e.getLand().getName());
+        File file = new File(new File(plugin.getDataFolder(), "chunksaves"), e.getLand().getName());
 
         try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
             writer.write(clipboard);

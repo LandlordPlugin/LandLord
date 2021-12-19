@@ -19,12 +19,12 @@ public class ListFriends extends LandlordCommand {
 
     private final IWorldGuardManager wg;
 
-    public ListFriends(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Listfriends.name"),
-                pl.getConfig().getString("CommandSettings.Listfriends.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Listfriends.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Listfriends.aliases")));
-        this.wg = pl.getWGManager();
+    public ListFriends(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Listfriends.name"),
+                plugin.getConfig().getString("CommandSettings.Listfriends.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Listfriends.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Listfriends.aliases")));
+        this.wg = plugin.getWGManager();
     }
 
     @Override
@@ -49,7 +49,8 @@ public class ListFriends extends LandlordCommand {
     }
 
     private void onListFriends(Player player, String landname) {
-        if (isDisabledWorld(player)) return;
+        if (isDisabledWorld(player))
+            return;
 
         if (landname == null) {
             lm.sendMessage(player, lm.getString(player, "Commands.Listfriends.freeLand"));

@@ -35,34 +35,12 @@ public enum Skulls {
     CASH("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjRkNjI1Y2E3NmRjODliNjc4YWFjYWRkZTJiNjI2ZTQ3NmRjYjE0YmU2NGM4ZDk1ZGM1MWU4OTA3NWZhY2MzOCJ9fX0="),
     REDEXCLAMATIONMARK("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTRlMWRhODgyZTQzNDgyOWI5NmVjOGVmMjQyYTM4NGE1M2Q4OTAxOGZhNjVmZWU1YjM3ZGViMDRlY2NiZjEwZSJ9fX0="),
     ;
+
     final String texture;
 
     Skulls(String texture) {
         this.texture = texture;
     }
-
-    public ItemStack getSkull(ILandLord pl) {
-        UUID uuid = UUID.randomUUID();
-        ItemStack head = pl.getMaterialsManager().getPlayerHead(uuid);
-        if (texture.isEmpty()) return head;
-
-        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-        GameProfile profile = new GameProfile(uuid, null);
-
-        profile.getProperties().put("textures", new Property("textures", texture));
-
-        try {
-            Field profileField = headMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(headMeta, profile);
-
-        } catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException error) {
-            error.printStackTrace();
-        }
-        head.setItemMeta(headMeta);
-        return head;
-    }
-
 
     public static List<Skulls> numToSkull(int num) {
         List<Skulls> list = new ArrayList<>();
@@ -107,6 +85,28 @@ public enum Skulls {
         return list;
     }
 
+    public ItemStack getSkull(ILandLord plugin) {
+        UUID uuid = UUID.randomUUID();
+        ItemStack head = plugin.getMaterialsManager().getPlayerHead(uuid);
+        if (texture.isEmpty())
+            return head;
+
+        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
+        GameProfile profile = new GameProfile(uuid, null);
+
+        profile.getProperties().put("textures", new Property("textures", texture));
+
+        try {
+            Field profileField = headMeta.getClass().getDeclaredField("profile");
+            profileField.setAccessible(true);
+            profileField.set(headMeta, profile);
+
+        } catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException error) {
+            error.printStackTrace();
+        }
+        head.setItemMeta(headMeta);
+        return head;
+    }
 
     @Override
     public String toString() {

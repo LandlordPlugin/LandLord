@@ -14,8 +14,7 @@ import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
+import io.papermc.lib.PaperLib;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -35,49 +34,49 @@ public class WGRegenerator implements IRegenerationManager {
 
     @Override
     public void regenerateChunk(World world, int x, int z) {
-
         WorldEdit worldEdit = WorldEdit.getInstance();
         com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
 
-        Chunk chunk = world.getChunkAt(x, z);
-        String landName = plugin.getWGManager().getLandName(chunk);
+        PaperLib.getChunkAtAsync(world, x, z).thenAccept(chunk -> {
+            String landName = plugin.getWGManager().getLandName(chunk);
 
-        // heal all players so that they dont suffocate in case they have only half a heart left. later we port them up
-        for (Entity entity : chunk.getEntities()) {
-            if (entity.getType() == EntityType.PLAYER) {
-                Bukkit.getPlayer(entity.getName()).setHealth(20);
+            // heal all players so that they dont suffocate in case they have only half a heart left. later we port them up
+            for (Entity entity : chunk.getEntities()) {
+                if (entity.getType() == EntityType.PLAYER) {
+                    plugin.getServer().getPlayer(entity.getName()).setHealth(20);
+                }
             }
-        }
 
-        File file = new File(new File(plugin.getPlugin().getDataFolder(), "chunksaves"), landName);
+            File file = new File(new File(plugin.getDataFolder(), "chunksaves"), landName);
 
-        if (file.exists()) {
-            ClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
+            if (file.exists()) {
+                ClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
 
-            try (EditSession editSession = worldEdit.getEditSessionFactory().getEditSession(weWorld, -1);
-                 ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+                try (EditSession editSession = worldEdit.getEditSessionFactory().getEditSession(weWorld, -1);
+                     ClipboardReader reader = format.getReader(new FileInputStream(file))) {
 
-                Clipboard clipboard = reader.read();
-                Operation operation = new ClipboardHolder(clipboard)
-                        .createPaste(editSession)
-                        .to(BlockVector3.at(x << 4, 0, z << 4))
-                        .ignoreAirBlocks(false)
-                        .build();
+                    Clipboard clipboard = reader.read();
+                    Operation operation = new ClipboardHolder(clipboard)
+                            .createPaste(editSession)
+                            .to(BlockVector3.at(x << 4, 0, z << 4))
+                            .ignoreAirBlocks(false)
+                            .build();
 
-                Operations.complete(operation);
+                    Operations.complete(operation);
 
-            } catch (IOException | WorldEditException e) {
-                e.printStackTrace();
+                } catch (IOException | WorldEditException e) {
+                    e.printStackTrace();
+                }
             }
-        }
 
-        // Teleport players up so that they dont suffocate.
-        for (Entity entity : chunk.getEntities()) {
-            if (entity.getType() == EntityType.PLAYER) {
-                Player p = Bukkit.getPlayer(entity.getName());
-                p.setHealth(20);
-                p.teleport(world.getHighestBlockAt(p.getLocation().add(0, 3, 0)).getLocation());
+            // Teleport players up so that they dont suffocate.
+            for (Entity entity : chunk.getEntities()) {
+                if (entity.getType() == EntityType.PLAYER) {
+                    Player p = plugin.getServer().getPlayer(entity.getName());
+                    p.setHealth(20);
+                    PaperLib.teleportAsync(p, world.getHighestBlockAt(p.getLocation().add(0, 3, 0)).getLocation());
+                }
             }
-        }
+        });
     }
 }

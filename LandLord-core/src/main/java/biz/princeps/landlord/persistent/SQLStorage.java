@@ -5,8 +5,8 @@ import biz.princeps.landlord.api.IStorage;
 import biz.princeps.lib.storage.Datastorage;
 import biz.princeps.lib.util.SpigotUtil;
 import biz.princeps.lib.util.TimeUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,8 +17,8 @@ public class SQLStorage extends Datastorage implements IStorage {
 
     private static final int CURRENT_VERSION = 4;
 
-    public SQLStorage(JavaPlugin plugin) {
-        super(plugin.getLogger(),
+    public SQLStorage(Plugin plugin) {
+        super(plugin,
                 plugin.getConfig().getString("MySQL.Hostname"),
                 plugin.getConfig().getString("MySQL.Port"),
                 plugin.getConfig().getString("MySQL.User"),
@@ -44,7 +44,7 @@ public class SQLStorage extends Datastorage implements IStorage {
                 executeAsync("UPDATE version FROM ll_version SET version = ?", CURRENT_VERSION);
         } catch (SQLException e) {
             e.printStackTrace();
-            logger.warning("Error while handling upgrade!\nError:" + e.getMessage());
+            plugin.getLogger().warning("Error while handling upgrade!\nError:" + e.getMessage());
         }
     }
 
@@ -90,14 +90,14 @@ public class SQLStorage extends Datastorage implements IStorage {
 
     @Override
     public void getPlayer(UUID id, Consumer<IPlayer> consumer) {
-        pl.getServer().getScheduler().runTaskAsynchronously(pl, () -> consumer.accept(getPlayer(id)));
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> consumer.accept(getPlayer(id)));
     }
 
     @Override
     public IPlayer getPlayer(UUID id) {
         Triplet triplet = executeQuery("SELECT * FROM ll_players WHERE uuid = '" + id + "'");
-        //System.out.println("Query: " + "SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
-        //       sanitize(obj.toString()) + "'");
+        // plugin.getLogger().log(Level.INFO, "Query: " + "SELECT * FROM ll_players WHERE " + mode.name().toLowerCase() + " = '" +
+        //        sanitize(obj.toString()) + "'");
         try {
             ResultSet res = triplet.getResultSet();
             if (!res.next()) {
@@ -111,7 +111,7 @@ public class SQLStorage extends Datastorage implements IStorage {
             }
 
         } catch (SQLException e) {
-            logger.warning("Error while handling getPlayer!\nError:" + e.getMessage());
+            plugin.getLogger().warning("Error while handling getPlayer!\nError:" + e.getMessage());
         } finally {
             triplet.close();
         }
@@ -124,11 +124,16 @@ public class SQLStorage extends Datastorage implements IStorage {
                 lp.getName() + "', " + lp.getClaims() + ", '" +
                 SpigotUtil.exactlocationToString(lp.getHome()) + "', '" +
                 TimeUtil.timeToString(lp.getLastSeen()) + "')");
-
         if (async) {
-            Bukkit.getScheduler().runTaskAsynchronously(pl, r);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    r.run();
+                }
+            }.runTaskAsynchronously(plugin);
         } else {
             r.run();
         }
     }
+
 }

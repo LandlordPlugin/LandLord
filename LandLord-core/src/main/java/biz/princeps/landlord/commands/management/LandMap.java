@@ -15,16 +15,15 @@ import org.bukkit.entity.Player;
  */
 public class LandMap extends LandlordCommand {
 
-    public LandMap(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Map.name"),
-                pl.getConfig().getString("CommandSettings.Map.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Map.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Map.aliases")));
+    public LandMap(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Map.name"),
+                plugin.getConfig().getString("CommandSettings.Map.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Map.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Map.aliases")));
     }
 
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
-
         if (arguments.size() == 0) {
             // toggle
             if (properties.isPlayer()) {
@@ -32,7 +31,7 @@ public class LandMap extends LandlordCommand {
             }
         } else if (arguments.size() == 1) {
             // on/off
-            String arg = arguments.get()[0];
+            String arg = arguments.get(0);
             if (arg.equalsIgnoreCase("on") || arg.equalsIgnoreCase("off")) {
                 onToggleLandMap(properties.getPlayer(), arg.toLowerCase());
             }
@@ -41,7 +40,8 @@ public class LandMap extends LandlordCommand {
 
     private void onToggleLandMap(Player player) {
 
-        if (isDisabledWorld(player)) return;
+        if (isDisabledWorld(player))
+            return;
 
         if (Options.enabled_map())
             plugin.getMapManager().toggleMap(player);
@@ -52,7 +52,8 @@ public class LandMap extends LandlordCommand {
     }
 
     private void onToggleLandMap(Player player, String state) {
-        if (isDisabledWorld(player)) return;
+        if (isDisabledWorld(player))
+            return;
 
         if (!Options.enabled_map()) {
             lm.sendMessage(player, lm.getString(player, "Commands.LandMap.disabled"));

@@ -8,8 +8,8 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Project: LandLord
@@ -18,11 +18,11 @@ import org.bukkit.entity.Player;
  */
 public class Unfriend extends LandlordCommand {
 
-    public Unfriend(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.RemoveFriend.name"),
-                pl.getConfig().getString("CommandSettings.RemoveFriend.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveFriend.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.RemoveFriend.aliases")));
+    public Unfriend(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.RemoveFriend.name"),
+                plugin.getConfig().getString("CommandSettings.RemoveFriend.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.RemoveFriend.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.RemoveFriend.aliases")));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Unfriend extends LandlordCommand {
             String targetPlayer;
             if (arguments.size() == 1) {
                 targetPlayer = arguments.get(0);
-                targetLand = plugin.getWGManager().getRegion(player.getLocation().getChunk());
+                targetLand = plugin.getWGManager().getRegion(player.getLocation());
             } else {
                 targetPlayer = arguments.get(0);
                 targetLand = plugin.getWGManager().getRegion(arguments.get(1));
@@ -76,18 +76,26 @@ public class Unfriend extends LandlordCommand {
                     String old = land.getMembersString();
                     land.removeFriend(offline.getUuid());
 
-                    Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> {
-                        LandManageEvent landManageEvent = new LandManageEvent(player, land,
-                                "FRIENDS", old, land.getMembersString());
-                        Bukkit.getPluginManager().callEvent(landManageEvent);
-                    });
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            LandManageEvent landManageEvent = new LandManageEvent(player, land,
+                                    "FRIENDS", old, land.getMembersString());
+                            plugin.getServer().getPluginManager().callEvent(landManageEvent);
+                        }
+                    }.runTask(plugin);
 
                     lm.sendMessage(player, lm.getString(player, "Commands.Unfriend.success")
                             .replace("%players%", playerName));
 
-                    // lets delay it, because we cant be sure, that the requests are done when executing this piece
-                    // of code
-                    Bukkit.getScheduler().runTaskLater(plugin.getPlugin(), plugin.getMapManager()::updateAll, 60L);
+                    // Let's delay it, because we cant be sure, that the requests are done when executing this piece
+                    // of code.
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            plugin.getMapManager().updateAll();
+                        }
+                    }.runTaskLater(plugin, 60L);
                 } else {
                     lm.sendMessage(player, lm.getString(player, "Commands.UnfriendAll.noFriend")
                             .replace("%player%", playerName));
@@ -96,4 +104,3 @@ public class Unfriend extends LandlordCommand {
         }
     }
 }
-

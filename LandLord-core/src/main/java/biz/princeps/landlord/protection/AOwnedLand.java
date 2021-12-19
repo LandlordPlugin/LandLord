@@ -10,6 +10,9 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.StringJoiner;
+import java.util.UUID;
+
 /**
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
@@ -17,12 +20,38 @@ import org.bukkit.entity.Player;
  */
 public abstract class AOwnedLand implements IOwnedLand {
 
-    protected final World world;
-    protected final ILandLord pl;
+    private static final String NAMES_DELIMITER = ", ";
 
-    public AOwnedLand(ILandLord pl, World world) {
+    protected final World world;
+    protected final ILandLord plugin;
+    protected final String name;
+
+    protected final int chunkX;
+    protected final int chunkZ;
+
+    public AOwnedLand(ILandLord plugin, World world, String name) {
+        this.plugin = plugin;
         this.world = world;
-        this.pl = pl;
+        this.name = name;
+
+        IWorldGuardManager wg = plugin.getWGManager();
+        this.chunkX = wg.getX(name);
+        this.chunkZ = wg.getZ(name);
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public int getChunkX() {
+        return chunkX;
+    }
+
+    @Override
+    public int getChunkZ() {
+        return chunkZ;
     }
 
     /**
@@ -49,8 +78,8 @@ public abstract class AOwnedLand implements IOwnedLand {
     }
 
     @Override
-    public void highlightLand(Chunk chunk, Player p, Particle e, int amt) {
-        this.pl.getWGManager().highlightLand(chunk, p, e, amt, false);
+    public void highlightLand(Chunk chunk, Player p, Particle e, int amount) {
+        this.plugin.getWGManager().highlightLand(chunk, p, e, amount, false);
     }
 
     /**
@@ -61,15 +90,12 @@ public abstract class AOwnedLand implements IOwnedLand {
      */
     @Override
     public Location getALocation() {
-        IWorldGuardManager wg = pl.getWGManager();
-        World world = wg.getWorld(getName());
+        IWorldGuardManager wg = plugin.getWGManager();
+        World world = wg.getWorld(name);
         if (world == null)
             return null;
 
-        int x = wg.getX(getName());
-        int z = wg.getZ(getName());
-        return new Location(world, x << 4, world.getHighestBlockYAt(x << 4, z << 4) + 1, z << 4);
-
+        return new Location(world, chunkX << 4, world.getHighestBlockYAt(chunkX << 4, chunkZ << 4) + 1, chunkZ << 4);
     }
 
     /**
@@ -79,13 +105,11 @@ public abstract class AOwnedLand implements IOwnedLand {
      */
     @Override
     public Chunk getChunk() {
-        IWorldGuardManager wg = pl.getWGManager();
-        World w = wg.getWorld(getName());
-        int x = wg.getX(getName());
-        int z = wg.getZ(getName());
+        IWorldGuardManager wg = plugin.getWGManager();
+        World w = wg.getWorld(name);
 
-        if (w != null && x != Integer.MIN_VALUE && z != Integer.MIN_VALUE) {
-            return w.getChunkAt(x, z);
+        if (w != null && chunkX != Integer.MIN_VALUE && chunkZ != Integer.MIN_VALUE) {
+            return w.getChunkAt(chunkX, chunkZ);
         }
         return null;
     }
@@ -96,4 +120,14 @@ public abstract class AOwnedLand implements IOwnedLand {
     }
 
     public abstract ILLFlag getFlag(String s);
+
+    protected String formatNames(Iterable<UUID> uuids) {
+        StringJoiner stringJoiner = new StringJoiner(NAMES_DELIMITER);
+        // ugly, maybe solve this in the future
+        for (UUID uuid : uuids) {
+            stringJoiner.add(plugin.getServer().getOfflinePlayer(uuid).getName());
+        }
+        return stringJoiner.toString();
+    }
+
 }

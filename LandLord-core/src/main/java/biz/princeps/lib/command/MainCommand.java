@@ -1,5 +1,6 @@
 package biz.princeps.lib.command;
 
+import biz.princeps.lib.PrincepsLib;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 
@@ -22,6 +23,8 @@ public abstract class MainCommand extends BukkitCommand implements Command {
 
     protected final Map<String, SubCommand> subCommandMap;
     protected final Set<String> permissions;
+
+    private final String noPermissionsCmd = PrincepsLib.getTranslateableStrings().get("Confirmation.accept");
 
     /**
      * Creates a basic MainCommand
@@ -64,7 +67,7 @@ public abstract class MainCommand extends BukkitCommand implements Command {
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
 
         if (!hasPermission(commandSender)) {
-            commandSender.sendMessage(CommandMessage.NO_PERMS.getMessage().replace("%cmd%", this.getName()));
+            commandSender.sendMessage(noPermissionsCmd.replace("%cmd%", this.getName()));
             return true;
         }
 
@@ -73,7 +76,7 @@ public abstract class MainCommand extends BukkitCommand implements Command {
                 if (entry.getKey().equals(strings[0]) || entry.getValue().getAliases().contains(strings[0])) {
 
                     if (!entry.getValue().hasPermission(commandSender)) {
-                        commandSender.sendMessage(CommandMessage.NO_PERMS.getMessage().replace("%cmd%", this.getName() + " " + strings[0]));
+                        commandSender.sendMessage(noPermissionsCmd.replace("%cmd%", this.getName() + " " + strings[0]));
                         return true;
                     }
 

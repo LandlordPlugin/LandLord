@@ -1,12 +1,14 @@
 package biz.princeps.lib.item;
 
 import biz.princeps.lib.PrincepsLib;
+import de.eldoria.eldoutilities.core.EldoUtilities;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * Project: PrincepsLib
@@ -23,6 +25,15 @@ public class ItemManager {
         new ItemActionListener(this);
     }
 
+    public static ItemStack stack(String string) {
+        try {
+            Material material = Material.valueOf(string.toUpperCase());
+            return new ItemStack(material);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
     public void registerItem(String name, Class<? extends AbstractItem> item) {
         items.put(name, item);
     }
@@ -35,17 +46,8 @@ public class ItemManager {
 
             return (AbstractItem) aClass.getConstructors()[0].newInstance();
         } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
-            System.out.println("Custom item must implement empty constructor: " + e);
+            EldoUtilities.logger().log(Level.WARNING, "Custom item must implement empty constructor: " + e);
         }
         return null;
-    }
-
-    public static ItemStack stack(String string) {
-        try {
-            Material material = Material.valueOf(string.toUpperCase());
-            return new ItemStack(material);
-        } catch (NumberFormatException ex) {
-            return null;
-        }
     }
 }

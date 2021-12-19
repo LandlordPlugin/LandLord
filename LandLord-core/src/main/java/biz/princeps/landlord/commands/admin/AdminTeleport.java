@@ -9,6 +9,7 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import biz.princeps.lib.gui.MultiPagedGUI;
 import biz.princeps.lib.gui.simple.Icon;
 import com.google.common.collect.Sets;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -23,11 +24,11 @@ import java.util.Set;
  */
 public class AdminTeleport extends LandlordCommand {
 
-    public AdminTeleport(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.AdminTP.name"),
-                pl.getConfig().getString("CommandSettings.AdminTP.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AdminTP.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AdminTP.aliases")));
+    public AdminTeleport(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.AdminTP.name"),
+                plugin.getConfig().getString("CommandSettings.AdminTP.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.AdminTP.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.AdminTP.aliases")));
     }
 
     @Override
@@ -53,7 +54,7 @@ public class AdminTeleport extends LandlordCommand {
                 // Success
                 Set<IOwnedLand> lands = plugin.getWGManager().getRegions(offline.getUuid());
                 if (lands.size() > 0) {
-                    MultiPagedGUI landGui = new MultiPagedGUI(sender, 5,
+                    MultiPagedGUI landGui = new MultiPagedGUI(plugin, sender, 5,
                             lm.getRawString("Commands.AdminTp.guiHeader").replace("%player%", target));
 
                     for (IOwnedLand land : lands) {
@@ -61,8 +62,8 @@ public class AdminTeleport extends LandlordCommand {
                                 .setName(land.getName())
                                 .addClickAction((p) -> {
                                             Location toTp = land.getALocation();
-                                            sender.teleport(toTp);
-                                            land.highlightLand(sender, Particle.VILLAGER_HAPPY);
+                                            PaperLib.teleportAsync(sender, toTp).thenRun(() ->
+                                                    land.highlightLand(sender, Particle.VILLAGER_HAPPY));
                                         }
                                 )
                         );

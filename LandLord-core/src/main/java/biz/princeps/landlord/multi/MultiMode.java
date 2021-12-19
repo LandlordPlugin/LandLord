@@ -1,4 +1,4 @@
-package biz.princeps.landlord.commands;
+package biz.princeps.landlord.multi;
 
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
@@ -14,27 +14,27 @@ import java.util.UUID;
 
 public enum MultiMode {
 
-    // Based on WorldEdit cylinder region.
     CIRCULAR {
+        // Based on WorldEdit cylinder region.
         @Override
         public Set<Location> getLandsLocations(int radius, Location center) {
-            final Set<Location> landsLocations = new HashSet<>();
-            final World world = center.getWorld();
+            Set<Location> landsLocations = new HashSet<>();
+            World world = center.getWorld();
             int xCenter = center.getBlockX() >> 4;
             int zCenter = center.getBlockZ() >> 4;
 
-            final double invRadiusX = 1 / (double) radius;
-            final double invRadiusZ = 1 / (double) radius;
+            double invRadiusX = 1 / (double) radius;
+            double invRadiusZ = 1 / (double) radius;
 
             double nextXn = 0;
             forX:
             for (int x = 0; x <= radius; ++x) {
-                final double xn = nextXn;
+                double xn = nextXn;
                 nextXn = (x + 1) * invRadiusX;
                 double nextZn = 0;
 
                 for (int z = 0; z <= radius; ++z) {
-                    final double zn = nextZn;
+                    double zn = nextZn;
                     nextZn = (z + 1) * invRadiusZ;
 
                     double distanceSq = (xn * xn) + (zn * zn);
@@ -58,8 +58,8 @@ public enum MultiMode {
     RECTANGULAR {
         @Override
         public Set<Location> getLandsLocations(int radius, Location center) {
-            final Set<Location> landsLocations = new HashSet<>();
-            final World world = center.getWorld();
+            Set<Location> landsLocations = new HashSet<>();
+            World world = center.getWorld();
             int xCenter = center.getBlockX() >> 4;
             int zCenter = center.getBlockZ() >> 4;
 
@@ -75,12 +75,12 @@ public enum MultiMode {
     LINEAR {
         @Override
         public Set<Location> getLandsLocations(int radius, Location center) {
-            final Set<Location> landsLocations = new HashSet<>();
-            final World world = center.getWorld();
+            Set<Location> landsLocations = new HashSet<>();
+            World world = center.getWorld();
             int xCenter = center.getBlockX() >> 4;
             int zCenter = center.getBlockZ() >> 4;
 
-            final BlockFace blockFace = JavaUtils.getBlockFace(center.getYaw());
+            BlockFace blockFace = JavaUtils.getBlockFace(center.getYaw());
 
             switch (blockFace) {
                 case NORTH:
@@ -112,10 +112,10 @@ public enum MultiMode {
     public abstract Set<Location> getLandsLocations(int radius, Location center);
 
     public Set<Chunk> getFreeLands(int radius, Location center, IWorldGuardManager worldGuardManager) {
-        final Set<Chunk> chunks = new HashSet<>();
+        Set<Chunk> chunks = new HashSet<>();
 
         for (Location landLocation : getLandsLocations(radius, center)) {
-            final IOwnedLand land = worldGuardManager.getRegion(landLocation);
+            IOwnedLand land = worldGuardManager.getRegion(landLocation);
 
             if (land == null)
                 chunks.add(landLocation.getChunk());
@@ -125,10 +125,10 @@ public enum MultiMode {
     }
 
     public Set<IOwnedLand> getLandsOf(int radius, Location center, UUID uuid, IWorldGuardManager worldGuardManager) {
-        final Set<IOwnedLand> lands = new HashSet<>();
+        Set<IOwnedLand> lands = new HashSet<>();
 
         for (Location landLocation : getLandsLocations(radius, center)) {
-            final IOwnedLand land = worldGuardManager.getRegion(landLocation);
+            IOwnedLand land = worldGuardManager.getRegion(landLocation);
 
             if (land != null && land.isOwner(uuid))
                 lands.add(land);

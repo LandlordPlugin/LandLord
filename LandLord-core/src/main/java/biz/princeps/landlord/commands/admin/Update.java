@@ -7,12 +7,12 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Project: LandLord
@@ -21,66 +21,103 @@ import java.util.HashSet;
  */
 public class Update extends LandlordCommand {
 
-    public Update(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Update.name"),
-                pl.getConfig().getString("CommandSettings.Update.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Update.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Update.aliases")));
+    private final ILandLord plugin;
+
+    public Update(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Update.name"),
+                plugin.getConfig().getString("CommandSettings.Update.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Update.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Update.aliases")));
+        this.plugin = plugin;
     }
 
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
         try {
-            if (arguments.get(0).equals("-r")) {
-                onResetLands(properties.getCommandSender());
+            String option = arguments.get(0);
+
+            switch (option) {
+                case "-u":
+                    onUpdateLands(properties.getCommandSender());
+                    break;
+                case "-r":
+                    onResetLands(properties.getCommandSender());
+                    break;
+                case "-c":
+                    onReclaimLands(properties.getCommandSender());
+                    break;
+                default:
+                    properties.sendUsage();
+                    break;
             }
         } catch (ArgumentsOutOfBoundsException e) {
-            onUpdateLands(properties.getCommandSender());
+            properties.sendUsage();
         }
     }
 
     /**
-     * Supposed to add missing flags to existing lands, remove non existing flags
+     * Supposed to add missing flags to existing lands, remove non existing flags.
      */
     private void onUpdateLands(CommandSender issuer) {
-        //Don't make the server crash/lag with lots of regions
-        Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-            issuer.sendMessage("§8[§c§l!§8] §fStarting to update lands...");
+        // Don't make the server crash/lag with lots of regions.
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                issuer.sendMessage("§8[§c§l!§8] §fStarting to update lands...");
 
-            Collection<IOwnedLand> regions = new HashSet<>();
-            for (World world : Bukkit.getWorlds()) {
-                regions.addAll(plugin.getWGManager().getRegions(world));
-            }
+                for (IOwnedLand ownedLand : getSusceptibleLands()) {
+                    // Update flags.
+                    ownedLand.updateFlags(ownedLand.getOwner());
+                }
 
-            for (IOwnedLand region : regions) {
-                // update flags
-                region.updateFlags(region.getOwner());
+                issuer.sendMessage("§8[§c§l!§8] §fFinished updating lands!");
             }
-            issuer.sendMessage("§8[§c§l!§8] §fFinished updating lands!");
-        });
+        }.runTaskAsynchronously(plugin);
     }
 
     /**
-     * Resets all lands to the default flag state
+     * Resets all lands to the default flag state.
      */
     private void onResetLands(CommandSender sender) {
-        //Don't make the server crash/lag with lots of regions
-        Bukkit.getScheduler().runTaskAsynchronously(plugin.getPlugin(), () -> {
-            sender.sendMessage("§8[§c§l!§8] §fStarting to reset lands... Please wait :)");
+        // Don't make the server crash/lag with lots of regions.
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                sender.sendMessage("§8[§c§l!§8] §fStarting to reset lands... Please wait :)");
 
-            Collection<IOwnedLand> regions = new HashSet<>();
-            for (World world : Bukkit.getWorlds()) {
-                if (isDisabledWorld(world)) continue;
-                regions.addAll(plugin.getWGManager().getRegions(world));
+                for (IOwnedLand ownedLand : getSusceptibleLands()) {
+                    // Reset flags.
+                    ownedLand.initFlags(ownedLand.getOwner());
+                }
+
+                sender.sendMessage("§8[§c§l!§8] §fFinished resetting lands!");
             }
+        }.runTaskAsynchronously(plugin);
+    }
 
-            for (IOwnedLand region : regions) {
-                // reset flags
-                region.initFlags(region.getOwner());
+    private void onReclaimLands(CommandSender sender) {
+        // Don't make the server crash/lag with lots of regions.
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                sender.sendMessage("§8[§c§l!§8] §fStarting to reclaim lands... Please wait :)");
+
+                for (IOwnedLand ownedLand : getSusceptibleLands()) {
+                    // Reclaim the chunk.
+                    ownedLand.reclaim();
+                }
+
+                sender.sendMessage("§8[§c§l!§8] §fFinished reclaiming lands!");
             }
+        }.runTaskAsynchronously(plugin);
+    }
 
-            sender.sendMessage("§8[§c§l!§8] §fFinished resetting lands!");
-        });
+    private Set<IOwnedLand> getSusceptibleLands() {
+        return plugin.getServer().getWorlds().stream()
+                .filter(world -> !isDisabledWorld(world))
+                .map(world -> plugin.getWGManager().getRegions(world))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
     }
 
 }

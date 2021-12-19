@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +24,15 @@ public class MultiPagedGUI extends AbstractGUI {
     /**
      * Creates a new MultiPagedGUI with navigation elements
      *
+     * @param plugin      the plugin instance
      * @param player      the player which want to see the menu
      * @param rowsPerSite a value between 0 and 5
      * @param title       the name of the menu - ChatColor allowed!
      * @param icons       a list of icons which should be displayed on more pages
      * @param main        the superior main menu
      */
-    public MultiPagedGUI(Player player, int rowsPerSite, String title, List<Icon> icons, AbstractGUI main) {
-        super(player, rowsPerSite * 9 + 9, title, main);
+    public MultiPagedGUI(Plugin plugin, Player player, int rowsPerSite, String title, List<Icon> icons, AbstractGUI main) {
+        super(plugin, player, rowsPerSite * 9 + 9, title, main);
         this.icons = icons;
         this.rowsPerSite = rowsPerSite;
     }
@@ -39,12 +41,13 @@ public class MultiPagedGUI extends AbstractGUI {
      * Creates a new MultiPagedGUI with navigation elements
      * You can add icons later with addIcon
      *
+     * @param plugin      the plugin instance
      * @param player      the player which want to see the menu
      * @param rowsPerSite a value between 0 and 5
      * @param title       the name of the menu - ChatColor allowed!
      */
-    public MultiPagedGUI(Player player, int rowsPerSite, String title) {
-        this(player, rowsPerSite, title, new ArrayList<>(), null);
+    public MultiPagedGUI(Plugin plugin, Player player, int rowsPerSite, String title) {
+        this(plugin, player, rowsPerSite, title, new ArrayList<>(), null);
     }
 
     /**

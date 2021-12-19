@@ -1,6 +1,11 @@
 package biz.princeps.landlord.commands.claiming;
 
-import biz.princeps.landlord.api.*;
+import biz.princeps.landlord.api.ClaimType;
+import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IOwnedLand;
+import biz.princeps.landlord.api.IVaultManager;
+import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.api.Options;
 import biz.princeps.landlord.api.events.LandPostClaimEvent;
 import biz.princeps.landlord.api.events.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
@@ -10,13 +15,14 @@ import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import com.google.common.collect.Sets;
+import io.papermc.lib.PaperLib;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
 
@@ -31,11 +37,11 @@ public class Claim extends LandlordCommand {
     private final IWorldGuardManager wg;
     private final IVaultManager vault;
 
-    public Claim(ILandLord pl, boolean overrideConfirmations) {
-        super(pl, pl.getConfig().getString("CommandSettings.Claim.name"),
-                pl.getConfig().getString("CommandSettings.Claim.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claim.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Claim.aliases")));
+    public Claim(ILandLord plugin, boolean overrideConfirmations) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Claim.name"),
+                plugin.getConfig().getString("CommandSettings.Claim.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Claim.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Claim.aliases")));
 
         this.overrideConfirmations = overrideConfirmations;
         this.wg = plugin.getWGManager();
@@ -45,13 +51,14 @@ public class Claim extends LandlordCommand {
     @Override
     public void onCommand(Properties properties, Arguments arguments) {
         if (properties.isPlayer()) {
-            Chunk chunk = properties.getPlayer().getWorld().getChunkAt(properties.getPlayer().getLocation());
-            onClaim(properties.getPlayer(), chunk);
+            PaperLib.getChunkAtAsync(properties.getPlayer().getLocation()).thenAccept(chunk -> {
+                onClaim(properties.getPlayer(), chunk);
+            });
         }
     }
 
     public void onClaim(Player player, Chunk chunk) {
-        if (isDisabledWorld(player)) {
+        if (!overrideConfirmations && isDisabledWorld(player)) {
             return;
         }
 
@@ -70,8 +77,9 @@ public class Claim extends LandlordCommand {
 
         // First check, if outer conditions (conditions that are related more to the buyer as individual)
         // Check for hardcap based on permissions
-        if (!plugin.getConfig().getBoolean("CommandSettings.Claim.allowOverlap", false) &&
-                !wg.canClaim(player, chunk) && !(ol != null && plugin.getPlayerManager().isInactiveSync(ol.getOwner()))) {
+        if (!plugin.getConfig().getBoolean("CommandSettings.Claim.allowOverlap", false)
+                && !wg.canClaim(player, chunk)
+                && !(ol != null && (plugin.getPlayerManager().isInactiveSync(ol.getOwner()) || ol.getPrice() != -1))) {
             lm.sendMessage(player, lm.getString(player, "Commands.Claim.notAllowed"));
             return;
         }
@@ -96,7 +104,7 @@ public class Claim extends LandlordCommand {
         }
 
         LandPreClaimEvent event = new LandPreClaimEvent(player, chunk);
-        Bukkit.getPluginManager().callEvent(event);
+        plugin.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
         }
@@ -180,7 +188,7 @@ public class Claim extends LandlordCommand {
                                 .replace("%chunk%", landName)
                                 .replace("%price%", vault.format(costForBuyer));
 
-                        String originalOwner = Bukkit.getOfflinePlayer(ol.getOwner()).getName();
+                        String originalOwner = plugin.getServer().getOfflinePlayer(ol.getOwner()).getName();
 
                         if (!hasMoney(player, costForBuyer, landName, chunk)) {
                             return;
@@ -233,6 +241,8 @@ public class Claim extends LandlordCommand {
 
     private void handleInactiveClaim(Player player, IOwnedLand ol, double costForBuyer, double payBackForInactive,
                                      String originalOwner) {
+        Chunk chunk = ol.getChunk();
+
         vault.take(player, costForBuyer);
         vault.give(ol.getOwner(), payBackForInactive, player.getWorld());
 
@@ -241,15 +251,20 @@ public class Claim extends LandlordCommand {
                 .replace("%player%", originalOwner)
                 .replace("%price%", vault.format(costForBuyer))
                 .replace("%chunk%", ol.getName())
-                .replace("%location%", wg.formatLocation(ol.getChunk()))
+                .replace("%location%", wg.formatLocation(chunk))
         );
 
-        ol.highlightLand(player,
+        ol.highlightLand(chunk, player,
                 Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
         plugin.getMapManager().updateAll();
 
         LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol, ClaimType.INACTIVE);
-        Bukkit.getScheduler().runTask(plugin.getPlugin(), () -> Bukkit.getPluginManager().callEvent(postEvent));
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                plugin.getServer().getPluginManager().callEvent(postEvent);
+            }
+        }.runTask(plugin);
     }
 
 
@@ -258,7 +273,7 @@ public class Claim extends LandlordCommand {
 
         vault.take(player, ol.getPrice());
         vault.give(ol.getOwner(), ol.getPrice(), player.getWorld());
-        Player pp = Bukkit.getPlayer(ol.getOwner());
+        Player pp = plugin.getServer().getPlayer(ol.getOwner());
 
         ol.replaceOwner(player.getUniqueId());
 
@@ -276,12 +291,13 @@ public class Claim extends LandlordCommand {
                     .replace("%price%", vault.format(ol.getPrice())));
         }
 
-        ol.highlightLand(player,
+        ol.setPrice(-1);
+        ol.highlightLand(chunk, player,
                 Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
         plugin.getMapManager().updateAll();
 
         LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol, ClaimType.ADVERTISED);
-        Bukkit.getPluginManager().callEvent(postEvent);
+        plugin.getServer().getPluginManager().callEvent(postEvent);
     }
 
     private void performNormalClaim(Player player, Chunk chunk, double calculatedCost, String landName) {
@@ -302,12 +318,12 @@ public class Claim extends LandlordCommand {
                 .replace("%world%", chunk.getWorld().getName()));
 
         if (plugin.getConfig().getBoolean("Particles.claim.enabled"))
-            claim.highlightLand(player,
+            claim.highlightLand(chunk, player,
                     Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
 
         if (Options.enabled_homes() && plugin.getConfig().getBoolean("Homes.enableAutoSetHome", false)) {
             if (plugin.getPlayerManager().get(player.getUniqueId()).getHome() == null) {
-                Bukkit.dispatchCommand(player,
+                plugin.getServer().dispatchCommand(player,
                         PrincepsLib.getCommandManager().getCommand(Landlordbase.class)
                                 .getCommandString(SetHome.class).substring(1));
             }
@@ -320,11 +336,11 @@ public class Claim extends LandlordCommand {
         plugin.getMapManager().updateAll();
 
         LandPostClaimEvent postEvent = new LandPostClaimEvent(player, claim, ClaimType.FREE_LAND);
-        Bukkit.getPluginManager().callEvent(postEvent);
+        plugin.getServer().getPluginManager().callEvent(postEvent);
     }
 
     private boolean hasLimitPermissions(Player player, int regionCount) {
-        final int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
+        int highestAllowedLandCount = plugin.getPlayerManager().getMaxClaimPermission(player);
 
         if (regionCount >= highestAllowedLandCount) {
             lm.sendMessage(player, lm.getString(player, "Commands.Claim.hardcap").replace("%regions%",
@@ -411,5 +427,5 @@ public class Claim extends LandlordCommand {
         }
         return true;
     }
-}
 
+}

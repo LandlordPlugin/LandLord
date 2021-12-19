@@ -40,7 +40,7 @@ public abstract class LandlordCommand extends SubCommand {
      * @return if the player's location is inside of the world
      */
     public boolean isInsideWorld(Player player) {
-        return isInsideWorld(player, player.getLocation().getChunk());
+        return isInsideWorld(player, player.getLocation());
     }
 
     /**
@@ -51,13 +51,24 @@ public abstract class LandlordCommand extends SubCommand {
      * @return if the location is inside of the world
      */
     public boolean isInsideWorld(Player player, Chunk chunk) {
-        //+ 8 enables to create a location at the "center" of the chunk. y location : 100 is a random value
-        if (chunk.getWorld().getWorldBorder().isInside(new Location(chunk.getWorld(), (chunk.getX() << 4) + 8, 100, (chunk.getZ() << 4) + 8)))
+        // + 8 allows to create a location at the "center" of the chunk. For y location, 100 is a random value.
+        return isInsideWorld(player, new Location(chunk.getWorld(), (chunk.getX() << 4) + 8, 100, (chunk.getZ() << 4) + 8));
+    }
+
+    /**
+     * Checks if the specified location is inside of the world, in order to avoid claiming outside world.
+     *
+     * @param player   the player to send the message
+     * @param location the location to check if its inside of the world
+     * @return if the location is inside of the world
+     */
+    public boolean isInsideWorld(Player player, Location location) {
+        if (location.getWorld().getWorldBorder().isInside(location))
             return true;
 
         lm.sendMessage(player, lm.getString(player, "locOutsideWorld")
-                .replace("%chunk%", plugin.getWGManager().getLandName(chunk))
-                .replace("%world%", chunk.getWorld().getName()));
+                .replace("%chunk%", plugin.getWGManager().getLandName(location))
+                .replace("%world%", location.getWorld().getName()));
         return false;
     }
 

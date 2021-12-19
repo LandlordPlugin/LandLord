@@ -159,9 +159,9 @@ public class LandMap {
      * @return a reference to the scoreboard
      */
     private SimpleScoreboard displayMap(Player p) {
-        scoreboard = new SimpleScoreboard(header, p);
+        scoreboard = new SimpleScoreboard(plugin, header, p);
 
-        scoreboard.scheduleUpdate(plugin.getPlugin(), new Runnable() {
+        scoreboard.scheduleUpdate(plugin, new Runnable() {
             List<String> prev;
 
             @Override
@@ -195,7 +195,7 @@ public class LandMap {
     }
 
     private String[] buildMap(Player p) {
-        final int radius = 3;
+        int radius = 3;
 
         String[][] mapBoard = getMapDir(p);
         String[] mapRows = new String[mapBoard.length + 3];
@@ -209,7 +209,7 @@ public class LandMap {
                 int xx = x - radius;
                 int zz = z - radius;
 
-                IOwnedLand land = nearby.get(p.getWorld().getChunkAt(xx + p.getLocation().getChunk().getX(), zz + p.getLocation().getChunk().getZ()));
+                IOwnedLand land = nearby.get(p.getWorld().getChunkAt(xx + p.getLocation().getBlockX() >> 4, zz + p.getLocation().getBlockZ() >> 4));
 
                 String currSpot = mapBoard[z][x];
 

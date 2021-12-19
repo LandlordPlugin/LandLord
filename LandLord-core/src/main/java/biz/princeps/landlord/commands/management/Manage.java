@@ -5,13 +5,12 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.events.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
-import biz.princeps.landlord.commands.MultiMode;
 import biz.princeps.landlord.guis.ManageGui;
+import biz.princeps.landlord.multi.MultiMode;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -30,12 +29,12 @@ public class Manage extends LandlordCommand {
 
     private final IWorldGuardManager wg;
 
-    public Manage(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Manage.name"),
-                pl.getConfig().getString("CommandSettings.Manage.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Manage.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Manage.aliases")));
-        this.wg = pl.getWGManager();
+    public Manage(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Manage.name"),
+                plugin.getConfig().getString("CommandSettings.Manage.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Manage.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Manage.aliases")));
+        this.wg = plugin.getWGManager();
     }
 
     // TODO Clean this mess up
@@ -85,7 +84,7 @@ public class Manage extends LandlordCommand {
                     setFarewell(player, args, new ArrayList<>(wg.getRegions(player.getUniqueId())), 1);
                     break;
                 case "setgreet":
-                    //System.out.println("greet " + Arrays.toString(args));
+                    //plugin.getLogger().log(Level.INFO, "greet " + Arrays.toString(args));
                     setGreet(player, args, Collections.singletonList(wg.getRegion(player.getLocation())), 1);
                     break;
                 case "setfarewell":
@@ -93,8 +92,8 @@ public class Manage extends LandlordCommand {
                     break;
                 case "multisetgreet":
                     try {
-                        final MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
-                        final int radius = arguments.getInt(2);
+                        MultiMode mode = MultiMode.valueOf(arguments.get(1).toUpperCase());
+                        int radius = arguments.getInt(2);
 
                         setGreet(player, args, new ArrayList<>(mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg)), 3);
                     } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ignored) {
@@ -102,8 +101,8 @@ public class Manage extends LandlordCommand {
                     break;
                 case "multisetfarewell":
                     try {
-                        final MultiMode mode = MultiMode.valueOf(arguments.get()[1].toUpperCase());
-                        final int radius = arguments.getInt(2);
+                        MultiMode mode = MultiMode.valueOf(arguments.get(1).toUpperCase());
+                        int radius = arguments.getInt(2);
 
                         setFarewell(player, args, new ArrayList<>(mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg)), 3);
                     } catch (IllegalArgumentException | ArgumentsOutOfBoundsException ignored) {
@@ -152,7 +151,7 @@ public class Manage extends LandlordCommand {
         for (IOwnedLand region : lands) {
             LandManageEvent landManageEvent = new LandManageEvent(player, region,
                     "GREET_MESSAGE", region.getGreetMessage(), newmsg);
-            Bukkit.getPluginManager().callEvent(landManageEvent);
+            plugin.getServer().getPluginManager().callEvent(landManageEvent);
 
             region.setGreetMessage(newmsg);
         }
@@ -181,7 +180,7 @@ public class Manage extends LandlordCommand {
         for (IOwnedLand region : lands) {
             LandManageEvent landManageEvent = new LandManageEvent(player, region,
                     "FAREWELL_MESSAGE", region.getFarewellMessage(), newmsg);
-            Bukkit.getPluginManager().callEvent(landManageEvent);
+            plugin.getServer().getPluginManager().callEvent(landManageEvent);
 
             region.setFarewellMessage(newmsg);
         }

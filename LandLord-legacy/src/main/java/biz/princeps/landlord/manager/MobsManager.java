@@ -1,5 +1,6 @@
 package biz.princeps.landlord.manager;
 
+import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMob;
 import biz.princeps.landlord.api.IMobManager;
 import org.bukkit.Material;
@@ -11,7 +12,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
-public class MobManager implements IMobManager {
+public class MobsManager implements IMobManager {
 
     static final List<IMob> MOBS = new ArrayList<>();
     public static final Mob ELDER_GUARDIAN = new Mob(EntityType.ELDER_GUARDIAN, 4);
@@ -55,7 +56,10 @@ public class MobManager implements IMobManager {
     public static final Mob PARROT = new Mob(EntityType.PARROT, 105);
     public static final Mob VILLAGER = new Mob(EntityType.VILLAGER, 120);
 
-    public MobManager() {
+    private final ILandLord plugin;
+
+    public MobsManager(ILandLord plugin) {
+        this.plugin = plugin;
         MOBS.sort(Comparator.comparing(iMob -> iMob.getType().name()));
     }
 

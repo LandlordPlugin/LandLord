@@ -16,11 +16,11 @@ import org.bukkit.entity.Player;
  */
 public class AdminClaim extends LandlordCommand {
 
-    public AdminClaim(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.AdminClaim.name"),
-                pl.getConfig().getString("CommandSettings.AdminClaim.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AdminClaim.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.AdminClaim.aliases")));
+    public AdminClaim(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.AdminClaim.name"),
+                plugin.getConfig().getString("CommandSettings.AdminClaim.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.AdminClaim.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.AdminClaim.aliases")));
     }
 
     @Override
@@ -39,7 +39,7 @@ public class AdminClaim extends LandlordCommand {
             return;
         }
 
-        IOwnedLand land = plugin.getWGManager().getRegion(sender.getLocation().getChunk());
+        IOwnedLand land = plugin.getWGManager().getRegion(sender.getLocation());
 
         plugin.getPlayerManager().getOffline(target, (offline) -> {
             if (offline == null) {

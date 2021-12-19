@@ -1,5 +1,5 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.github.johnrengelman.shadow") version "7.1.1"
     id("biz.princeps.library-conventions")
 }
 
@@ -8,6 +8,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldguard:worldguard-legacy:6.2")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:6.1.4-SNAPSHOT")
+    compileOnly("io.papermc:paperlib:1.0.6")
 }
 
 description = "LandLord-legacy"
@@ -31,6 +32,7 @@ tasks {
         relocate("org.slf4j.slf4j-api", shadebade + "slf4j-api")
         relocate("io.github", shadebade + "nbteditor")
         relocate("de.eldoria.eldoutilities", shadebade + "eldoutilities")
+        relocate("io.papermc.lib", shadebade + "paperlib")
         mergeServiceFiles()
         archiveBaseName.set(project.parent?.name)
     }

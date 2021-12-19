@@ -7,26 +7,27 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.TownPreClaimEvent;
 import com.palmergames.bukkit.towny.object.TownBlock;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 
 
 public class Towny extends BasicListener {
 
     private final TownyAPI towny;
-    private final ILandLord pl;
+    private final ILandLord plugin;
 
-    public Towny(ILandLord pl) {
-        super(pl);
+    public Towny(ILandLord plugin) {
+        super(plugin);
         this.towny = TownyAPI.getInstance();
-        this.pl = pl;
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onLLClaim(LandPreClaimEvent e) {
         Chunk chunk = e.getChunk();
-        if (towny.isTownyWorld(e.getChunk().getWorld()) &&
-                !towny.isWilderness(chunk.getBlock(2, 2, 2).getLocation())) {
-            pl.getLangManager().sendMessage(e.getPlayer(), "Integrations.Towny.TownyPresent");
+        if (towny.isTownyWorld(chunk.getWorld()) &&
+                !towny.isWilderness(new Location(chunk.getWorld(), (chunk.getX() << 4) + 2, 2, (chunk.getZ() << 4) + 2))) {
+            plugin.getLangManager().sendMessage(e.getPlayer(), "Integrations.Towny.TownyPresent");
             e.setCancelled(true);
         }
     }
@@ -37,10 +38,10 @@ public class Towny extends BasicListener {
         int x = townBlock.getX();
         int z = townBlock.getZ();
 
-        Chunk chunkAt = townBlock.getWorldCoord().getBukkitWorld().getChunkAt(x, z);
+        Location locationAt = new Location(townBlock.getWorldCoord().getBukkitWorld(), x, 0, z);
 
-        if (pl.getWGManager().getRegion(chunkAt) != null) {
-            pl.getLangManager().sendMessage(e.getPlayer(), "Integrations.Towny.LLPresent");
+        if (plugin.getWGManager().getRegion(locationAt) != null) {
+            plugin.getLangManager().sendMessage(e.getPlayer(), "Integrations.Towny.LLPresent");
             e.setCancelled(true);
         }
     }

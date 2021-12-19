@@ -4,11 +4,13 @@ plugins {
 }
 
 group = "biz.princeps"
-version = "4.351"
+version = "4.359"
 
 repositories {
     mavenCentral()
+    // Spigot & Paper
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
+    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     // WorldEdit & WorldGuard
     maven { url = uri("https://maven.enginehub.org/repo/") }
     // Towny
@@ -18,7 +20,7 @@ repositories {
     // nbteditor & bungeecord-chat
     maven { url = uri("https://repo.codemc.org/repository/maven-public/") }
     // EldoUtilitites & Landlord
-    maven { url = uri("https://eldonexus.de/repository/maven-releases/") }
+    maven { url = uri("https://eldonexus.de/repository/maven-public/") }
     // Authlib
     maven { url = uri("https://papermc.io/repo/repository/maven-releases/") }
 }
@@ -46,4 +48,3 @@ tasks {
         }
     }
 }
-

@@ -69,16 +69,16 @@ public class PistonOverwriter extends BasicListener {
             return false;
         }
 
-        if (wg.getRegion(origin.getChunk()) == null) {
+        if (wg.getRegion(origin.getLocation()) == null) {
             return false;
         }
 
         Set<IOwnedLand> lands = new HashSet<>();
         for (Block block : blocks) {
-            lands.add(wg.getRegion(block.getChunk()));
+            lands.add(wg.getRegion(block.getLocation()));
         }
 
-        UUID onlyOwner = wg.getRegion(origin.getChunk()).getOwner();
+        UUID onlyOwner = wg.getRegion(origin.getLocation()).getOwner();
         // System.out.println("original owner" + onlyOwner);
         for (IOwnedLand land : lands) {
             // System.out.println(land);

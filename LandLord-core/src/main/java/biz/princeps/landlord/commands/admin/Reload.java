@@ -8,17 +8,13 @@ import com.google.common.collect.Sets;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-/**
- * This is shit.
- * I hate reloading. Just makes stuff complicate. Tbh i have no idea how well this works
- */
 public class Reload extends LandlordCommand {
-    public Reload(ILandLord pl) {
-        super(pl, pl.getConfig().getString("CommandSettings.Reload.name"),
-                pl.getConfig().getString("CommandSettings.Reload.usage"),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Reload.permissions")),
-                Sets.newHashSet(pl.getConfig().getStringList("CommandSettings.Reload.aliases")));
 
+    public Reload(ILandLord plugin) {
+        super(plugin, plugin.getConfig().getString("CommandSettings.Reload.name"),
+                plugin.getConfig().getString("CommandSettings.Reload.usage"),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Reload.permissions")),
+                Sets.newHashSet(plugin.getConfig().getStringList("CommandSettings.Reload.aliases")));
     }
 
     @Override
@@ -28,8 +24,9 @@ public class Reload extends LandlordCommand {
         issuer.sendMessage(ChatColor.RED + "Reloading is not recommended! Before reporting any bugs, please restart your server.");
 
         plugin.getLangManager().reload();
-        plugin.getPlugin().reloadConfig();
+        plugin.reloadConfig();
         plugin.setupPrincepsLib();
+        plugin.postloadPrincepsLib();
 
         String msg = lm.getString("Commands.Reload.success");
         issuer.sendMessage(msg);

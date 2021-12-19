@@ -20,6 +20,6 @@ public interface IRegenerationManager {
      * @param location a location inside of the chunk to regenerate.
      */
     default void regenerateChunk(Location location) {
-        regenerateChunk(location.getWorld(), location.getChunk().getX(), location.getChunk().getZ());
+        regenerateChunk(location.getWorld(), location.getBlockX() >> 4, location.getBlockZ() >> 4);
     }
 }

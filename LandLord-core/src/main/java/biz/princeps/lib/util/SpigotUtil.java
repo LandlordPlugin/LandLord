@@ -1,7 +1,10 @@
 package biz.princeps.lib.util;
 
+import de.eldoria.eldoutilities.core.EldoUtilities;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+
+import java.util.logging.Level;
 
 /**
  * Created by spatium on 11.06.17.
@@ -9,9 +12,8 @@ import org.bukkit.Location;
 public class SpigotUtil {
 
     public static Location exactlocationFromString(String s) {
-        if (s == null) return null;
-        if (s.isEmpty()) return null;
-        if (s.equals("null")) return null;
+        if (s == null || s.isEmpty() || s.equals("null"))
+            return null;
         String[] split = s.split(":");
         Location loc;
 
@@ -27,9 +29,10 @@ public class SpigotUtil {
     }
 
     public static String exactlocationToString(Location loc) {
-        if (loc == null) return "";
+        if (loc == null)
+            return "";
         if (loc.getWorld() == null || loc.getWorld().getName() == null) {
-            System.out.println("Something is wrong with your world!");
+            EldoUtilities.logger().log(Level.WARNING, "Something is wrong with your world!");
             return "";
         }
         String world = loc.getWorld().getName();
@@ -41,4 +44,5 @@ public class SpigotUtil {
 
         return world + ":" + MathUtil.round(x, 3) + ":" + MathUtil.round(y, 3) + ":" + MathUtil.round(z, 3) + ":" + yaw + ":" + pitch;
     }
+
 }

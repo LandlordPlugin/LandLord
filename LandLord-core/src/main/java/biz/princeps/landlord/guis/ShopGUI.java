@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Project: LandLord
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public class ShopGUI extends AbstractGUI {
 
-    private final ILandLord pl;
+    private final ILandLord plugin;
     private final ClaimsCostManager costManager;
     private final ILangManager lm;
 
@@ -31,20 +32,20 @@ public class ShopGUI extends AbstractGUI {
     private int delta = 0;
     private double cost = 0;
 
-    public ShopGUI(ILandLord pl, Player player, String title) {
-        super(player, 54, title);
-        this.pl = pl;
-        this.costManager = new ClaimsCostManager(pl);
-        this.mats = pl.getMaterialsManager();
-        this.lm = pl.getLangManager();
-        this.vault = pl.getVaultManager();
+    public ShopGUI(ILandLord plugin, Player player, String title) {
+        super(plugin, player, 54, title);
+        this.plugin = plugin;
+        this.costManager = new ClaimsCostManager(plugin);
+        this.mats = plugin.getMaterialsManager();
+        this.lm = plugin.getLangManager();
+        this.vault = plugin.getVaultManager();
     }
 
     @Override
     protected void create() {
-        int lands = pl.getWGManager().getRegionCount(player.getUniqueId());
-        int claims = pl.getPlayerManager().get(player.getUniqueId()).getClaims();
-        int max = pl.getPlayerManager().getMaxClaimPermission(player);
+        int lands = plugin.getWGManager().getRegionCount(player.getUniqueId());
+        int claims = plugin.getPlayerManager().get(player.getUniqueId()).getClaims();
+        int max = plugin.getPlayerManager().getMaxClaimPermission(player);
 
         for (int i = 0; i < this.getSize(); i++) {
             Icon placehodler = new Icon(mats.getGreyStainedGlass());
@@ -52,7 +53,7 @@ public class ShopGUI extends AbstractGUI {
             this.setIcon(i, placehodler);
         }
 
-        System.out.println("Cl: " + lands + " | " + claims + "/" + max);
+        // plugin.getLogger().log(Level.INFO, "Cl: " + lands + " | " + claims + "/" + max);
 
         Icon yourLands = new Icon(new ItemStack(mats.getGrass()));
         yourLands.setName(lm.getRawString("Shop.gui.lands.name"));
@@ -61,7 +62,7 @@ public class ShopGUI extends AbstractGUI {
 
         List<Skulls> landsSkulls = Skulls.numToSkull(lands);
         for (int i = 0; i < landsSkulls.size(); i++) {
-            Icon icon = new Icon(landsSkulls.get(i).getSkull(pl));
+            Icon icon = new Icon(landsSkulls.get(i).getSkull(plugin));
             icon.setName(" ");
             this.setIcon(8 - landsSkulls.size() + 1 + i, icon);
         }
@@ -76,22 +77,22 @@ public class ShopGUI extends AbstractGUI {
         this.setIcon(9, yourClaims);
         List<Skulls> claimsSkulls = Skulls.numToSkull(claims + delta);
         for (int i = 0; i < claimsSkulls.size(); i++) {
-            Icon icon = new Icon(claimsSkulls.get(i).getSkull(pl));
+            Icon icon = new Icon(claimsSkulls.get(i).getSkull(plugin));
             icon.setName(" ");
             this.setIcon(17 - claimsSkulls.size() + 1 + i, icon);
         }
 
         // cost line
-        Icon costIcon = new Icon(Skulls.CASH.getSkull(pl));
+        Icon costIcon = new Icon(Skulls.CASH.getSkull(plugin));
         this.setIcon(18, costIcon);
         List<Skulls> costSkulls = Skulls.numToSkull((int) cost);
         for (int i = 0; i < costSkulls.size(); i++) {
-            Icon icon = new Icon(costSkulls.get(i).getSkull(pl));
+            Icon icon = new Icon(costSkulls.get(i).getSkull(plugin));
             icon.setName(" ");
             this.setIcon(26 - costSkulls.size() + 1 + i, icon);
         }
 
-        Icon back1 = new Icon(Skulls.BACK1.getSkull(pl));
+        Icon back1 = new Icon(Skulls.BACK1.getSkull(plugin));
         back1.setName(lm.getRawString("Shop.gui.decrease1"));
         back1.addClickAction((p) -> {
             if (claims + delta - 1 < 0) {
@@ -107,7 +108,7 @@ public class ShopGUI extends AbstractGUI {
             refresh();
         });
         this.setIcon(30, back1);
-        Icon back5 = new Icon(Skulls.BACK5.getSkull(pl));
+        Icon back5 = new Icon(Skulls.BACK5.getSkull(plugin));
         back5.setName(lm.getRawString("Shop.gui.decrease5"));
         back5.addClickAction((p) -> {
             if (claims + delta <= 0) {
@@ -129,7 +130,7 @@ public class ShopGUI extends AbstractGUI {
             refresh();
         });
         this.setIcon(29, back5);
-        Icon back10 = new Icon(Skulls.BACK10.getSkull(pl));
+        Icon back10 = new Icon(Skulls.BACK10.getSkull(plugin));
         back10.setName(lm.getRawString("Shop.gui.decrease10"));
         back10.addClickAction((p) -> {
             if (claims + delta <= 0) {
@@ -153,7 +154,7 @@ public class ShopGUI extends AbstractGUI {
 
         this.setIcon(31, yourClaims);
 
-        Icon forw1 = new Icon(Skulls.FORWARD1.getSkull(pl));
+        Icon forw1 = new Icon(Skulls.FORWARD1.getSkull(plugin));
         forw1.setName(lm.getRawString("Shop.gui.increase1"));
         forw1.addClickAction((p) -> {
             if (claims + delta + 1 > max) {
@@ -165,7 +166,7 @@ public class ShopGUI extends AbstractGUI {
             refresh();
         });
         this.setIcon(32, forw1);
-        Icon forw5 = new Icon(Skulls.FORWARD5.getSkull(pl));
+        Icon forw5 = new Icon(Skulls.FORWARD5.getSkull(plugin));
         forw5.setName(lm.getRawString("Shop.gui.increase5"));
         forw5.addClickAction((p) -> {
             if (claims + delta == max) {
@@ -183,7 +184,7 @@ public class ShopGUI extends AbstractGUI {
             refresh();
         });
         this.setIcon(33, forw5);
-        Icon forw10 = new Icon(Skulls.FORWARD10.getSkull(pl));
+        Icon forw10 = new Icon(Skulls.FORWARD10.getSkull(plugin));
         forw10.setName(lm.getRawString("Shop.gui.increase10"));
         forw10.addClickAction((p) -> {
             if (claims + delta == max) {
@@ -203,7 +204,7 @@ public class ShopGUI extends AbstractGUI {
         this.setIcon(34, forw10);
 
         // Transaction control items
-        Icon abort = new Icon(Skulls.ABORT.getSkull(pl));
+        Icon abort = new Icon(Skulls.ABORT.getSkull(plugin));
         abort.setName(lm.getRawString("Shop.gui.abort"));
         abort.addClickAction((p) -> {
             p.closeInventory();
@@ -212,7 +213,7 @@ public class ShopGUI extends AbstractGUI {
         this.setIcon(45, abort);
 
         if (vault.getBalance(player) < cost) {
-            Icon error = new Icon(Skulls.REDEXCLAMATIONMARK.getSkull(pl));
+            Icon error = new Icon(Skulls.REDEXCLAMATIONMARK.getSkull(plugin));
             error.setName(lm.getRawString("Shop.gui.error.name"));
             error.setLore(replaceLore(
                     replaceLore(
@@ -225,18 +226,18 @@ public class ShopGUI extends AbstractGUI {
             this.setIcon(53, error);
         } else {
 
-            Icon confirm = new Icon(Skulls.CONFIRM.getSkull(pl));
+            Icon confirm = new Icon(Skulls.CONFIRM.getSkull(plugin));
             confirm.addClickAction((p) -> {
                 if (delta > 0) {
                     vault.take(p, cost);
-                    pl.getPlayerManager().get(p.getUniqueId()).addClaims(delta);
+                    plugin.getPlayerManager().get(p.getUniqueId()).addClaims(delta);
                     lm.sendMessage(p, lm.getString(p, "Shop.successBuy")
                             .replace("%number%", String.valueOf(delta))
                             .replace("%cost%", vault.format(cost)));
                 } else {
                     vault.give(p, cost * -1);
                     // delta is negative, so it will subtract
-                    pl.getPlayerManager().get(p.getUniqueId()).addClaims(delta);
+                    plugin.getPlayerManager().get(p.getUniqueId()).addClaims(delta);
 
                     lm.sendMessage(p, lm.getString(p, "Shop.successSell")
                             .replace("%number%", String.valueOf(-1 * delta))
@@ -261,4 +262,5 @@ public class ShopGUI extends AbstractGUI {
         }
         return newList;
     }
+
 }
