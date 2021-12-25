@@ -67,7 +67,7 @@ public class LandLord extends ALandLord {
             getLogger().warning("It appears that Landlord is not fully ready to run Minecraft 1.18. " +
                     "Due to world height changes, Landlord lands must be converted. Check and adjust your " +
                     "configuration and convert your lands if necessary. " +
-                    "This operation could be unsuccessful, so don't hesitate to BACKUP configuration/regions," +
+                    "This operation could be unsuccessful, so don't hesitate to BACKUP configuration/regions, " +
                     "contact us and use the command '/ll update -c'!");
             getLogger().info("To disable this warning once all notes considered, set 'check-1-18-world-heights' to false.");
         }
