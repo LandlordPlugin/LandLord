@@ -1,6 +1,7 @@
 package biz.princeps.landlord.regenerators;
 
 import biz.princeps.landlord.api.ILandLord;
+import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IRegenerationManager;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -20,9 +21,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WGRegenerator implements IRegenerationManager {
 
@@ -38,7 +39,8 @@ public class WGRegenerator implements IRegenerationManager {
         com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
 
         PaperLib.getChunkAtAsync(world, x, z).thenAccept(chunk -> {
-            String landName = plugin.getWGManager().getLandName(chunk);
+            IOwnedLand land = plugin.getWGManager().getRegion(chunk);
+            String landName = land.getName();
 
             // heal all players so that they dont suffocate in case they have only half a heart left. later we port them up
             for (Entity entity : chunk.getEntities()) {
@@ -47,18 +49,18 @@ public class WGRegenerator implements IRegenerationManager {
                 }
             }
 
-            File file = new File(new File(plugin.getDataFolder(), "chunksaves"), landName);
+            Path path = plugin.getDataFolder().toPath().resolve("chunksaves").resolve(landName);
 
-            if (file.exists()) {
+            if (Files.exists(path)) {
                 ClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
 
                 try (EditSession editSession = worldEdit.getEditSessionFactory().getEditSession(weWorld, -1);
-                     ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+                     ClipboardReader reader = format.getReader(Files.newInputStream(path))) {
 
                     Clipboard clipboard = reader.read();
                     Operation operation = new ClipboardHolder(clipboard)
                             .createPaste(editSession)
-                            .to(BlockVector3.at(x << 4, 0, z << 4))
+                            .to(BlockVector3.at(x << 4, land.getMinY(), z << 4))
                             .ignoreAirBlocks(false)
                             .build();
 

@@ -209,7 +209,7 @@ public class LandMap {
                 int xx = x - radius;
                 int zz = z - radius;
 
-                IOwnedLand land = nearby.get(p.getWorld().getChunkAt(xx + p.getLocation().getBlockX() >> 4, zz + p.getLocation().getBlockZ() >> 4));
+                IOwnedLand land = nearby.get(p.getWorld().getChunkAt(xx + (p.getLocation().getBlockX() >> 4), zz + (p.getLocation().getBlockZ() >> 4)));
 
                 String currSpot = mapBoard[z][x];
 
