@@ -1,5 +1,5 @@
 name: Landlord
-version: ${version}
+version: "${version}"
 main: biz.princeps.landlord.LandLord
 authors: [ SpatiumPrinceps, Aurelien30000, SirYwell, RainbowDashLabs ]
 website: https://www.spigotmc.org/resources/44398/
