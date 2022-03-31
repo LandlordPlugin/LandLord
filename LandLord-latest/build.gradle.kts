@@ -8,7 +8,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.7-SNAPSHOT")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.5-SNAPSHOT")
-    compileOnly("io.papermc:paperlib:1.0.6")
+    compileOnly("io.papermc:paperlib:1.0.7")
 }
 
 description = "LandLord-latest"
