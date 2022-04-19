@@ -40,7 +40,9 @@ public class SecureWorldListener extends BasicListener {
         this.worlds = new HashSet<>(plugin.getConfig().getStringList("SecureWorld.worlds"));
         if (worlds.isEmpty()) {
             worlds.addAll(plugin.getServer().getWorlds()
-                    .stream().map(World::getName).collect(Collectors.toSet()));
+                    .stream().map(World::getName)
+                    .collect(Collectors.toSet()));
+            plugin.getLogger().info("No worlds in \"SecureWorld.worlds\". Setting default to: " + String.join(", ", worlds));
         }
         this.treshold = plugin.getConfig().getInt("SecureWorld.threshold");
         this.wg = plugin.getWGManager();
