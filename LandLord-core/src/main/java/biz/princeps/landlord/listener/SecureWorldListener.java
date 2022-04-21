@@ -16,6 +16,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,13 +38,14 @@ public class SecureWorldListener extends BasicListener {
 
     public SecureWorldListener(ILandLord plugin) {
         super(plugin);
-        this.worlds = new HashSet<>(plugin.getConfig().getStringList("SecureWorld.worlds"));
-        if (worlds.isEmpty()) {
-            worlds.addAll(plugin.getServer().getWorlds()
+        List<String> worlds = plugin.getConfig().getStringList("SecureWorld.worlds");
+        if (worlds.size() == 1 && "ALL".equals(worlds.get(0))) {
+            worlds = plugin.getServer().getWorlds()
                     .stream().map(World::getName)
-                    .collect(Collectors.toSet()));
+                    .collect(Collectors.toList());
             plugin.getLogger().info("No worlds in \"SecureWorld.worlds\". Setting default to: " + String.join(", ", worlds));
         }
+        this.worlds = new HashSet<>(worlds);
         this.treshold = plugin.getConfig().getInt("SecureWorld.threshold");
         this.wg = plugin.getWGManager();
         this.display = MessageDisplay.valueOf(plugin.getConfig().getString("SecureWorld.displayWarning"));
