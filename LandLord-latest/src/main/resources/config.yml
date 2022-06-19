@@ -753,6 +753,10 @@ Manage:
       - AXOLOTL
       - GLOW_SQUID
       - GOAT
+      - ALLAY
+      - FROG
+      - TADPOLE
+      - WARDEN
 
 # Define how the claim height should be defined.
 ClaimHeight:

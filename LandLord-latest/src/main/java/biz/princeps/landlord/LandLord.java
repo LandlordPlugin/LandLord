@@ -64,7 +64,7 @@ public class LandLord extends ALandLord {
         // https://minecraft.fandom.com/wiki/Data_version
         int currentDataVersion = getServer().getUnsafe().getDataVersion();
         if (currentDataVersion > 2858 && getConfig().getBoolean("check-1-18-world-heights")) {
-            getLogger().warning("It appears that Landlord is not fully ready to run Minecraft 1.18. " +
+            getLogger().warning("It appears that Landlord is not fully ready to run Minecraft 1.18+. " +
                     "Due to world height changes, Landlord lands must be converted. Check and adjust your " +
                     "configuration and convert your lands if necessary. " +
                     "This operation could be unsuccessful, so don't hesitate to BACKUP configuration/regions, " +
@@ -101,9 +101,10 @@ public class LandLord extends ALandLord {
         // Dependency stuff
         String version = getServer().getVersion();
         if (!version.contains("1.13.2") && !version.contains("1.14") && !version.contains("1.15")
-                && !version.contains("1.16") && !version.contains("1.17") && !version.contains("1.18")) {
+                && !version.contains("1.16") && !version.contains("1.17") && !version.contains("1.18")
+                && !version.contains("1.19")) {
             haltPlugin("Invalid Spigot version detected! LandLord latest requires " +
-                    "1.13.2/1.14.x/1.15.x/1.16.x/1.17.x/1.18.x, use Legacy version for 1.12.2!");
+                    "1.13.2/1.14.x/1.15.x/1.16.x/1.17.x/1.18.x/1.19.x, use Legacy version for 1.12.2!");
             return false;
         }
 
