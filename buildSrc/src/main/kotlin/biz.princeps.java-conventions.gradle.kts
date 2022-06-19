@@ -1,10 +1,10 @@
 plugins {
+    java
     `java-library`
     `maven-publish`
 }
 
-group = "biz.princeps"
-version = "4.361"
+version = rootProject.version
 
 repositories {
     mavenCentral()
