@@ -224,7 +224,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     @Override
     public IOwnedLand[] getSurroundings(Chunk chunk) {
-        return getSurroundings(new Location(chunk.getWorld(), (chunk.getX() << 4) + 1, 1, chunk.getZ() << 4 + 1));
+        return getSurroundings(new Location(chunk.getWorld(), chunk.getX() << 4, 1, chunk.getZ() << 4));
     }
 
     @Override
@@ -245,7 +245,7 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
 
     @Override
     public IOwnedLand[] getSurroundingsOwner(Chunk chunk, UUID owner) {
-        return getSurroundingsOwner(new Location(chunk.getWorld(), (chunk.getX() << 4) + 1, 1, (chunk.getZ() << 4) + 1), owner);
+        return getSurroundingsOwner(new Location(chunk.getWorld(), chunk.getX() << 4, 1, chunk.getZ() << 4), owner);
     }
 
     @Override
