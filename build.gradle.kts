@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "biz.princeps"
-version = "4.361"
+version = "5.0.0"
 
 subprojects {
     apply {
