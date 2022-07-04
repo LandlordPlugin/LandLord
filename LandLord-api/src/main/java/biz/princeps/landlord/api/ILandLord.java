@@ -1,5 +1,6 @@
 package biz.princeps.landlord.api;
 
+import biz.princeps.landlord.api.event.EventDispatcher;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -129,5 +130,7 @@ public interface ILandLord extends Plugin {
      * @return the configuration manager
      */
     IConfigurationManager getConfigurationManager();
+
+    EventDispatcher eventDispatcher();
 
 }

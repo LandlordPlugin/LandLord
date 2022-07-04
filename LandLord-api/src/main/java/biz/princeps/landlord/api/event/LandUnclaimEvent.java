@@ -1,10 +1,7 @@
-package biz.princeps.landlord.api.events;
+package biz.princeps.landlord.api.event;
 
 import biz.princeps.landlord.api.IOwnedLand;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 /**
  * Project: LandLord
@@ -13,9 +10,8 @@ import org.bukkit.event.HandlerList;
  * <p>
  * This event is called when a land is unclaimed
  */
-public class LandUnclaimEvent extends Event implements Cancellable {
+public class LandUnclaimEvent implements LandLordEvent {
 
-    private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
 
     private final Player player;
@@ -26,15 +22,6 @@ public class LandUnclaimEvent extends Event implements Cancellable {
         this.land = land;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
     public Player getPlayer() {
         return player;
     }
@@ -43,12 +30,10 @@ public class LandUnclaimEvent extends Event implements Cancellable {
         return land;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
-    @Override
     public void setCancelled(boolean b) {
         this.cancelled = b;
     }

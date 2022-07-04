@@ -4,7 +4,7 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.Options;
-import biz.princeps.landlord.api.events.LandManageEvent;
+import biz.princeps.landlord.api.event.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
@@ -79,7 +79,7 @@ public class Regenerate extends LandlordCommand {
                                 public void run() {
                                     LandManageEvent landManageEvent = new LandManageEvent(player, finalLand,
                                             null, "REGENERATE", "REGENERATE");
-                                    plugin.getServer().getPluginManager().callEvent(landManageEvent);
+                                    plugin.eventDispatcher().fire(landManageEvent);
                                 }
                             }.runTask(plugin);
 

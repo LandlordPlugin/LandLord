@@ -1,7 +1,7 @@
 package biz.princeps.landlord.listener;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.events.LandChangeEvent;
+import biz.princeps.landlord.api.event.LandChangeEvent;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
@@ -35,17 +35,26 @@ public class LandChangeListener extends BasicListener {
                 sendMessage = (message, player) -> {
                 };
         }
+        this.plugin.eventDispatcher().registerListener(LandChangeEvent.class, event -> {
+            if (event.newLand() == null) {
+                // exited
+                this.sendMessage.accept(event.previousLand().getFarewellMessage(), event.player());
+                return;
+            }
+            // entered
+            this.sendMessage.accept(event.newLand().getGreetMessage(), event.player());
+        });
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onLandChange(LandChangeEvent event) {
-        if (event.getNewLand() == null) {
+        if (event.newLand() == null) {
             // exited
-            this.sendMessage.accept(event.getPreviousLand().getFarewellMessage(), event.getPlayer());
+            this.sendMessage.accept(event.previousLand().getFarewellMessage(), event.player());
             return;
         }
         // entered
-        this.sendMessage.accept(event.getNewLand().getGreetMessage(), event.getPlayer());
+        this.sendMessage.accept(event.newLand().getGreetMessage(), event.player());
     }
 
 }

@@ -3,7 +3,7 @@ package biz.princeps.landlord.listener;
 import biz.princeps.landlord.api.ClaimType;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
-import biz.princeps.landlord.api.events.LandPostClaimEvent;
+import biz.princeps.landlord.api.event.LandPostClaimEvent;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
@@ -17,7 +17,6 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.World;
-import org.bukkit.event.EventHandler;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,20 +25,22 @@ import java.io.IOException;
 /**
  * This listener creates a snapshot of a chunk after the claim process was done successfully.
  */
-public class WGRegenListener extends BasicListener {
+public class WGRegenListener {
+
+    private final ILandLord plugin;
 
     public WGRegenListener(ILandLord plugin) {
-        super(plugin);
+        this.plugin = plugin;
+        this.plugin.eventDispatcher().registerListener(LandPostClaimEvent.class, this::onClaim);
     }
 
-    @EventHandler
-    public void onClaim(LandPostClaimEvent e) {
+    private void onClaim(LandPostClaimEvent e) {
         // We want to regenerate it to the state where it was claimed initially.
-        if (e.getClaimType() != ClaimType.FREE_LAND) {
+        if (e.type() != ClaimType.FREE_LAND) {
             return;
         }
 
-        IOwnedLand ownedLand = e.getLand();
+        IOwnedLand ownedLand = e.land();
         World world = ownedLand.getWorld();
         int x = ownedLand.getChunkX();
         int z = ownedLand.getChunkZ();
@@ -61,7 +62,7 @@ public class WGRegenListener extends BasicListener {
             worldEditException.printStackTrace();
         }
 
-        File file = new File(new File(plugin.getDataFolder(), "chunksaves"), e.getLand().getName());
+        File file = new File(new File(plugin.getDataFolder(), "chunksaves"), e.land().getName());
 
         try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
             writer.write(clipboard);

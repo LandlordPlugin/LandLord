@@ -4,7 +4,7 @@ import biz.princeps.landlord.api.AMultiTask;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.ILangManager;
 import biz.princeps.landlord.api.IWorldGuardManager;
-import biz.princeps.landlord.api.events.LandClearInactiveEvent;
+import biz.princeps.landlord.api.event.LandClearInactiveEvent;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -36,7 +36,7 @@ public class MultiClearInactiveTask extends AMultiTask<OfflinePlayer> {
     @Override
     public boolean process(OfflinePlayer offlinePlayer) {
         LandClearInactiveEvent event = new LandClearInactiveEvent(commandSender, offlinePlayer);
-        plugin.getServer().getPluginManager().callEvent(event);
+        plugin.eventDispatcher().fire(event);
 
         if (!event.isCancelled()) {
             clearedLands += wgManager.unclaim(

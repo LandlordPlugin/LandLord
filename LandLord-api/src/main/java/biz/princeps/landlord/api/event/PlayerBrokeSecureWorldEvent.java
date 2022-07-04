@@ -1,11 +1,9 @@
-package biz.princeps.landlord.api.events;
+package biz.princeps.landlord.api.event;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 /**
  * Project: LandLord
@@ -16,9 +14,7 @@ import org.bukkit.event.HandlerList;
  * Called whenever a player modifies the wilderness. This includes, but is not limited to breaking/placing blocks in
  * unclaimed regions.
  */
-public class PlayerBrokeSecureWorldEvent extends Event implements Cancellable {
-
-    private static final HandlerList handlers = new HandlerList();
+public class PlayerBrokeSecureWorldEvent implements LandLordEvent {
 
     private boolean isCancelled;
 
@@ -30,10 +26,6 @@ public class PlayerBrokeSecureWorldEvent extends Event implements Cancellable {
         this.player = player;
         this.block = block;
         this.cancellable = cancellable;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -67,17 +59,10 @@ public class PlayerBrokeSecureWorldEvent extends Event implements Cancellable {
         return cancellable;
     }
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @Override
     public boolean isCancelled() {
         return isCancelled;
     }
 
-    @Override
     public void setCancelled(boolean b) {
         this.isCancelled = b;
     }

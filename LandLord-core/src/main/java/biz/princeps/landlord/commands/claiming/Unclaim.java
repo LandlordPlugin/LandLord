@@ -5,7 +5,7 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.Options;
-import biz.princeps.landlord.api.events.LandUnclaimEvent;
+import biz.princeps.landlord.api.event.LandUnclaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.lib.PrincepsLib;
 import biz.princeps.lib.command.Arguments;
@@ -82,7 +82,7 @@ public class Unclaim extends LandlordCommand {
 
         // Normal unclaim
         LandUnclaimEvent event = new LandUnclaimEvent(player, ol);
-        plugin.getServer().getPluginManager().callEvent(event);
+        plugin.eventDispatcher().fire(event);
 
         if (!event.isCancelled()) {
             if (plugin.getConfig().getBoolean("ConfirmationDialog.onUnclaim")) {

@@ -15,7 +15,9 @@ import biz.princeps.landlord.api.IUtilsManager;
 import biz.princeps.landlord.api.IVaultManager;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.Options;
+import biz.princeps.landlord.api.event.EventDispatcher;
 import biz.princeps.landlord.commands.Landlordbase;
+import biz.princeps.landlord.event.SimpleEventDispatcher;
 import biz.princeps.landlord.integrations.LLLuckPerms;
 import biz.princeps.landlord.integrations.Towny;
 import biz.princeps.landlord.listener.JoinListener;
@@ -67,6 +69,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     protected IRegenerationManager regenerationManager;
     protected IMultiTaskManager multiTaskManager;
     protected IConfigurationManager configurationManager;
+    private /*final*/ EventDispatcher eventDispatcher;
 
     @Override
     public void onLoad() {
@@ -75,6 +78,7 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
 
     @Override
     public void onEnable() {
+        this.eventDispatcher = new SimpleEventDispatcher();
         EldoUtilities.ignite(this);
 
         Options.setConfig(this.getConfig(), getVault() != null);
@@ -369,5 +373,10 @@ public abstract class ALandLord extends JavaPlugin implements ILandLord, Listene
     @Override
     public IConfigurationManager getConfigurationManager() {
         return configurationManager;
+    }
+
+    @Override
+    public EventDispatcher eventDispatcher() {
+        return this.eventDispatcher;
     }
 }

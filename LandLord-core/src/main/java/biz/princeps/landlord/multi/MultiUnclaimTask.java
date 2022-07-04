@@ -8,7 +8,7 @@ import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.ManageMode;
 import biz.princeps.landlord.api.Options;
-import biz.princeps.landlord.api.events.LandUnclaimEvent;
+import biz.princeps.landlord.api.event.LandUnclaimEvent;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -47,7 +47,7 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
     @Override
     public boolean process(IOwnedLand ownedLand) {
         LandUnclaimEvent event = new LandUnclaimEvent(player, ownedLand);
-        plugin.getServer().getPluginManager().callEvent(event);
+        plugin.eventDispatcher().fire(event);
 
         if (!event.isCancelled()) {
             if (Options.isVaultEnabled()) {

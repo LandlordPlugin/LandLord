@@ -1,7 +1,7 @@
 package biz.princeps.landlord.integrations;
 
 import biz.princeps.landlord.api.ILandLord;
-import biz.princeps.landlord.api.events.LandPreClaimEvent;
+import biz.princeps.landlord.api.event.LandPreClaimEvent;
 import biz.princeps.landlord.listener.BasicListener;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.TownPreClaimEvent;

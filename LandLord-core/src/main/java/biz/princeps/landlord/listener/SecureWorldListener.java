@@ -3,7 +3,7 @@ package biz.princeps.landlord.listener;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
-import biz.princeps.landlord.api.events.PlayerBrokeSecureWorldEvent;
+import biz.princeps.landlord.api.event.PlayerBrokeSecureWorldEvent;
 import biz.princeps.landlord.util.JavaUtils;
 import biz.princeps.lib.PrincepsLib;
 import org.bukkit.Location;
@@ -45,6 +45,12 @@ public class SecureWorldListener extends BasicListener {
         this.treshold = plugin.getConfig().getInt("SecureWorld.threshold");
         this.wg = plugin.getWGManager();
         this.display = MessageDisplay.valueOf(plugin.getConfig().getString("SecureWorld.displayWarning"));
+        this.plugin.eventDispatcher().registerListener(PlayerBrokeSecureWorldEvent.class, event -> {
+            IOwnedLand land = wg.getRegion(event.getBlock().getLocation());
+            if (!event.isCancelled()) {
+                handleLand(event.getPlayer(), event.getBlock().getLocation(), land, event.getCancellable());
+            }
+        });
     }
 
     @EventHandler
@@ -53,7 +59,7 @@ public class SecureWorldListener extends BasicListener {
         IOwnedLand land = wg.getRegion(e.getBlock().getLocation());
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlock(), e);
-            plugin.getServer().getPluginManager().callEvent(event);
+            plugin.eventDispatcher().fire(event);
         }
     }
 
@@ -64,7 +70,7 @@ public class SecureWorldListener extends BasicListener {
 
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlockPlaced(), e);
-            plugin.getServer().getPluginManager().callEvent(event);
+            plugin.eventDispatcher().fire(event);
         }
     }
 
@@ -75,15 +81,7 @@ public class SecureWorldListener extends BasicListener {
 
         if (land == null) {
             PlayerBrokeSecureWorldEvent event = new PlayerBrokeSecureWorldEvent(p, e.getBlockClicked(), e);
-            plugin.getServer().getPluginManager().callEvent(event);
-        }
-    }
-
-    @EventHandler
-    public void onThresholdEvent(PlayerBrokeSecureWorldEvent e) {
-        IOwnedLand land = wg.getRegion(e.getBlock().getLocation());
-        if (!e.isCancelled()) {
-            handleLand(e.getPlayer(), e.getBlock().getLocation(), land, e.getCancellable());
+            plugin.eventDispatcher().fire(event);
         }
     }
 

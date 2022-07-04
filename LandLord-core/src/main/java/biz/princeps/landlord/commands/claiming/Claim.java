@@ -6,8 +6,8 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IVaultManager;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.Options;
-import biz.princeps.landlord.api.events.LandPostClaimEvent;
-import biz.princeps.landlord.api.events.LandPreClaimEvent;
+import biz.princeps.landlord.api.event.LandPostClaimEvent;
+import biz.princeps.landlord.api.event.LandPreClaimEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.commands.homes.SetHome;
@@ -103,9 +103,7 @@ public class Claim extends LandlordCommand {
             return;
         }
 
-        LandPreClaimEvent event = new LandPreClaimEvent(player, chunk);
-        plugin.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+        if (plugin.eventDispatcher().fire(new LandPreClaimEvent(player, chunk)).isCancelled()) {
             return;
         }
 
@@ -262,7 +260,7 @@ public class Claim extends LandlordCommand {
         new BukkitRunnable() {
             @Override
             public void run() {
-                plugin.getServer().getPluginManager().callEvent(postEvent);
+                plugin.eventDispatcher().fire(postEvent);
             }
         }.runTask(plugin);
     }
@@ -296,8 +294,7 @@ public class Claim extends LandlordCommand {
                 Particle.valueOf(plugin.getConfig().getString("Particles.claim.particle").toUpperCase()));
         plugin.getMapManager().updateAll();
 
-        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, ol, ClaimType.ADVERTISED);
-        plugin.getServer().getPluginManager().callEvent(postEvent);
+        plugin.eventDispatcher().fire(new LandPostClaimEvent(player, ol, ClaimType.ADVERTISED));
     }
 
     private void performNormalClaim(Player player, Chunk chunk, double calculatedCost, String landName) {
@@ -335,8 +332,7 @@ public class Claim extends LandlordCommand {
 
         plugin.getMapManager().updateAll();
 
-        LandPostClaimEvent postEvent = new LandPostClaimEvent(player, claim, ClaimType.FREE_LAND);
-        plugin.getServer().getPluginManager().callEvent(postEvent);
+        plugin.eventDispatcher().fire(new LandPostClaimEvent(player, claim, ClaimType.FREE_LAND));
     }
 
     private boolean hasLimitPermissions(Player player, int regionCount) {

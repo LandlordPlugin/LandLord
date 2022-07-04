@@ -9,7 +9,7 @@ import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IPlayer;
 import biz.princeps.landlord.api.ManageMode;
 import biz.princeps.landlord.api.Options;
-import biz.princeps.landlord.api.events.LandManageEvent;
+import biz.princeps.landlord.api.event.LandManageEvent;
 import biz.princeps.landlord.commands.Landlordbase;
 import biz.princeps.landlord.commands.friends.Unfriend;
 import biz.princeps.landlord.commands.management.Manage;
@@ -209,7 +209,7 @@ public class AManage extends AbstractGUI {
                                     public void run() {
                                         LandManageEvent landManageEvent = new LandManageEvent(player, land,
                                                 landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
-                                        plugin.getServer().getPluginManager().callEvent(landManageEvent);
+                                        plugin.eventDispatcher().fire(landManageEvent);
                                     }
                                 }.runTask(plugin);
                             }
@@ -242,7 +242,7 @@ public class AManage extends AbstractGUI {
                                     public void run() {
                                         LandManageEvent landManageEvent = new LandManageEvent(player, land,
                                                 landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
-                                        plugin.getServer().getPluginManager().callEvent(landManageEvent);
+                                        plugin.eventDispatcher().fire(landManageEvent);
                                     }
                                 }.runTask(plugin);
                             }
@@ -369,7 +369,7 @@ public class AManage extends AbstractGUI {
                                                 public void run() {
                                                     LandManageEvent landManageEvent = new LandManageEvent(player, region,
                                                             "FRIENDS", oldfriends, region.getMembersString());
-                                                    plugin.getServer().getPluginManager().callEvent(landManageEvent);
+                                                    plugin.eventDispatcher().fire(landManageEvent);
                                                 }
                                             }.runTask(plugin);
                                         }
@@ -561,7 +561,7 @@ public class AManage extends AbstractGUI {
                                             public void run() {
                                                 LandManageEvent landManageEvent = new LandManageEvent(player, land,
                                                         landFlag.getName(), !landFlag.getFriendStatus(), landFlag.getFriendStatus());
-                                                plugin.getServer().getPluginManager().callEvent(landManageEvent);
+                                                plugin.eventDispatcher().fire(landManageEvent);
                                             }
                                         }.runTask(plugin);
                                     }
@@ -573,7 +573,7 @@ public class AManage extends AbstractGUI {
                                             public void run() {
                                                 LandManageEvent landManageEvent = new LandManageEvent(player, land,
                                                         landFlag.getName(), !landFlag.getAllStatus(), landFlag.getAllStatus());
-                                                plugin.getServer().getPluginManager().callEvent(landManageEvent);
+                                                plugin.eventDispatcher().fire(landManageEvent);
                                             }
                                         }.runTask(plugin);
                                     }

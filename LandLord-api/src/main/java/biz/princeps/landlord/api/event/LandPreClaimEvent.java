@@ -1,10 +1,7 @@
-package biz.princeps.landlord.api.events;
+package biz.princeps.landlord.api.event;
 
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 /**
  * Project: LandLord
@@ -14,9 +11,8 @@ import org.bukkit.event.HandlerList;
  * This event is called, before the actual claiming process starts.
  * You can still cancel the process at this point by cancelling this event.
  */
-public class LandPreClaimEvent extends Event implements Cancellable {
+public class LandPreClaimEvent implements LandLordEvent {
 
-    private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
 
     private final Player player;
@@ -25,10 +21,6 @@ public class LandPreClaimEvent extends Event implements Cancellable {
     public LandPreClaimEvent(Player player, Chunk land) {
         this.player = player;
         this.land = land;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     /**
@@ -45,22 +37,13 @@ public class LandPreClaimEvent extends Event implements Cancellable {
         return land;
     }
 
-    @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
-    @Override
     public void setCancelled(boolean b) {
         this.cancelled = b;
     }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-
 }
 
 

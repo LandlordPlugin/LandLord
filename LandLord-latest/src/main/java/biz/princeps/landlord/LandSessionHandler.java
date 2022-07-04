@@ -3,7 +3,7 @@ package biz.princeps.landlord;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
-import biz.princeps.landlord.api.events.LandChangeEvent;
+import biz.princeps.landlord.api.event.LandChangeEvent;
 import biz.princeps.landlord.manager.WorldGuardManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.Location;
@@ -63,8 +63,7 @@ public class LandSessionHandler extends Handler {
             // exited a non-ll region, needs to be handled by WG
             this.farewell.onCrossBoundary(player, from, to, toSet, entered, exited, moveType);
         }
-        plugin.getServer().getPluginManager()
-                .callEvent(new LandChangeEvent(BukkitAdapter.adapt(player), exitedLand, enteredLand));
+        plugin.eventDispatcher().fire(new LandChangeEvent(BukkitAdapter.adapt(player), exitedLand, enteredLand));
         return true; // we're not handling anything here for now
     }
 

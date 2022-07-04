@@ -3,7 +3,7 @@ package biz.princeps.landlord.commands.management;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
-import biz.princeps.landlord.api.events.LandManageEvent;
+import biz.princeps.landlord.api.event.LandManageEvent;
 import biz.princeps.landlord.commands.LandlordCommand;
 import biz.princeps.landlord.guis.ManageGui;
 import biz.princeps.landlord.multi.MultiMode;
@@ -151,7 +151,7 @@ public class Manage extends LandlordCommand {
         for (IOwnedLand region : lands) {
             LandManageEvent landManageEvent = new LandManageEvent(player, region,
                     "GREET_MESSAGE", region.getGreetMessage(), newmsg);
-            plugin.getServer().getPluginManager().callEvent(landManageEvent);
+            plugin.eventDispatcher().fire(landManageEvent);
 
             region.setGreetMessage(newmsg);
         }
@@ -180,7 +180,7 @@ public class Manage extends LandlordCommand {
         for (IOwnedLand region : lands) {
             LandManageEvent landManageEvent = new LandManageEvent(player, region,
                     "FAREWELL_MESSAGE", region.getFarewellMessage(), newmsg);
-            plugin.getServer().getPluginManager().callEvent(landManageEvent);
+            plugin.eventDispatcher().fire(landManageEvent);
 
             region.setFarewellMessage(newmsg);
         }
