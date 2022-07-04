@@ -2,6 +2,9 @@ package biz.princeps.landlord.api.event;
 
 import java.util.function.Consumer;
 
+/**
+ * The {@link EventDispatcher} provides methods to manage listeners and fire events.
+ */
 public interface EventDispatcher {
 
   default <E extends LandLordEvent> ListenerKey registerListener(
