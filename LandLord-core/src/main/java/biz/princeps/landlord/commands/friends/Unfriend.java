@@ -83,7 +83,7 @@ public class Unfriend extends LandlordCommand {
                                     "FRIENDS", old, land.getMembersString());
                             plugin.getServer().getPluginManager().callEvent(landManageEvent);
                         }
-                    }.runTask(plugin);
+                    }.runTaskAsynchronously(plugin);
 
                     lm.sendMessage(player, lm.getString(player, "Commands.Unfriend.success")
                             .replace("%players%", playerName));

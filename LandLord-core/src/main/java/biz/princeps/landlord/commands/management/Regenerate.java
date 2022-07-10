@@ -81,7 +81,7 @@ public class Regenerate extends LandlordCommand {
                                             null, "REGENERATE", "REGENERATE");
                                     plugin.getServer().getPluginManager().callEvent(landManageEvent);
                                 }
-                            }.runTask(plugin);
+                            }.runTaskAsynchronously(plugin);
 
                             plugin.getRegenerationManager().regenerateChunk(finalLand.getALocation());
                             lm.sendMessage(player, lm.getString(player, "Commands.Regenerate.success")

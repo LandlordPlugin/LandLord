@@ -1,6 +1,7 @@
 package biz.princeps.landlord.api;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -27,5 +28,22 @@ public interface IMaterialsManager {
     Material getFireCharge();
 
     ItemStack getGreyStainedGlass();
+
+    Material getNetherGrass();
+
+    Material getEnderGrass();
+
+    default Material getWorldGrass(World world) {
+        switch (world.getEnvironment()) {
+            case NORMAL:
+                return getGrass();
+            case NETHER:
+                return getNetherGrass();
+            case THE_END:
+                return getEnderGrass();
+            default:
+                return Material.BARRIER;
+        }
+    }
 
 }

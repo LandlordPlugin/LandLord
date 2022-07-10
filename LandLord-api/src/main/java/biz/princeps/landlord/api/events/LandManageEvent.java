@@ -25,6 +25,7 @@ public class LandManageEvent extends Event {
 
 
     public LandManageEvent(Player player, IOwnedLand land, String flagChanged, Object oldValue, Object newValue) {
+        super(true);
         this.player = player;
         this.land = land;
         this.flagChanged = flagChanged;
