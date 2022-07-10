@@ -74,7 +74,7 @@ public class Addfriend extends LandlordCommand {
                                     "FRIENDS", oldFriends, land.getMembersString());
                             plugin.getServer().getPluginManager().callEvent(landManageEvent);
                         }
-                    }.runTask(plugin);
+                    }.runTaskAsynchronously(plugin);
 
                     lm.sendMessage(player, lm.getString(player, "Commands.Addfriend.success")
                             .replace("%players%", playerName));

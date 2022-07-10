@@ -142,8 +142,7 @@ public class Landlordbase extends MainCommand {
                         if (Options.enabled_map()) {
                             tabReturn.add(subCommand.getName());
                         }
-                    } else if (subCommand instanceof Shop || subCommand instanceof Claims
-                            || subCommand instanceof GiveClaims) {
+                    } else if (subCommand instanceof Shop || subCommand instanceof GiveClaims) {
                         if (Options.enabled_shop()) {
                             tabReturn.add(subCommand.getName());
                         }

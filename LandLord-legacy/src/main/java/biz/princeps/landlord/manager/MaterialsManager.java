@@ -65,5 +65,13 @@ public class MaterialsManager implements IMaterialsManager {
         return new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7);
     }
 
+    @Override
+    public Material getNetherGrass() {
+        return Material.NETHERRACK;
+    }
 
+    @Override
+    public Material getEnderGrass() {
+        return Material.ENDER_STONE;
+    }
 }

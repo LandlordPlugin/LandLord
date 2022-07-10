@@ -21,8 +21,10 @@ import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Project: LandLord
@@ -30,6 +32,8 @@ import java.util.UUID;
  * Date: 06-05-19
  */
 public class OwnedLand extends AOwnedLand {
+
+    private static final Map<String, Flag<StateFlag.State>> FLAGS_CACHE = new ConcurrentHashMap<>();
 
     private final ProtectedRegion region;
     private final FlagRegistry flagRegistry = WorldGuardPlugin.inst().getFlagRegistry();
@@ -325,7 +329,7 @@ public class OwnedLand extends AOwnedLand {
     }
 
     private Flag<StateFlag.State> getWGFlag(String flagName) {
-        return (Flag<StateFlag.State>) DefaultFlag.fuzzyMatchFlag(flagRegistry, flagName);
+        return FLAGS_CACHE.computeIfAbsent(flagName, name -> (Flag<StateFlag.State>) DefaultFlag.fuzzyMatchFlag(flagRegistry, name));
     }
 
 }

@@ -137,7 +137,7 @@ public class ListLands extends LandlordCommand {
                             }
                         }
 
-                        Icon icon = new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()));
+                        Icon icon = new Icon(new ItemStack(plugin.getMaterialsManager().getWorldGrass(land.getWorld())));
                         icon.setName(lm.getRawString("Commands.ListLands.gui.itemname")
                                 .replace("%name%", land.getName()));
                         icon.setLore(lore);
