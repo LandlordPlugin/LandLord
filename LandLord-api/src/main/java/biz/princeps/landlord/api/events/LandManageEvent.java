@@ -1,6 +1,7 @@
 package biz.princeps.landlord.api.events;
 
 import biz.princeps.landlord.api.IOwnedLand;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -23,9 +24,8 @@ public class LandManageEvent extends Event {
     private final Object oldValue;
     private final Object newValue;
 
-
     public LandManageEvent(Player player, IOwnedLand land, String flagChanged, Object oldValue, Object newValue) {
-        super(true);
+        super(!Bukkit.isPrimaryThread());
         this.player = player;
         this.land = land;
         this.flagChanged = flagChanged;
