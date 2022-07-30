@@ -11,7 +11,6 @@ import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import com.google.common.collect.Sets;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 
 /**
@@ -74,14 +73,9 @@ public class Regenerate extends LandlordCommand {
                             }
                         }
                         if (flag) {
-                            new BukkitRunnable() {
-                                @Override
-                                public void run() {
-                                    LandManageEvent landManageEvent = new LandManageEvent(player, finalLand,
-                                            null, "REGENERATE", "REGENERATE");
-                                    plugin.getServer().getPluginManager().callEvent(landManageEvent);
-                                }
-                            }.runTask(plugin);
+                            LandManageEvent landManageEvent = new LandManageEvent(player, finalLand,
+                                    null, "REGENERATE", "REGENERATE");
+                            plugin.getServer().getPluginManager().callEvent(landManageEvent);
 
                             plugin.getRegenerationManager().regenerateChunk(finalLand.getALocation());
                             lm.sendMessage(player, lm.getString(player, "Commands.Regenerate.success")

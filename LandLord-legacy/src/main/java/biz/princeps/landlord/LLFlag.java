@@ -3,6 +3,7 @@ package biz.princeps.landlord;
 import biz.princeps.landlord.api.ILLFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
+import com.sk89q.worldguard.protection.flags.RegionGroupFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Material;
@@ -25,27 +26,25 @@ public class LLFlag implements ILLFlag {
         this.flag = flag;
         this.mat = mat;
 
-        RegionGroup regionGroupFlag = (RegionGroup) pr.getFlags().get(flag.getRegionGroupFlag());
+        RegionGroupFlag regionGroupFlag = flag.getRegionGroupFlag();
+        RegionGroup regionGroup = (RegionGroup) pr.getFlags().get(regionGroupFlag);
         StateFlag.State value = (StateFlag.State) pr.getFlags().get(flag);
-        setStatus(regionGroupFlag, value);
+        setStatus(regionGroup == null ? regionGroupFlag.getDefault() : regionGroup, value == null ? flag.getDefault() : value);
     }
 
-    void setStatus(RegionGroup grp, Object state) {
+    private void setStatus(RegionGroup grp, StateFlag.State state) {
         if (grp == RegionGroup.MEMBERS && state == StateFlag.State.ALLOW ||
                 grp == RegionGroup.NON_MEMBERS && state == StateFlag.State.DENY) {
             friendStatus = true;
             allStatus = false;
-            // System.out.println("10");
         }
         if (grp == RegionGroup.ALL && state == StateFlag.State.ALLOW) {
             friendStatus = true;
             allStatus = true;
-            // System.out.println("11");
         }
         if (grp == RegionGroup.NON_OWNERS && state == StateFlag.State.DENY) {
             friendStatus = false;
             allStatus = false;
-            // System.out.println("00");
         }
     }
 

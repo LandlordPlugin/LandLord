@@ -13,6 +13,7 @@ import biz.princeps.lib.exception.ArgumentsOutOfBoundsException;
 import com.google.common.collect.Sets;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,7 +131,6 @@ public class Manage extends LandlordCommand {
         }
     }
 
-
     private void setGreet(Player player, String[] args, List<IOwnedLand> lands, int casy) {
         if (lands.size() == 0 || lands.get(0) == null) {
             lm.sendMessage(player, lm.getString(player, "Commands.Manage.notOwnFreeLand"));
@@ -149,12 +149,20 @@ public class Manage extends LandlordCommand {
         newmsg = newmsg.replace("%owner%", player.getName());
 
         for (IOwnedLand region : lands) {
-            LandManageEvent landManageEvent = new LandManageEvent(player, region,
-                    "GREET_MESSAGE", region.getGreetMessage(), newmsg);
-            plugin.getServer().getPluginManager().callEvent(landManageEvent);
-
             region.setGreetMessage(newmsg);
         }
+
+        String finalNewmsg = newmsg;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (IOwnedLand region : lands) {
+                    LandManageEvent landManageEvent = new LandManageEvent(player, region,
+                            "GREET_MESSAGE", region.getGreetMessage(), finalNewmsg);
+                    plugin.getServer().getPluginManager().callEvent(landManageEvent);
+                }
+            }
+        }.runTaskAsynchronously(plugin);
 
         lm.sendMessage(player, lm.getString(player, "Commands.Manage.SetGreet.successful")
                 .replace("%msg%", newmsg));
@@ -178,12 +186,21 @@ public class Manage extends LandlordCommand {
         newmsg = newmsg.replace("%owner%", player.getName());
 
         for (IOwnedLand region : lands) {
-            LandManageEvent landManageEvent = new LandManageEvent(player, region,
-                    "FAREWELL_MESSAGE", region.getFarewellMessage(), newmsg);
-            plugin.getServer().getPluginManager().callEvent(landManageEvent);
-
             region.setFarewellMessage(newmsg);
         }
+
+        String finalNewmsg = newmsg;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (IOwnedLand region : lands) {
+                    LandManageEvent landManageEvent = new LandManageEvent(player, region,
+                            "FAREWELL_MESSAGE", region.getFarewellMessage(), finalNewmsg);
+                    plugin.getServer().getPluginManager().callEvent(landManageEvent);
+
+                }
+            }
+        }.runTaskAsynchronously(plugin);
 
         lm.sendMessage(player, lm.getString(player, "Commands.Manage.SetFarewell.successful")
                 .replace("%msg%", newmsg));
