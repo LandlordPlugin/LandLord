@@ -64,4 +64,14 @@ public class MaterialsManager implements IMaterialsManager {
     public ItemStack getGreyStainedGlass() {
         return new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
     }
+
+    @Override
+    public Material getNetherGrass() {
+        return Material.CRIMSON_NYLIUM;
+    }
+
+    @Override
+    public Material getEnderGrass() {
+        return Material.END_STONE;
+    }
 }
