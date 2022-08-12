@@ -64,4 +64,14 @@ public class JavaUtils {
         return BLOCK_FACES[(Math.round(yaw / 90f) & 0x3)];
     }
 
+    /**
+     * +     * @param x X Coordinate
+     * +     * @param z Z Coordinate
+     * +     * @return Chunk coordinates packed into a long
+     * +
+     */
+    public static long getChunkKey(int x, int z) {
+        return (long) x & 0xffffffffL | ((long) z & 0xffffffffL) << 32;
+    }
+
 }
