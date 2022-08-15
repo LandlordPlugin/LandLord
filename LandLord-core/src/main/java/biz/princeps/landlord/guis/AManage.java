@@ -339,6 +339,46 @@ public class AManage extends AbstractGUI {
                     player.hasPermission("landlord.player.manage.spreadfriends") && manageMode != ManageMode.ONE;
             MultiPagedGUI friendsGui = new MultiPagedGUI(plugin, player, (int) Math.ceil((double) friends.size() / 9.0),
                     lm.getRawString("Commands.Manage.ManageFriends.title"), new ArrayList<>(), this) {
+
+                @Override
+                protected void create() {
+                    String rawTitle = lm.getRawString("Commands.Manage.ManageFriends.unfriend");
+
+                    for (UUID id : friends) {
+                        OfflinePlayer op = plugin.getServer().getOfflinePlayer(id);
+                        Icon friend = new Icon(mats.getPlayerHead(id));
+                        String name = (op != null && op.getName() != null ? op.getName() : "OfflinePlayer");
+                        String confititle = rawTitle.replace("%player%", name);
+                        friend.setName(name);
+                        friend.setLore(formatFriendsSegment(id));
+                        friend.addClickAction((player) -> {
+                            ConfirmationGUI confirmationGUI = new ConfirmationGUI(plugin, this.player,
+                                    confititle,
+                                    (p) -> {
+                                        this.removeIcon(friend);
+
+                                        for (IOwnedLand region : regions) {
+                                            plugin.getServer().dispatchCommand(player, PrincepsLib.getCommandManager()
+                                                    .getCommand(Landlordbase.class).getCommandString(Unfriend.class)
+                                                    .substring(1) + " " + name + " " + region.getName());
+                                        }
+                                        player.closeInventory();
+                                        this.display();
+                                    },
+                                    (p) -> {
+                                        player.closeInventory();
+                                        this.display();
+                                    }, this);
+                            confirmationGUI.setConfirm(lm.getRawString("Confirmation.accept"));
+                            confirmationGUI.setDecline(lm.getRawString("Confirmation.decline"));
+                            confirmationGUI.display();
+                        });
+                        this.addIcon(friend);
+                    }
+
+                    super.create();
+                }
+
                 @Override
                 protected void generateStaticIcons() {
                     if (canSpread) {
@@ -381,39 +421,6 @@ public class AManage extends AbstractGUI {
                 }
             };
 
-            String rawTitle = lm.getRawString("Commands.Manage.ManageFriends.unfriend");
-
-            for (UUID id : friends) {
-                OfflinePlayer op = plugin.getServer().getOfflinePlayer(id);
-                Icon friend = new Icon(mats.getPlayerHead(id));
-                String name = (op != null && op.getName() != null ? op.getName() : "OfflinePlayer");
-                String confititle = rawTitle.replace("%player%", name);
-                friend.setName(name);
-                friend.setLore(formatFriendsSegment(id));
-                friend.addClickAction((player) -> {
-                    ConfirmationGUI confirmationGUI = new ConfirmationGUI(plugin, this.player,
-                            confititle,
-                            (p) -> {
-                                friendsGui.removeIcon(friend);
-
-                                for (IOwnedLand region : regions) {
-                                    plugin.getServer().dispatchCommand(player, PrincepsLib.getCommandManager()
-                                            .getCommand(Landlordbase.class).getCommandString(Unfriend.class)
-                                            .substring(1) + " " + name + " " + region.getName());
-                                }
-                                player.closeInventory();
-                                friendsGui.display();
-                            },
-                            (p) -> {
-                                player.closeInventory();
-                                friendsGui.display();
-                            }, friendsGui);
-                    confirmationGUI.setConfirm(lm.getRawString("Confirmation.accept"));
-                    confirmationGUI.setDecline(lm.getRawString("Confirmation.decline"));
-                    confirmationGUI.display();
-                });
-                friendsGui.addIcon(friend);
-            }
             int friendPosition = position;
             icon.addClickAction((p) -> {
                 friendsGui.generateAsync().display();
@@ -623,13 +630,13 @@ public class AManage extends AbstractGUI {
         OfflinePlayer op = plugin.getServer().getOfflinePlayer(id);
         List<String> toReturn = new ArrayList<>();
 
-        IPlayer offline = plugin.getPlayerManager().getOfflineSync(id);
         List<String> stringList = lm.getStringList("Commands.Manage.ManageFriends.friendSegment");
         String lastseen;
 
         if (op.isOnline()) {
             lastseen = lm.getRawString("Commands.Info.online");
         } else {
+            IPlayer offline = plugin.getPlayerManager().getOfflineSync(id);
             if (offline != null) {
                 lastseen = offline.getLastSeen().toString();
             } else {

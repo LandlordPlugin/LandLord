@@ -58,7 +58,7 @@ public class AdminTeleport extends LandlordCommand {
                             lm.getRawString("Commands.AdminTp.guiHeader").replace("%player%", target));
 
                     for (IOwnedLand land : lands) {
-                        landGui.addIcon(new Icon(new ItemStack(plugin.getMaterialsManager().getGrass()))
+                        landGui.addIcon(new Icon(new ItemStack(plugin.getMaterialsManager().getWorldGrass(land.getWorld())))
                                 .setName(land.getName())
                                 .addClickAction((p) -> {
                                             Location toTp = land.getALocation();
