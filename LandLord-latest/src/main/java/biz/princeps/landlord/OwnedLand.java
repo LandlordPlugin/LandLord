@@ -201,6 +201,9 @@ public class OwnedLand extends AOwnedLand {
         } else {
             flag.add(EntityType.REGISTRY.get(mob.getName().toLowerCase()));
         }
+        // Mark region as dirty to make the change persistent into WorldGuard data.
+        // Simple additions or removal to flag lists do not mark the region as dirty ~ to be saved.
+        region.setDirty(true);
     }
 
     @Override
