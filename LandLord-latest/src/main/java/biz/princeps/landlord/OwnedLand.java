@@ -55,7 +55,7 @@ public class OwnedLand extends AOwnedLand {
         this(plugin, region);
 
         // Insert default flags.
-        if (region.getFlags().size() == 0) {
+        if (region.getFlags().isEmpty()) {
             initFlags(owner);
             initRegionPriority();
         }
