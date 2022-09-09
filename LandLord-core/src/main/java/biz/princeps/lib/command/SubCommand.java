@@ -19,7 +19,7 @@ public abstract class SubCommand implements Command {
     private final String usage;
     private final Set<String> aliases;
 
-    public SubCommand(String name, String usage, Set<String> permissions, Set<String> aliases) {
+    protected SubCommand(String name, String usage, Set<String> permissions, Set<String> aliases) {
         this.name = name;
         this.usage = usage;
         this.aliases = aliases;
@@ -75,7 +75,7 @@ public abstract class SubCommand implements Command {
      * @return whether the cs is allowed to execute the cmd or not
      */
     public boolean hasPermission(CommandSender cs) {
-        if (permissions.size() == 0) {
+        if (permissions.isEmpty()) {
             return true;
         }
 
