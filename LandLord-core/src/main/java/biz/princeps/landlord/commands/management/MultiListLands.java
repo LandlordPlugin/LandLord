@@ -98,7 +98,7 @@ public class MultiListLands extends LandlordCommand {
             public void run() {
                 List<IOwnedLand> lands = new ArrayList<>(mode.getLandsOf(radius, sender.getLocation(), target.getUuid(), wg));
 
-                if (lands.size() == 0) {
+                if (lands.isEmpty()) {
                     lm.sendMessage(sender, plugin.getLangManager().getString("Commands.MultiListLands.noLands"));
                     return;
                 }
