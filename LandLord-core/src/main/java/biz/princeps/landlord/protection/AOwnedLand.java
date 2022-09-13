@@ -29,7 +29,7 @@ public abstract class AOwnedLand implements IOwnedLand {
     protected final int chunkX;
     protected final int chunkZ;
 
-    public AOwnedLand(ILandLord plugin, World world, String name) {
+    protected AOwnedLand(ILandLord plugin, World world, String name) {
         this.plugin = plugin;
         this.world = world;
         this.name = name;
