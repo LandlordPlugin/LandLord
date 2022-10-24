@@ -52,7 +52,7 @@ public class MultiManage extends LandlordCommand {
 
         List<IOwnedLand> lands = new ArrayList<>(mode.getLandsOf(radius, player.getLocation(), player.getUniqueId(), wg));
 
-        if (lands.size() == 0) {
+        if (lands.isEmpty()) {
             lm.sendMessage(player, plugin.getLangManager().getString("Commands.ListLands.noLands"));
             return;
         }

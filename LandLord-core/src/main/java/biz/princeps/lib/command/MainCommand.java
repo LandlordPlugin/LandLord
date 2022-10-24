@@ -97,7 +97,7 @@ public abstract class MainCommand extends BukkitCommand implements Command {
      * @return whether the cs is allowed to execute the cmd or not
      */
     public boolean hasPermission(CommandSender cs) {
-        if (permissions.size() == 0) {
+        if (permissions.isEmpty()) {
             return true;
         }
 

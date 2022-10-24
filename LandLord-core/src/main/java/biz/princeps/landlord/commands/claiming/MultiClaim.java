@@ -83,7 +83,7 @@ public class MultiClaim extends LandlordCommand {
         }
 
         Set<Chunk> toClaim = mode.getFreeLands(radius, player.getLocation(), wg);
-        if (toClaim.size() == 0) {
+        if (toClaim.isEmpty()) {
             lm.sendMessage(player, lm.getString(player, "Commands.MultiClaim.noLands"));
             return;
         }

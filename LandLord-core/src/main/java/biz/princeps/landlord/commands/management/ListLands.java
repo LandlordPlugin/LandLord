@@ -91,7 +91,7 @@ public class ListLands extends LandlordCommand {
             public void run() {
                 List<IOwnedLand> lands = new ArrayList<>(plugin.getWGManager().getRegions(target.getUuid()));
 
-                if (lands.size() == 0) {
+                if (lands.isEmpty()) {
                     lm.sendMessage(sender, plugin.getLangManager().getString("Commands.ListLands.noLands"));
                     return;
                 }

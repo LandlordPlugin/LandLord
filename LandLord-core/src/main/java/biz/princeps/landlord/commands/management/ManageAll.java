@@ -39,7 +39,7 @@ public class ManageAll extends LandlordCommand {
 
         List<IOwnedLand> lands = Lists.newArrayList(plugin.getWGManager().getRegions(player.getUniqueId()));
 
-        if (lands.size() == 0) {
+        if (lands.isEmpty()) {
             lm.sendMessage(player, plugin.getLangManager().getString("Commands.ListLands.noLands"));
             return;
         }
