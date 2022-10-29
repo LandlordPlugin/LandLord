@@ -293,7 +293,7 @@ public class Landlordbase extends MainCommand {
         plugin.getUtilsManager().sendBasecomponent(properties.getPlayer(), msg.create());
     }
 
-    public class Confirm extends SubCommand {
+    public static class Confirm extends SubCommand {
 
         public Confirm() {
             super("confirm",
