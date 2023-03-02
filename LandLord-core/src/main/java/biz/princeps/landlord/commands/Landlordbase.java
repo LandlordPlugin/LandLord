@@ -293,7 +293,11 @@ public class Landlordbase extends MainCommand {
         plugin.getUtilsManager().sendBasecomponent(properties.getPlayer(), msg.create());
     }
 
+    @SuppressWarnings({"synthetic-access", "InnerClassMayBeStatic"})
     public class Confirm extends SubCommand {
+        /**
+         * This class MUST NOT be static due to how commands are registered, see {@link MainCommand}.
+         */
 
         public Confirm() {
             super("confirm",
@@ -308,7 +312,11 @@ public class Landlordbase extends MainCommand {
         }
     }
 
+    @SuppressWarnings({"synthetic-access", "InnerClassMayBeStatic"})
     public class Version extends SubCommand {
+        /**
+         * This class MUST NOT be static due to how commands are registered, see {@link MainCommand}.
+         */
 
         public Version() {
             super("version",
