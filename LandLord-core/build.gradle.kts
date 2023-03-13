@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     api(project(":LandLord-api"))
-    implementation("com.zaxxer:HikariCP:4.0.3")
+    implementation("com.zaxxer:HikariCP:5.0.1")
     implementation("io.github.bananapuncher714:nbteditor:7.18.4")
     implementation("de.eldoria:eldo-util:1.11.0-DEV")
     implementation("io.papermc:paperlib:1.0.8")
