@@ -10,7 +10,7 @@ dependencies {
     implementation("io.papermc:paperlib:1.0.8")
     compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
-    compileOnly("me.clip:placeholderapi:2.11.2")
+    compileOnly("me.clip:placeholderapi:2.11.3")
     compileOnly("com.github.TownyAdvanced:Towny:0.98.6.19")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("com.mojang:authlib:1.5.25")
