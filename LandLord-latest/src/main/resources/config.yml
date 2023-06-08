@@ -757,6 +757,8 @@ Manage:
       - FROG
       - TADPOLE
       - WARDEN
+      - CAMEL
+      - SNIFFER
 
 # Define how the claim height should be defined.
 ClaimHeight:
