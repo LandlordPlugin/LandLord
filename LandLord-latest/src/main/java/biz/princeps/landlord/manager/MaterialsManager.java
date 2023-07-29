@@ -33,7 +33,7 @@ public class MaterialsManager implements IMaterialsManager {
 
     @Override
     public ItemStack getPlayerHead(UUID owner) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
+        ItemStack skull = new ItemStack(getSkull());
         SkullMeta itemMeta = (SkullMeta) skull.getItemMeta();
         itemMeta.setOwningPlayer(plugin.getServer().getOfflinePlayer(owner));
         skull.setItemMeta(itemMeta);

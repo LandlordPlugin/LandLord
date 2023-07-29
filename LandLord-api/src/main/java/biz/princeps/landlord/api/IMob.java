@@ -13,11 +13,11 @@ public interface IMob {
     String getName();
 
     /**
-     * Gets the corresponding spawn egg, that spawns this mob.
+     * Gets the corresponding head.
      *
-     * @return the spawn egg
+     * @return the mob head
      */
-    ItemStack getEgg();
+    ItemStack getHead();
 
     /**
      * Gets the bukkit entity type.

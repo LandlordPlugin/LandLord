@@ -506,7 +506,7 @@ public class AManage extends AbstractGUI {
                         continue;
                     }
 
-                    Icon mob = new Icon(m.getEgg());
+                    Icon mob = new Icon(m.getHead());
                     mob.setName(titleMob.replace("%mob%", m.getNiceName()));
                     mob.setLore(formatList(formatList(lore, "%value%", formatMobState(land.isMobDenied(m))),
                             "%mob%", m.getNiceName()));
