@@ -46,6 +46,14 @@ public class MobsManager implements IMobManager {
             register1_17Entities();
         }
 
+        if (currentDataVersion >= 3105) {
+            register1_19Entities();
+        }
+
+        if (currentDataVersion >= 3463) {
+            register1_20Entities();
+        }
+
         MOBS.sort(Comparator.comparing(iMob -> iMob.getType().name()));
     }
 
@@ -141,6 +149,20 @@ public class MobsManager implements IMobManager {
         Mob AXOLOTL = new Mob(EntityType.AXOLOTL, Material.AXOLOTL_SPAWN_EGG);
         Mob GLOW_SQUID = new Mob(EntityType.GLOW_SQUID, Material.GLOW_SQUID_SPAWN_EGG);
         Mob GOAT = new Mob(EntityType.GOAT, Material.GOAT_SPAWN_EGG);
+    }
+
+    private void register1_19Entities() {
+        // 1.19's entities
+        Mob ALLAY = new Mob(EntityType.ALLAY, Material.ALLAY_SPAWN_EGG);
+        Mob FROG = new Mob(EntityType.FROG, Material.FROG_SPAWN_EGG);
+        Mob TADPOLE = new Mob(EntityType.TADPOLE, Material.TADPOLE_SPAWN_EGG);
+        Mob WARDEN = new Mob(EntityType.WARDEN, Material.WARDEN_SPAWN_EGG);
+    }
+
+    private void register1_20Entities() {
+        // 1.20's entities
+        Mob CAMEL = new Mob(EntityType.CAMEL, Material.CAMEL_SPAWN_EGG);
+        Mob SNIFFER = new Mob(EntityType.SNIFFER, Material.SNIFFER_SPAWN_EGG);
     }
 
     @Override
