@@ -41,11 +41,7 @@ public class MaterialsManager implements IMaterialsManager {
     public ItemStack getPlayerHead(OfflinePlayer owner) {
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta itemMeta = (SkullMeta) skull.getItemMeta();
-        try {
-            itemMeta.setPlayerProfile(owner.getPlayerProfile());
-        } catch (NoSuchMethodError e) {
-            itemMeta.setOwnerProfile(owner.getPlayerProfile());
-        }
+        itemMeta.setOwnerProfile(owner.getPlayerProfile());
         skull.setItemMeta(itemMeta);
         return skull;
     }
