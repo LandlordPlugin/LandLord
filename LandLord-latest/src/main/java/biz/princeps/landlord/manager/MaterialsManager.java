@@ -29,7 +29,7 @@ public class MaterialsManager implements IMaterialsManager {
 
     @Override
     public Material getLongGrass() {
-        return Material.TALL_GRASS;
+        return Material.GRASS;
     }
 
     @Override
