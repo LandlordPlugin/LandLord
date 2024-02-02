@@ -1,7 +1,9 @@
 package biz.princeps.landlord.api;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -18,6 +20,7 @@ public interface IMaterialsManager {
     Material getLongGrass();
 
     ItemStack getPlayerHead(UUID owner);
+    ItemStack getPlayerHead(OfflinePlayer owner);
 
     ItemStack getWitherSkull();
 
