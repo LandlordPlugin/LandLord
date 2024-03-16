@@ -24,6 +24,8 @@ public interface IWorldGuardManager {
 
     IOwnedLand getRegion(String name);
 
+    IOwnedLand getRegion(World world, int chunkX, int chunkZ);
+
     Set<IOwnedLand> getRegions(UUID id, World world);
 
     Set<IOwnedLand> getRegions(UUID id);
@@ -69,9 +71,9 @@ public interface IWorldGuardManager {
 
     IOwnedLand[] getSurroundingsOwner(IOwnedLand land, UUID owner);
 
-    Map<Chunk, IOwnedLand> getNearbyLands(Chunk chunk, int offsetX, int offsetZ);
+    Map<Long, IOwnedLand> getNearbyLands(Chunk chunk, int offsetX, int offsetZ);
 
-    Map<Chunk, IOwnedLand> getNearbyLands(Location loc, int offsetX, int offsetZ);
+    Map<Long, IOwnedLand> getNearbyLands(Location loc, int offsetX, int offsetZ);
 
     int getRegionCount(UUID id);
 
