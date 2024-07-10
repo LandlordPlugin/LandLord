@@ -58,6 +58,10 @@ public class MobsManager implements IMobManager {
             register1_20_5Entities();
         }
 
+        if (currentDataVersion >= 3953) {
+            register1_21Entities();
+        }
+
         MOBS.sort(Comparator.comparing(iMob -> iMob.getType().name()));
     }
 
@@ -180,6 +184,12 @@ public class MobsManager implements IMobManager {
     private void register1_20_5Entities() {
         // 1.20.5's entities
         Mob ARMADILLO = new Mob(EntityType.ARMADILLO, Material.ARMADILLO_SPAWN_EGG);
+    }
+
+    private void register1_21Entities() {
+        // 1.21's entities
+        Mob BOGGED = new Mob(EntityType.BOGGED, Material.BOGGED_SPAWN_EGG);
+        Mob BREEZE = new Mob(EntityType.BREEZE, Material.BREEZE_SPAWN_EGG);
     }
 
     @Override
