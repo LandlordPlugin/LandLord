@@ -92,7 +92,7 @@ public enum Skulls {
             return head;
 
         SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-        GameProfile profile = new GameProfile(uuid, null);
+        GameProfile profile = new GameProfile(uuid, uuid.toString());
 
         profile.getProperties().put("textures", new Property("textures", texture));
 

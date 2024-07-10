@@ -133,7 +133,9 @@ public class MobsManager implements IMobManager {
     private void register1_16Entities() {
         // 1.16's entities
         Mob HOGLIN = new Mob(EntityType.HOGLIN, Material.HOGLIN_SPAWN_EGG);
-        Mob PIGLIN = new Mob(EntityType.PIGLIN, Material.PIGLIN_SPAWN_EGG);
+        Mob PIGLIN = new Mob(EntityType.PIGLIN, currentDataVersion >= 3463
+                ? Material.valueOf("PIGLIN_HEAD")
+                : Material.PIGLIN_SPAWN_EGG);
         Mob STRIDER = new Mob(EntityType.STRIDER, Material.STRIDER_SPAWN_EGG);
         Mob ZOGLIN = new Mob(EntityType.ZOGLIN, Material.ZOGLIN_SPAWN_EGG);
         Mob ZOMBIFIED_PIGLIN = new Mob(EntityType.ZOMBIFIED_PIGLIN, Material.ZOMBIFIED_PIGLIN_SPAWN_EGG);
