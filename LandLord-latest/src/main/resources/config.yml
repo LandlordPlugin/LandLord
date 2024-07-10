@@ -759,6 +759,7 @@ Manage:
       - WARDEN
       - CAMEL
       - SNIFFER
+      - ARMADILLO
 
 # Define how the claim height should be defined.
 ClaimHeight:

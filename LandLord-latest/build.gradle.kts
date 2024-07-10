@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     implementation(project(":LandLord-core"))
-    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.18")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
     compileOnly("io.papermc:paperlib:1.0.8")
