@@ -760,6 +760,8 @@ Manage:
       - CAMEL
       - SNIFFER
       - ARMADILLO
+      - BOGGED
+      - BREEZE
 
 # Define how the claim height should be defined.
 ClaimHeight:
