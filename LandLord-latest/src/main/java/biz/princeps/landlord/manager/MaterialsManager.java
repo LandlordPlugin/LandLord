@@ -28,7 +28,11 @@ public class MaterialsManager implements IMaterialsManager {
 
     @Override
     public Material getLongGrass() {
-        return Material.GRASS;
+        try {
+            return Material.TALL_GRASS;
+        } catch (Exception ignored) {
+            return Material.valueOf("GRASS");
+        }
     }
 
     @Override
