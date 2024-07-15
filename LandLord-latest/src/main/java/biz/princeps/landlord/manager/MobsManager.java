@@ -46,6 +46,22 @@ public class MobsManager implements IMobManager {
             register1_17Entities();
         }
 
+        if (currentDataVersion >= 3105) {
+            register1_19Entities();
+        }
+
+        if (currentDataVersion >= 3463) {
+            register1_20Entities();
+        }
+
+        if (currentDataVersion >= 3837) {
+            register1_20_5Entities();
+        }
+
+        if (currentDataVersion >= 3953) {
+            register1_21Entities();
+        }
+
         MOBS.sort(Comparator.comparing(iMob -> iMob.getType().name()));
     }
 
@@ -98,7 +114,13 @@ public class MobsManager implements IMobManager {
         Mob TROPICAL_FISH = new Mob(EntityType.TROPICAL_FISH, Material.TROPICAL_FISH_SPAWN_EGG);
         Mob DROWNED = new Mob(EntityType.DROWNED, Material.DROWNED_SPAWN_EGG);
         Mob DOLPHIN = new Mob(EntityType.DOLPHIN, Material.DOLPHIN_SPAWN_EGG);
-        Mob MUSHROOM_COW = new Mob(EntityType.MUSHROOM_COW, Material.MOOSHROOM_SPAWN_EGG);
+
+        // MUSHROOM_COW still exists in 1.20.4-
+        if (currentDataVersion <= 3700) {
+            Mob MUSHROOM_COW = new Mob(EntityType.valueOf("MUSHROOM_COW"), Material.MOOSHROOM_SPAWN_EGG);
+        } else {
+            Mob MUSHROOM_COW = new Mob(EntityType.MOOSHROOM, Material.MOOSHROOM_SPAWN_EGG);
+        }
 
         // PIG_ZOMBIE still exists in 1.15.1-
         if (currentDataVersion <= 2227) {
@@ -125,7 +147,9 @@ public class MobsManager implements IMobManager {
     private void register1_16Entities() {
         // 1.16's entities
         Mob HOGLIN = new Mob(EntityType.HOGLIN, Material.HOGLIN_SPAWN_EGG);
-        Mob PIGLIN = new Mob(EntityType.PIGLIN, Material.PIGLIN_SPAWN_EGG);
+        Mob PIGLIN = new Mob(EntityType.PIGLIN, currentDataVersion >= 3463
+                ? Material.valueOf("PIGLIN_HEAD")
+                : Material.PIGLIN_SPAWN_EGG);
         Mob STRIDER = new Mob(EntityType.STRIDER, Material.STRIDER_SPAWN_EGG);
         Mob ZOGLIN = new Mob(EntityType.ZOGLIN, Material.ZOGLIN_SPAWN_EGG);
         Mob ZOMBIFIED_PIGLIN = new Mob(EntityType.ZOMBIFIED_PIGLIN, Material.ZOMBIFIED_PIGLIN_SPAWN_EGG);
@@ -141,6 +165,31 @@ public class MobsManager implements IMobManager {
         Mob AXOLOTL = new Mob(EntityType.AXOLOTL, Material.AXOLOTL_SPAWN_EGG);
         Mob GLOW_SQUID = new Mob(EntityType.GLOW_SQUID, Material.GLOW_SQUID_SPAWN_EGG);
         Mob GOAT = new Mob(EntityType.GOAT, Material.GOAT_SPAWN_EGG);
+    }
+
+    private void register1_19Entities() {
+        // 1.19's entities
+        Mob ALLAY = new Mob(EntityType.ALLAY, Material.ALLAY_SPAWN_EGG);
+        Mob FROG = new Mob(EntityType.FROG, Material.FROG_SPAWN_EGG);
+        Mob TADPOLE = new Mob(EntityType.TADPOLE, Material.TADPOLE_SPAWN_EGG);
+        Mob WARDEN = new Mob(EntityType.WARDEN, Material.WARDEN_SPAWN_EGG);
+    }
+
+    private void register1_20Entities() {
+        // 1.20's entities
+        Mob CAMEL = new Mob(EntityType.CAMEL, Material.CAMEL_SPAWN_EGG);
+        Mob SNIFFER = new Mob(EntityType.SNIFFER, Material.SNIFFER_SPAWN_EGG);
+    }
+
+    private void register1_20_5Entities() {
+        // 1.20.5's entities
+        Mob ARMADILLO = new Mob(EntityType.ARMADILLO, Material.ARMADILLO_SPAWN_EGG);
+    }
+
+    private void register1_21Entities() {
+        // 1.21's entities
+        Mob BOGGED = new Mob(EntityType.BOGGED, Material.BOGGED_SPAWN_EGG);
+        Mob BREEZE = new Mob(EntityType.BREEZE, Material.BREEZE_SPAWN_EGG);
     }
 
     @Override
