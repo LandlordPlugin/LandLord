@@ -15,7 +15,7 @@ public class CrossVersion {
     }
 
     public static String getVersion() {
-        return Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        return Bukkit.getBukkitVersion().split("-")[0];
     }
 
     public ItemStack addNBTTag(ItemStack stack, String key, Object value) {
