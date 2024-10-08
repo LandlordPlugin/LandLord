@@ -20,7 +20,6 @@ import java.util.UUID;
 public class MaterialsManager implements IMaterialsManager {
 
     private final ILandLord plugin;
-    private static final Gson GSON = new Gson();
 
     public MaterialsManager(ILandLord plugin) {
         this.plugin = plugin;
@@ -55,22 +54,21 @@ public class MaterialsManager implements IMaterialsManager {
     }
 
     @Override
-    public ItemStack getPlayerHead(UUID owner, String texture) {
-        return getPlayerHead(texture);
+    public ItemStack getPlayerHead(UUID owner, String url) {
+        return getPlayerHead(url);
     }
 
     @Override
-    public ItemStack getPlayerHead(OfflinePlayer owner, String texture) {
-        return getPlayerHead(texture);
+    public ItemStack getPlayerHead(OfflinePlayer owner, String url) {
+        return getPlayerHead(url);
     }
 
     @Override
-    public ItemStack getPlayerHead(String texture) {
+    public ItemStack getPlayerHead(String url) {
         PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
         PlayerTextures textures = profile.getTextures();
-        Skulls.Profile parsed = GSON.fromJson(new String(Base64.getDecoder().decode(texture)), Skulls.Profile.class);
         try {
-            textures.setSkin(new URL(parsed.textures().SKIN().url()));
+            textures.setSkin(new URL(url));
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
