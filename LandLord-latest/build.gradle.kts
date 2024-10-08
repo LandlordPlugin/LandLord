@@ -1,13 +1,15 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.1"
     id("biz.princeps.library-conventions")
 }
 
 dependencies {
     implementation(project(":LandLord-core"))
-    compileOnly("org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.5")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.5") {
+        exclude("org.spigotmc")
+    }
     compileOnly("io.papermc:paperlib:1.0.8")
 }
 

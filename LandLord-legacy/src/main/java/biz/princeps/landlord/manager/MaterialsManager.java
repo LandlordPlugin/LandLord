@@ -2,6 +2,8 @@ package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMaterialsManager;
+import org.apache.commons.lang.NotImplementedException;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -34,17 +36,27 @@ public class MaterialsManager implements IMaterialsManager {
     }
 
     @Override
-    public ItemStack getPlayerHead(UUID owner) {
-        return getPlayerHead(plugin.getServer().getOfflinePlayer(owner));
+    public ItemStack getPlayerHead(UUID owner, String texture) {
+        return getPlayerHead(plugin.getServer().getOfflinePlayer(owner), texture);
     }
 
     @Override
-    public ItemStack getPlayerHead(OfflinePlayer owner) {
+    public ItemStack getPlayerHead(UUID owner) {
         ItemStack skull = new ItemStack(Material.SKULL_ITEM);
         SkullMeta itemMeta = (SkullMeta) skull.getItemMeta();
-        itemMeta.setOwningPlayer(owner);
+        itemMeta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
         skull.setItemMeta(itemMeta);
         return skull;
+    }
+
+    @Override
+    public ItemStack getPlayerHead(OfflinePlayer owner, String texture) {
+        return getPlayerHead(texture);
+    }
+
+    @Override
+    public ItemStack getPlayerHead(String texture) {
+        throw new NotImplementedException();
     }
 
     @Override
