@@ -2,16 +2,25 @@ package biz.princeps.landlord.manager;
 
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IMaterialsManager;
+import biz.princeps.landlord.util.Skulls;
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.google.gson.Gson;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerTextures;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Base64;
 import java.util.UUID;
 
 public class MaterialsManager implements IMaterialsManager {
 
     private final ILandLord plugin;
+    private static final Gson GSON = new Gson();
 
     public MaterialsManager(ILandLord plugin) {
         this.plugin = plugin;
@@ -38,16 +47,39 @@ public class MaterialsManager implements IMaterialsManager {
 
     @Override
     public ItemStack getPlayerHead(UUID owner) {
-        return getPlayerHead(plugin.getServer().getOfflinePlayer(owner));
+        ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta itemMeta = (SkullMeta) skull.getItemMeta();
+        itemMeta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
+        skull.setItemMeta(itemMeta);
+        return skull;
     }
 
     @Override
-    public ItemStack getPlayerHead(OfflinePlayer owner) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta itemMeta = (SkullMeta) skull.getItemMeta();
-        itemMeta.setOwnerProfile(owner.getPlayerProfile());
-        skull.setItemMeta(itemMeta);
-        return skull;
+    public ItemStack getPlayerHead(UUID owner, String texture) {
+        return getPlayerHead(texture);
+    }
+
+    @Override
+    public ItemStack getPlayerHead(OfflinePlayer owner, String texture) {
+        return getPlayerHead(texture);
+    }
+
+    @Override
+    public ItemStack getPlayerHead(String texture) {
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+        PlayerTextures textures = profile.getTextures();
+        Skulls.Profile parsed = GSON.fromJson(new String(Base64.getDecoder().decode(texture)), Skulls.Profile.class);
+        try {
+            textures.setSkin(new URL(parsed.textures().SKIN().url()));
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        profile.setTextures(textures);
+        ItemStack stack = ItemStack.of(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) stack.getItemMeta();
+        meta.setPlayerProfile(profile);
+        stack.setItemMeta(meta);
+        return stack;
     }
 
     @Override

@@ -3,6 +3,9 @@ package biz.princeps.landlord.util;
 import biz.princeps.landlord.api.ILandLord;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -86,26 +89,8 @@ public enum Skulls {
     }
 
     public ItemStack getSkull(ILandLord plugin) {
-        UUID uuid = UUID.randomUUID();
-        ItemStack head = plugin.getMaterialsManager().getPlayerHead(uuid);
-        if (texture.isEmpty())
-            return head;
-
-        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-        GameProfile profile = new GameProfile(uuid, uuid.toString().substring(0, 16));
-
-        profile.getProperties().put("textures", new Property("textures", texture));
-
-        try {
-            Field profileField = headMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(headMeta, profile);
-
-        } catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException error) {
-            error.printStackTrace();
-        }
-        head.setItemMeta(headMeta);
-        return head;
+        UUID uuid = plugin.getServer().getOnlinePlayers().stream().findAny().get().getUniqueId();
+        return plugin.getMaterialsManager().getPlayerHead(uuid, texture);
     }
 
     @Override
@@ -114,4 +99,8 @@ public enum Skulls {
                 this.name() +
                 '}';
     }
+
+    public record Profile(Textures textures){}
+    public record Textures(Skin SKIN){}
+    public record Skin(String url){}
 }
