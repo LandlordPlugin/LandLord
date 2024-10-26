@@ -21,8 +21,8 @@ public enum MaterialProxy {
 
     public ItemStack crossVersion() {
         String version = CrossVersion.getVersion();
-        if ("v1_12_R1".equals(version)) {
-            return getLegacy();
+        if (version.startsWith("1.12")) {
+            getLegacy();
         }
         return getLatest();
     }
