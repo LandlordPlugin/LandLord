@@ -14,6 +14,8 @@ repositories {
     // WorldEdit & WorldGuard
     maven { url = uri("https://maven.enginehub.org/repo/") }
     // Towny
+    maven { url = uri("https://repo.glaremasters.me/repository/towny/") }
+    // Vault API
     maven { url = uri("https://jitpack.io") }
     // PAPI
     maven { url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/") }
