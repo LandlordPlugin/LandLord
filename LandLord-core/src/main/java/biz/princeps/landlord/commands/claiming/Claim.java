@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Project: LandLord
@@ -409,7 +410,7 @@ public class Claim extends LandlordCommand {
         int radius = plugin.getConfig().getInt("CommandSettings.Claim.customGapRadius");
 
         boolean differentOwner = false;
-        Map<Chunk, IOwnedLand> nearbyLands = wg.getNearbyLands(chunk, radius, radius);
+        Map<Long, IOwnedLand> nearbyLands = wg.getNearbyLands(chunk, radius, radius);
         for (IOwnedLand adjLand : nearbyLands.values()) {
             if (adjLand != null) {
                 if (!adjLand.isOwner(player.getUniqueId())) {

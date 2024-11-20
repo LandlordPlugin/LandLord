@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 public class JavaUtils {
 
     public static final BlockFace[] BLOCK_FACES = new BlockFace[]{BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST};
+    private static final long CHUNK_KEY_MAX_VALUE = 0xffffffffL;
+    private static final short CHUNK_KEY_MAX_BITS = 32;
 
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
@@ -62,6 +64,15 @@ public class JavaUtils {
      */
     public static BlockFace getBlockFace(float yaw) {
         return BLOCK_FACES[(Math.round(yaw / 90f) & 0x3)];
+    }
+
+    /**
+     * @param x Chunk X Coordinate
+     * @param z Chunk Z Coordinate
+     * @return Chunk coordinates packed into a long
+     */
+    public static long getChunkKey(int x, int z) {
+        return (long) x & CHUNK_KEY_MAX_VALUE | ((long) z & CHUNK_KEY_MAX_VALUE) << CHUNK_KEY_MAX_BITS;
     }
 
 }
