@@ -17,3 +17,6 @@ gradle-app.setting
 
 # IntelliJ
 out/
+
+# run-task
+run/
