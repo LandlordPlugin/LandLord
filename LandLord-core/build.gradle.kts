@@ -11,7 +11,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("me.clip:placeholderapi:2.11.5")
-    compileOnly("com.github.TownyAdvanced:Towny:0.100.1.7")
+    compileOnly("com.palmergames.bukkit.towny:towny:0.100.3.0")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("com.mojang:authlib:1.5.25")
 }
