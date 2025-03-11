@@ -16,6 +16,8 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 /**
  * Project: LandLord
  * Created by Alex D. (SpatiumPrinceps)
@@ -125,7 +127,7 @@ public class Unclaim extends LandlordCommand {
         wg.unclaim(ol.getWorld(), ol.getName());
 
         if (plugin.getConfig().getBoolean("CommandSettings.Unclaim.regenerate")) {
-            plugin.getRegenerationManager().regenerateChunk(ol.getALocation());
+            plugin.getRegenerationManager().regenerateChunks(List.of(ol));
         }
 
         // remove possible homes

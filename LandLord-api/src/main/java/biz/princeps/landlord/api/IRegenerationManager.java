@@ -3,6 +3,8 @@ package biz.princeps.landlord.api;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface IRegenerationManager {
 
     /**
@@ -21,5 +23,16 @@ public interface IRegenerationManager {
      */
     default void regenerateChunk(Location location) {
         regenerateChunk(location.getWorld(), location.getBlockX() >> 4, location.getBlockZ() >> 4);
+    }
+
+    /**
+     * Regenerates all chunks of the given lands. All lands must belong to the same world.
+     *
+     * @param lands a non-empty iterable of lands to regenerate.
+     * @return a future that completes when all given chunks are regenerated.
+     */
+    default CompletableFuture<Void> regenerateChunks(Iterable<IOwnedLand> lands) {
+        lands.forEach(l -> regenerateChunk(l.getALocation()));
+        return CompletableFuture.completedFuture(null);
     }
 }

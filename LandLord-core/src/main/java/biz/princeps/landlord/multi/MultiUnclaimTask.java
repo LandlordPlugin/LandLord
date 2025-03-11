@@ -14,7 +14,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
 
@@ -28,6 +30,7 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
     private final World world;
     private final ManageMode manageMode;
     private double totalPayBack;
+    private final List<IOwnedLand> delayedRegenerations;
 
     public MultiUnclaimTask(ILandLord plugin, Player player, Collection<IOwnedLand> operations, World world, ManageMode manageMode) {
         super(plugin, operations);
@@ -42,6 +45,7 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
         this.world = world;
         this.manageMode = manageMode;
         this.totalPayBack = 0;
+        this.delayedRegenerations = new ArrayList<>();
     }
 
     @Override
@@ -68,10 +72,9 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
                 totalPayBack += payback;
             }
 
-            Location location = ownedLand.getALocation();
             wgManager.unclaim(ownedLand.getWorld(), ownedLand.getName());
             if (plugin.getConfig().getBoolean("CommandSettings.Unclaim.regenerate", false)) {
-                plugin.getRegenerationManager().regenerateChunk(location);
+                delayedRegenerations.add(ownedLand);
             }
 
             // remove possible homes
@@ -108,6 +111,10 @@ public class MultiUnclaimTask extends AMultiTask<IOwnedLand> {
                         .replace("%world%", world.getName())
                         .replace("%money%", (Options.isVaultEnabled() ? plugin.getVaultManager().format(totalPayBack) : "-eco disabled-")));
                 break;
+        }
+
+        if (!delayedRegenerations.isEmpty()) {
+            plugin.getRegenerationManager().regenerateChunks(delayedRegenerations);
         }
 
         new BukkitRunnable() {

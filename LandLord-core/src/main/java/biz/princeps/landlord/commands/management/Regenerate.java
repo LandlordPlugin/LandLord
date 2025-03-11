@@ -10,8 +10,11 @@ import biz.princeps.lib.command.Arguments;
 import biz.princeps.lib.command.Properties;
 import biz.princeps.lib.gui.ConfirmationGUI;
 import com.google.common.collect.Sets;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.List;
 
 
 /**
@@ -83,10 +86,12 @@ public class Regenerate extends LandlordCommand {
                                 }
                             }.runTask(plugin);
 
-                            plugin.getRegenerationManager().regenerateChunk(finalLand.getALocation());
-                            lm.sendMessage(player, lm.getString(player, "Commands.Regenerate.success")
-                                    .replace("%land%", finalLand.getName()));
-                            player.closeInventory();
+                            plugin.getRegenerationManager().regenerateChunks(List.of(finalLand))
+                                    .whenCompleteAsync((v, e) -> {
+                                        lm.sendMessage(player, lm.getString(player, "Commands.Regenerate.success")
+                                            .replace("%land%", finalLand.getName()));
+                                        player.closeInventory();
+                                    }, r -> Bukkit.getScheduler().runTask(plugin, r));
                         }
 
                     }, (p2) -> lm.sendMessage(player, lm.getString(player, "Commands.Regenerate.abort")
