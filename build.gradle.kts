@@ -18,14 +18,14 @@ subprojects {
 
 tasks {
     register<RunServer>("runLatest") {
-        minecraftVersion("1.21.1")
+        minecraftVersion("1.21.4")
         pluginJars(*project(":LandLord-latest").getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
             .toTypedArray())
         downloadPlugins {
-            modrinth("worldguard", "7.0.12")
+            modrinth("worldguard", "f9NoeotB") // 7.0.13
             // worldedit supports multiple platforms, we need to use the specific version id
             // instead of the actual version
-            modrinth("worldedit", "ecqqLKUO") // 7.3.8
+            modrinth("fastasyncworldedit", "cf5QSDJ7") // 2.12.3 Paper
         }
         runDirectory = file("run/latest")
         group = "run paper"
