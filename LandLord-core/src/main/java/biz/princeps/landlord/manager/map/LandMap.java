@@ -3,6 +3,7 @@ package biz.princeps.landlord.manager.map;
 import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
+import biz.princeps.landlord.util.JavaUtils;
 import biz.princeps.landlord.util.MapConstants;
 import biz.princeps.landlord.util.SimpleScoreboard;
 import org.bukkit.ChatColor;
@@ -200,7 +201,7 @@ public class LandMap {
         String[][] mapBoard = getMapDir(p);
         String[] mapRows = new String[mapBoard.length + 3];
 
-        Map<Chunk, IOwnedLand> nearby = wg.getNearbyLands(p.getLocation(), radius, radius);
+        Map<Long, IOwnedLand> nearby = wg.getNearbyLands(p.getLocation(), radius, radius);
 
         for (int z = 0; z < mapBoard.length; z++) {
             StringBuilder row = new StringBuilder();
@@ -209,7 +210,7 @@ public class LandMap {
                 int xx = x - radius;
                 int zz = z - radius;
 
-                IOwnedLand land = nearby.get(p.getWorld().getChunkAt(xx + (p.getLocation().getBlockX() >> 4), zz + (p.getLocation().getBlockZ() >> 4)));
+                IOwnedLand land = nearby.get(JavaUtils.getChunkKey(xx + (p.getLocation().getBlockX() >> 4), zz + (p.getLocation().getBlockZ() >> 4)));
 
                 String currSpot = mapBoard[z][x];
 

@@ -5,6 +5,7 @@ import biz.princeps.landlord.api.ILandLord;
 import biz.princeps.landlord.api.IOwnedLand;
 import biz.princeps.landlord.api.IWorldGuardManager;
 import biz.princeps.landlord.api.tuple.Pair;
+import biz.princeps.landlord.util.JavaUtils;
 import biz.princeps.lib.PrincepsLib;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -105,21 +106,21 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
     }
 
     @Override
-    public Map<Chunk, IOwnedLand> getNearbyLands(Chunk chunk, int offsetX, int offsetZ) {
-        Map<Chunk, IOwnedLand> lands = new HashMap<>();
+    public Map<Long, IOwnedLand> getNearbyLands(Chunk chunk, int offsetX, int offsetZ) {
+        Map<Long, IOwnedLand> lands = new HashMap<>();
+        World world = chunk.getWorld();
         int xCoord = chunk.getX();
         int zCoord = chunk.getZ();
         for (int x = xCoord - offsetX; x <= xCoord + offsetX; x++) {
             for (int z = zCoord - offsetZ; z <= zCoord + offsetZ; z++) {
-                Chunk chunkA = chunk.getWorld().getChunkAt(x, z);
-                lands.put(chunkA, this.getRegion(chunkA));
+                lands.put(JavaUtils.getChunkKey(x, z), this.getRegion(world, x, z));
             }
         }
         return lands;
     }
 
     @Override
-    public Map<Chunk, IOwnedLand> getNearbyLands(Location loc, int offsetX, int offsetZ) {
+    public Map<Long, IOwnedLand> getNearbyLands(Location loc, int offsetX, int offsetZ) {
         return getNearbyLands(loc.getChunk(), offsetX, offsetZ);
     }
 
@@ -265,12 +266,23 @@ public abstract class AWorldGuardManager implements IWorldGuardManager {
         name += "_";
 
         // x coord
-        int x = loc.getBlockX() >> 4;
-        name += x;
+        name += loc.getBlockX() >> 4;
         name += "_";
         // z coord
-        int z = loc.getBlockZ() >> 4;
-        name += z;
+        name += loc.getBlockZ() >> 4;
+        return getRegion(name);
+    }
+
+    @Override
+    public IOwnedLand getRegion(World world, int chunkX, int chunkZ) {
+        String name = world.getName().toLowerCase().replace(" ", "_");
+        name += "_";
+
+        // x coord
+        name += chunkX;
+        name += "_";
+        // z coord
+        name += chunkZ;
         return getRegion(name);
     }
 
