@@ -13,6 +13,8 @@ jobs:
   build:
     environment: build
     runs-on: ubuntu-latest
+    env:
+      NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
 
     steps:
       - uses: actions/checkout@v5
@@ -23,10 +25,16 @@ jobs:
           java-version: 25
       - name: Build with Gradle
         run: ./gradlew --build-cache build
+      - name: Archive plugin jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: LandLord
+          path: LandLord-latest/build/libs/*-all.jar
+          if-no-files-found: error
       - name: Test with Gradle
         run: ./gradlew test
       - name: Publish to eldonexus
+        if: env.NEXUS_USERNAME != ''
         run: ./gradlew publishMavenPublicationToEldoNexusRepository
         env:
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
