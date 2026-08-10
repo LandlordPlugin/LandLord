@@ -1,0 +1,256 @@
+name: Landlord
+version: "${version}"
+main: biz.princeps.landlord.LandLord
+authors: [ SpatiumPrinceps, Aurelien30000, SirYwell, RainbowDashLabs ]
+website: https://www.spigotmc.org/resources/44398/
+depend: [ WorldGuard ]
+softdepend: [ Vault, PlaceholderAPI, MVdWPlaceholderAPI, Towny ]
+
+permissions:
+  landlord.*:
+    description: Gives access to all landlord commands
+    children:
+      landlord.player.*: true
+      landlord.admin.*: true
+
+  landlord.player.*:
+    description: Gives access to default player commands.
+    children:
+      landlord.player.own: true
+      landlord.player.unclaim: true
+      landlord.player.map: true
+      landlord.player.borders: true
+      landlord.player.info: true
+      landlord.player.shop: true
+      landlord.player.home: true
+      landlord.player.advertise: true
+      landlord.player.manage: true
+      landlord.player.manage.*: true
+      landlord.player.multiclaim.*: true
+
+  landlord.admin.*:
+    description: Gives access to admin commands.
+    children:
+      landlord.admin.unclaim: true
+      landlord.admin.list: true
+      landlord.admin.manage: true
+      landlord.admin.clear.*: true
+      landlord.admin.clearinactive: true
+      landlord.admin.bypass: true
+      landlord.admin.reload: true
+      landlord.admin.modifyfriends: true
+      landlord.admin.giveclaims: true
+      landlord.admin.update: true
+      landlord.admin.admintp: true
+      landlord.admin.adminclaim: true
+      landlord.limit.override: true
+
+  landlord.admin.clear.*:
+    description: Gives access to the clear commands
+    children:
+      landlord.admin.clear.player: true
+      landlord.admin.clear.world: true
+      landlord.admin.clear.land: true
+
+  landlord.player.manage.*:
+    description: required to manage all the stuff in ll manage
+    children:
+      landlord.player.manage.friends: true
+      landlord.player.manage.regenerate: true
+      landlord.player.manage.setgreet: true
+      landlord.player.manage.setfarewell: true
+      landlord.player.manage.unclaim: true
+      landlord.player.manage.mob-spawning: true
+      landlord.player.manage.mob-spawning.*: true
+      landlord.player.manage.damage-animals: true
+      landlord.player.manage.ride: true
+      landlord.player.manage.frosted-ice-form: true
+      landlord.player.manage.block-trampling: true
+      landlord.player.manage.potion-splash: true
+      landlord.player.manage.pistons: true
+      landlord.player.manage.build: true
+      landlord.player.manage.interact: true
+      landlord.player.manage.chest-access: true
+      landlord.player.manage.creeper-explosion: true
+      landlord.player.manage.pvp: true
+      landlord.player.manage.spreadflags: true
+      landlord.player.manage.spreadmobs: true
+      landlord.player.manage.spreadfriends: true
+
+  landlord.player.multiclaim.*:
+    description: required to use multi commands
+    children:
+      landlord.player.multiclaim: true
+      landlord.player.multiunclaim: true
+      landlord.player.multiaddfriend: true
+      landlord.player.multiremovefriend: true
+      landlord.player.multilist: true
+      landlord.player.multimanage: true
+
+  landlord.use:
+    description: required to use any Landlord commands
+    default: true
+
+  landlord.player.own:
+    description: permission for plot ownership (claim, manage, friends, etc.)
+    default: true
+
+  landlord.player.unclaim:
+    description: permission to unclaim lands
+    default: true
+
+  landlord.player.map:
+    description: permission to use the land map
+    default: true
+
+  landlord.player.borders:
+    description: permission to use the ll border cmd
+    default: true
+
+  landlord.player.info:
+    description: Permission to use land info
+    default: true
+
+  landlord.player.manage:
+    description: Permission to manage own lands
+    default: true
+
+  landlord.player.shop:
+    description: Permission to use the shop
+    default: true
+
+  landlord.player.home:
+    description: Permission to set home and teleport back
+    default: true
+
+  landlord.player.advertise:
+    description: Permission to advertise a land
+    default: true
+
+  landlord.player.multiclaim:
+    description: Permission to claim multiple lands at once
+    default: true
+
+  landlord.player.homeother:
+    description: Permission to teleport to other homes
+    default: false
+
+  landlord.limit.10:
+    description: Allows a user to claim up to 10 lands
+    default: true
+
+  landlord.limit.override:
+    description: allows unlimited land ownership
+    default: op
+
+  landlord.admin.help:
+    description: will have an advanced ll help menu
+    default: op
+
+  landlord.admin.unclaim:
+    description: Unclaim anyone's land
+    default: op
+
+  landlord.admin.list:
+    description: list all land owned by a user
+    default: op
+
+  landlord.admin.manage:
+    description: manage anyone's land
+    default: op
+
+  landlord.admin.clearworld:
+    description: clear a player's land in a world or all land in a world
+    default: op
+
+  landlord.admin.bypass:
+    description: bypass land protections
+    default: op
+
+  landlord.admin.reload:
+    description: reload plugin configuration
+    default: op
+
+  landlord.admin.modifyfriends:
+    description: add/remove friends of any land
+    default: op
+
+  landlord.admin.giveclaims:
+    description: give someone claims
+    default: op
+
+  landlord.admin.update:
+    description: Update existing claims
+    default: op
+
+  landlord.admin.admintp:
+    description: Opens a gui with all available lands of a player to tp to
+    default: op
+
+  landlord.player.manage.friends:
+    description: manage friends
+    default: true
+
+  landlord.player.manage.regenerate:
+    description: manage regenerate
+    default: true
+
+  landlord.player.manage.setgreet:
+    description: manage setgreet
+    default: true
+
+  landlord.player.manage.setfarewell:
+    description: manage setfarewell
+    default: true
+
+  landlord.player.manage.unclaim:
+    description: manage unclaim
+    default: true
+
+  landlord.player.manage.mob-spawning:
+    description: manage mobspawn
+    default: true
+
+  landlord.player.manage.damage-animals:
+    description: manage damage animals
+    default: true
+
+  landlord.player.manage.ride:
+    description: manage riding
+    default: true
+
+  landlord.player.manage.frosted-ice-form:
+    description: manage frosted ice form boots
+    default: true
+
+  landlord.player.manage.block-trampling:
+    description: manage block trampling
+    default: true
+
+  landlord.player.manage.potion-splash:
+    description: manage potion splash
+    default: true
+
+  landlord.player.manage.pistons:
+    description: manage pistons
+    default: true
+
+  landlord.player.manage.build:
+    description: manage build
+    default: true
+
+  landlord.player.manage.interact:
+    description: manage interact
+    default: true
+
+  landlord.player.manage.chest-access:
+    description: manage chest access
+    default: true
+
+  landlord.player.manage.creeper-explosion:
+    description: manage creeper explosions
+    default: true
+
+  landlord.player.manage.pvp:
+    description: manage pvp
+    default: true

@@ -35,4 +35,15 @@ tasks {
         runDirectory = file("run/latest")
         group = "run paper"
     }
+    register<RunServer>("runLegacy") {
+        minecraftVersion("1.12.2")
+        pluginJars(*project(":LandLord-legacy").getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
+            .toTypedArray())
+        downloadPlugins {
+            url("https://dev.bukkit.org/projects/worldguard/files/2610618/download")
+            url("https://dev.bukkit.org/projects/worldedit/files/2597538/download")
+        }
+        runDirectory = file("run/legacy")
+        group = "run paper"
+    }
 }
