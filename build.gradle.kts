@@ -3,12 +3,7 @@ import xyz.jpenilla.runpaper.task.RunServer
 
 plugins {
     java
-    // Only applied to the subprojects below; the root project publishes nothing and would fail
-    // generateBuildData because it never registers a repo via useEldoNexusRepos().
     id("de.chojo.publishdata") version "1.4.0" apply false
-    // NOTE: RunServer fails task validation on Gradle 9.7+ ("downloadPlugins.elements is missing an
-    // input or output annotation"), so the wrapper is pinned to 9.6.1. Bump both once
-    // https://github.com/jpenilla/run-task/issues/158 is released.
     id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
@@ -21,8 +16,14 @@ subprojects {
     }
 }
 
+val toolchains = extensions.getByType<JavaToolchainService>()
+
 tasks {
     register<RunServer>("runLatest") {
+        // 26.1+ needs Java 25 or newer
+        javaLauncher = toolchains.launcherFor {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
         minecraftVersion("26.2")
         pluginJars(*project(":LandLord-latest").getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
             .toTypedArray())
@@ -36,6 +37,10 @@ tasks {
         group = "run paper"
     }
     register<RunServer>("runLegacy") {
+        // 1.12.2 needs Java 17 or earlier
+        javaLauncher = toolchains.launcherFor {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
         minecraftVersion("1.12.2")
         pluginJars(*project(":LandLord-legacy").getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
             .toTypedArray())
